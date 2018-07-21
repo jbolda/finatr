@@ -1,0 +1,23 @@
+{
+  "name": "budget",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "src/index.js",
+  "dependencies": {
+    "d3": "5.4.0",
+    "js-file-download": "0.4.1",
+    "later": "1.2.0",
+    "react": "16.3.2",
+    "react-dom": "16.3.2",
+    "react-file-reader-input": "2.0.0",
+    "react-scripts": "1.1.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
