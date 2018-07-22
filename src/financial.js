@@ -73,17 +73,13 @@ class Financial extends React.Component {
     this.state = { data: data };
   }
 
-  handleChange = (event, results) => {
-    console.log(results);
-    // results.forEach(result => {
-    // const [e, file] = result;
-    // this.props.dispatch(uploadFile(e.target.result));
-    // console.log(`Successfully uploaded ${file.name}!`);
-    // });
+  handleUpload = (event, results) => {
+    let result = JSON.parse(results[0][0].target.result).data;
+    this.setState({ data: result });
   };
 
   handleDownload = () => {
-    let fileData = JSON.stringify(this.state.data);
+    let fileData = JSON.stringify({ data: this.state.data });
     fileDownload(fileData, 'financials.json');
   };
 
@@ -92,16 +88,13 @@ class Financial extends React.Component {
       <div>
         <BarChart data={this.state.data} />
         <button onClick={this.handleDownload}>Download</button>
-        <form>
-          <label htmlFor="my-file-input">Upload a File:</label>
-          <FileReaderInput
-            as="text"
-            id="file-input"
-            onChange={this.handleChange}
-          >
-            <button>Select a file!</button>
-          </FileReaderInput>
-        </form>
+        <FileReaderInput
+          as="text"
+          id="my-file-input"
+          onChange={this.handleUpload}
+        >
+          <button>Select a file!</button>
+        </FileReaderInput>
       </div>
     );
   }
