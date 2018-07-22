@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import later from 'later';
+import getDay from 'date-fns/fp/getDay';
+import getDate from 'date-fns/fp/getDate';
 
 export class BarChart extends Component {
   componentDidMount() {
@@ -219,31 +220,13 @@ let barBuild = {
         } else if (
           d.rtype === 'day of week' &&
           convertdate(i) >= d.start &&
-          later
-            .schedule(
-              later.parse
-                .recur()
-                .on(d.repeat)
-                .dayOfWeek()
-                .every(d.cycle)
-                .weekOfYear()
-            )
-            .isValid(i)
+          getDay(i) === d.repeat
         ) {
           obj[key].y = d.value;
         } else if (
           d.rtype === 'day of month' &&
           convertdate(i) >= d.start &&
-          later
-            .schedule(
-              later.parse
-                .recur()
-                .on(d.repeat)
-                .dayOfMonth()
-                .every(d.cycle)
-                .month()
-            )
-            .isValid(i)
+          getDate(i) === d.repeat
         ) {
           obj[key].y = d.value;
         } else {
