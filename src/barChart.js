@@ -5,16 +5,26 @@ import getDate from 'date-fns/fp/getDate';
 
 export class BarChart extends Component {
   componentDidMount() {
-    let { data } = this.props;
+    let svgBar = barBuild.init(350, 'bar-section');
+    let svgLine = barBuild.init(350, 'line-section');
+    this.drawCharts('initial', this.props.data, svgBar, svgLine);
+  }
 
-    let svg = barBuild.init();
+  componentDidUpdate() {
+    let svgBar = d3.select('.bar-section').select('g');
+    let svgLine = d3.select('.line-section').select('g');
+    this.drawCharts('update', this.props.data, svgBar, svgLine);
+  }
+
+  drawCharts(phase, data, svgBar, svgLine) {
+    console.log('drawCharts', data);
 
     let acc = {
       income: [],
       expense: [],
       transfer: []
     };
-    data.forEach(d => {
+    data.transactions.forEach(d => {
       switch (d.type) {
         case 'income':
           acc.income.push(d);
@@ -33,42 +43,51 @@ export class BarChart extends Component {
     let dataMassagedIncome = barBuild.graph(acc.income);
     let dataMassagedExpense = barBuild.graph(acc.expense);
     // let dataMassagedTransfer = barBuild.graph(acc.transfer);
-    let dataMassaged = barBuild.graph(data);
-    let accountData = barBuild.accountGraph(data, dataMassaged);
+    let dataMassaged = barBuild.graph(data.transactions);
+    let accountData = barBuild.accountGraph(data.transactions, dataMassaged);
     let max_domain_bars = d3.max([
       dataMassagedIncome[0].maxHeight,
       dataMassagedExpense[0].maxHeight
       // dataMassagedTransfer[0].maxHeight
     ]);
 
+    let blobs;
+    let lineGroup;
+    if (phase === 'initial') {
+      blobs = barBuild.initBar(svgBar);
+      lineGroup = barBuild.initLine(svgLine);
+    } else if (phase === 'update') {
+      blobs = svgBar.select('g');
+      lineGroup = svgLine.select('g');
+    }
+
     let barExpense = barBuild.drawBar(
-      svg,
+      blobs,
       'neg',
       dataMassagedExpense,
       max_domain_bars
     );
     let barIncome = barBuild.drawBar(
-      svg,
+      blobs,
       'pos',
       dataMassagedIncome,
       max_domain_bars
     );
-    // let barTransfer = barBuild.drawBar(svg, 'transfer', dataMassagedTransfer);
-    let axis = barBuild.drawAxis(svg, max_domain_bars);
+    // let barTransfer = barBuild.drawBar(svgBar, 'transfer', dataMassagedTransfer);
+    let axis = barBuild.drawAxis(svgBar, max_domain_bars);
 
-    let svg2 = barBuild.init();
     let max_domain_line = d3.max(accountData, d =>
       d3.max(d.values, d => d3.max(d.data))
     );
 
-    let line = barBuild.drawLine(svg2, accountData, max_domain_line);
-    let axis2 = barBuild.drawAxis(svg2, max_domain_line);
+    let line = barBuild.drawLine(lineGroup, accountData, max_domain_line);
+    let axis2 = barBuild.drawAxis(svgLine, max_domain_line);
   }
 
   render() {
     return (
       <div>
-        <div className="bar-section" style={{ overflow: 'auto' }} />
+        <div className="draw-section" style={{ overflow: 'auto' }} />
       </div>
     );
   }
@@ -325,11 +344,11 @@ let barBuild = {
   }
 };
 
-barBuild.init = function(height) {
-  // make svg div with specified size and axis
+barBuild.init = function(height, selector) {
   return d3
-    .select(this.selector())
+    .select('.draw-section')
     .append('svg')
+    .attr('class', selector)
     .attr('width', this.width() + this.margin().left + this.margin().right)
     .attr(
       'height',
@@ -382,12 +401,16 @@ barBuild.drawAxis = function(svg, max_domain) {
   return;
 };
 
-barBuild.drawBar = function(svg, append_class, massagedData, max_domain) {
+barBuild.initBar = function(svg) {
   let blobs = svg
     .append('g')
     .attr('class', 'blobs')
     .attr('transform', `translate(${this.shift() / 2},${this.margin().top})`);
 
+  return blobs;
+};
+
+barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
   let tweak = () => {
     if (append_class === 'pos') {
       return 0.9;
@@ -414,26 +437,31 @@ barBuild.drawBar = function(svg, append_class, massagedData, max_domain) {
     .range(colors(append_class));
 
   // Add a group for each entry
-  let groups = blobs
+  let groupSelection = blobs
     .selectAll('g')
-    .filter(append_class)
-    .data(massagedData)
+    .filter(`.${append_class}`)
+    .filter((d, i) => `#${i}-${d.id}`)
+    .data(massagedData);
+
+  groupSelection.exit().remove();
+
+  let groups = groupSelection
     .enter()
     .insert('g')
     .attr('class', append_class)
-    .attr('id', (d, i) => `${i} ${d.category}`)
-    .style('fill', (d, i) => color(i));
+    .attr('id', (d, i) => `${i}-${d.id}`)
+    .style('fill', (d, i) => color(i))
+    .merge(groupSelection);
 
-  // Add a rect for each data value
-  let rects = groups
-    .selectAll(`g.${append_class} rect.${append_class}`)
-    .data((d, i) => d.stack);
+  let rects = groups.selectAll(`rect.${append_class}`).data((d, i) => d.stack);
+
+  // console.log(`${append_class}-rects`, rects);
 
   rects
     .enter()
     .append('rect')
     .transition()
-    .duration(1500)
+    .duration(3000)
     .attr('class', append_class)
     .attr('x', (d, i) => barBuild.xScale()(d.data.date))
     .attr('y', (d, i) => barBuild.yScale(max_domain)(d[1]))
@@ -445,13 +473,17 @@ barBuild.drawBar = function(svg, append_class, massagedData, max_domain) {
     .attr('width', this.shift() * 0.9 * tweak())
     .attr('transform', `translate(${this.shift() / 2},${0})`);
 
-  groups.exit().remove();
   rects.exit().remove();
-
-  return svg;
 };
 
-barBuild.drawLine = function(svg, data, max_domain) {
+barBuild.initLine = function(svg) {
+  return svg
+    .append('g')
+    .attr('class', 'line')
+    .attr('transform', `translate(${this.shift() / 2},${this.margin().top})`);
+};
+
+barBuild.drawLine = function(lineGroup, data, max_domain) {
   let linecolors = d3.scaleOrdinal(d3.schemeCategory10);
 
   const line = d3
@@ -459,17 +491,15 @@ barBuild.drawLine = function(svg, data, max_domain) {
     .x(d => barBuild.xScale()(d.date))
     .y(d => barBuild.yScale(max_domain)(d.data[1]));
 
-  let lines = svg
-    .append('g')
-    .attr('class', 'line')
-    .attr('transform', `translate(${this.shift() / 2},${this.margin().top})`)
-    .selectAll('path')
-    .data(data);
+  let lines = lineGroup.selectAll('path').data(data);
 
   lines
     .transition()
     .duration(1500)
-    .attr('d', d => line(d.values))
+    .attr('d', d => {
+      console.log('transitioned', d);
+      return line(d.values);
+    })
     .attr('stroke', (d, i) => linecolors(i))
     .attr('stroke-width', 2)
     .attr('fill', 'none')

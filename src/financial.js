@@ -70,23 +70,50 @@ class Financial extends React.Component {
       value: 112
     };
     data.push(dFive);
-    this.state = { data: data };
+
+    this.state = {
+      transactions: data,
+      accounts: { name: 'account', starting: 3000 }
+    };
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState((prevState, props) => {
+        let nextState = { ...prevState };
+        let newTransaction = {
+          id: `oasis13`,
+          raccount: `account`,
+          vaccount: `vaccount`,
+          category: `test exp`,
+          type: `expense`,
+          start: `2018-03-22`,
+          rtype: `day`,
+          repeat: 1,
+          cycle: 1,
+          value: 30
+        };
+        nextState.transactions.push(newTransaction);
+        return nextState;
+      });
+    }, 3000);
   }
 
   handleUpload = (event, results) => {
-    let result = JSON.parse(results[0][0].target.result).data;
-    this.setState({ data: result });
+    let result = JSON.parse(results[0][0].target.result);
+    console.log(result);
+    this.setState({ ...result });
   };
 
   handleDownload = () => {
-    let fileData = JSON.stringify({ data: this.state.data });
+    let fileData = JSON.stringify(this.state);
     fileDownload(fileData, 'financials.json');
   };
 
   render() {
     return (
       <div>
-        <BarChart data={this.state.data} />
+        <BarChart data={this.state} />
         <button onClick={this.handleDownload}>Download</button>
         <FileReaderInput
           as="text"
