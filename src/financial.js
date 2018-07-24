@@ -94,17 +94,40 @@ class Financial extends React.Component {
 
   render() {
     return (
-      <div>
-        <BarChart data={this.state} />
-        <button onClick={this.handleDownload}>Download</button>
-        <FileReaderInput
-          as="text"
-          id="my-file-input"
-          onChange={this.handleUpload}
-        >
-          <button>Select a file!</button>
-        </FileReaderInput>
-      </div>
+      <React.Fragment>
+        <section className="section">
+          <BarChart data={this.state} />
+        </section>
+        <nav className="level">
+          <div className="level-left">
+            <div className="level-item has-text-centered">
+              <div>
+                <p className="heading">Get your current</p>
+                <p className="heading">data out:</p>
+                <button
+                  className="button is-success"
+                  onClick={this.handleDownload}
+                >
+                  Download
+                </button>
+              </div>
+            </div>
+            <div className="level-item has-text-centered">
+              <div>
+                <p className="heading">Import data from</p>
+                <p className="heading">your computer:</p>
+                <FileReaderInput
+                  as="text"
+                  id="my-file-input"
+                  onChange={this.handleUpload}
+                >
+                  <button className="button is-link">Select a file!</button>
+                </FileReaderInput>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </React.Fragment>
     );
   }
 }

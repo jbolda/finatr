@@ -5,6 +5,7 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
+    "bulma": "0.7.1",
     "d3": "5.4.0",
     "date-fns": "2.0.0-alpha.11",
     "js-file-download": "0.4.1",
