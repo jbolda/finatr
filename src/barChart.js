@@ -17,8 +17,6 @@ export class BarChart extends Component {
   }
 
   drawCharts(phase, data, svgBar, svgLine) {
-    console.log('drawCharts', data);
-
     let acc = {
       income: [],
       expense: [],
@@ -74,14 +72,14 @@ export class BarChart extends Component {
       max_domain_bars
     );
     // let barTransfer = barBuild.drawBar(svgBar, 'transfer', dataMassagedTransfer);
-    let axis = barBuild.drawAxis(svgBar, max_domain_bars, phase);
+    let axisBar = barBuild.drawAxis(svgBar, max_domain_bars, phase);
 
     let max_domain_line = d3.max(accountData, d =>
       d3.max(d.values, d => d3.max(d.data))
     );
 
     let line = barBuild.drawLine(lineGroup, accountData, max_domain_line);
-    let axis2 = barBuild.drawAxis(svgLine, max_domain_line, phase);
+    let axisLine = barBuild.drawAxis(svgLine, max_domain_line, phase);
   }
 
   render() {
@@ -96,15 +94,6 @@ export class BarChart extends Component {
 export default BarChart;
 
 let barBuild = {
-  rdata: function() {
-    return [0];
-  },
-  fill: function() {
-    return null;
-  },
-  selector: function() {
-    return '.bar-section';
-  },
   div_width: function() {
     return 600;
   },
@@ -131,17 +120,6 @@ let barBuild = {
       this.div_width() * 0.5 - this.margin().top - this.margin().bottom,
       350
     ]);
-  },
-  colors: function(set) {
-    if (set === 'pos') {
-      return ['#a1d99b', '#41ab5d'];
-    } else if (set === 'neg') {
-      return ['#fb6a4a', '#cb181d'];
-    } else if (set === 'trans') {
-      return ['#FAA43A'];
-    } else {
-      return ['#000000'];
-    }
   },
   shift: function() {
     return (1.1 * this.width()) / this.daysinfuture();
@@ -170,32 +148,6 @@ let barBuild = {
   },
   max_x: function() {
     return parseDate(this.graphrange()[1]);
-  },
-  maxfinder: function(data) {
-    data = this.stack(data);
-
-    let rmax = 0;
-    for (let i = 0; data.length > i; i++) {
-      rmax = Math.max(
-        rmax,
-        d3.max(data[i].graph(), function(d) {
-          return d.y + d.y0;
-        })
-      );
-    }
-    return rmax;
-  },
-  maxbalance: function(data) {
-    let bmax = 0;
-    for (let i = 0; data.length > i; i++) {
-      bmax = Math.max(
-        bmax,
-        d3.max(data[i].graph(), function(d) {
-          return d.y;
-        })
-      );
-    }
-    return bmax;
   },
   xScale: function() {
     return d3

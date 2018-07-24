@@ -73,30 +73,8 @@ class Financial extends React.Component {
 
     this.state = {
       transactions: data,
-      accounts: { name: 'account', starting: 3000 }
+      accounts: [{ name: 'account', starting: 3000 }]
     };
-  }
-
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState((prevState, props) => {
-        let nextState = { ...prevState };
-        let newTransaction = {
-          id: `oasis13`,
-          raccount: `account`,
-          vaccount: `vaccount`,
-          category: `test exp`,
-          type: `expense`,
-          start: `2018-03-22`,
-          rtype: `day`,
-          repeat: 1,
-          cycle: 1,
-          value: 30
-        };
-        nextState.transactions.push(newTransaction);
-        return nextState;
-      });
-    }, 3000);
   }
 
   handleUpload = (event, results) => {
@@ -106,7 +84,11 @@ class Financial extends React.Component {
   };
 
   handleDownload = () => {
-    let fileData = JSON.stringify(this.state);
+    let outputData = {
+      transactions: [...this.state.transactions],
+      accounts: [...this.state.accounts]
+    };
+    let fileData = JSON.stringify(outputData);
     fileDownload(fileData, 'financials.json');
   };
 
