@@ -39,7 +39,6 @@ class Financial extends React.Component {
       type: `income`,
       start: `2018-03-22`,
       rtype: `day of week`,
-      repeat: 3,
       cycle: 2,
       value: 35
     };
@@ -52,11 +51,21 @@ class Financial extends React.Component {
       type: `income`,
       start: `2018-03-22`,
       rtype: `day of month`,
-      repeat: 1,
       cycle: 1,
       value: 90
     };
     data.push(dFour);
+    let dThreePointFive = {
+      id: `oasis92`,
+      raccount: `account`,
+      vaccount: `vaccount`,
+      category: `test complex`,
+      type: `income`,
+      start: `2018-09-22`,
+      rtype: `none`,
+      value: 190
+    };
+    data.push(dThreePointFive);
     let dFive = {
       id: `oasis8`,
       raccount: `account`,

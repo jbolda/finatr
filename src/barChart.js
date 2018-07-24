@@ -178,7 +178,7 @@ let barBuild = {
         let key = `${d.id}`;
         obj[key] = { ...d };
 
-        if (convertdate(i) === d.start && this.rtype() === 'none') {
+        if (convertdate(i) === d.start && d.rtype === 'none') {
           obj[key].y = d.value;
         } else if (convertdate(i) > d.end && d.end !== 'none') {
           obj[key].y = 0;
@@ -191,13 +191,13 @@ let barBuild = {
         } else if (
           d.rtype === 'day of week' &&
           convertdate(i) >= d.start &&
-          getDay(i) === d.repeat
+          getDay(i) === d.cycle
         ) {
           obj[key].y = d.value;
         } else if (
           d.rtype === 'day of month' &&
           convertdate(i) >= d.start &&
-          getDate(i) === d.repeat
+          getDate(i) === d.cycle
         ) {
           obj[key].y = d.value;
         } else {
