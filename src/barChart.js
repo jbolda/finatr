@@ -74,14 +74,14 @@ export class BarChart extends Component {
       max_domain_bars
     );
     // let barTransfer = barBuild.drawBar(svgBar, 'transfer', dataMassagedTransfer);
-    let axis = barBuild.drawAxis(svgBar, max_domain_bars);
+    let axis = barBuild.drawAxis(svgBar, max_domain_bars, phase);
 
     let max_domain_line = d3.max(accountData, d =>
       d3.max(d.values, d => d3.max(d.data))
     );
 
     let line = barBuild.drawLine(lineGroup, accountData, max_domain_line);
-    let axis2 = barBuild.drawAxis(svgLine, max_domain_line);
+    let axis2 = barBuild.drawAxis(svgLine, max_domain_line, phase);
   }
 
   render() {
@@ -358,7 +358,7 @@ barBuild.init = function(height, selector) {
     .attr('transform', `translate(${this.margin().left},${this.margin().top})`);
 };
 
-barBuild.drawAxis = function(svg, max_domain) {
+barBuild.drawAxis = function(svg, max_domain, phase) {
   // create axis
   let xAxis = d3
     .axisBottom(this.xScale())
@@ -367,37 +367,44 @@ barBuild.drawAxis = function(svg, max_domain) {
 
   let yAxis = d3.axisLeft(this.yScale(max_domain)).ticks(10);
 
-  let drawnX = svg
-    .append('g')
-    .attr('class', 'xaxis')
-    .attr('transform', `translate(${this.shift() / 2},${this.height()})`)
-    .call(xAxis);
+  if (phase === 'initial') {
+    let drawnX = svg
+      .append('g')
+      .attr('class', 'xaxis')
+      .attr('transform', `translate(${this.shift() / 2},${this.height()})`)
+      .call(xAxis);
 
-  drawnX
-    .selectAll('text')
-    .style('text-anchor', 'end')
-    .attr('dx', '-.8em')
-    .attr('dy', '-.55em')
-    .attr('transform', 'rotate(-90)');
+    drawnX
+      .selectAll('text')
+      .style('text-anchor', 'end')
+      .attr('dx', '-.8em')
+      .attr('dy', '-.55em')
+      .attr('transform', 'rotate(-90)');
 
-  drawnX
-    .select('path')
-    .attr('transform', `translate(-${this.shift() / 2},${0})`);
+    drawnX
+      .select('path')
+      .attr('transform', `translate(-${this.shift() / 2},${0})`);
 
-  let drawnY = svg
-    .append('g')
-    .attr('class', 'yaxis')
-    .attr('transform', `translate(${0},${this.margin().top})`)
-    .call(yAxis);
+    let drawnY = svg
+      .append('g')
+      .attr('class', 'yaxis')
+      .attr('transform', `translate(${0},${this.margin().top})`)
+      .call(yAxis);
 
-  drawnY
-    .append('text')
-    .attr('transform', `rotate(-90)`)
-    .attr('y', 6)
-    .attr('dy', '.71em')
-    .style('text-anchor', 'end')
-    .text('Value ($)');
-
+    drawnY
+      .append('text')
+      .attr('transform', `rotate(-90)`)
+      .attr('y', 6)
+      .attr('dy', '.71em')
+      .style('text-anchor', 'end')
+      .text('Value ($)');
+  } else {
+    svg
+      .select('.yaxis')
+      .transition()
+      .duration(3000)
+      .call(yAxis);
+  }
   return;
 };
 
