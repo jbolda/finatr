@@ -75,7 +75,7 @@ export class BarChart extends Component {
     let axisBar = barBuild.drawAxis(svgBar, max_domain_bars, phase);
 
     let max_domain_line = d3.max(accountData, d =>
-      d3.max(d.values, d => d3.max(d.data))
+      d3.max(d.values, d => d.value)
     );
 
     let line = barBuild.drawLine(lineGroup, accountData, max_domain_line);
@@ -122,7 +122,7 @@ let barBuild = {
     ]);
   },
   shift: function() {
-    return (1.1 * this.width()) / this.daysinfuture();
+    return this.width() / this.daysinfuture();
   },
   today: function() {
     return new Date();
@@ -280,7 +280,9 @@ let barBuild = {
         let prevVal =
           finalZippedLine.values.length === 0
             ? 0
-            : extractValue(finalZippedLine.values[iterator - 1].data[1]);
+            : extractValue(
+                finalZippedLine.values[finalZippedLine.values.length - 1].value
+              );
         let firstStep = prevVal - extractValue(accountStack.expense[iterator]);
         let secondStep =
           firstStep +
@@ -288,7 +290,11 @@ let barBuild = {
           extractValue(accountStack.transfer[iterator]);
         finalZippedLine.values.push({
           date: dataMassaged[0].stack[iterator].data.date,
-          data: [firstStep, secondStep]
+          value: firstStep
+        });
+        finalZippedLine.values.push({
+          date: dataMassaged[0].stack[iterator].data.date,
+          value: secondStep
         });
       }
       return finalZippedLine;
@@ -372,9 +378,9 @@ barBuild.initBar = function(svg) {
 barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
   let tweak = () => {
     if (append_class === 'pos') {
-      return 0.9;
+      return 0.4;
     } else {
-      return 0.7;
+      return 0.4;
     }
   };
 
@@ -429,8 +435,13 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
         barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
       );
     })
-    .attr('width', this.shift() * 0.9 * tweak())
-    .attr('transform', `translate(${this.shift() / 2},${0})`);
+    .attr('width', this.shift() * tweak())
+    .attr(
+      'transform',
+      `translate(${
+        append_class === 'pos' ? this.shift() : (1.2 * this.shift()) / 2
+      },${0})`
+    );
 
   rects.exit().remove();
 };
@@ -448,17 +459,14 @@ barBuild.drawLine = function(lineGroup, data, max_domain) {
   const line = d3
     .line()
     .x(d => barBuild.xScale()(d.date))
-    .y(d => barBuild.yScale(max_domain)(d.data[1]));
+    .y(d => barBuild.yScale(max_domain)(d.value));
 
   let lines = lineGroup.selectAll('path').data(data);
 
   lines
     .transition()
-    .duration(1500)
-    .attr('d', d => {
-      console.log('transitioned', d);
-      return line(d.values);
-    })
+    .duration(3000)
+    .attr('d', d => line(d.values))
     .attr('stroke', (d, i) => linecolors(i))
     .attr('stroke-width', 2)
     .attr('fill', 'none')
