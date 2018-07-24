@@ -42,7 +42,7 @@ export class BarChart extends Component {
     let dataMassagedExpense = barBuild.graph(acc.expense);
     // let dataMassagedTransfer = barBuild.graph(acc.transfer);
     let dataMassaged = barBuild.graph(data.transactions);
-    let accountData = barBuild.accountGraph(data.transactions, dataMassaged);
+    let accountData = barBuild.accountGraph(data, dataMassaged);
     let max_domain_bars = d3.max([
       dataMassagedIncome[0].maxHeight,
       dataMassagedExpense[0].maxHeight
@@ -223,7 +223,7 @@ let barBuild = {
     }));
   },
   accountGraph: function(data, dataMassaged) {
-    let accounts = data
+    let accounts = data.transactions
       .map(d => d.raccount)
       .filter((d, i, a) => a.indexOf(d) === i);
 
@@ -279,7 +279,9 @@ let barBuild = {
       for (let iterator = 0; iterator < arrayLength; iterator++) {
         let prevVal =
           finalZippedLine.values.length === 0
-            ? 0
+            ? extractValue(
+                data.accounts.find(acc => acc.name === account).starting
+              )
             : extractValue(
                 finalZippedLine.values[finalZippedLine.values.length - 1].value
               );
