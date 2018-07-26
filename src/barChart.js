@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import getDay from 'date-fns/fp/getDay';
 import getDate from 'date-fns/fp/getDate';
@@ -92,6 +93,29 @@ export class BarChart extends Component {
 }
 
 export default BarChart;
+
+BarChart.propTypes = {
+  data: PropTypes.shape({
+    transactions: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        raccount: PropTypes.string.isRequired,
+        category: PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired,
+        start: PropTypes.string.isRequired,
+        rtype: PropTypes.string.isRequired,
+        cycle: PropTypes.number,
+        value: PropTypes.number.isRequired
+      })
+    ).isRequired,
+    accounts: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string,
+        starting: PropTypes.number
+      })
+    )
+  })
+};
 
 let barBuild = {
   div_width: function() {
