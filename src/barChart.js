@@ -18,35 +18,10 @@ export class BarChart extends Component {
   }
 
   drawCharts(phase, data, svgBar, svgLine) {
-    let acc = {
-      income: [],
-      expense: [],
-      transfer: []
-    };
-    data.transactions.forEach(d => {
-      switch (d.type) {
-        case 'income':
-          acc.income.push(d);
-          break;
-        case 'expense':
-          acc.expense.push(d);
-          break;
-        case 'transfer':
-          acc.transer.push(d);
-          break;
-        default:
-          break;
-      }
-    });
-
-    let dataMassagedIncome = barBuild.graph(acc.income);
-    let dataMassagedExpense = barBuild.graph(acc.expense);
-    // let dataMassagedTransfer = barBuild.graph(acc.transfer);
-    let dataMassaged = data.BarChart;
     let accountData = data.AccountChart;
     let max_domain_bars = d3.max([
-      dataMassagedIncome[0].maxHeight,
-      dataMassagedExpense[0].maxHeight
+      data.BarChartIncome[0].maxHeight,
+      data.BarChartExpense[0].maxHeight
       // dataMassagedTransfer[0].maxHeight
     ]);
 
@@ -63,13 +38,13 @@ export class BarChart extends Component {
     let barExpense = barBuild.drawBar(
       blobs,
       'neg',
-      dataMassagedExpense,
+      data.BarChartExpense,
       max_domain_bars
     );
     let barIncome = barBuild.drawBar(
       blobs,
       'pos',
-      dataMassagedIncome,
+      data.BarChartIncome,
       max_domain_bars
     );
     // let barTransfer = barBuild.drawBar(svgBar, 'transfer', dataMassagedTransfer);
@@ -108,12 +83,62 @@ BarChart.propTypes = {
         value: PropTypes.number.isRequired
       })
     ).isRequired,
+    BarChartIncome: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        raccount: PropTypes.string.isRequired,
+        category: PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired,
+        start: PropTypes.string.isRequired,
+        rtype: PropTypes.string.isRequired,
+        cycle: PropTypes.number,
+        value: PropTypes.number.isRequired,
+        stack: PropTypes.array.isRequired
+      })
+    ).isRequired,
+    BarChartExpense: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        raccount: PropTypes.string.isRequired,
+        category: PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired,
+        start: PropTypes.string.isRequired,
+        rtype: PropTypes.string.isRequired,
+        cycle: PropTypes.number,
+        value: PropTypes.number.isRequired,
+        stack: PropTypes.array.isRequired
+      })
+    ).isRequired,
+    BarChartTransfer: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        raccount: PropTypes.string.isRequired,
+        category: PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired,
+        start: PropTypes.string.isRequired,
+        rtype: PropTypes.string.isRequired,
+        cycle: PropTypes.number,
+        value: PropTypes.number.isRequired,
+        stack: PropTypes.array.isRequired
+      })
+    ).isRequired,
     accounts: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string,
         starting: PropTypes.number
       })
-    )
+    ),
+    AccountChart: PropTypes.arrayOf(
+      PropTypes.shape({
+        account: PropTypes.string.isRequired,
+        values: PropTypes.arrayOf(
+          PropTypes.shape({
+            date: PropTypes.instanceOf(Date).isRequired,
+            value: PropTypes.number.isRequired
+          })
+        )
+      })
+    ).isRequired
   })
 };
 
@@ -184,147 +209,6 @@ let barBuild = {
       .scaleLinear()
       .domain([0, max_domain])
       .range([this.height() - this.margin().top, 0]);
-  },
-  graph: function(data) {
-    let arrData = [];
-    let keys = [];
-
-    data.forEach(d => {
-      let key = `${d.id}`;
-      keys.push(key);
-    });
-
-    for (let i = this.min_x(); i <= this.max_x(); i.setDate(i.getDate() + 1)) {
-      //create object for stack layout
-      let obj = {};
-      obj.date = new Date(i);
-      data.forEach(d => {
-        let key = `${d.id}`;
-        obj[key] = { ...d };
-
-        if (convertdate(i) === d.start && d.rtype === 'none') {
-          obj[key].y = d.value;
-        } else if (convertdate(i) > d.end && d.end !== 'none') {
-          obj[key].y = 0;
-        } else if (
-          d.rtype === 'day' &&
-          d.cycle != null &&
-          ((i - parseDate(d.start)) / (24 * 60 * 60 * 1000)) % d.cycle < 1
-        ) {
-          obj[key].y = d.value;
-        } else if (
-          d.rtype === 'day of week' &&
-          convertdate(i) >= d.start &&
-          getDay(i) === d.cycle
-        ) {
-          obj[key].y = d.value;
-        } else if (
-          d.rtype === 'day of month' &&
-          convertdate(i) >= d.start &&
-          getDate(i) === d.cycle
-        ) {
-          obj[key].y = d.value;
-        } else {
-          obj[key].y = 0;
-        }
-      });
-      arrData.push(obj);
-    }
-
-    let stack = d3
-      .stack()
-      .value((d, key) => d[key].y)
-      .keys(keys);
-
-    let stacked = stack(arrData);
-
-    let maxHeight = d3.max(stacked.reduce((a, b) => a.concat(b)), d => d[1]);
-
-    return data.map((entry, index) => ({
-      ...entry,
-      stack: stacked[index],
-      maxHeight: maxHeight
-    }));
-  },
-  accountGraph: function(data, dataMassaged) {
-    let accounts = data.transactions
-      .map(d => d.raccount)
-      .filter((d, i, a) => a.indexOf(d) === i);
-
-    return accounts.map(account => {
-      let acc = {
-        income: [],
-        expense: [],
-        transfer: []
-      };
-      dataMassaged.forEach(d => {
-        if (d.raccount === account) {
-          switch (d.type) {
-            case 'income':
-              acc.income.push(d.stack);
-              break;
-            case 'expense':
-              acc.expense.push(d.stack);
-              break;
-            case 'transfer':
-              acc.transer.push(d.stack);
-              break;
-            default:
-              break;
-          }
-        }
-      });
-
-      let accountStack = {};
-      const zipTogethor = array =>
-        array.reduce((accumlator, d) => {
-          let flatten = d.map(e => e[1] - e[0]);
-          return accumlator.length === 0
-            ? flatten
-            : accumlator.map((d, i, thisArray) => d + flatten[i]);
-        }, []);
-      const extractValue = value => {
-        if (value === undefined) {
-          return 0;
-        } else {
-          return value;
-        }
-      };
-
-      accountStack.income = zipTogethor(acc.income);
-      accountStack.expense = zipTogethor(acc.expense);
-      accountStack.transfer = zipTogethor(acc.transfer);
-      let arrayLength = Math.max(
-        accountStack.income.length,
-        accountStack.expense.length,
-        accountStack.transfer.length
-      );
-      let finalZippedLine = { account: account, values: [] };
-      for (let iterator = 0; iterator < arrayLength; iterator++) {
-        let prevVal =
-          finalZippedLine.values.length === 0
-            ? extractValue(
-                data.accounts.find(acc => acc.name === account).starting
-              )
-            : extractValue(
-                finalZippedLine.values[finalZippedLine.values.length - 1].value
-              );
-        let firstStep = prevVal - extractValue(accountStack.expense[iterator]);
-        let secondStep =
-          firstStep +
-          extractValue(accountStack.income[iterator]) +
-          extractValue(accountStack.transfer[iterator]);
-        finalZippedLine.values.push({
-          date: dataMassaged[0].stack[iterator].data.date,
-          value: firstStep
-        });
-        finalZippedLine.values.push({
-          date: dataMassaged[0].stack[iterator].data.date,
-          value: secondStep
-        });
-      }
-      return finalZippedLine;
-    });
   }
 };
 

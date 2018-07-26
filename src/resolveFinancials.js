@@ -2,7 +2,48 @@ import * as d3 from 'd3';
 import getDay from 'date-fns/fp/getDay';
 import getDate from 'date-fns/fp/getDate';
 
+const resolveData = data => {
+  let splitTransactions = {
+    income: [],
+    expense: [],
+    transfer: []
+  };
+  data.transactions.forEach(d => {
+    switch (d.type) {
+      case 'income':
+        splitTransactions.income.push(d);
+        break;
+      case 'expense':
+        splitTransactions.expense.push(d);
+        break;
+      case 'transfer':
+        splitTransactions.transer.push(d);
+        break;
+      default:
+        break;
+    }
+  });
+
+  let BarChart = resolveBarChart(data.transactions);
+  let BarChartIncome = resolveBarChart(splitTransactions.income);
+  let BarChartExpense = resolveBarChart(splitTransactions.expense);
+  let BarChartTransfer = resolveBarChart(splitTransactions.transer);
+  let AccountChart = resolveAccountChart(data, BarChart);
+
+  return {
+    ...data,
+    BarChartIncome: BarChartIncome,
+    BarChartExpense: BarChartExpense,
+    BarChartTransfer: BarChartTransfer,
+    AccountChart: AccountChart
+  };
+};
+
 const resolveBarChart = (data, width) => {
+  // return early with an empty array
+  // for empty data
+  if (!data || data.length === 0) return [];
+
   let arrData = [];
   let keys = [];
 
@@ -151,6 +192,7 @@ const resolveAccountChart = (data, dataMassaged) => {
 };
 
 export { resolveBarChart, resolveAccountChart };
+export default resolveData;
 
 const daysinfuture = divWidth => {
   if (divWidth > 1000) {

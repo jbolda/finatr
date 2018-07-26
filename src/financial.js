@@ -1,6 +1,6 @@
 import React from 'react';
 import BarChart from './barChart';
-import { resolveBarChart, resolveAccountChart } from './resolveFinancials';
+import resolveData from './resolveFinancials';
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';
 
@@ -86,26 +86,13 @@ class Financial extends React.Component {
       accounts: [{ name: 'account', starting: 3000 }]
     };
 
-    let BarChart = resolveBarChart(dataArray.transactions);
-    let AccountChart = resolveAccountChart(dataArray, BarChart);
-
-    this.state = {
-      ...dataArray,
-      BarChart: BarChart,
-      AccountChart: AccountChart
-    };
+    this.state = resolveData(dataArray);
   }
 
   handleUpload = (event, results) => {
     let result = JSON.parse(results[0][0].target.result);
     console.log(result);
-    let BarChart = resolveBarChart(result.transactions);
-    let AccountChart = resolveAccountChart(result, BarChart);
-    this.setState({
-      ...result,
-      BarChart: BarChart,
-      AccountChart: AccountChart
-    });
+    this.setState(resolveData(result));
   };
 
   handleDownload = () => {
