@@ -42,8 +42,8 @@ export class BarChart extends Component {
     let dataMassagedIncome = barBuild.graph(acc.income);
     let dataMassagedExpense = barBuild.graph(acc.expense);
     // let dataMassagedTransfer = barBuild.graph(acc.transfer);
-    let dataMassaged = barBuild.graph(data.transactions);
-    let accountData = barBuild.accountGraph(data, dataMassaged);
+    let dataMassaged = data.BarChart;
+    let accountData = data.AccountChart;
     let max_domain_bars = d3.max([
       dataMassagedIncome[0].maxHeight,
       dataMassagedExpense[0].maxHeight
