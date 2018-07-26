@@ -18,6 +18,7 @@ export class BarChart extends Component {
   }
 
   drawCharts(phase, data, svgBar, svgLine) {
+    console.log(data);
     let accountData = data.AccountChart;
     let max_domain_bars = d3.max([
       data.BarChartIncome[0].maxHeight,
@@ -93,7 +94,12 @@ BarChart.propTypes = {
         rtype: PropTypes.string.isRequired,
         cycle: PropTypes.number,
         value: PropTypes.number.isRequired,
-        stack: PropTypes.array.isRequired
+        stack: PropTypes.arrayOf(
+          PropTypes.arrayOf(
+            (0: PropTypes.number.isRequired),
+            (1: PropTypes.number.isRequired)
+          )
+        ).isRequired
       })
     ).isRequired,
     BarChartExpense: PropTypes.arrayOf(
@@ -106,7 +112,12 @@ BarChart.propTypes = {
         rtype: PropTypes.string.isRequired,
         cycle: PropTypes.number,
         value: PropTypes.number.isRequired,
-        stack: PropTypes.array.isRequired
+        stack: PropTypes.arrayOf(
+          PropTypes.arrayOf(
+            (0: PropTypes.number.isRequired),
+            (1: PropTypes.number.isRequired)
+          )
+        ).isRequired
       })
     ).isRequired,
     BarChartTransfer: PropTypes.arrayOf(
@@ -119,7 +130,12 @@ BarChart.propTypes = {
         rtype: PropTypes.string.isRequired,
         cycle: PropTypes.number,
         value: PropTypes.number.isRequired,
-        stack: PropTypes.array.isRequired
+        stack: PropTypes.arrayOf(
+          PropTypes.arrayOf(
+            (0: PropTypes.number.isRequired),
+            (1: PropTypes.number.isRequired)
+          )
+        ).isRequired
       })
     ).isRequired,
     accounts: PropTypes.arrayOf(
