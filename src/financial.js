@@ -1,6 +1,7 @@
 import React from 'react';
 import BarChart from './barChart';
 import resolveData from './resolveFinancials';
+import TransactionInput from './transactionInput';
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';
 
@@ -104,6 +105,13 @@ class Financial extends React.Component {
     fileDownload(fileData, 'financials.json');
   };
 
+  addTransaction = result => {
+    console.log(result);
+    let newState = { ...this.state };
+    newState.transactions.push(result);
+    this.setState(resolveData(newState));
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -139,6 +147,9 @@ class Financial extends React.Component {
             </div>
           </div>
         </nav>
+        <section className="section">
+          <TransactionInput addTransaction={this.addTransaction} />
+        </section>
       </React.Fragment>
     );
   }
