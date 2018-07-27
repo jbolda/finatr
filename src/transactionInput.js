@@ -5,6 +5,7 @@ class TransactionInput extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <h1 className="title has-text-centered">Add a Transaction</h1>
         <Formik
           initialValues={{
             id: `oasidjas1`,
@@ -19,6 +20,8 @@ class TransactionInput extends React.Component {
           }}
           onSubmit={(values, actions) => {
             this.props.addTransaction(values);
+            actions.setSubmitting(false);
+            actions.resetForm();
           }}
           render={({
             values,
@@ -201,7 +204,7 @@ class TransactionInput extends React.Component {
                       type="submit"
                       disabled={isSubmitting}
                     >
-                      Add
+                      Add Transaction
                     </button>
                   </div>
                 </div>

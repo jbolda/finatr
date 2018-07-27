@@ -346,7 +346,16 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
 
   let rects = groups.selectAll(`rect.${append_class}`).data((d, i) => d.stack);
 
-  // console.log(`${append_class}-rects`, rects);
+  rects
+    .transition()
+    .duration(3000)
+    .attr('x', (d, i) => barBuild.xScale()(d.data.date))
+    .attr('y', (d, i) => barBuild.yScale(max_domain)(d[1]))
+    .attr('height', (d, i) => {
+      return (
+        barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
+      );
+    });
 
   rects
     .enter()
