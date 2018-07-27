@@ -3,6 +3,8 @@ import getDay from 'date-fns/fp/getDay';
 import getDate from 'date-fns/fp/getDate';
 
 const resolveData = data => {
+  data.transactions.sort(sortTransactionOrder);
+
   let splitTransactions = {
     income: [],
     expense: [],
@@ -37,6 +39,19 @@ const resolveData = data => {
     BarChartTransfer: BarChartTransfer,
     AccountChart: AccountChart
   };
+};
+
+const sortTransactionOrder = (a, b) => {
+  const typeA = a.type.toUpperCase();
+  const typeB = b.type.toUpperCase();
+
+  let comparison = 0;
+  if (typeA > typeB) {
+    comparison = 1;
+  } else if (typeA < typeB) {
+    comparison = -1;
+  }
+  return comparison;
 };
 
 const resolveBarChart = (data, width) => {

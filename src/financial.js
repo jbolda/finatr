@@ -148,6 +148,9 @@ class Financial extends React.Component {
           </div>
         </nav>
         <section className="section">
+          {transactionTable(this.state.transactions)}
+        </section>
+        <section className="section">
           <TransactionInput addTransaction={this.addTransaction} />
         </section>
       </React.Fragment>
@@ -156,3 +159,50 @@ class Financial extends React.Component {
 }
 
 export default Financial;
+
+const transactionTable = data => (
+  <table className="table is-striped is-hoverable">
+    <thead>
+      <tr>
+        <th>
+          <abbr title="id">id</abbr>
+        </th>
+        <th>
+          <abbr title="real account">raccount</abbr>
+        </th>
+        <th>
+          <abbr title="category">category</abbr>
+        </th>
+        <th>
+          <abbr title="type">type</abbr>
+        </th>
+        <th>
+          <abbr title="start">start</abbr>
+        </th>
+        <th>
+          <abbr title="repeat type">rtype</abbr>
+        </th>
+        <th>
+          <abbr title="cycle">cycle</abbr>
+        </th>
+        <th>
+          <abbr title="value">value</abbr>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {data.map(transaction => (
+        <tr>
+          <th>{transaction.id}</th>
+          <td>{transaction.raccount}</td>
+          <td>{transaction.category}</td>
+          <td>{transaction.type}</td>
+          <td>{transaction.start}</td>
+          <td>{transaction.rtype}</td>
+          <td>{transaction.cycle}</td>
+          <td>{transaction.value}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+);
