@@ -108,14 +108,12 @@ class Financial extends React.Component {
   };
 
   addTransaction = result => {
-    console.log(result);
     let newState = { ...this.state };
     newState.transactions.push(result);
     this.setState(resolveData(newState));
   };
 
   deleteTransaction = id => {
-    console.log(this, id);
     let newState = { ...this.state };
     newState.transactions.splice(
       this.state.transactions.findIndex(element => element.id === id),
