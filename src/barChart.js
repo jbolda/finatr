@@ -20,10 +20,23 @@ export class BarChart extends Component {
   drawCharts(phase, data, svgBar, svgLine) {
     console.log(data);
     let accountData = data.AccountChart;
+    const extractValue = value => {
+      if (value === undefined) {
+        return 0;
+      } else {
+        return value;
+      }
+    };
     let max_domain_bars = d3.max([
-      data.BarChartIncome[0].maxHeight,
-      data.BarChartExpense[0].maxHeight
-      // dataMassagedTransfer[0].maxHeight
+      extractValue(
+        data.BarChartIncome[0] ? data.BarChartIncome[0].maxHeight : 0
+      ),
+      extractValue(
+        data.BarChartExpense[0] ? data.BarChartExpense[0].maxHeight : 0
+      ),
+      extractValue(
+        data.BarChartTransfer[0] ? data.BarChartTransfer[0].maxHeight : 0
+      )
     ]);
 
     let blobs;

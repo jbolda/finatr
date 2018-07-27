@@ -88,6 +88,8 @@ class Financial extends React.Component {
     };
 
     this.state = resolveData(dataArray);
+
+    // this.deleteTransaction = this.deleteTransaction.bind(this);
   }
 
   handleUpload = (event, results) => {
@@ -109,6 +111,16 @@ class Financial extends React.Component {
     console.log(result);
     let newState = { ...this.state };
     newState.transactions.push(result);
+    this.setState(resolveData(newState));
+  };
+
+  deleteTransaction = id => {
+    console.log(this, id);
+    let newState = { ...this.state };
+    newState.transactions.splice(
+      this.state.transactions.findIndex(element => element.id === id),
+      1
+    );
     this.setState(resolveData(newState));
   };
 
@@ -148,7 +160,9 @@ class Financial extends React.Component {
           </div>
         </nav>
         <section className="section">
-          {transactionTable(this.state.transactions)}
+          {transactionTable(this.state.transactions, {
+            deleteTransaction: this.deleteTransaction
+          })}
         </section>
         <section className="section">
           <TransactionInput addTransaction={this.addTransaction} />
@@ -160,34 +174,27 @@ class Financial extends React.Component {
 
 export default Financial;
 
-const transactionTable = data => (
+const transactionTable = (data, actions) => (
   <table className="table is-striped is-hoverable">
     <thead>
       <tr>
         <th>
-          <abbr title="id">id</abbr>
+          <abbr title="unique id">id</abbr>
         </th>
         <th>
           <abbr title="real account">raccount</abbr>
         </th>
+        <th>category</th>
+        <th>type</th>
         <th>
-          <abbr title="category">category</abbr>
-        </th>
-        <th>
-          <abbr title="type">type</abbr>
-        </th>
-        <th>
-          <abbr title="start">start</abbr>
+          <abbr title="start date">start</abbr>
         </th>
         <th>
           <abbr title="repeat type">rtype</abbr>
         </th>
-        <th>
-          <abbr title="cycle">cycle</abbr>
-        </th>
-        <th>
-          <abbr title="value">value</abbr>
-        </th>
+        <th>cycle</th>
+        <th>value</th>
+        <th>Delete</th>
       </tr>
     </thead>
     <tbody>
@@ -201,6 +208,9 @@ const transactionTable = data => (
           <td>{transaction.rtype}</td>
           <td>{transaction.cycle}</td>
           <td>{transaction.value}</td>
+          <td onClick={actions.deleteTransaction.bind(this, transaction.id)}>
+            X
+          </td>
         </tr>
       ))}
     </tbody>
