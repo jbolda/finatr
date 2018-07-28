@@ -122,6 +122,21 @@ class Financial extends React.Component {
     this.setState(resolveData(newState));
   };
 
+  addAccount = result => {
+    // let newState = { ...this.state };
+    // newState.transactions.push(result);
+    // this.setState(resolveData(newState));
+  };
+
+  deleteAccount = name => {
+    let newState = { ...this.state };
+    newState.accounts.splice(
+      this.state.accounts.findIndex(element => element.name === name),
+      1
+    );
+    this.setState(resolveData(newState));
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -158,12 +173,24 @@ class Financial extends React.Component {
           </div>
         </nav>
         <section className="section">
-          {transactionTable(this.state.transactions, {
-            deleteTransaction: this.deleteTransaction
-          })}
-        </section>
-        <section className="section">
-          <TransactionInput addTransaction={this.addTransaction} />
+          <div className="columns">
+            <div className="column is-half">
+              <div className="container is-fluid">
+                {transactionTable(this.state.transactions, {
+                  deleteTransaction: this.deleteTransaction
+                })}
+                <TransactionInput addTransaction={this.addTransaction} />
+              </div>
+            </div>
+            <div className="column">
+              <div className="container is-fluid">
+                {accountTable(this.state.accounts, {
+                  deleteAccount: this.deleteAccount
+                })}
+                <TransactionInput addTransaction={this.addTransaction} />
+              </div>
+            </div>
+          </div>
         </section>
       </React.Fragment>
     );
@@ -209,6 +236,29 @@ const transactionTable = (data, actions) => (
           <td onClick={actions.deleteTransaction.bind(this, transaction.id)}>
             X
           </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+);
+
+const accountTable = (data, actions) => (
+  <table className="table is-striped is-hoverable">
+    <thead>
+      <tr>
+        <th>name</th>
+        <th>
+          <abbr title="starting balance">starting</abbr>
+        </th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {data.map(account => (
+        <tr>
+          <th>{account.name}</th>
+          <td>{account.starting}</td>
+          <td onClick={actions.deleteAccount.bind(this, account.name)}>X</td>
         </tr>
       ))}
     </tbody>
