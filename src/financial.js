@@ -2,6 +2,7 @@ import React from 'react';
 import BarChart from './barChart';
 import resolveData from './resolveFinancials';
 import TransactionInput from './transactionInput';
+import AccountInput from './accountInput';
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';
 
@@ -123,9 +124,9 @@ class Financial extends React.Component {
   };
 
   addAccount = result => {
-    // let newState = { ...this.state };
-    // newState.transactions.push(result);
-    // this.setState(resolveData(newState));
+    let newState = { ...this.state };
+    newState.accounts.push(result);
+    this.setState(resolveData(newState));
   };
 
   deleteAccount = name => {
@@ -187,7 +188,7 @@ class Financial extends React.Component {
                 {accountTable(this.state.accounts, {
                   deleteAccount: this.deleteAccount
                 })}
-                <TransactionInput addTransaction={this.addTransaction} />
+                <AccountInput addAccount={this.addAccount} />
               </div>
             </div>
           </div>
