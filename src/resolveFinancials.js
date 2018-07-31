@@ -29,7 +29,7 @@ const resolveData = data => {
   let BarChart = resolveBarChart(data.transactions);
   let BarChartIncome = resolveBarChart(splitTransactions.income);
   let BarChartExpense = resolveBarChart(splitTransactions.expense);
-  let BarChartTransfer = resolveBarChart(splitTransactions.transer);
+  let BarChartTransfer = resolveBarChart(splitTransactions.transfer);
   let AccountChart = resolveAccountChart(data, BarChart);
 
   return {

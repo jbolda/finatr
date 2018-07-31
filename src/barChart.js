@@ -321,8 +321,8 @@ barBuild.initBar = function(svg) {
 
 barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
   let tweak = () => {
-    if (append_class === 'pos') {
-      return 0.4;
+    if (append_class === 'transfer') {
+      return 0.2;
     } else {
       return 0.4;
     }
@@ -333,8 +333,8 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
       return ['#a1d99b', '#41ab5d'];
     } else if (set === 'neg') {
       return ['#fb6a4a', '#cb181d'];
-    } else if (set === 'trans') {
-      return ['#FAA43A'];
+    } else if (set === 'transfer') {
+      return ['#faa43a'];
     } else {
       return ['#000000'];
     }
