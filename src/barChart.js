@@ -334,7 +334,7 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
     } else if (set === 'neg') {
       return ['#fb6a4a', '#cb181d'];
     } else if (set === 'transfer') {
-      return ['#faa43a'];
+      return ['#ba39f9', '#d238f9'];
     } else {
       return ['#000000'];
     }
@@ -353,6 +353,8 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
     .data(massagedData);
 
   groupSelection.exit().remove();
+
+  groupSelection.transition().style('fill', (d, i) => color(i));
 
   let groups = groupSelection
     .enter()
