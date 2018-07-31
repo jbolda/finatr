@@ -19,7 +19,7 @@ const resolveData = data => {
         splitTransactions.expense.push(d);
         break;
       case 'transfer':
-        splitTransactions.transer.push(d);
+        splitTransactions.transfer.push(d);
         break;
       default:
         break;
@@ -146,7 +146,7 @@ const resolveAccountChart = (data, dataMassaged) => {
             acc.expense.push(d.stack);
             break;
           case 'transfer':
-            acc.transer.push(d.stack);
+            acc.transfer.push(d.stack);
             break;
           default:
             break;

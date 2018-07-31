@@ -61,7 +61,12 @@ export class BarChart extends Component {
       data.BarChartIncome,
       max_domain_bars
     );
-    // let barTransfer = barBuild.drawBar(svgBar, 'transfer', dataMassagedTransfer);
+    let barTransfer = barBuild.drawBar(
+      blobs,
+      'transfer',
+      data.BarChartTransfer,
+      max_domain_bars
+    );
     let axisBar = barBuild.drawAxis(svgBar, max_domain_bars, phase);
 
     let max_domain_line = d3.max(accountData, d =>

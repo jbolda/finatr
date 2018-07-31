@@ -196,8 +196,8 @@ class TransactionInput extends React.Component {
                 </div>
                 {touched.value && errors.value && <div>{errors.value}</div>}
               </div>
-              <div class="field is-grouped is-grouped-centered">
-                <div class="control">
+              <div className="field is-grouped is-grouped-centered">
+                <div className="control">
                   <button
                     className="button is-link"
                     type="submit"
