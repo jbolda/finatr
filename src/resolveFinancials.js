@@ -32,12 +32,31 @@ const resolveData = data => {
   let BarChartTransfer = resolveBarChart(splitTransactions.transfer);
   let AccountChart = resolveAccountChart(data, BarChart);
 
+  const extractValue = value => {
+    if (value === undefined) {
+      return 0;
+    } else {
+      return value;
+    }
+  };
+  let max_domain_bars = d3.max([
+    extractValue(BarChartIncome[0] ? BarChartIncome[0].maxHeight : 0),
+    extractValue(BarChartExpense[0] ? BarChartExpense[0].maxHeight : 0),
+    extractValue(BarChartTransfer[0] ? BarChartTransfer[0].maxHeight : 0)
+  ]);
+
+  let max_domain_line = d3.max(AccountChart, d =>
+    d3.max(d.values, d => d.value)
+  );
+
   return {
     ...data,
     BarChartIncome: BarChartIncome,
     BarChartExpense: BarChartExpense,
     BarChartTransfer: BarChartTransfer,
-    AccountChart: AccountChart
+    BarChartMax: max_domain_bars,
+    AccountChart: AccountChart,
+    LineChartMax: max_domain_line
   };
 };
 

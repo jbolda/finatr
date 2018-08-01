@@ -19,25 +19,6 @@ export class BarChart extends Component {
 
   drawCharts(phase, data, svgBar, svgLine) {
     console.log(data);
-    let accountData = data.AccountChart;
-    const extractValue = value => {
-      if (value === undefined) {
-        return 0;
-      } else {
-        return value;
-      }
-    };
-    let max_domain_bars = d3.max([
-      extractValue(
-        data.BarChartIncome[0] ? data.BarChartIncome[0].maxHeight : 0
-      ),
-      extractValue(
-        data.BarChartExpense[0] ? data.BarChartExpense[0].maxHeight : 0
-      ),
-      extractValue(
-        data.BarChartTransfer[0] ? data.BarChartTransfer[0].maxHeight : 0
-      )
-    ]);
 
     let blobs;
     let lineGroup;
@@ -53,28 +34,28 @@ export class BarChart extends Component {
       blobs,
       'neg',
       data.BarChartExpense,
-      max_domain_bars
+      data.BarChartMax
     );
     let barIncome = barBuild.drawBar(
       blobs,
       'pos',
       data.BarChartIncome,
-      max_domain_bars
+      data.BarChartMax
     );
     let barTransfer = barBuild.drawBar(
       blobs,
       'transfer',
       data.BarChartTransfer,
-      max_domain_bars
+      data.BarChartMax
     );
-    let axisBar = barBuild.drawAxis(svgBar, max_domain_bars, phase);
+    let axisBar = barBuild.drawAxis(svgBar, data.BarChartMax, phase);
 
-    let max_domain_line = d3.max(accountData, d =>
-      d3.max(d.values, d => d.value)
+    let line = barBuild.drawLine(
+      lineGroup,
+      data.AccountChart,
+      data.LineChartMax
     );
-
-    let line = barBuild.drawLine(lineGroup, accountData, max_domain_line);
-    let axisLine = barBuild.drawAxis(svgLine, max_domain_line, phase);
+    let axisLine = barBuild.drawAxis(svgLine, data.LineChartMax, phase);
   }
 
   render() {
