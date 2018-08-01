@@ -82,6 +82,19 @@ class Financial extends React.Component {
       value: 112
     };
     data.push(dFive);
+    let dSix = {
+      id: `oasis8asg`,
+      raccount: `account2`,
+      vaccount: `vaccount`,
+      category: `test comp`,
+      type: `transfer`,
+      start: `2018-03-22`,
+      rtype: `day`,
+      repeat: 1,
+      cycle: 1,
+      value: 112
+    };
+    data.push(dSix);
 
     let dataArray = {
       transactions: data,
@@ -91,6 +104,12 @@ class Financial extends React.Component {
           starting: 3000,
           interest: 0.01,
           vehicle: 'operating'
+        },
+        {
+          name: 'account2',
+          starting: 30000,
+          interest: 0.01,
+          vehicle: 'investment'
         }
       ]
     };
@@ -160,6 +179,18 @@ class Financial extends React.Component {
               <div>
                 <p className="heading">Daily Expenses</p>
                 <p className="heading">{this.state.dailyExpense}</p>
+              </div>
+            </div>
+            <div className="level-item has-text-centered">
+              <div>
+                <p className="heading">Savings Rate</p>
+                <p className="heading">{this.state.savingsRate}%</p>
+              </div>
+            </div>
+            <div className="level-item has-text-centered">
+              <div>
+                <p className="heading">% to FI</p>
+                <p className="heading">{this.state.fiNumber}%</p>
               </div>
             </div>
           </div>

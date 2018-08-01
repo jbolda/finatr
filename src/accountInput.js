@@ -8,8 +8,10 @@ class AccountInput extends React.Component {
         <h1 className="title has-text-centered">Add an Account</h1>
         <Formik
           initialValues={{
-            name: `account2`,
-            starting: 150
+            name: `account3`,
+            starting: 150,
+            interest: 0.01,
+            vehicle: 'operating'
           }}
           onSubmit={(values, actions) => {
             this.props.addAccount(values);
@@ -97,7 +99,7 @@ class AccountInput extends React.Component {
                     <p className="control">
                       <input
                         type="text"
-                        name="starting"
+                        name="vehicle"
                         className="input"
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -109,8 +111,8 @@ class AccountInput extends React.Component {
                 {touched.vehicle &&
                   errors.vehicle && <div>{errors.vehicle}</div>}
               </div>
-              <div class="field is-grouped is-grouped-centered">
-                <div class="control">
+              <div className="field is-grouped is-grouped-centered">
+                <div className="control">
                   <button
                     className="button is-link"
                     type="submit"

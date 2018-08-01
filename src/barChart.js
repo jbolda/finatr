@@ -18,8 +18,6 @@ export class BarChart extends Component {
   }
 
   drawCharts(phase, data, svgBar, svgLine) {
-    console.log(data);
-
     let blobs;
     let lineGroup;
     if (phase === 'initial') {

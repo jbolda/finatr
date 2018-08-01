@@ -52,6 +52,25 @@ const resolveData = data => {
   let dailyIncome = d3.sum(BarChartIncome, d => d.dailyRate);
   let dailyExpense = d3.sum(BarChartExpense, d => d.dailyRate);
 
+  const sumInvest = d => {
+    let accountRaw = data.accounts.find(acc => acc.name === d.raccount);
+    if (accountRaw.vehicle === 'investment') {
+      return d.dailyRate;
+    } else {
+      return 0;
+    }
+  };
+  let dailyInvest =
+    d3.sum(BarChartIncome, sumInvest) + d3.sum(BarChartTransfer, sumInvest);
+
+  let totalInvest = d3.sum(data.accounts, d => {
+    if (d.vehicle === 'investment') {
+      return d.starting;
+    } else {
+      return 0;
+    }
+  });
+
   return {
     ...data,
     BarChartIncome: BarChartIncome,
@@ -60,7 +79,8 @@ const resolveData = data => {
     BarChartMax: max_domain_bars,
     dailyIncome: dailyIncome,
     dailyExpense: dailyExpense,
-    savingsRate: dailyIncome,
+    savingsRate: (100 * dailyInvest) / dailyExpense,
+    fiNumber: (100 * totalInvest) / (dailyExpense * 365) / 25,
     AccountChart: AccountChart,
     LineChartMax: max_domain_line
   };
