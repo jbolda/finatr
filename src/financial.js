@@ -232,7 +232,7 @@ const transactionTable = (data, actions) => (
     </thead>
     <tbody>
       {data.map(transaction => (
-        <tr>
+        <tr key={transaction.id}>
           <th>{transaction.id}</th>
           <td>{transaction.raccount}</td>
           <td>{transaction.category}</td>
@@ -263,7 +263,7 @@ const accountTable = (data, actions) => (
     </thead>
     <tbody>
       {data.map(account => (
-        <tr>
+        <tr key={account.name}>
           <th>{account.name}</th>
           <td>{account.starting}</td>
           <td onClick={actions.deleteAccount.bind(this, account.name)}>X</td>
