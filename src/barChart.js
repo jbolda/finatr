@@ -112,12 +112,8 @@ BarChart.propTypes = {
         rtype: PropTypes.string.isRequired,
         cycle: PropTypes.number,
         value: PropTypes.number.isRequired,
-        stack: PropTypes.arrayOf(
-          PropTypes.arrayOf(
-            (0: PropTypes.number.isRequired),
-            (1: PropTypes.number.isRequired)
-          )
-        ).isRequired
+        stack: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired))
+          .isRequired
       })
     ).isRequired,
     BarChartExpense: PropTypes.arrayOf(
@@ -130,12 +126,8 @@ BarChart.propTypes = {
         rtype: PropTypes.string.isRequired,
         cycle: PropTypes.number,
         value: PropTypes.number.isRequired,
-        stack: PropTypes.arrayOf(
-          PropTypes.arrayOf(
-            (0: PropTypes.number.isRequired),
-            (1: PropTypes.number.isRequired)
-          )
-        ).isRequired
+        stack: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired))
+          .isRequired
       })
     ).isRequired,
     BarChartTransfer: PropTypes.arrayOf(
@@ -148,12 +140,8 @@ BarChart.propTypes = {
         rtype: PropTypes.string.isRequired,
         cycle: PropTypes.number,
         value: PropTypes.number.isRequired,
-        stack: PropTypes.arrayOf(
-          PropTypes.arrayOf(
-            (0: PropTypes.number.isRequired),
-            (1: PropTypes.number.isRequired)
-          )
-        ).isRequired
+        stack: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired))
+          .isRequired
       })
     ).isRequired,
     accounts: PropTypes.arrayOf(

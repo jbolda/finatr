@@ -67,6 +67,48 @@ class AccountInput extends React.Component {
                 {touched.starting &&
                   errors.starting && <div>{errors.starting}</div>}
               </div>
+              <div className="field is-horizontal">
+                <div className="field-label is-normal">
+                  <label className="label">interest</label>
+                </div>
+                <div className="field-body">
+                  <div className="field">
+                    <p className="control">
+                      <input
+                        type="number"
+                        name="interest"
+                        className="input"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.interest}
+                      />
+                    </p>
+                  </div>
+                </div>
+                {touched.interest &&
+                  errors.interest && <div>{errors.interest}</div>}
+              </div>
+              <div className="field is-horizontal">
+                <div className="field-label is-normal">
+                  <label className="label">vehicle</label>
+                </div>
+                <div className="field-body">
+                  <div className="field">
+                    <p className="control">
+                      <input
+                        type="text"
+                        name="starting"
+                        className="input"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.vehicle}
+                      />
+                    </p>
+                  </div>
+                </div>
+                {touched.vehicle &&
+                  errors.vehicle && <div>{errors.vehicle}</div>}
+              </div>
               <div class="field is-grouped is-grouped-centered">
                 <div class="control">
                   <button

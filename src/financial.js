@@ -258,6 +258,8 @@ const accountTable = (data, actions) => (
         <th>
           <abbr title="starting balance">starting</abbr>
         </th>
+        <th>interest</th>
+        <th>vehicle</th>
         <th>Delete</th>
       </tr>
     </thead>
@@ -266,6 +268,8 @@ const accountTable = (data, actions) => (
         <tr key={account.name}>
           <th>{account.name}</th>
           <td>{account.starting}</td>
+          <td>{account.interest * 100}%</td>
+          <td>{account.vehicle}</td>
           <td onClick={actions.deleteAccount.bind(this, account.name)}>X</td>
         </tr>
       ))}

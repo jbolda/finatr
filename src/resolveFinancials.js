@@ -178,13 +178,17 @@ const resolveAccountChart = (data, dataMassaged) => {
       accountStack.expense.length,
       accountStack.transfer.length
     );
-    let finalZippedLine = { account: account, values: [] };
+    let accountRaw = data.accounts.find(acc => acc.name === account);
+    let finalZippedLine = {
+      account: account,
+      values: [],
+      interest: accountRaw.interest,
+      vehicle: accountRaw.vehicle
+    };
     for (let iterator = 0; iterator < arrayLength; iterator++) {
       let prevVal =
         finalZippedLine.values.length === 0
-          ? extractValue(
-              data.accounts.find(acc => acc.name === account).starting
-            )
+          ? extractValue(accountRaw.starting)
           : extractValue(
               finalZippedLine.values[finalZippedLine.values.length - 1].value
             );
