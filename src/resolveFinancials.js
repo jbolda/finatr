@@ -49,12 +49,18 @@ const resolveData = data => {
     d3.max(d.values, d => d.value)
   );
 
+  let dailyIncome = d3.sum(BarChartIncome, d => d.dailyRate);
+  let dailyExpense = d3.sum(BarChartExpense, d => d.dailyRate);
+
   return {
     ...data,
     BarChartIncome: BarChartIncome,
     BarChartExpense: BarChartExpense,
     BarChartTransfer: BarChartTransfer,
     BarChartMax: max_domain_bars,
+    dailyIncome: dailyIncome,
+    dailyExpense: dailyExpense,
+    savingsRate: dailyIncome,
     AccountChart: AccountChart,
     LineChartMax: max_domain_line
   };
@@ -101,28 +107,34 @@ const resolveBarChart = (data, width) => {
 
       if (convertdate(i) === d.start && d.rtype === 'none') {
         obj[key].y = d.value;
+        obj[key].dailyRate = 0;
       } else if (convertdate(i) > d.end && d.end !== 'none') {
         obj[key].y = 0;
+        obj[key].dailyRate = 0;
       } else if (
         d.rtype === 'day' &&
         d.cycle != null &&
         ((i - parseDate(d.start)) / (24 * 60 * 60 * 1000)) % d.cycle < 1
       ) {
         obj[key].y = d.value;
+        obj[key].dailyRate = d.value / d.cycle;
       } else if (
         d.rtype === 'day of week' &&
         convertdate(i) >= d.start &&
         getDay(i) === d.cycle
       ) {
         obj[key].y = d.value;
+        obj[key].dailyRate = d.value / 7;
       } else if (
         d.rtype === 'day of month' &&
         convertdate(i) >= d.start &&
         getDate(i) === d.cycle
       ) {
         obj[key].y = d.value;
+        obj[key].dailyRate = d.value / 30;
       } else {
         obj[key].y = 0;
+        obj[key].dailyRate = 0;
       }
     });
     arrData.push(obj);
@@ -134,13 +146,13 @@ const resolveBarChart = (data, width) => {
     .keys(keys);
 
   let stacked = stack(arrData);
-
   let maxHeight = d3.max(stacked.reduce((a, b) => a.concat(b)), d => d[1]);
 
   return data.map((entry, index) => ({
     ...entry,
     stack: stacked[index],
-    maxHeight: maxHeight
+    maxHeight: maxHeight,
+    dailyRate: d3.max(arrData, d => d[entry.id].dailyRate)
   }));
 };
 

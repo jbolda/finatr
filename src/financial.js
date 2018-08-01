@@ -149,6 +149,20 @@ class Financial extends React.Component {
     return (
       <React.Fragment>
         <section className="section">
+          <div className="level">
+            <div className="level-item has-text-centered">
+              <div>
+                <p className="heading">Daily Income</p>
+                <p className="heading">{this.state.dailyIncome}</p>
+              </div>
+            </div>
+            <div className="level-item has-text-centered">
+              <div>
+                <p className="heading">Daily Expenses</p>
+                <p className="heading">{this.state.dailyExpense}</p>
+              </div>
+            </div>
+          </div>
           <BarChart data={this.state} />
         </section>
         <nav className="level">
@@ -227,6 +241,7 @@ const transactionTable = (data, actions) => (
         </th>
         <th>cycle</th>
         <th>value</th>
+        <th>Daily Rate</th>
         <th>Delete</th>
       </tr>
     </thead>
@@ -241,6 +256,7 @@ const transactionTable = (data, actions) => (
           <td>{transaction.rtype}</td>
           <td>{transaction.cycle}</td>
           <td>{transaction.value}</td>
+          <td>{transaction.dailyRate}</td>
           <td onClick={actions.deleteTransaction.bind(this, transaction.id)}>
             X
           </td>
