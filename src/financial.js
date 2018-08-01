@@ -85,7 +85,14 @@ class Financial extends React.Component {
 
     let dataArray = {
       transactions: data,
-      accounts: [{ name: 'account', starting: 3000 }]
+      accounts: [
+        {
+          name: 'account',
+          starting: 3000,
+          interest: 0.01,
+          vehicle: 'operating'
+        }
+      ]
     };
 
     this.state = resolveData(dataArray);

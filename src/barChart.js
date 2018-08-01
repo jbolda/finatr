@@ -95,7 +95,7 @@ BarChart.propTypes = {
         id: PropTypes.string.isRequired,
         raccount: PropTypes.string.isRequired,
         category: PropTypes.string.isRequired,
-        type: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['income', 'expense', 'transfer']).isRequired,
         start: PropTypes.string.isRequired,
         rtype: PropTypes.string.isRequired,
         cycle: PropTypes.number,
@@ -107,7 +107,7 @@ BarChart.propTypes = {
         id: PropTypes.string.isRequired,
         raccount: PropTypes.string.isRequired,
         category: PropTypes.string.isRequired,
-        type: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['income']).isRequired,
         start: PropTypes.string.isRequired,
         rtype: PropTypes.string.isRequired,
         cycle: PropTypes.number,
@@ -125,7 +125,7 @@ BarChart.propTypes = {
         id: PropTypes.string.isRequired,
         raccount: PropTypes.string.isRequired,
         category: PropTypes.string.isRequired,
-        type: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['expense']).isRequired,
         start: PropTypes.string.isRequired,
         rtype: PropTypes.string.isRequired,
         cycle: PropTypes.number,
@@ -143,7 +143,7 @@ BarChart.propTypes = {
         id: PropTypes.string.isRequired,
         raccount: PropTypes.string.isRequired,
         category: PropTypes.string.isRequired,
-        type: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['transfer']).isRequired,
         start: PropTypes.string.isRequired,
         rtype: PropTypes.string.isRequired,
         cycle: PropTypes.number,
@@ -159,7 +159,9 @@ BarChart.propTypes = {
     accounts: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string,
-        starting: PropTypes.number
+        starting: PropTypes.number,
+        interest: PropTypes.number.isRequired,
+        vehicle: PropTypes.oneOf(['operating', 'debt', 'investment']).isRequired
       })
     ),
     AccountChart: PropTypes.arrayOf(
@@ -170,7 +172,9 @@ BarChart.propTypes = {
             date: PropTypes.instanceOf(Date).isRequired,
             value: PropTypes.number.isRequired
           })
-        )
+        ),
+        interest: PropTypes.number.isRequired,
+        vehicle: PropTypes.oneOf(['operating', 'debt', 'investment']).isRequired
       })
     ).isRequired
   })
