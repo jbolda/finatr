@@ -1,5 +1,5 @@
 import React from 'react';
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 
 class TransactionInput extends React.Component {
   render() {
@@ -40,14 +40,7 @@ class TransactionInput extends React.Component {
                 <div className="field-body">
                   <div className="field">
                     <p className="control">
-                      <input
-                        type="text"
-                        name="id"
-                        className="input"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.id}
-                      />
+                      <Field type="text" name="id" className="input" />
                     </p>
                   </div>
                 </div>
@@ -61,14 +54,7 @@ class TransactionInput extends React.Component {
                 <div className="field-body">
                   <div className="field">
                     <p className="control">
-                      <input
-                        type="text"
-                        name="raccount"
-                        className="input"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.raccount}
-                      />
+                      <Field type="text" name="raccount" className="input" />
                     </p>
                   </div>
                 </div>
@@ -82,14 +68,7 @@ class TransactionInput extends React.Component {
                 <div className="field-body">
                   <div className="field">
                     <p className="control">
-                      <input
-                        type="text"
-                        name="category"
-                        className="input"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.category}
-                      />
+                      <Field type="text" name="category" className="input" />
                     </p>
                   </div>
                 </div>
@@ -102,16 +81,15 @@ class TransactionInput extends React.Component {
                 </div>
                 <div className="field-body">
                   <div className="field">
-                    <p className="control">
-                      <input
-                        type="text"
-                        name="type"
-                        className="input"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.type}
-                      />
-                    </p>
+                    <div className="control">
+                      <div className="select">
+                        <Field component="select" name="type">
+                          <option value="income">Income</option>
+                          <option value="expense">Expense</option>
+                          <option value="transfer">Transfer</option>
+                        </Field>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 {touched.type && errors.type && <div>{errors.type}</div>}
@@ -123,14 +101,7 @@ class TransactionInput extends React.Component {
                 <div className="field-body">
                   <div className="field">
                     <p className="control">
-                      <input
-                        type="text"
-                        name="start"
-                        className="input"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.start}
-                      />
+                      <Field type="text" name="start" className="input" />
                     </p>
                   </div>
                 </div>
@@ -142,16 +113,20 @@ class TransactionInput extends React.Component {
                 </div>
                 <div className="field-body">
                   <div className="field">
-                    <p className="control">
-                      <input
-                        type="text"
-                        name="rtype"
-                        className="input"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.rtype}
-                      />
-                    </p>
+                    <div className="select">
+                      <Field component="select" name="rtype">
+                        <option value="none">No Repeating</option>
+                        <option value="day">
+                          Repeat Daily (or Every X Day)
+                        </option>
+                        <option value="day of week">
+                          Repeat on a Day of the Week
+                        </option>
+                        <option value="day of month">
+                          Repeat on a Day of the Month
+                        </option>
+                      </Field>
+                    </div>
                   </div>
                 </div>
                 {touched.rtype && errors.rtype && <div>{errors.rtype}</div>}
@@ -163,14 +138,7 @@ class TransactionInput extends React.Component {
                 <div className="field-body">
                   <div className="field">
                     <p className="control">
-                      <input
-                        type="number"
-                        name="cycle"
-                        className="input"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.cycle}
-                      />
+                      <Field type="number" name="cycle" className="input" />
                     </p>
                   </div>
                 </div>
@@ -183,14 +151,7 @@ class TransactionInput extends React.Component {
                 <div className="field-body">
                   <div className="field">
                     <p className="control">
-                      <input
-                        type="number"
-                        name="value"
-                        className="input"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.value}
-                      />
+                      <Field type="number" name="value" className="input" />
                     </p>
                   </div>
                 </div>
