@@ -341,29 +341,29 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
   rects
     .transition()
     .duration(3000)
-    .attr('x', (d, i) => barBuild.xScale()(d.data.date))
-    .attr('y', (d, i) => barBuild.yScale(max_domain)(d[1]))
-    .attr('height', (d, i) => {
-      return (
-        barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
-      );
-    });
+    .ease(d3.easeBounceOut)
+    .attr('y', d => barBuild.yScale(max_domain)(d[1]))
+    .attr(
+      'height',
+      d => barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
+    );
 
   rects
     .enter()
     .append('rect')
+    .attr('class', append_class)
+    .attr('x', d => barBuild.xScale()(d.data.date))
+    .attr('transform', `translate(${widths.translate},${0})`)
+    .attr('width', widths.bar)
+    .attr('y', d => barBuild.yScale(max_domain)(d[0]))
     .transition()
     .duration(3000)
-    .attr('class', append_class)
-    .attr('x', (d, i) => barBuild.xScale()(d.data.date))
-    .attr('y', (d, i) => barBuild.yScale(max_domain)(d[1]))
-    .attr('height', (d, i) => {
-      return (
-        barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
-      );
-    })
-    .attr('width', widths.bar)
-    .attr('transform', `translate(${widths.translate},${0})`);
+    .ease(d3.easeBounceOut)
+    .attr('y', d => barBuild.yScale(max_domain)(d[1]))
+    .attr(
+      'height',
+      d => barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
+    );
 
   rects.exit().remove();
 };
