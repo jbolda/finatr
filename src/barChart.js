@@ -291,13 +291,14 @@ barBuild.initBar = function(svg) {
 };
 
 barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
-  let tweak = () => {
-    if (append_class === 'transfer') {
-      return 0.2;
-    } else {
-      return 0.4;
-    }
-  };
+  let widths;
+  if (append_class === 'transfer') {
+    widths = { bar: 0.2 * this.shift(), translate: this.shift() * 0.9 };
+  } else if (append_class === 'pos') {
+    widths = { bar: 0.4 * this.shift(), translate: this.shift() };
+  } else if (append_class === 'neg') {
+    widths = { bar: 0.4 * this.shift(), translate: (1.2 * this.shift()) / 2 };
+  }
 
   let colors = function(set) {
     if (set === 'pos') {
@@ -361,13 +362,8 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
         barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
       );
     })
-    .attr('width', this.shift() * tweak())
-    .attr(
-      'transform',
-      `translate(${
-        append_class === 'pos' ? this.shift() : (1.2 * this.shift()) / 2
-      },${0})`
-    );
+    .attr('width', widths.bar)
+    .attr('transform', `translate(${widths.translate},${0})`);
 
   rects.exit().remove();
 };
