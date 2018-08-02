@@ -1,5 +1,5 @@
 import React from 'react';
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 
 class AccountInput extends React.Component {
   render() {
@@ -35,14 +35,7 @@ class AccountInput extends React.Component {
                 <div className="field-body">
                   <div className="field">
                     <p className="control">
-                      <input
-                        type="text"
-                        name="name"
-                        className="input"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.name}
-                      />
+                      <Field type="text" name="name" className="input" />
                     </p>
                   </div>
                 </div>
@@ -55,14 +48,7 @@ class AccountInput extends React.Component {
                 <div className="field-body">
                   <div className="field">
                     <p className="control">
-                      <input
-                        type="number"
-                        name="starting"
-                        className="input"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.starting}
-                      />
+                      <Field type="number" name="starting" className="input" />
                     </p>
                   </div>
                 </div>
@@ -76,14 +62,7 @@ class AccountInput extends React.Component {
                 <div className="field-body">
                   <div className="field">
                     <p className="control">
-                      <input
-                        type="number"
-                        name="interest"
-                        className="input"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.interest}
-                      />
+                      <Field type="number" name="interest" className="input" />
                     </p>
                   </div>
                 </div>
@@ -96,16 +75,15 @@ class AccountInput extends React.Component {
                 </div>
                 <div className="field-body">
                   <div className="field">
-                    <p className="control">
-                      <input
-                        type="text"
-                        name="vehicle"
-                        className="input"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.vehicle}
-                      />
-                    </p>
+                    <div className="control">
+                      <div className="select">
+                        <Field component="select" name="vehicle">
+                          <option value="operating">Operating</option>
+                          <option value="debt">Debt</option>
+                          <option value="investment">Investment</option>
+                        </Field>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 {touched.vehicle &&
