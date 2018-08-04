@@ -33,7 +33,7 @@ class TransactionInput extends React.Component {
             handleSubmit,
             isSubmitting
           }) => (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} autoComplete="off">
               <div className="field is-horizontal">
                 <div className="field-label is-normal">
                   <label className="label">id</label>
@@ -58,7 +58,9 @@ class TransactionInput extends React.Component {
                       <div className="select">
                         <Field component="select" name="raccount">
                           {accounts.map(account => (
-                            <option value={account.name}>{account.name}</option>
+                            <option key={account.name} value={account.name}>
+                              {account.name}
+                            </option>
                           ))}
                         </Field>
                       </div>

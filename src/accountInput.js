@@ -27,7 +27,7 @@ class AccountInput extends React.Component {
             handleSubmit,
             isSubmitting
           }) => (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} autoComplete="off">
               <div className="field is-horizontal">
                 <div className="field-label is-normal">
                   <label className="label">name</label>
