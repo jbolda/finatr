@@ -230,7 +230,10 @@ class Financial extends React.Component {
             {transactionTable(this.state.transactions, {
               deleteTransaction: this.deleteTransaction
             })}
-            <TransactionInput addTransaction={this.addTransaction} />
+            <TransactionInput
+              accounts={this.state.accounts}
+              addTransaction={this.addTransaction}
+            />
           </div>
         </section>
         <section className="section">

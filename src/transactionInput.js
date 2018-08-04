@@ -3,6 +3,7 @@ import { Formik, Field } from 'formik';
 
 class TransactionInput extends React.Component {
   render() {
+    const { accounts } = this.props;
     return (
       <React.Fragment>
         <h1 className="title has-text-centered">Add a Transaction</h1>
@@ -49,13 +50,19 @@ class TransactionInput extends React.Component {
               </div>
               <div className="field is-horizontal">
                 <div className="field-label is-normal">
-                  <label className="label">raccount</label>
+                  <label className="label">account</label>
                 </div>
                 <div className="field-body">
                   <div className="field">
-                    <p className="control">
-                      <Field type="text" name="raccount" className="input" />
-                    </p>
+                    <div className="control">
+                      <div className="select">
+                        <Field component="select" name="raccount">
+                          {accounts.map(account => (
+                            <option value={account.name}>{account.name}</option>
+                          ))}
+                        </Field>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 {touched.raccount &&
