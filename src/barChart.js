@@ -334,7 +334,10 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
     .attr('class', append_class)
     .attr('id', (d, i) => `${i}-${d.id}`)
     .style('fill', (d, i) => color(i))
-    .merge(groupSelection);
+    .merge(groupSelection)
+    .on('mouseover', function() {
+      console.log(d3.event.target.__data__);
+    });
 
   let rects = groups.selectAll(`rect.${append_class}`).data((d, i) => d.stack);
 

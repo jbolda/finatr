@@ -226,23 +226,19 @@ class Financial extends React.Component {
           </div>
         </nav>
         <section className="section">
-          <div className="columns">
-            <div className="column is-half">
-              <div className="container is-fluid">
-                {transactionTable(this.state.transactions, {
-                  deleteTransaction: this.deleteTransaction
-                })}
-                <TransactionInput addTransaction={this.addTransaction} />
-              </div>
-            </div>
-            <div className="column">
-              <div className="container is-fluid">
-                {accountTable(this.state.accounts, {
-                  deleteAccount: this.deleteAccount
-                })}
-                <AccountInput addAccount={this.addAccount} />
-              </div>
-            </div>
+          <div className="container is-fluid">
+            {transactionTable(this.state.transactions, {
+              deleteTransaction: this.deleteTransaction
+            })}
+            <TransactionInput addTransaction={this.addTransaction} />
+          </div>
+        </section>
+        <section className="section">
+          <div className="container is-fluid">
+            {accountTable(this.state.accounts, {
+              deleteAccount: this.deleteAccount
+            })}
+            <AccountInput addAccount={this.addAccount} />
           </div>
         </section>
       </React.Fragment>
