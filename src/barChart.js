@@ -346,11 +346,10 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
     .duration(3000)
     .ease(d3.easeBounceOut)
     .attr('y', d => barBuild.yScale(max_domain)(d[1]))
-    .attr('height', d =>
-      Math.max([
-        0,
-        barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
-      ])
+    .attr(
+      'height',
+      20
+      // d => barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
     );
 
   rects
@@ -365,11 +364,10 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
     .duration(3000)
     .ease(d3.easeBounceOut)
     .attr('y', d => barBuild.yScale(max_domain)(d[1]))
-    .attr('height', d =>
-      Math.max([
-        0,
-        barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
-      ])
+    .attr(
+      'height',
+      20
+      // d => barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
     );
 
   rects.exit().remove();
