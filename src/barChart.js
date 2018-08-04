@@ -336,7 +336,7 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
     .style('fill', (d, i) => color(i))
     .merge(groupSelection)
     .on('mouseover', function() {
-      console.log(d3.event.target.__data__);
+      console.log(d3.event.target.parentElement.__data__);
     });
 
   let rects = groups.selectAll(`rect.${append_class}`).data((d, i) => d.stack);
@@ -346,9 +346,11 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
     .duration(3000)
     .ease(d3.easeBounceOut)
     .attr('y', d => barBuild.yScale(max_domain)(d[1]))
-    .attr(
-      'height',
-      d => barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
+    .attr('height', d =>
+      Math.max([
+        0,
+        barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
+      ])
     );
 
   rects
@@ -363,9 +365,11 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
     .duration(3000)
     .ease(d3.easeBounceOut)
     .attr('y', d => barBuild.yScale(max_domain)(d[1]))
-    .attr(
-      'height',
-      d => barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
+    .attr('height', d =>
+      Math.max([
+        0,
+        barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
+      ])
     );
 
   rects.exit().remove();
