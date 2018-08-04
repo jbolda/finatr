@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import getDay from 'date-fns/fp/getDay';
@@ -17,8 +18,15 @@ export class BarChart extends Component {
     this.drawCharts('update', this.props.data, svgBar, svgLine);
   }
 
+  shouldComponentUpdate() {
+    return false;
+  }
+
+  componentWillUnmount() {
+    ReactDOM.unmountComponentAtNode(this.tooltipTarget);
+  }
+
   drawCharts(phase, data, svgBar, svgLine) {
-    console.log(data);
     let blobs;
     let lineGroup;
     if (phase === 'initial') {
@@ -33,19 +41,25 @@ export class BarChart extends Component {
       blobs,
       'neg',
       data.BarChartExpense,
-      data.BarChartMax
+      data.BarChartMax,
+      this.renderTooltip,
+      this.tooltipTarget
     );
     let barIncome = barBuild.drawBar(
       blobs,
       'pos',
       data.BarChartIncome,
-      data.BarChartMax
+      data.BarChartMax,
+      this.renderTooltip,
+      this.tooltipTarget
     );
     let barTransfer = barBuild.drawBar(
       blobs,
       'transfer',
       data.BarChartTransfer,
-      data.BarChartMax
+      data.BarChartMax,
+      this.renderTooltip,
+      this.tooltipTarget
     );
     let axisBar = barBuild.drawAxis(svgBar, data.BarChartMax, phase);
 
@@ -57,9 +71,20 @@ export class BarChart extends Component {
     let axisLine = barBuild.drawAxis(svgLine, data.LineChartMax, phase);
   }
 
+  renderTooltip(coordinates, tooltipData, tooltipTarget) {
+    const tooltipComponent = <div>stuff</div>;
+
+    ReactDOM.render(tooltipComponent, tooltipTarget);
+  }
+
   render() {
     return (
       <div>
+        <div
+          ref={elem => {
+            this.tooltipTarget = elem;
+          }}
+        />
         <div className="draw-section" style={{ overflow: 'auto' }} />
       </div>
     );
@@ -291,7 +316,14 @@ barBuild.initBar = function(svg) {
   return blobs;
 };
 
-barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
+barBuild.drawBar = function(
+  blobs,
+  append_class,
+  massagedData,
+  max_domain,
+  renderTooltip,
+  tooltipTarget
+) {
   let widths;
   if (append_class === 'transfer') {
     widths = { bar: 0.2 * this.shift(), translate: this.shift() * 0.9 };
@@ -337,7 +369,8 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
     .style('fill', (d, i) => color(i))
     .merge(groupSelection)
     .on('mouseover', function() {
-      console.log(d3.event.target.parentElement.__data__);
+      let d = d3.event.target.parentElement.__data__;
+      renderTooltip([50, 100], d, tooltipTarget);
     });
 
   let rects = groups.selectAll(`rect.${append_class}`).data((d, i) => d.stack);
@@ -375,6 +408,8 @@ barBuild.drawBar = function(blobs, append_class, massagedData, max_domain) {
 
   rects.exit().remove();
 };
+
+const Tooltip = ({ dailyRate }) => <div>stuff</div>;
 
 barBuild.initLine = function(svg) {
   return svg
