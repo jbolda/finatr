@@ -287,8 +287,11 @@ const transactionTable = (data, actions) => (
           <td>{transaction.cycle}</td>
           <td>{transaction.value}</td>
           <td>{transaction.dailyRate}</td>
-          <td onClick={actions.deleteTransaction.bind(this, transaction.id)}>
-            X
+          <td>
+            <button
+              className="delete"
+              onClick={actions.deleteTransaction.bind(this, transaction.id)}
+            />
           </td>
         </tr>
       ))}
@@ -316,7 +319,12 @@ const accountTable = (data, actions) => (
           <td>{account.starting}</td>
           <td>{account.interest * 100}%</td>
           <td>{account.vehicle}</td>
-          <td onClick={actions.deleteAccount.bind(this, account.name)}>X</td>
+          <td>
+            <button
+              className="delete"
+              onClick={actions.deleteAccount.bind(this, account.name)}
+            />
+          </td>
         </tr>
       ))}
     </tbody>
