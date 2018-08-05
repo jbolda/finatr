@@ -18,10 +18,6 @@ export class BarChart extends Component {
     this.drawCharts('update', this.props.data, svgBar, svgLine);
   }
 
-  shouldComponentUpdate() {
-    return false;
-  }
-
   componentWillUnmount() {
     ReactDOM.unmountComponentAtNode(this.tooltipTarget);
   }
@@ -37,29 +33,32 @@ export class BarChart extends Component {
       lineGroup = svgLine.select('g');
     }
 
+    let tooltip = {
+      target: this.tooltipTarget,
+      render: this.renderTooltip,
+      unmount: this.unmountTooltip
+    };
+
     let barExpense = barBuild.drawBar(
       blobs,
       'neg',
       data.BarChartExpense,
       data.BarChartMax,
-      this.renderTooltip,
-      this.tooltipTarget
+      tooltip
     );
     let barIncome = barBuild.drawBar(
       blobs,
       'pos',
       data.BarChartIncome,
       data.BarChartMax,
-      this.renderTooltip,
-      this.tooltipTarget
+      tooltip
     );
     let barTransfer = barBuild.drawBar(
       blobs,
       'transfer',
       data.BarChartTransfer,
       data.BarChartMax,
-      this.renderTooltip,
-      this.tooltipTarget
+      tooltip
     );
     let axisBar = barBuild.drawAxis(svgBar, data.BarChartMax, phase);
 
@@ -72,9 +71,27 @@ export class BarChart extends Component {
   }
 
   renderTooltip(coordinates, tooltipData, tooltipTarget) {
-    const tooltipComponent = <div>stuff</div>;
+    let styles = {
+      position: 'absolute',
+      pointerEvents: 'none',
+      left: `${coordinates.pageX}px`,
+      top: `${coordinates.pageY}px`
+    };
+    const tooltipComponent = (
+      <div className="notification is-primary" id="tooltipBar" style={styles}>
+        <p>{`${tooltipData.type} in ${tooltipData.raccount}`}</p>
+        <p>category: {tooltipData.category}</p>
+        <p>
+          ${tooltipData.value} | ${tooltipData.dailyRate} per day
+        </p>
+      </div>
+    );
 
     ReactDOM.render(tooltipComponent, tooltipTarget);
+  }
+
+  unmountTooltip(tooltipTarget) {
+    ReactDOM.unmountComponentAtNode(tooltipTarget);
   }
 
   render() {
@@ -321,8 +338,7 @@ barBuild.drawBar = function(
   append_class,
   massagedData,
   max_domain,
-  renderTooltip,
-  tooltipTarget
+  tooltip
 ) {
   let widths;
   if (append_class === 'transfer') {
@@ -370,7 +386,14 @@ barBuild.drawBar = function(
     .merge(groupSelection)
     .on('mouseover', function() {
       let d = d3.event.target.parentElement.__data__;
-      renderTooltip([50, 100], d, tooltipTarget);
+      tooltip.render(
+        { pageX: d3.event.pageX, pageY: d3.event.pageY },
+        d,
+        tooltip.target
+      );
+    })
+    .on('mouseout', function() {
+      tooltip.unmount(tooltip.target);
     });
 
   let rects = groups.selectAll(`rect.${append_class}`).data((d, i) => d.stack);
