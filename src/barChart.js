@@ -459,7 +459,7 @@ barBuild.initLine = function(svg) {
   return svg
     .append('g')
     .attr('class', 'line')
-    .attr('transform', `translate(${this.shift() / 2},${this.margin().top})`);
+    .attr('transform', `translate(${this.margin().left},${this.margin().top})`);
 };
 
 barBuild.drawLine = function(lineGroup, data, max_domain, tooltip) {
@@ -478,8 +478,7 @@ barBuild.drawLine = function(lineGroup, data, max_domain, tooltip) {
     .attr('d', d => line(d.values))
     .attr('stroke', (d, i) => linecolors(i))
     .attr('stroke-width', 2)
-    .attr('fill', 'none')
-    .attr('transform', `translate(${this.shift()},${this.margin().top})`);
+    .attr('fill', 'none');
 
   lines
     .enter()
@@ -488,7 +487,6 @@ barBuild.drawLine = function(lineGroup, data, max_domain, tooltip) {
     .attr('stroke', (d, i) => linecolors(i))
     .attr('stroke-width', 2)
     .attr('fill', 'none')
-    .attr('transform', `translate(${this.shift()},${this.margin().top})`)
     .on('mouseover', function(d, i, node) {
       let mouse = d3.mouse(this);
       let beginning = 0;
