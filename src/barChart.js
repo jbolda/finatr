@@ -33,9 +33,9 @@ export class BarChart extends Component {
       lineGroup = svgLine.select('g');
     }
 
-    let tooltip = {
+    let tooltipBar = {
       target: this.tooltipTarget,
-      render: this.renderTooltip,
+      render: this.renderTooltipBar,
       unmount: this.unmountTooltip
     };
 
@@ -44,33 +44,39 @@ export class BarChart extends Component {
       'neg',
       data.BarChartExpense,
       data.BarChartMax,
-      tooltip
+      tooltipBar
     );
     let barIncome = barBuild.drawBar(
       blobs,
       'pos',
       data.BarChartIncome,
       data.BarChartMax,
-      tooltip
+      tooltipBar
     );
     let barTransfer = barBuild.drawBar(
       blobs,
       'transfer',
       data.BarChartTransfer,
       data.BarChartMax,
-      tooltip
+      tooltipBar
     );
     let axisBar = barBuild.drawAxis(svgBar, data.BarChartMax, phase);
 
+    let tooltipLine = {
+      target: this.tooltipTarget,
+      render: this.renderTooltipLine,
+      unmount: this.unmountTooltip
+    };
     let line = barBuild.drawLine(
       lineGroup,
       data.AccountChart,
-      data.LineChartMax
+      data.LineChartMax,
+      tooltipLine
     );
     let axisLine = barBuild.drawAxis(svgLine, data.LineChartMax, phase);
   }
 
-  renderTooltip(coordinates, tooltipData, tooltipTarget) {
+  renderTooltipBar(coordinates, tooltipData, tooltipTarget) {
     let styles = {
       position: 'absolute',
       pointerEvents: 'none',
@@ -84,6 +90,24 @@ export class BarChart extends Component {
         <p>
           ${tooltipData.value} | ${tooltipData.dailyRate} per day
         </p>
+      </div>
+    );
+
+    ReactDOM.render(tooltipComponent, tooltipTarget);
+  }
+
+  renderTooltipLine(coordinates, tooltipData, d, tooltipTarget) {
+    let styles = {
+      position: 'absolute',
+      pointerEvents: 'none',
+      left: `${coordinates.pageX}px`,
+      top: `${coordinates.pageY}px`
+    };
+    const tooltipComponent = (
+      <div className="notification is-primary" id="tooltipLine" style={styles}>
+        <p>{tooltipData.account}</p>
+        <p>({tooltipData.vehicle})</p>
+        <p>${d.value}</p>
       </div>
     );
 
@@ -384,8 +408,7 @@ barBuild.drawBar = function(
     .attr('id', (d, i) => `${i}-${d.id}`)
     .style('fill', (d, i) => color(i))
     .merge(groupSelection)
-    .on('mouseover', function() {
-      let d = d3.event.target.parentElement.__data__;
+    .on('mouseover', function(d, i) {
       tooltip.render(
         { pageX: d3.event.pageX, pageY: d3.event.pageY },
         d,
@@ -432,8 +455,6 @@ barBuild.drawBar = function(
   rects.exit().remove();
 };
 
-const Tooltip = ({ dailyRate }) => <div>stuff</div>;
-
 barBuild.initLine = function(svg) {
   return svg
     .append('g')
@@ -441,7 +462,7 @@ barBuild.initLine = function(svg) {
     .attr('transform', `translate(${this.shift() / 2},${this.margin().top})`);
 };
 
-barBuild.drawLine = function(lineGroup, data, max_domain) {
+barBuild.drawLine = function(lineGroup, data, max_domain, tooltip) {
   let linecolors = d3.scaleOrdinal(d3.schemeCategory10);
 
   const line = d3
@@ -467,7 +488,18 @@ barBuild.drawLine = function(lineGroup, data, max_domain) {
     .attr('stroke', (d, i) => linecolors(i))
     .attr('stroke-width', 2)
     .attr('fill', 'none')
-    .attr('transform', `translate(${this.shift()},${this.margin().top})`);
+    .attr('transform', `translate(${this.shift()},${this.margin().top})`)
+    .on('mouseover', function(d, i) {
+      tooltip.render(
+        { pageX: d3.event.pageX, pageY: d3.event.pageY },
+        this.__data__,
+        d.values[i],
+        tooltip.target
+      );
+    })
+    .on('mouseout', function() {
+      tooltip.unmount(tooltip.target);
+    });
 
   lines.exit().remove();
 };
