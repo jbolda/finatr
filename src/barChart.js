@@ -96,7 +96,7 @@ export class BarChart extends Component {
     ReactDOM.render(tooltipComponent, tooltipTarget);
   }
 
-  renderTooltipLine(coordinates, tooltipData, d, tooltipTarget) {
+  renderTooltipLine(coordinates, tooltipData, value, tooltipTarget) {
     let styles = {
       position: 'absolute',
       pointerEvents: 'none',
@@ -107,7 +107,7 @@ export class BarChart extends Component {
       <div className="notification is-primary" id="tooltipLine" style={styles}>
         <p>{tooltipData.account}</p>
         <p>({tooltipData.vehicle})</p>
-        <p>${d.value}</p>
+        <p>${value}</p>
       </div>
     );
 
@@ -489,11 +489,31 @@ barBuild.drawLine = function(lineGroup, data, max_domain, tooltip) {
     .attr('stroke-width', 2)
     .attr('fill', 'none')
     .attr('transform', `translate(${this.shift()},${this.margin().top})`)
-    .on('mouseover', function(d, i) {
+    .on('mouseover', function(d, i, node) {
+      let mouse = d3.mouse(this);
+      let beginning = 0;
+      let end = node[i].getTotalLength();
+      let target, position;
+      while (true) {
+        target = Math.floor((beginning + end) / 2);
+        position = node[i].getPointAtLength(target);
+        if (
+          (target === end || target === beginning) &&
+          position.x !== mouse[0]
+        ) {
+          break;
+        }
+        if (position.x > mouse[0]) end = target;
+        else if (position.x < mouse[0]) beginning = target;
+        else break; //position found
+      }
       tooltip.render(
         { pageX: d3.event.pageX, pageY: d3.event.pageY },
         this.__data__,
-        d.values[i],
+        barBuild
+          .yScale(max_domain)
+          .invert(position.y)
+          .toFixed(2),
         tooltip.target
       );
     })
