@@ -226,7 +226,7 @@ let barBuild = {
     }
   },
   margin: function() {
-    return { top: 10, right: 20, bottom: 40, left: 40 };
+    return { top: 10, right: 20, bottom: 20, left: 40 };
   },
   width: function() {
     let w =
@@ -237,10 +237,7 @@ let barBuild = {
     return w;
   },
   height: function() {
-    return d3.min([
-      this.div_width() * 0.5 - this.margin().top - this.margin().bottom,
-      350
-    ]);
+    return d3.min([this.div_width() * 0.5, 350]);
   },
   shift: function() {
     return this.width() / this.daysinfuture();
@@ -280,7 +277,7 @@ let barBuild = {
     return d3
       .scaleLinear()
       .domain([0, max_domain])
-      .range([this.height() - this.margin().top, 0]);
+      .range([this.height() - this.margin().top - this.margin().bottom, 0]);
   }
 };
 
@@ -311,7 +308,10 @@ barBuild.drawAxis = function(svg, max_domain, phase) {
     let drawnX = svg
       .append('g')
       .attr('class', 'xaxis')
-      .attr('transform', `translate(${this.shift() / 2},${this.height()})`)
+      .attr(
+        'transform',
+        `translate(${this.shift() / 2},${this.height() - this.margin().bottom})`
+      )
       .call(xAxis);
 
     drawnX
