@@ -350,23 +350,23 @@ barBuild.drawBar = function(
     };
   }
 
-  let colors = function(set) {
-    if (set === 'income') {
+  let colors = function(d) {
+    if (d.type === 'income') {
       return ['#a1d99b', '#41ab5d'];
-    } else if (set === 'expense') {
+    } else if (d.type === 'expense') {
       return ['#fb6a4a', '#cb181d'];
-    } else if (set === 'transfer') {
+    } else if (d.type === 'transfer') {
       return ['#8029aa', '#d238f9'];
     } else {
-      return ['#000000'];
+      return ['#0019ff'];
     }
   };
 
-  let color = set =>
+  let color = d =>
     d3
       .scaleLinear()
       .domain([0, 1])
-      .range(colors(set));
+      .range(colors(d));
 
   // Add a group for each entry
   let groupSelection = blobs
@@ -377,14 +377,18 @@ barBuild.drawBar = function(
 
   groupSelection.exit().remove();
 
-  groupSelection.transition().style('fill', (d, i) => color(i));
+  groupSelection
+    .transition()
+    .attr('class', append_class)
+    .attr('id', (d, i) => `${i}-${d.id}`)
+    .style('fill', (d, i) => color(d)(i));
 
   let groups = groupSelection
     .enter()
     .insert('g')
     .attr('class', append_class)
     .attr('id', (d, i) => `${i}-${d.id}`)
-    .style('fill', (d, i) => color(d.type)(i))
+    .style('fill', (d, i) => color(d)(i))
     .merge(groupSelection)
     .on('mouseover', function(d, i) {
       tooltip.render(
@@ -403,6 +407,7 @@ barBuild.drawBar = function(
     .transition()
     .duration(3000)
     .ease(d3.easeBounceOut)
+    .attr('class', append_class)
     .attr('y', d => barBuild.yScale(max_domain)(d[1]))
     .attr('height', d =>
       d3.max([
