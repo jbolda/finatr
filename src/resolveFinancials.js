@@ -19,7 +19,11 @@ const resolveData = data => {
         splitTransactions.expense.push(d);
         break;
       case 'transfer':
-        splitTransactions.transfer.push(d);
+        if (d.value <= 0) {
+          splitTransactions.expense.push(d);
+        } else {
+          splitTransactions.income.push(d);
+        }
         break;
       default:
         break;
@@ -29,7 +33,6 @@ const resolveData = data => {
   let BarChart = resolveBarChart(data.transactions);
   let BarChartIncome = resolveBarChart(splitTransactions.income);
   let BarChartExpense = resolveBarChart(splitTransactions.expense);
-  let BarChartTransfer = resolveBarChart(splitTransactions.transfer);
   let AccountChart = resolveAccountChart(data, BarChart);
 
   const extractValue = value => {
@@ -41,16 +44,21 @@ const resolveData = data => {
   };
   let max_domain_bars = d3.max([
     extractValue(BarChartIncome[0] ? BarChartIncome[0].maxHeight : 0),
-    extractValue(BarChartExpense[0] ? BarChartExpense[0].maxHeight : 0),
-    extractValue(BarChartTransfer[0] ? BarChartTransfer[0].maxHeight : 0)
+    extractValue(BarChartExpense[0] ? BarChartExpense[0].maxHeight : 0)
   ]);
 
   let max_domain_line = d3.max(AccountChart, d =>
     d3.max(d.values, d => d.value)
   );
 
-  let dailyIncome = d3.sum(BarChartIncome, d => d.dailyRate);
-  let dailyExpense = d3.sum(BarChartExpense, d => d.dailyRate);
+  let dailyIncome = d3.sum(
+    BarChartIncome,
+    d => (d.type === 'income' ? d.dailyRate : 0)
+  );
+  let dailyExpense = d3.sum(
+    BarChartExpense,
+    d => (d.type === 'expense' ? d.dailyRate : 0)
+  );
 
   const sumInvest = d => {
     let accountRaw = data.accounts.find(acc => acc.name === d.raccount);
@@ -60,8 +68,7 @@ const resolveData = data => {
       return 0;
     }
   };
-  let dailyInvest =
-    d3.sum(BarChartIncome, sumInvest) + d3.sum(BarChartTransfer, sumInvest);
+  let dailyInvest = d3.sum(BarChartIncome, sumInvest);
 
   let totalInvest = d3.sum(data.accounts, d => {
     if (d.vehicle === 'investment') {
@@ -75,7 +82,6 @@ const resolveData = data => {
     ...data,
     BarChartIncome: BarChartIncome,
     BarChartExpense: BarChartExpense,
-    BarChartTransfer: BarChartTransfer,
     BarChartMax: max_domain_bars,
     dailyIncome: dailyIncome,
     dailyExpense: dailyExpense,
@@ -301,7 +307,7 @@ const future = daysinfuture => {
 
 const past = () => {
   let past = new Date();
-  past.setDate(past.getDate() - 1);
+  past.setDate(past.getDate() + 1);
   return past;
 };
 

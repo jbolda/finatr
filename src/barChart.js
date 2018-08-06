@@ -53,13 +53,6 @@ export class BarChart extends Component {
       data.BarChartMax,
       tooltipBar
     );
-    let barTransfer = barBuild.drawBar(
-      blobs,
-      'transfer',
-      data.BarChartTransfer,
-      data.BarChartMax,
-      tooltipBar
-    );
     let axisBar = barBuild.drawAxis(svgBar, data.BarChartMax, phase);
 
     let tooltipLine = {
@@ -153,7 +146,7 @@ BarChart.propTypes = {
         id: PropTypes.string.isRequired,
         raccount: PropTypes.string.isRequired,
         category: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['income']).isRequired,
+        type: PropTypes.oneOf(['income', 'transfer']).isRequired,
         start: PropTypes.string.isRequired,
         rtype: PropTypes.string.isRequired,
         cycle: PropTypes.number,
@@ -167,21 +160,7 @@ BarChart.propTypes = {
         id: PropTypes.string.isRequired,
         raccount: PropTypes.string.isRequired,
         category: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['expense']).isRequired,
-        start: PropTypes.string.isRequired,
-        rtype: PropTypes.string.isRequired,
-        cycle: PropTypes.number,
-        value: PropTypes.number.isRequired,
-        stack: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired))
-          .isRequired
-      })
-    ).isRequired,
-    BarChartTransfer: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        raccount: PropTypes.string.isRequired,
-        category: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['transfer']).isRequired,
+        type: PropTypes.oneOf(['expense', 'transfer']).isRequired,
         start: PropTypes.string.isRequired,
         rtype: PropTypes.string.isRequired,
         cycle: PropTypes.number,
@@ -226,14 +205,14 @@ let barBuild = {
     }
   },
   margin: function() {
-    return { top: 10, right: 20, bottom: 20, left: 40 };
+    return { top: 10, right: 0, bottom: 20, left: 40 };
+  },
+  band: function() {
+    return this.daysinfuture() * 30;
   },
   width: function() {
     let w =
-      this.div_width() -
-      this.margin().left -
-      this.margin().right +
-      this.daysinfuture() * 20;
+      this.div_width() - this.margin().left - this.margin().right + this.band();
     return w;
   },
   height: function() {
@@ -252,7 +231,7 @@ let barBuild = {
   },
   past: function() {
     let past = new Date();
-    past.setDate(past.getDate() - 1);
+    past.setDate(past.getDate());
     return past;
   },
   one_day: function() {
@@ -310,7 +289,7 @@ barBuild.drawAxis = function(svg, max_domain, phase) {
       .attr('class', 'xaxis')
       .attr(
         'transform',
-        `translate(${this.shift() / 2},${this.height() - this.margin().bottom})`
+        `translate(${0},${this.height() - this.margin().bottom})`
       )
       .call(xAxis);
 
@@ -320,10 +299,6 @@ barBuild.drawAxis = function(svg, max_domain, phase) {
       .attr('dx', '-.8em')
       .attr('dy', '-.55em')
       .attr('transform', 'rotate(-90)');
-
-    drawnX
-      .select('path')
-      .attr('transform', `translate(-${this.shift() / 2},${0})`);
 
     let drawnY = svg
       .append('g')
@@ -352,7 +327,7 @@ barBuild.initBar = function(svg) {
   let blobs = svg
     .append('g')
     .attr('class', 'blobs')
-    .attr('transform', `translate(${this.shift() / 2},${this.margin().top})`);
+    .attr('transform', `translate(${0},${this.margin().top})`);
 
   return blobs;
 };
@@ -365,30 +340,33 @@ barBuild.drawBar = function(
   tooltip
 ) {
   let widths;
-  if (append_class === 'transfer') {
-    widths = { bar: 0.2 * this.shift(), translate: this.shift() * 0.9 };
-  } else if (append_class === 'pos') {
-    widths = { bar: 0.4 * this.shift(), translate: this.shift() };
+  // 100% of shift is the space between ticks
+  if (append_class === 'pos') {
+    widths = { bar: 0.4 * this.shift(), translate: 0 };
   } else if (append_class === 'neg') {
-    widths = { bar: 0.4 * this.shift(), translate: (1.2 * this.shift()) / 2 };
+    widths = {
+      bar: 0.4 * this.shift(),
+      translate: -0.4 * this.shift()
+    };
   }
 
   let colors = function(set) {
-    if (set === 'pos') {
+    if (set === 'income') {
       return ['#a1d99b', '#41ab5d'];
-    } else if (set === 'neg') {
+    } else if (set === 'expense') {
       return ['#fb6a4a', '#cb181d'];
     } else if (set === 'transfer') {
-      return ['#ba39f9', '#d238f9'];
+      return ['#8029aa', '#d238f9'];
     } else {
       return ['#000000'];
     }
   };
 
-  let color = d3
-    .scaleLinear()
-    .domain([0, 1])
-    .range(colors(append_class));
+  let color = set =>
+    d3
+      .scaleLinear()
+      .domain([0, 1])
+      .range(colors(set));
 
   // Add a group for each entry
   let groupSelection = blobs
@@ -406,7 +384,7 @@ barBuild.drawBar = function(
     .insert('g')
     .attr('class', append_class)
     .attr('id', (d, i) => `${i}-${d.id}`)
-    .style('fill', (d, i) => color(i))
+    .style('fill', (d, i) => color(d.type)(i))
     .merge(groupSelection)
     .on('mouseover', function(d, i) {
       tooltip.render(
@@ -459,7 +437,7 @@ barBuild.initLine = function(svg) {
   return svg
     .append('g')
     .attr('class', 'line')
-    .attr('transform', `translate(${this.margin().left},${this.margin().top})`);
+    .attr('transform', `translate(${0},${this.margin().top})`);
 };
 
 barBuild.drawLine = function(lineGroup, data, max_domain, tooltip) {
