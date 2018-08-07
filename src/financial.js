@@ -1,8 +1,11 @@
 import React from 'react';
 import BarChart from './barChart';
 import resolveData from './resolveFinancials';
+
 import TransactionInput from './transactionInput';
 import AccountInput from './accountInput';
+import YNABInput from './ynabInput.js';
+
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';
 
@@ -128,7 +131,9 @@ class Financial extends React.Component {
   handleDownload = () => {
     let outputData = {
       transactions: [...this.state.transactions],
-      accounts: [...this.state.accounts]
+      accounts: [...this.state.accounts],
+      devToken: this.state.devToken,
+      budgetId: this.state.budgetId
     };
     let fileData = JSON.stringify(outputData);
     fileDownload(fileData, 'financials.json');
@@ -161,6 +166,33 @@ class Financial extends React.Component {
       this.state.accounts.findIndex(element => element.name === name),
       1
     );
+    this.setState(resolveData(newState));
+  };
+
+  addYNAB = (tokens, resultantAccounts) => {
+    let newState = { ...this.state };
+    let indexed = {};
+    resultantAccounts.forEach(resultAccount => {
+      indexed[resultAccount.name] = resultAccount;
+    });
+    this.state.accounts.forEach(existingAccount => {
+      if (!indexed[existingAccount.name]) {
+        indexed[existingAccount.name] = existingAccount;
+      } else {
+        indexed[existingAccount.name] = {
+          name: existingAccount.name,
+          starting: indexed[existingAccount.name].starting,
+          interest: existingAccount.interest ? existingAccount.interest : 0,
+          vehicle: existingAccount.vehicle
+            ? existingAccount.vehicle
+            : 'operating'
+        };
+      }
+    });
+
+    newState.accounts = Object.keys(indexed).map(key => indexed[key]);
+    newState.devToken = tokens.devToken;
+    newState.budgetId = tokens.budgetId;
     this.setState(resolveData(newState));
   };
 
@@ -242,6 +274,15 @@ class Financial extends React.Component {
               deleteAccount: this.deleteAccount
             })}
             <AccountInput addAccount={this.addAccount} />
+          </div>
+        </section>
+        <section className="section">
+          <div className="container is-fluid">
+            <YNABInput
+              initialDevToken={this.state.devToken}
+              initialBudgetId={this.state.budgetId}
+              addYNAB={this.addYNAB}
+            />
           </div>
         </section>
       </React.Fragment>
