@@ -169,7 +169,7 @@ class Financial extends React.Component {
     this.setState(resolveData(newState));
   };
 
-  addYNAB = (tokens, resultantAccounts) => {
+  addYNAB = (tokens, resultantAccounts, resultantTransactions) => {
     let newState = { ...this.state };
     let indexed = {};
     resultantAccounts.forEach(resultAccount => {
@@ -191,6 +191,10 @@ class Financial extends React.Component {
     });
 
     newState.accounts = Object.keys(indexed).map(key => indexed[key]);
+    newState.transactions = [
+      ...this.state.transactions,
+      ...resultantTransactions
+    ];
     newState.devToken = tokens.devToken;
     newState.budgetId = tokens.budgetId;
     this.setState(resolveData(newState));
