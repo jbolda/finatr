@@ -1,6 +1,9 @@
 import React from 'react';
 import { Formik, Field } from 'formik';
 import * as ynab from 'ynab';
+import getDay from 'date-fns/fp/getDay';
+import getDate from 'date-fns/fp/getDate';
+import parse from 'date-fns/parse';
 
 class YNABInput extends React.Component {
   render() {
@@ -43,17 +46,26 @@ class YNABInput extends React.Component {
                     .getScheduledTransactions(values.budgetId)
                     .then(scheduledTransactionResponse => {
                       console.log('transactions', scheduledTransactionResponse);
-                      ynabScheduledTransactions = scheduledTransactionResponse.data.scheduled_transactions.map(
-                        transaction => ({
-                          id: transaction.id,
-                          raccount: transaction.account_name,
-                          category: transaction.category_name,
-                          type: `expense`,
-                          start: transaction.date_first,
-                          rtype: transaction.frequency,
-                          cycle: 5,
-                          value: transaction.amount / 1000
-                        })
+                      scheduledTransactionResponse.data.scheduled_transactions.forEach(
+                        transaction => {
+                          let ynabSanitizedFrequency = consumeYNABRepeat(
+                            transaction,
+                            ynabScheduledTransactions
+                          );
+                          ynabScheduledTransactions.push({
+                            id: transaction.id,
+                            raccount: transaction.account_name,
+                            category:
+                              consumeYNABType(transaction) === 'transfer'
+                                ? 'transfer'
+                                : transaction.category_name,
+                            type: consumeYNABType(transaction),
+                            start: transaction.date_first,
+                            rtype: ynabSanitizedFrequency.repeat,
+                            cycle: ynabSanitizedFrequency.cycle,
+                            value: Math.abs(transaction.amount) / 1000
+                          });
+                        }
                       );
                       this.props.addYNAB(
                         {
@@ -148,3 +160,68 @@ class YNABInput extends React.Component {
 }
 
 export default YNABInput;
+
+const consumeYNABType = transaction => {
+  if (transaction.transfer_account_id) {
+    return 'transfer';
+  } else if (transaction.category_name === 'Inflow: To Be Budgeted') {
+    return 'income';
+  } else {
+    return 'expense';
+  }
+};
+
+const consumeYNABRepeat = (transaction, scheduledArray) => {
+  let ynabSanitizedFrequency = {};
+  switch (transaction.frequency) {
+    default:
+    case 'never':
+      ynabSanitizedFrequency.repeat = 'none';
+      ynabSanitizedFrequency.cycle = 0;
+      break;
+    case 'daily':
+      ynabSanitizedFrequency.repeat = 'daily';
+      ynabSanitizedFrequency.cycle = 1;
+      break;
+    case 'weekly':
+      ynabSanitizedFrequency.repeat = 'day of week';
+      ynabSanitizedFrequency.cycle = getDay(parseDate(transaction.date_first));
+      break;
+    case 'everyOtherWeek':
+      ynabSanitizedFrequency.repeat = 'daily';
+      ynabSanitizedFrequency.cycle =
+        getDay(parseDate(transaction.date_first)) + 14;
+      break;
+    case 'twiceAMonth':
+      ynabSanitizedFrequency.repeat = 'day of month';
+      ynabSanitizedFrequency.cycle = getDate(parseDate(transaction.date_first));
+      // the above will create the first,
+      // and the below will add in the second
+      scheduledArray.push({
+        id: transaction.id,
+        raccount: transaction.account_name,
+        category: transaction.category_name,
+        type: consumeYNABType(transaction),
+        start: transaction.date_next,
+        rtype: 'day of month',
+        cycle: getDate(parseDate(transaction.date_last)),
+        value: Math.abs(transaction.amount) / 1000
+      });
+      break;
+    case 'every4Weeks':
+      ynabSanitizedFrequency.repeat = 'daily';
+      ynabSanitizedFrequency.cycle = 28;
+      break;
+    case 'monthly':
+      ynabSanitizedFrequency.repeat = 'day of month';
+      ynabSanitizedFrequency.cycle = getDate(parseDate(transaction.date_first));
+      break;
+    // we can't deal with:
+    // everyOtherMonth, every3Months, every4Months, twiceAYear, yearly, everyOtherYear
+    // so we punt for now and put it in the default case
+  }
+
+  return ynabSanitizedFrequency;
+};
+
+const parseDate = stringDate => parse(stringDate, 'YYYY-MM-DD', new Date());
