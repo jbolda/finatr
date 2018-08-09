@@ -232,6 +232,7 @@ class Financial extends React.Component {
           </div>
           <BarChart data={this.state} />
         </section>
+
         <nav className="level">
           <div className="level-left">
             <div className="level-item has-text-centered">
@@ -261,25 +262,34 @@ class Financial extends React.Component {
             </div>
           </div>
         </nav>
+
         <section className="section">
-          <div className="container is-fluid">
-            {transactionTable(this.state.transactions, {
-              deleteTransaction: this.deleteTransaction
-            })}
-            <TransactionInput
-              accounts={this.state.accounts}
-              addTransaction={this.addTransaction}
-            />
-          </div>
+          <TabView
+            tabTitles={['All Transactions', 'Add Transaction']}
+            tabContents={[
+              transactionTable(this.state.transactions, {
+                deleteTransaction: this.deleteTransaction
+              }),
+              <TransactionInput
+                accounts={this.state.accounts}
+                addTransaction={this.addTransaction}
+              />
+            ]}
+          />
         </section>
+
         <section className="section">
-          <div className="container is-fluid">
-            {accountTable(this.state.accounts, {
-              deleteAccount: this.deleteAccount
-            })}
-            <AccountInput addAccount={this.addAccount} />
-          </div>
+          <TabView
+            tabTitles={['All Accounts', 'Add Account']}
+            tabContents={[
+              accountTable(this.state.accounts, {
+                deleteAccount: this.deleteAccount
+              }),
+              <AccountInput addAccount={this.addAccount} />
+            ]}
+          />
         </section>
+
         <section className="section">
           <div className="container is-fluid">
             <YNABInput
@@ -375,3 +385,36 @@ const accountTable = (data, actions) => (
     </tbody>
   </table>
 );
+
+class TabView extends React.Component {
+  constructor() {
+    super();
+    this.state = { activeTab: 0 };
+  }
+
+  tabClick(index) {
+    this.setState({ activeTab: index });
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <div className="tabs">
+          <ul>
+            {this.props.tabTitles.map((tab, index) => (
+              <li
+                className={index === this.state.activeTab ? 'is-active' : ''}
+                onClick={this.tabClick.bind(this, index)}
+              >
+                <a>{tab}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="container is-fluid">
+          {this.props.tabContents[this.state.activeTab]}
+        </div>
+      </React.Fragment>
+    );
+  }
+}
