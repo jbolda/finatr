@@ -141,7 +141,14 @@ class Financial extends React.Component {
 
   addTransaction = result => {
     let newState = { ...this.state };
-    newState.transactions.push(result);
+    let existingTransactionIndex = newState.transactions
+      .map(t => t.id)
+      .indexOf(result.id);
+    if (existingTransactionIndex === -1) {
+      newState.transactions.push(result);
+    } else {
+      newState.transactions.splice(existingTransactionIndex, 1, result);
+    }
     this.setState(resolveData(newState));
   };
 
