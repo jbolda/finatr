@@ -16,7 +16,7 @@ class Financial extends React.Component {
     let dOne = {
       id: `oasidjas1`,
       raccount: `account`,
-      vaccount: `vaccount`,
+      description: `description`,
       category: `test default`,
       type: `income`,
       start: `2018-03-22`,
@@ -28,7 +28,7 @@ class Financial extends React.Component {
     let dTwo = {
       id: `oasis2`,
       raccount: `account`,
-      vaccount: `vaccount`,
+      description: `description`,
       category: `test default`,
       type: `income`,
       start: `2018-03-22`,
@@ -40,7 +40,7 @@ class Financial extends React.Component {
     let dThree = {
       id: `oasis3`,
       raccount: `account`,
-      vaccount: `vaccount`,
+      description: `description`,
       category: `test complex`,
       type: `income`,
       start: `2018-03-22`,
@@ -52,7 +52,7 @@ class Financial extends React.Component {
     let dFour = {
       id: `oasis6`,
       raccount: `account`,
-      vaccount: `vaccount`,
+      description: `description`,
       category: `test complex`,
       type: `income`,
       start: `2018-03-22`,
@@ -64,7 +64,7 @@ class Financial extends React.Component {
     let dThreePointFive = {
       id: `oasis92`,
       raccount: `account`,
-      vaccount: `vaccount`,
+      description: `description`,
       category: `test complex`,
       type: `income`,
       start: `2018-09-22`,
@@ -75,7 +75,7 @@ class Financial extends React.Component {
     let dFive = {
       id: `oasis8`,
       raccount: `account`,
-      vaccount: `vaccount`,
+      description: `description`,
       category: `test comp`,
       type: `expense`,
       start: `2018-03-22`,
@@ -88,7 +88,7 @@ class Financial extends React.Component {
     let dSix = {
       id: `oasis8asg`,
       raccount: `account2`,
-      vaccount: `vaccount`,
+      description: `description`,
       category: `test comp`,
       type: `transfer`,
       start: `2018-03-22`,
@@ -118,7 +118,7 @@ class Financial extends React.Component {
       transactionForm: {
         id: `oasid7`,
         raccount: `account`,
-        vaccount: `vaccount`,
+        description: `description`,
         category: `test default`,
         type: `income`,
         start: `2018-03-22`,
@@ -345,6 +345,7 @@ const transactionTable = (data, actions) => (
         <th>
           <abbr title="real account">raccount</abbr>
         </th>
+        <th>description</th>
         <th>category</th>
         <th>type</th>
         <th>
@@ -365,6 +366,7 @@ const transactionTable = (data, actions) => (
         <tr key={transaction.id}>
           <th>{transaction.id}</th>
           <td>{transaction.raccount}</td>
+          <td>{transaction.description}</td>
           <td>{transaction.category}</td>
           <td>{transaction.type}</td>
           <td>{transaction.start}</td>

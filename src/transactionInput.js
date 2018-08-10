@@ -62,6 +62,21 @@ class TransactionInput extends React.Component {
               </div>
               <div className="field is-horizontal">
                 <div className="field-label is-normal">
+                  <label className="label">description</label>
+                </div>
+                <div className="field-body">
+                  <div className="field">
+                    <p className="control">
+                      <Field type="text" name="description" className="input" />
+                    </p>
+                  </div>
+                </div>
+
+                {touched.description &&
+                  errors.description && <div>{errors.description}</div>}
+              </div>
+              <div className="field is-horizontal">
+                <div className="field-label is-normal">
                   <label className="label">category</label>
                 </div>
                 <div className="field-body">
