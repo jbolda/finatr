@@ -8,17 +8,7 @@ class TransactionInput extends React.Component {
       <React.Fragment>
         <h1 className="title has-text-centered">Add a Transaction</h1>
         <Formik
-          initialValues={{
-            id: `oasidjas1`,
-            raccount: `account`,
-            vaccount: `vaccount`,
-            category: `test default`,
-            type: `income`,
-            start: `2018-03-22`,
-            rtype: `day`,
-            cycle: 3,
-            value: 150
-          }}
+          initialValues={this.props.initialValues}
           onSubmit={(values, actions) => {
             this.props.addTransaction(values);
             actions.setSubmitting(false);

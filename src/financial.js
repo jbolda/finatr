@@ -114,7 +114,18 @@ class Financial extends React.Component {
           interest: 0.01,
           vehicle: 'investment'
         }
-      ]
+      ],
+      transactionForm: {
+        id: `oasid7`,
+        raccount: `account`,
+        vaccount: `vaccount`,
+        category: `test default`,
+        type: `income`,
+        start: `2018-03-22`,
+        rtype: `day`,
+        cycle: 3,
+        value: 150
+      }
     };
 
     this.state = resolveData(dataArray);
@@ -149,6 +160,15 @@ class Financial extends React.Component {
     } else {
       newState.transactions.splice(existingTransactionIndex, 1, result);
     }
+    this.setState(resolveData(newState));
+  };
+
+  modifyTransaction = id => {
+    let newState = { ...this.state };
+    newState.transactionForm = this.state.transactions.find(
+      element => element.id === id
+    );
+
     this.setState(resolveData(newState));
   };
 
@@ -275,11 +295,13 @@ class Financial extends React.Component {
             tabTitles={['All Transactions', 'Add Transaction']}
             tabContents={[
               transactionTable(this.state.transactions, {
+                modifyTransaction: this.modifyTransaction,
                 deleteTransaction: this.deleteTransaction
               }),
               <TransactionInput
                 accounts={this.state.accounts}
                 addTransaction={this.addTransaction}
+                initialValues={this.state.transactionForm}
               />
             ]}
           />
@@ -334,6 +356,7 @@ const transactionTable = (data, actions) => (
         <th>cycle</th>
         <th>value</th>
         <th>Daily Rate</th>
+        <th>Modify</th>
         <th>Delete</th>
       </tr>
     </thead>
@@ -349,6 +372,14 @@ const transactionTable = (data, actions) => (
           <td>{transaction.cycle}</td>
           <td>{transaction.value}</td>
           <td>{transaction.dailyRate}</td>
+          <td>
+            <button
+              className="button is-rounded is-small is-info"
+              onClick={actions.modifyTransaction.bind(this, transaction.id)}
+            >
+              M
+            </button>
+          </td>
           <td>
             <button
               className="delete"
