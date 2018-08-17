@@ -167,6 +167,7 @@ class Financial extends React.Component {
       newState.transactions.splice(existingTransactionIndex, 1, result);
     }
     this.setState(resolveData(newState));
+    this.transactionTabs.tabClick(0);
   };
 
   modifyTransaction = id => {
@@ -191,6 +192,7 @@ class Financial extends React.Component {
     let newState = { ...this.state };
     newState.accounts.push(result);
     this.setState(resolveData(newState));
+    this.accountTabs.tabClick(0);
   };
 
   modifyAccount = name => {
