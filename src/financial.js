@@ -125,6 +125,12 @@ class Financial extends React.Component {
         rtype: `day`,
         cycle: 3,
         value: 150
+      },
+      accountForm: {
+        name: 'new account',
+        starting: 1000,
+        interest: 0.0,
+        vehicle: 'operating'
       }
     };
 
@@ -185,6 +191,15 @@ class Financial extends React.Component {
     let newState = { ...this.state };
     newState.accounts.push(result);
     this.setState(resolveData(newState));
+  };
+
+  modifyAccount = name => {
+    let newState = { ...this.state };
+    newState.accountForm = this.state.accounts.find(
+      element => element.name === name
+    );
+    this.setState(resolveData(newState));
+    this.accountTabs.tabClick(1);
   };
 
   deleteAccount = name => {
@@ -314,9 +329,13 @@ class Financial extends React.Component {
             tabTitles={['All Accounts', 'Add Account']}
             tabContents={[
               accountTable(this.state.accounts, {
+                modifyAccount: this.modifyAccount,
                 deleteAccount: this.deleteAccount
               }),
-              <AccountInput addAccount={this.addAccount} />
+              <AccountInput
+                addAccount={this.addAccount}
+                initialValues={this.state.accountForm}
+              />
             ]}
           />
         </section>
@@ -406,6 +425,7 @@ const accountTable = (data, actions) => (
         </th>
         <th>interest</th>
         <th>vehicle</th>
+        <th>Modify</th>
         <th>Delete</th>
       </tr>
     </thead>
@@ -416,6 +436,14 @@ const accountTable = (data, actions) => (
           <td>{account.starting}</td>
           <td>{account.interest * 100}%</td>
           <td>{account.vehicle}</td>
+          <td>
+            <button
+              className="button is-rounded is-small is-info"
+              onClick={actions.modifyAccount.bind(this, account.name)}
+            >
+              M
+            </button>
+          </td>
           <td>
             <button
               className="delete"

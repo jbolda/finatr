@@ -7,12 +7,7 @@ class AccountInput extends React.Component {
       <React.Fragment>
         <h1 className="title has-text-centered">Add an Account</h1>
         <Formik
-          initialValues={{
-            name: `account3`,
-            starting: 150,
-            interest: 0.01,
-            vehicle: 'operating'
-          }}
+          initialValues={this.props.initialValues}
           onSubmit={(values, actions) => {
             this.props.addAccount(values);
             actions.setSubmitting(false);
