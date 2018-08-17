@@ -168,8 +168,8 @@ class Financial extends React.Component {
     newState.transactionForm = this.state.transactions.find(
       element => element.id === id
     );
-
     this.setState(resolveData(newState));
+    this.transactionTabs.tabClick(1);
   };
 
   deleteTransaction = id => {
@@ -292,6 +292,7 @@ class Financial extends React.Component {
 
         <section className="section">
           <TabView
+            ref={ref => (this.transactionTabs = ref)}
             tabTitles={['All Transactions', 'Add Transaction']}
             tabContents={[
               transactionTable(this.state.transactions, {
@@ -309,6 +310,7 @@ class Financial extends React.Component {
 
         <section className="section">
           <TabView
+            ref={ref => (this.accountTabs = ref)}
             tabTitles={['All Accounts', 'Add Account']}
             tabContents={[
               accountTable(this.state.accounts, {
