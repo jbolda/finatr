@@ -475,6 +475,7 @@ class TabView extends React.Component {
           <ul>
             {this.props.tabTitles.map((tab, index) => (
               <li
+                key={tab}
                 className={index === this.state.activeTab ? 'is-active' : ''}
                 onClick={this.tabClick.bind(this, index)}
               >
