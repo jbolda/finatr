@@ -97,7 +97,13 @@ const sortTransactionOrder = (a, b) => {
   const typeB = b.type.toUpperCase();
 
   let comparison = 0;
-  if (typeA > typeB) {
+  if (typeA === typeB) {
+    if (a.value > b.value) {
+      comparison = 1;
+    } else {
+      comparison = -1;
+    }
+  } else if (typeA > typeB) {
     comparison = 1;
   } else if (typeA < typeB) {
     comparison = -1;
