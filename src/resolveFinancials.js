@@ -98,7 +98,7 @@ const sortTransactionOrder = (a, b) => {
 
   let comparison = 0;
   if (typeA === typeB) {
-    if (a.value > b.value) {
+    if (Math.abs(a.value) > Math.abs(b.value)) {
       comparison = 1;
     } else {
       comparison = -1;
