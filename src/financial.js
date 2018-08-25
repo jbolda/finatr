@@ -443,7 +443,7 @@ const accountTable = (data, actions) => (
         <tr key={account.name}>
           <th>{account.name}</th>
           <td>{account.starting}</td>
-          <td>{account.interest * 100}%</td>
+          <td>{account.interest}%</td>
           <td>{account.vehicle}</td>
           <td>
             <button
