@@ -190,7 +190,14 @@ class Financial extends React.Component {
 
   addAccount = result => {
     let newState = { ...this.state };
-    newState.accounts.push(result);
+    let existingAccountIndex = newState.accounts
+      .map(t => t.name)
+      .indexOf(result.name);
+    if (existingAccountIndex === -1) {
+      newState.accounts.push(result);
+    } else {
+      newState.accounts.splice(existingAccountIndex, 1, result);
+    }
     this.setState(resolveData(newState));
     this.accountTabs.tabClick(0);
   };
