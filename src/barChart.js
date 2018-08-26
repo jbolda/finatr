@@ -32,7 +32,7 @@ export class BarChart extends Component {
       blobs = svgBar.select('g');
       initLine = {
         lineGroup: svgLine.select('g'),
-        tooltipLine: svgLine.select('path')
+        tooltipLine: svgLine.select('line')
       };
     }
 
