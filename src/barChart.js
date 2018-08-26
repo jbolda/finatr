@@ -531,13 +531,15 @@ barBuild.drawLine = function(
         .attr('y1', 0)
         .attr('y2', max_domain);
 
-      let lineVals = linePositions.map(line => {
-        let scaledY = barBuild
-          .yScale(max_domain)
-          .invert(line.positionY)
-          .toFixed(2);
-        return { data: line.node.__data__, date: new Date(), value: scaledY };
-      });
+      let lineVals = linePositions
+        .map(line => {
+          let scaledY = barBuild
+            .yScale(max_domain)
+            .invert(line.positionY)
+            .toFixed(2);
+          return { data: line.node.__data__, date: new Date(), value: scaledY };
+        })
+        .sort((a, b) => b.value - a.value);
 
       tooltip.render(
         { pageX: d3.event.pageX, pageY: d3.event.pageY },
