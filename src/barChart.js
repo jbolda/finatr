@@ -24,13 +24,16 @@ export class BarChart extends Component {
 
   drawCharts(phase, data, svgBar, svgLine) {
     let blobs;
-    let lineGroup;
+    let initLine;
     if (phase === 'initial') {
       blobs = barBuild.initBar(svgBar);
-      lineGroup = barBuild.initLine(svgLine);
+      initLine = barBuild.initLine(svgLine);
     } else if (phase === 'update') {
       blobs = svgBar.select('g');
-      lineGroup = svgLine.select('g');
+      initLine = {
+        lineGroup: svgLine.select('g'),
+        tooltipLine: svgLine.select('path')
+      };
     }
 
     let tooltipBar = {
@@ -61,7 +64,9 @@ export class BarChart extends Component {
       unmount: this.unmountTooltip
     };
     let line = barBuild.drawLine(
-      lineGroup,
+      d3.select('.line-section'),
+      initLine.lineGroup,
+      initLine.tooltipLine,
       data.AccountChart,
       data.LineChartMax,
       tooltipLine
@@ -89,18 +94,21 @@ export class BarChart extends Component {
     ReactDOM.render(tooltipComponent, tooltipTarget);
   }
 
-  renderTooltipLine(coordinates, tooltipData, value, tooltipTarget) {
+  renderTooltipLine(coordinates, tooltipData, tooltipTarget) {
     let styles = {
       position: 'absolute',
       pointerEvents: 'none',
       left: `${coordinates.pageX}px`,
       top: `${coordinates.pageY}px`
     };
+
     const tooltipComponent = (
       <div className="notification is-primary" id="tooltipLine" style={styles}>
-        <p>{tooltipData.account}</p>
-        <p>({tooltipData.vehicle})</p>
-        <p>${value}</p>
+        {tooltipData.map(line => (
+          <p key={line.data.account}>
+            {line.data.account} ${line.value}
+          </p>
+        ))}
       </div>
     );
 
@@ -439,14 +447,30 @@ barBuild.drawBar = function(
 };
 
 barBuild.initLine = function(svg) {
-  return svg
+  let tooltipLine = svg
+    .append('line')
+    .attr('class', 'tooltipLine')
+    .attr('stroke', 'black');
+  tooltipLine.enter();
+
+  let lineGroup = svg
     .append('g')
     .attr('class', 'line')
     .attr('transform', `translate(${0},${this.margin().top})`);
+
+  return { lineGroup, tooltipLine };
 };
 
-barBuild.drawLine = function(lineGroup, data, max_domain, tooltip) {
+barBuild.drawLine = function(
+  svg,
+  lineGroup,
+  tooltipLine,
+  data,
+  max_domain,
+  tooltip
+) {
   let linecolors = d3.scaleOrdinal(d3.schemeCategory10);
+  let marginLeft = this.margin().left;
 
   const line = d3
     .line()
@@ -469,40 +493,61 @@ barBuild.drawLine = function(lineGroup, data, max_domain, tooltip) {
     .attr('d', d => line(d.values))
     .attr('stroke', (d, i) => linecolors(i))
     .attr('stroke-width', 2)
-    .attr('fill', 'none')
-    .on('mouseover', function(d, i, node) {
+    .attr('fill', 'none');
+
+  lines.exit().remove();
+
+  svg
+    .on('mousemove', function(d, i, node) {
       let mouse = d3.mouse(this);
-      let beginning = 0;
-      let end = node[i].getTotalLength();
-      let target, position;
-      while (true) {
-        target = Math.floor((beginning + end) / 2);
-        position = node[i].getPointAtLength(target);
-        if (
-          (target === end || target === beginning) &&
-          position.x !== mouse[0]
-        ) {
-          break;
+      let positionX = mouse[0] - marginLeft;
+      let lineGroup = Array.from(node[0].firstChild.childNodes[1].childNodes);
+
+      let linePositions = lineGroup.map(lineNode => {
+        let beginning = 0;
+        let end = lineNode.getTotalLength();
+        let target, position;
+        while (true) {
+          target = Math.floor((beginning + end) / 2);
+          position = lineNode.getPointAtLength(target);
+          if (
+            (target === end || target === beginning) &&
+            position.x !== mouse[0]
+          ) {
+            break;
+          }
+          if (position.x > mouse[0]) end = target;
+          else if (position.x < mouse[0]) beginning = target;
+          else break; //position found
         }
-        if (position.x > mouse[0]) end = target;
-        else if (position.x < mouse[0]) beginning = target;
-        else break; //position found
-      }
+        return { node: lineNode, positionY: position.y };
+      });
+
+      tooltipLine
+        .transition()
+        .duration(300)
+        .attr('x1', positionX)
+        .attr('x2', positionX)
+        .attr('y1', 0)
+        .attr('y2', max_domain);
+
+      let lineVals = linePositions.map(line => {
+        let scaledY = barBuild
+          .yScale(max_domain)
+          .invert(line.positionY)
+          .toFixed(2);
+        return { data: line.node.__data__, date: new Date(), value: scaledY };
+      });
+
       tooltip.render(
         { pageX: d3.event.pageX, pageY: d3.event.pageY },
-        this.__data__,
-        barBuild
-          .yScale(max_domain)
-          .invert(position.y)
-          .toFixed(2),
+        lineVals,
         tooltip.target
       );
     })
     .on('mouseout', function() {
       tooltip.unmount(tooltip.target);
     });
-
-  lines.exit().remove();
 };
 
 // function to convert javascript dates into a pretty format (i.e. '2014-12-03')
