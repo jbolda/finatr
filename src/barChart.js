@@ -512,12 +512,12 @@ barBuild.drawLine = function(
           position = lineNode.getPointAtLength(target);
           if (
             (target === end || target === beginning) &&
-            position.x !== mouse[0]
+            position.x !== positionX
           ) {
             break;
           }
-          if (position.x > mouse[0]) end = target;
-          else if (position.x < mouse[0]) beginning = target;
+          if (position.x > positionX) end = target;
+          else if (position.x < positionX) beginning = target;
           else break; //position found
         }
         return { node: lineNode, positionY: position.y };
@@ -525,7 +525,8 @@ barBuild.drawLine = function(
 
       tooltipLine
         .transition()
-        .duration(300)
+        .duration(400)
+        .ease(d3.easeBackOut)
         .attr('x1', positionX)
         .attr('x2', positionX)
         .attr('y1', 0)
