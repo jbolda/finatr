@@ -24,20 +24,12 @@ class TransactionInput extends React.Component {
             isSubmitting
           }) => (
             <form onSubmit={handleSubmit} autoComplete="off">
-              <div className="field is-horizontal">
-                <div className="field-label is-normal">
-                  <label className="label">id</label>
-                </div>
-                <div className="field-body">
-                  <div className="field">
-                    <p className="control">
-                      <Field type="text" name="id" className="input" />
-                    </p>
-                  </div>
-                </div>
-
-                {touched.id && errors.id && <div>{errors.id}</div>}
-              </div>
+              <Field
+                type="text"
+                name="id"
+                className="input"
+                style={{ display: 'none' }}
+              />
               <div className="field is-horizontal">
                 <div className="field-label is-normal">
                   <label className="label">account</label>
