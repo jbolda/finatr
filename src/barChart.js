@@ -450,7 +450,8 @@ barBuild.initLine = function(svg) {
   let tooltipLine = svg
     .append('line')
     .attr('class', 'tooltipLine')
-    .attr('stroke', 'black');
+    .attr('stroke', 'black')
+    .attr('pointer-events', 'none');
   tooltipLine.enter();
 
   let lineGroup = svg
