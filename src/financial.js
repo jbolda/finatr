@@ -1,6 +1,7 @@
 import React from 'react';
 import BarChart from './barChart';
 import resolveData from './resolveFinancials';
+import makeUUID from './makeUUID.js';
 
 import TransactionInput from './transactionInput';
 import AccountInput from './accountInput';
@@ -116,7 +117,7 @@ class Financial extends React.Component {
         }
       ],
       transactionForm: {
-        id: `oasid7`,
+        id: ``,
         raccount: `account`,
         description: `description`,
         category: `test default`,
@@ -158,14 +159,19 @@ class Financial extends React.Component {
 
   addTransaction = result => {
     let newState = { ...this.state };
-    let existingTransactionIndex = newState.transactions
-      .map(t => t.id)
-      .indexOf(result.id);
-    if (existingTransactionIndex === -1) {
-      newState.transactions.push(result);
+    if (result.id || result.id !== '') {
+      let existingTransactionIndex = newState.transactions
+        .map(t => t.id)
+        .indexOf(result.id);
+      if (existingTransactionIndex === -1) {
+        newState.transactions.push(result);
+      } else {
+        newState.transactions.splice(existingTransactionIndex, 1, result);
+      }
     } else {
-      newState.transactions.splice(existingTransactionIndex, 1, result);
+      newState.transactions.push({ ...result, id: makeUUID() });
     }
+    newState.transactionForm.id = '';
     this.setState(resolveData(newState));
     this.transactionTabs.tabClick(0);
   };
@@ -370,9 +376,6 @@ const transactionTable = (data, actions) => (
     <thead>
       <tr>
         <th>
-          <abbr title="unique id">id</abbr>
-        </th>
-        <th>
           <abbr title="real account">raccount</abbr>
         </th>
         <th>description</th>
@@ -394,7 +397,6 @@ const transactionTable = (data, actions) => (
     <tbody>
       {data.map(transaction => (
         <tr key={transaction.id}>
-          <th>{transaction.id}</th>
           <td>{transaction.raccount}</td>
           <td>{transaction.description}</td>
           <td>{transaction.category}</td>
