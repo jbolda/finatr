@@ -1,6 +1,6 @@
 {
-  "name": "budget",
-  "version": "1.0.0",
+  "name": "Reaccount",
+  "version": "1.0.0-alpha.0",
   "description": "",
   "keywords": [],
   "main": "src/index.js",
