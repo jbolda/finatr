@@ -7,7 +7,7 @@
   "dependencies": {
     "bulma": "0.7.1",
     "d3": "5.4.0",
-    "date-fns": "2.0.0-alpha.11",
+    "date-fns": "2.0.0-alpha.16",
     "formik": "1.0.2",
     "js-file-download": "0.4.1",
     "prop-types": "15.6.2",
