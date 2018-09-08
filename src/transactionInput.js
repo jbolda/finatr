@@ -131,6 +131,18 @@ class TransactionInput extends React.Component {
                         <option value="day of month">
                           Repeat on a Day of the Month
                         </option>
+                        <option value="bimonthly">
+                          Repeat Every Other Month on Day
+                        </option>
+                        <option value="quarterly">
+                          Repeat Every Quarter on Day
+                        </option>
+                        <option value="semiannually">
+                          Repeat Twice a Year on Day
+                        </option>
+                        <option value="annually">
+                          Repeat Every Year on Day
+                        </option>
                       </Field>
                     </div>
                   </div>

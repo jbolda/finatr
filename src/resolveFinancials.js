@@ -1,6 +1,9 @@
 import * as d3 from 'd3';
 import getDay from 'date-fns/fp/getDay';
 import getDate from 'date-fns/fp/getDate';
+import addDays from 'date-fns/fp/addDays';
+import startOfDay from 'date-fns/fp/startOfDay';
+import differenceInMonths from 'date-fns/fp/differenceInMonths';
 
 const resolveData = data => {
   data.transactions.sort(sortTransactionOrder);
@@ -164,6 +167,38 @@ const resolveBarChart = (data, width) => {
       ) {
         obj[key].y = d.value;
         obj[key].dailyRate = d.value / 30;
+      } else if (
+        d.rtype === 'bimonthly' &&
+        convertdate(i) >= d.start &&
+        getDate(i) === d.cycle &&
+        differenceInMonths(i)(d.start) % 2 === 0
+      ) {
+        obj[key].y = d.value;
+        obj[key].dailyRate = d.value / 30 / 2;
+      } else if (
+        d.rtype === 'quarterly' &&
+        convertdate(i) >= d.start &&
+        getDate(i) === d.cycle &&
+        differenceInMonths(i)(d.start) % 3 === 0
+      ) {
+        obj[key].y = d.value;
+        obj[key].dailyRate = d.value / 30 / 3;
+      } else if (
+        d.rtype === 'semiannually' &&
+        convertdate(i) >= d.start &&
+        getDate(i) === d.cycle &&
+        differenceInMonths(i)(d.start) % 6 === 0
+      ) {
+        obj[key].y = d.value;
+        obj[key].dailyRate = d.value / 30 / 6;
+      } else if (
+        d.rtype === 'annually' &&
+        convertdate(i) >= d.start &&
+        getDate(i) === d.cycle &&
+        differenceInMonths(i)(d.start) % 12 === 0
+      ) {
+        obj[key].y = d.value;
+        obj[key].dailyRate = d.value / 365;
       } else {
         obj[key].y = 0;
         obj[key].dailyRate = 0;
@@ -302,19 +337,15 @@ const shift = (width, daysinfuture) => {
 };
 
 const today = () => {
-  return new Date();
+  return startOfDay(new Date());
 };
 
 const future = daysinfuture => {
-  let future = new Date();
-  future.setDate(future.getDate() + daysinfuture);
-  return future;
+  return addDays(daysinfuture)(startOfDay(new Date()));
 };
 
 const past = () => {
-  let past = new Date();
-  past.setDate(past.getDate() + 1);
-  return past;
+  return addDays(1)(startOfDay(new Date()));
 };
 
 const graphrange = (past, future) => {
