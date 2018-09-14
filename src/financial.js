@@ -81,7 +81,6 @@ class Financial extends React.Component {
       type: `expense`,
       start: `2018-03-22`,
       rtype: `day`,
-      repeat: 1,
       cycle: 1,
       value: 112
     };
@@ -94,7 +93,6 @@ class Financial extends React.Component {
       type: `transfer`,
       start: `2018-03-22`,
       rtype: `day`,
-      repeat: 1,
       cycle: 1,
       value: 112
     };
@@ -114,6 +112,22 @@ class Financial extends React.Component {
           starting: 30000,
           interest: 0.01,
           vehicle: 'investment'
+        },
+        {
+          name: 'account3',
+          starting: 30000,
+          interest: 6.0,
+          vehicle: 'debt',
+          payback: [
+            {
+              id: `oasisasdqljg`,
+              description: `description`,
+              start: `2018-03-22`,
+              rtype: `day`,
+              cycle: 1,
+              value: 112
+            }
+          ]
         }
       ],
       transactionForm: {
@@ -341,7 +355,7 @@ class Financial extends React.Component {
         <section className="section">
           <TabView
             ref={ref => (this.accountTabs = ref)}
-            tabTitles={['All Accounts', 'Add Account']}
+            tabTitles={['All Accounts', 'Add Account', 'Debt']}
             tabContents={[
               accountTable(this.state.accounts, {
                 modifyAccount: this.modifyAccount,
@@ -350,7 +364,11 @@ class Financial extends React.Component {
               <AccountInput
                 addAccount={this.addAccount}
                 initialValues={this.state.accountForm}
-              />
+              />,
+              debtTable(this.state.accounts, {
+                modifyAccount: this.modifyAccount,
+                deleteAccount: this.deleteAccount
+              })
             ]}
           />
         </section>
@@ -466,6 +484,60 @@ const accountTable = (data, actions) => (
     </tbody>
   </table>
 );
+
+const debtTable = (data, actions) =>
+  data.filter(account => account.vehicle === 'debt').map(account => (
+    <div className="media box" key={account.name}>
+      <div className="media-content">
+        <div className="content">
+          <p>
+            <strong>{account.name}</strong>{' '}
+            <small>{`$${account.starting} @ ${account.interest}%`}</small>
+          </p>
+        </div>
+        {account.payback ? paybackTable(account.payback, actions) : null}
+      </div>
+      <div className="media-right">
+        <button
+          className="button is-rounded is-small is-info"
+          onClick={actions.modifyAccount.bind(this, account.name)}
+        >
+          M
+        </button>
+        <button
+          className="delete"
+          onClick={actions.deleteAccount.bind(this, account.name)}
+        />
+      </div>
+    </div>
+  ));
+
+const paybackTable = (data, actions) =>
+  data.map(payback => (
+    <div className="media" key={payback.id}>
+      <div className="media-content">
+        <p>
+          <strong>{payback.start}</strong>{' '}
+          <small>{`${payback.rtype} @ ${payback.cycle} for ${
+            payback.value
+          }`}</small>
+        </p>
+        <p>{payback.description}</p>
+      </div>
+      <div className="media-right">
+        <button
+          className="button is-rounded is-small is-info"
+          onClick={actions.modifyAccount.bind(this, payback.id)}
+        >
+          M
+        </button>
+        <button
+          className="delete"
+          onClick={actions.deleteAccount.bind(this, payback.id)}
+        />
+      </div>
+    </div>
+  ));
 
 class TabView extends React.Component {
   constructor() {
