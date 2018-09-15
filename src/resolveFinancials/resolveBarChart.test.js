@@ -1,4 +1,4 @@
-import { resolveBarChart } from './index.js';
+import { resolveBarChart, past, future } from './index.js';
 
 const testData = {
   transactions: [
@@ -17,7 +17,9 @@ const testData = {
 };
 
 describe(`check resolveBarChart`, () => {
-  let resolvedTestData = resolveBarChart(testData.transactions);
+  let graphRange = { start: past(), end: future(356) };
+  let resolvedTestData = resolveBarChart(testData.transactions, { graphRange });
+
   it(`has all the correct original properties`, () => {
     expect(resolvedTestData[0]).toHaveProperty('id', 'oasidjas1');
     expect(resolvedTestData[0]).toHaveProperty('raccount', 'account');

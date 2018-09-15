@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval';
 import getDay from 'date-fns/fp/getDay';
 import getDate from 'date-fns/fp/getDate';
 import addDays from 'date-fns/fp/addDays';
@@ -7,6 +8,7 @@ import differenceInMonths from 'date-fns/fp/differenceInMonths';
 
 const resolveData = data => {
   data.transactions.sort(sortTransactionOrder);
+  let graphRange = { start: past(), end: future(356) };
 
   let splitTransactions = {
     income: [],
@@ -38,9 +40,9 @@ const resolveData = data => {
     }
   });
 
-  let BarChart = resolveBarChart(data.transactions);
-  let BarChartIncome = resolveBarChart(splitTransactions.income);
-  let BarChartExpense = resolveBarChart(splitTransactions.expense);
+  let BarChart = resolveBarChart(data.transactions, graphRange);
+  let BarChartIncome = resolveBarChart(splitTransactions.income, graphRange);
+  let BarChartExpense = resolveBarChart(splitTransactions.expense, graphRange);
   let AccountChart = resolveAccountChart(data, BarChart);
 
   const extractValue = value => {
@@ -120,7 +122,7 @@ const sortTransactionOrder = (a, b) => {
   return comparison;
 };
 
-const resolveBarChart = (data, width) => {
+const resolveBarChart = (data, { graphRange }) => {
   // return early with an empty array
   // for empty data
   if (!data || data.length === 0) return [];
@@ -133,15 +135,10 @@ const resolveBarChart = (data, width) => {
     keys.push(key);
   });
 
-  let numberofFutureDays = daysinfuture(width);
-  let graphRange = graphrange(past(), future(numberofFutureDays));
-  let minX = min_x(graphRange);
-  let maxX = max_x(graphRange);
-
-  for (let i = minX; i <= maxX; i.setDate(i.getDate() + 1)) {
+  eachDayOfInterval(graphRange).forEach(day => {
     //create object for stack layout
-    arrData.push(stackObj(i, data));
-  }
+    arrData.push(stackObj(day, data));
+  });
 
   let stack = d3
     .stack()
@@ -328,23 +325,11 @@ export { resolveBarChart, resolveAccountChart };
 export default resolveData;
 
 const future = daysinfuture => {
-  return addDays(356)(startOfDay(new Date()));
+  return addDays(daysinfuture)(startOfDay(new Date()));
 };
 
 const past = () => {
   return addDays(1)(startOfDay(new Date()));
-};
-
-const graphrange = (past, future) => {
-  return [convertdate(past), convertdate(future)];
-};
-
-const min_x = graphrange => {
-  return parseDate(graphrange[0]);
-};
-
-const max_x = graphrange => {
-  return parseDate(graphrange[1]);
 };
 
 // function to convert javascript dates into a pretty format (i.e. '2014-12-03')
@@ -366,3 +351,5 @@ const convertdate = date => {
 const parseDate = date => {
   return d3.timeParse('%Y-%m-%d')(date);
 };
+
+export { past, future };
