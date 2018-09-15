@@ -32,6 +32,11 @@ const resolveData = data => {
         break;
     }
   });
+  data.accounts.forEach(account => {
+    if (account.vehicle === 'debt' && account.payback) {
+      splitTransactions.expense.push([...account.payback]);
+    }
+  });
 
   let BarChart = resolveBarChart(data.transactions);
   let BarChartIncome = resolveBarChart(splitTransactions.income);
@@ -65,7 +70,8 @@ const resolveData = data => {
 
   const sumInvest = d => {
     let accountRaw = data.accounts.find(acc => acc.name === d.raccount);
-    if (accountRaw.vehicle === 'investment') {
+
+    if (accountRaw && accountRaw.vehicle === 'investment') {
       return d.dailyRate;
     } else {
       return 0;
@@ -123,7 +129,7 @@ const resolveBarChart = (data, width) => {
   let keys = [];
 
   data.forEach(d => {
-    let key = `${d.id}`;
+    let key = `${d.id ? d.id : d[0].id}`;
     keys.push(key);
   });
 
@@ -145,11 +151,11 @@ const resolveBarChart = (data, width) => {
   let stacked = stack(arrData);
   let maxHeight = d3.max(stacked.reduce((a, b) => a.concat(b)), d => d[1]);
 
-  return data.map((entry, index) => ({
-    ...entry,
+  return keys.map((key, index) => ({
+    ...arrData[0][key],
     stack: stacked[index],
     maxHeight: maxHeight,
-    dailyRate: d3.max(arrData, d => d[entry.id].dailyRate)
+    dailyRate: d3.max(arrData, d => d[key].dailyRate)
   }));
 };
 
@@ -157,8 +163,8 @@ const stackObj = (i, data) => {
   let obj = {};
   obj.date = new Date(i);
   data.forEach(d => {
-    let key = `${d.id}`;
-    obj[key] = { ...d };
+    let key = `${d.id ? d.id : d[0].id}`;
+    obj[key] = Array.isArray(d) ? { ...d[0] } : { ...d };
     obj[key].y = 0;
     obj[key].dailyRate = 0;
     let transactions = Array.isArray(d) ? d : [d];

@@ -120,8 +120,11 @@ class Financial extends React.Component {
           vehicle: 'debt',
           payback: [
             {
-              id: `oasisasdqljg`,
-              description: `description`,
+              id: `sasdqljg`,
+              raccount: 'account3',
+              description: `payback`,
+              category: 'account3 payback',
+              type: 'expense',
               start: `2018-03-22`,
               rtype: `day`,
               cycle: 1,
@@ -150,8 +153,6 @@ class Financial extends React.Component {
     };
 
     this.state = resolveData(dataArray);
-
-    // this.deleteTransaction = this.deleteTransaction.bind(this);
   }
 
   handleUpload = (event, results) => {
