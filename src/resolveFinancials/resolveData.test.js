@@ -1,4 +1,4 @@
-import resolveData from './resolveFinancials.js';
+import resolveData from './index.js';
 
 let data = [];
 let dOne = {
@@ -144,7 +144,8 @@ describe(`check resolveData`, () => {
         id: 'oasidjas1',
         maxHeight: 402,
         raccount: 'account',
-        rtype: 'day'
+        rtype: 'day',
+        stack: expect.arrayContaining([0, 0])
       })
     ];
     expect(resolvedTestData.BarChartIncome).toEqual(
