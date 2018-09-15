@@ -134,77 +134,7 @@ const resolveBarChart = (data, width) => {
 
   for (let i = minX; i <= maxX; i.setDate(i.getDate() + 1)) {
     //create object for stack layout
-    let obj = {};
-    obj.date = new Date(i);
-    data.forEach(d => {
-      let key = `${d.id}`;
-      obj[key] = { ...d };
-
-      if (convertdate(i) === d.start && d.rtype === 'none') {
-        obj[key].y = d.value;
-        obj[key].dailyRate = 0;
-      } else if (convertdate(i) > d.end && d.end !== 'none') {
-        obj[key].y = 0;
-        obj[key].dailyRate = 0;
-      } else if (
-        d.rtype === 'day' &&
-        d.cycle != null &&
-        ((i - parseDate(d.start)) / (24 * 60 * 60 * 1000)) % d.cycle < 1
-      ) {
-        obj[key].y = d.value;
-        obj[key].dailyRate = d.value / d.cycle;
-      } else if (
-        d.rtype === 'day of week' &&
-        convertdate(i) >= d.start &&
-        getDay(i) === d.cycle
-      ) {
-        obj[key].y = d.value;
-        obj[key].dailyRate = d.value / 7;
-      } else if (
-        d.rtype === 'day of month' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle
-      ) {
-        obj[key].y = d.value;
-        obj[key].dailyRate = d.value / 30;
-      } else if (
-        d.rtype === 'bimonthly' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle &&
-        differenceInMonths(i)(d.start) % 2 === 0
-      ) {
-        obj[key].y = d.value;
-        obj[key].dailyRate = d.value / 30 / 2;
-      } else if (
-        d.rtype === 'quarterly' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle &&
-        differenceInMonths(i)(d.start) % 3 === 0
-      ) {
-        obj[key].y = d.value;
-        obj[key].dailyRate = d.value / 30 / 3;
-      } else if (
-        d.rtype === 'semiannually' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle &&
-        differenceInMonths(i)(d.start) % 6 === 0
-      ) {
-        obj[key].y = d.value;
-        obj[key].dailyRate = d.value / 30 / 6;
-      } else if (
-        d.rtype === 'annually' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle &&
-        differenceInMonths(i)(d.start) % 12 === 0
-      ) {
-        obj[key].y = d.value;
-        obj[key].dailyRate = d.value / 365;
-      } else {
-        obj[key].y = 0;
-        obj[key].dailyRate = 0;
-      }
-    });
-    arrData.push(obj);
+    arrData.push(stackObj(i, data));
   }
 
   let stack = d3
@@ -221,6 +151,86 @@ const resolveBarChart = (data, width) => {
     maxHeight: maxHeight,
     dailyRate: d3.max(arrData, d => d[entry.id].dailyRate)
   }));
+};
+
+const stackObj = (i, data) => {
+  let obj = {};
+  obj.date = new Date(i);
+  data.forEach(d => {
+    let key = `${d.id}`;
+    obj[key] = { ...d };
+    obj[key].y = 0;
+    obj[key].dailyRate = 0;
+    let transactions = Array.isArray(d) ? d : [d];
+
+    transactions.forEach(d => {
+      if (convertdate(i) === d.start && d.rtype === 'none') {
+        obj[key].y += d.value;
+        obj[key].dailyRate += 0;
+      } else if (convertdate(i) > d.end && d.end !== 'none') {
+        obj[key].y += 0;
+        obj[key].dailyRate += 0;
+      } else if (
+        d.rtype === 'day' &&
+        d.cycle != null &&
+        ((i - parseDate(d.start)) / (24 * 60 * 60 * 1000)) % d.cycle < 1
+      ) {
+        obj[key].y += d.value;
+        obj[key].dailyRate += d.value / d.cycle;
+      } else if (
+        d.rtype === 'day of week' &&
+        convertdate(i) >= d.start &&
+        getDay(i) === d.cycle
+      ) {
+        obj[key].y += d.value;
+        obj[key].dailyRate += d.value / 7;
+      } else if (
+        d.rtype === 'day of month' &&
+        convertdate(i) >= d.start &&
+        getDate(i) === d.cycle
+      ) {
+        obj[key].y += d.value;
+        obj[key].dailyRate += d.value / 30;
+      } else if (
+        d.rtype === 'bimonthly' &&
+        convertdate(i) >= d.start &&
+        getDate(i) === d.cycle &&
+        differenceInMonths(i)(d.start) % 2 === 0
+      ) {
+        obj[key].y += d.value;
+        obj[key].dailyRate += d.value / 30 / 2;
+      } else if (
+        d.rtype === 'quarterly' &&
+        convertdate(i) >= d.start &&
+        getDate(i) === d.cycle &&
+        differenceInMonths(i)(d.start) % 3 === 0
+      ) {
+        obj[key].y += d.value;
+        obj[key].dailyRate += d.value / 30 / 3;
+      } else if (
+        d.rtype === 'semiannually' &&
+        convertdate(i) >= d.start &&
+        getDate(i) === d.cycle &&
+        differenceInMonths(i)(d.start) % 6 === 0
+      ) {
+        obj[key].y += d.value;
+        obj[key].dailyRate += d.value / 30 / 6;
+      } else if (
+        d.rtype === 'annually' &&
+        convertdate(i) >= d.start &&
+        getDate(i) === d.cycle &&
+        differenceInMonths(i)(d.start) % 12 === 0
+      ) {
+        obj[key].y += d.value;
+        obj[key].dailyRate += d.value / 365;
+      } else {
+        obj[key].y += 0;
+        obj[key].dailyRate += 0;
+      }
+    });
+  });
+
+  return obj;
 };
 
 const resolveAccountChart = (data, dataMassaged) => {
