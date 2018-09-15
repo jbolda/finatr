@@ -1,4 +1,4 @@
-import { resolveBarChart, past, future } from './index.js';
+import { resolveBarChart } from './index.js';
 
 const testData = {
   transactions: [
@@ -17,10 +17,14 @@ const testData = {
 };
 
 describe(`check resolveBarChart`, () => {
-  let graphRange = { start: past(), end: future(356) };
-  let resolvedTestData = resolveBarChart(testData.transactions, { graphRange });
-
   it(`has all the correct original properties`, () => {
+    let graphRange = {
+      start: new Date('2018-01-01').setHours(0),
+      end: new Date('2019-01-01').setHours(0)
+    };
+    let resolvedTestData = resolveBarChart(testData.transactions, {
+      graphRange
+    });
     expect(resolvedTestData[0]).toHaveProperty('id', 'oasidjas1');
     expect(resolvedTestData[0]).toHaveProperty('raccount', 'account');
     expect(resolvedTestData[0]).toHaveProperty('description', 'description');
@@ -33,10 +37,54 @@ describe(`check resolveBarChart`, () => {
   });
 
   it(`has the new properties`, () => {
+    let graphRange = {
+      start: new Date('2018-01-01').setHours(0),
+      end: new Date('2018-02-01').setHours(0)
+    };
+    let resolvedTestData = resolveBarChart(testData.transactions, {
+      graphRange
+    });
     expect(resolvedTestData[0]).toHaveProperty('dailyRate', 50);
     expect(resolvedTestData[0]).toHaveProperty('maxHeight', 150);
     expect(resolvedTestData[0].stack).toEqual(
       expect.arrayContaining([expect.arrayContaining([0, 0])])
+    );
+    let stacked = [
+      [0, 150],
+      [0, 0],
+      [0, 0],
+      [0, 150],
+      [0, 0],
+      [0, 0],
+      [0, 150],
+      [0, 0],
+      [0, 0],
+      [0, 150],
+      [0, 0],
+      [0, 0],
+      [0, 150],
+      [0, 0],
+      [0, 0],
+      [0, 150],
+      [0, 0],
+      [0, 0],
+      [0, 150],
+      [0, 0],
+      [0, 0],
+      [0, 150],
+      [0, 0],
+      [0, 0],
+      [0, 150],
+      [0, 0],
+      [0, 0],
+      [0, 150],
+      [0, 0],
+      [0, 0],
+      [0, 150],
+      [0, 0]
+    ];
+    expect(JSON.stringify(resolvedTestData[0].stack)).toBe(
+      JSON.stringify(stacked)
     );
   });
 });

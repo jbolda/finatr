@@ -1,5 +1,9 @@
 import * as d3 from 'd3';
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval';
+import isSameDay from 'date-fns/fp/isSameDay';
+import isAfter from 'date-fns/fp/isAfter';
+import isBefore from 'date-fns/fp/isBefore';
+import differenceInCalendarDays from 'date-fns/fp/differenceInCalendarDays';
 import getDay from 'date-fns/fp/getDay';
 import getDate from 'date-fns/fp/getDate';
 import addDays from 'date-fns/fp/addDays';
@@ -156,9 +160,9 @@ const resolveBarChart = (data, { graphRange }) => {
   }));
 };
 
-const stackObj = (i, data) => {
+const stackObj = (day, data) => {
   let obj = {};
-  obj.date = new Date(i);
+  obj.date = day;
   data.forEach(d => {
     let key = `${d.id ? d.id : d[0].id}`;
     obj[key] = Array.isArray(d) ? { ...d[0] } : { ...d };
@@ -167,62 +171,62 @@ const stackObj = (i, data) => {
     let transactions = Array.isArray(d) ? d : [d];
 
     transactions.forEach(d => {
-      if (convertdate(i) === d.start && d.rtype === 'none') {
+      if (isSameDay(day)(d.start) && d.rtype === 'none') {
         obj[key].y += d.value;
         obj[key].dailyRate += 0;
-      } else if (convertdate(i) > d.end && d.end !== 'none') {
+      } else if (isAfter(day)(d.end) && d.end !== 'none') {
         obj[key].y += 0;
         obj[key].dailyRate += 0;
       } else if (
         d.rtype === 'day' &&
         d.cycle != null &&
-        ((i - parseDate(d.start)) / (24 * 60 * 60 * 1000)) % d.cycle < 1
+        differenceInCalendarDays(day)(d.start) % d.cycle < 1
       ) {
         obj[key].y += d.value;
         obj[key].dailyRate += d.value / d.cycle;
       } else if (
         d.rtype === 'day of week' &&
-        convertdate(i) >= d.start &&
-        getDay(i) === d.cycle
+        (isAfter(d.start)(day) || isSameDay(d.start)(day)) &&
+        getDay(day) === d.cycle
       ) {
         obj[key].y += d.value;
         obj[key].dailyRate += d.value / 7;
       } else if (
         d.rtype === 'day of month' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle
+        (isAfter(d.start)(day) || isSameDay(d.start)(day)) &&
+        getDate(day) === d.cycle
       ) {
         obj[key].y += d.value;
         obj[key].dailyRate += d.value / 30;
       } else if (
         d.rtype === 'bimonthly' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle &&
-        differenceInMonths(i)(d.start) % 2 === 0
+        (isAfter(d.start)(day) || isSameDay(d.start)(day)) &&
+        getDate(day) === d.cycle &&
+        differenceInMonths(day)(d.start) % 2 === 0
       ) {
         obj[key].y += d.value;
         obj[key].dailyRate += d.value / 30 / 2;
       } else if (
         d.rtype === 'quarterly' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle &&
-        differenceInMonths(i)(d.start) % 3 === 0
+        (isAfter(d.start)(day) || isSameDay(d.start)(day)) &&
+        getDate(day) === d.cycle &&
+        differenceInMonths(day)(d.start) % 3 === 0
       ) {
         obj[key].y += d.value;
         obj[key].dailyRate += d.value / 30 / 3;
       } else if (
         d.rtype === 'semiannually' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle &&
-        differenceInMonths(i)(d.start) % 6 === 0
+        (isAfter(d.start)(day) || isSameDay(d.start)(day)) &&
+        getDate(day) === d.cycle &&
+        differenceInMonths(day)(d.start) % 6 === 0
       ) {
         obj[key].y += d.value;
         obj[key].dailyRate += d.value / 30 / 6;
       } else if (
         d.rtype === 'annually' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle &&
-        differenceInMonths(i)(d.start) % 12 === 0
+        (isAfter(d.start)(day) || isSameDay(d.start)(day)) &&
+        getDate(day) === d.cycle &&
+        differenceInMonths(day)(d.start) % 12 === 0
       ) {
         obj[key].y += d.value;
         obj[key].dailyRate += d.value / 365;
