@@ -327,37 +327,8 @@ const resolveAccountChart = (data, dataMassaged) => {
 export { resolveBarChart, resolveAccountChart };
 export default resolveData;
 
-const daysinfuture = divWidth => {
-  if (divWidth > 1000) {
-    return 240;
-  } else {
-    return 120;
-  }
-};
-
-const margin = () => {
-  return { top: 10, right: 20, bottom: 40, left: 40 };
-};
-
-const width = (divWidth, margin, daysinfuture) => {
-  return;
-  divWidth - margin.left - margin.right + daysinfuture * 20;
-};
-
-const height = (divWidth, margin) => {
-  return d3.min([divWidth * 0.5 - margin.top - margin.bottom, 350]);
-};
-
-const shift = (width, daysinfuture) => {
-  return width / daysinfuture;
-};
-
-const today = () => {
-  return startOfDay(new Date());
-};
-
 const future = daysinfuture => {
-  return addDays(daysinfuture)(startOfDay(new Date()));
+  return addDays(356)(startOfDay(new Date()));
 };
 
 const past = () => {
