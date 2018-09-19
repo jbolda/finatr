@@ -46,7 +46,9 @@ const generateModification = (
 ) => {
   let modification = nextModification(transaction.rtype)(transaction, prevDate);
   modification.mutateKey = transaction.id;
-  // console.log(transaction.id, modification);
+
+  // if this is a modification we should use then add it to the list
+  // and generate the next one
   if (
     isWithinInterval(transactionInterval)(modification.date) &&
     isAfter(prevDate)(modification.date) &&
@@ -61,9 +63,13 @@ const generateModification = (
       modifications,
       occurrences + 1
     );
+    // this isn't a modification we want because it is before
+    //  our graph starts, but we need to keep generating to confirm
+    // that none of the future ones fall within our graphRange
   } else if (
     isBefore(transactionInterval.end)(modification.date) &&
-    isAfter(prevDate)(modification.date)
+    isAfter(prevDate)(modification.date) &&
+    occurrences < 365
   ) {
     generateModification(
       transaction,
