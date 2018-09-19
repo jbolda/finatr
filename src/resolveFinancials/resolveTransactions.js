@@ -26,7 +26,7 @@ const computeTransactionModifications = (transactions, graphRange) =>
       generateModification(
         transaction,
         transactionInterval,
-        transactionInterval.start,
+        transaction.start,
         [],
         0
       )
@@ -57,6 +57,14 @@ const generateModification = (
       modification.date,
       modifications,
       occurrences + 1
+    );
+  } else if (isBefore(transactionInterval.end)(modification.date)) {
+    generateModification(
+      transaction,
+      transactionInterval,
+      modification.date,
+      modifications,
+      occurrences
     );
   }
   return modifications;
