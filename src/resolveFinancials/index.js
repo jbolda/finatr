@@ -154,18 +154,17 @@ const resolveBarChart = (data, { graphRange }) => {
   const replaceWithModified = (oldValue, modification) => {
     let newValue = oldValue;
     newValue.y += modification.y;
-    newValue.dailyRate = +modification.dailyRate;
+    newValue.dailyRate += modification.dailyRate;
     return newValue;
   };
 
   // return array of modifications to be applied to stackStructure
-  console.log(computeTransactionModifications(data, graphRange));
   let stackComputed = computeTransactionModifications(data, graphRange).reduce(
     (structure, modification) => {
       let modIndex = closestIndexTo(modification.date, allDates);
       let updatedStructure = structure;
-      updatedStructure[modIndex] = replaceWithModified(
-        updatedStructure[modIndex],
+      updatedStructure[modIndex][modification.mutateKey] = replaceWithModified(
+        updatedStructure[modIndex][modification.mutateKey],
         modification
       );
       return updatedStructure;
@@ -173,24 +172,19 @@ const resolveBarChart = (data, { graphRange }) => {
     stackStructure
   );
 
-  eachDayOfInterval(graphRange).forEach(day => {
-    //create object for stack layout
-    arrData.push(stackObj(day, data));
-  });
-
   let stack = d3
     .stack()
-    .value((d, key) => d[key].y)
+    .value((d, key) => d[key.value].y)
     .keys(keys);
 
-  let stacked = stack(arrData);
+  let stacked = stack(stackComputed);
   let maxHeight = d3.max(stacked.reduce((a, b) => a.concat(b)), d => d[1]);
 
   return keys.map((key, index) => ({
-    ...arrData[0][key],
+    ...stackComputed[0][key.value],
     stack: stacked[index],
     maxHeight: maxHeight,
-    dailyRate: d3.max(arrData, d => d[key].dailyRate)
+    dailyRate: d3.max(stackComputed, d => d[key.value].dailyRate)
   }));
 };
 

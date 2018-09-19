@@ -43,6 +43,7 @@ const generateModification = (
   occurrences
 ) => {
   let modification = nextModification(transaction.rtype)(transaction, prevDate);
+  modification.mutateKey = transaction.id;
   // console.log(transaction.id, modification);
   if (
     isWithinInterval(transactionInterval)(modification.date) &&
