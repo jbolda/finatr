@@ -1,18 +1,14 @@
 import * as d3 from 'd3';
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval';
-import isSameDay from 'date-fns/fp/isSameDay';
-import isAfter from 'date-fns/fp/isAfter';
-import isBefore from 'date-fns/fp/isBefore';
-import differenceInCalendarDays from 'date-fns/fp/differenceInCalendarDays';
-import getDay from 'date-fns/fp/getDay';
-import getDate from 'date-fns/fp/getDate';
+import closestIndexTo from 'date-fns/closestIndexTo';
 import addDays from 'date-fns/fp/addDays';
 import startOfDay from 'date-fns/fp/startOfDay';
-import differenceInMonths from 'date-fns/fp/differenceInMonths';
+
+import computeTransactionModifications from './resolveTransactions.js';
 
 const resolveData = data => {
   data.transactions.sort(sortTransactionOrder);
-  let graphRange = { start: past(), end: future(356) };
+  let graphRange = { start: past(), end: future(365) };
 
   let splitTransactions = {
     income: [],
@@ -44,9 +40,13 @@ const resolveData = data => {
     }
   });
 
-  let BarChart = resolveBarChart(data.transactions, graphRange);
-  let BarChartIncome = resolveBarChart(splitTransactions.income, graphRange);
-  let BarChartExpense = resolveBarChart(splitTransactions.expense, graphRange);
+  let BarChart = resolveBarChart(data.transactions, { graphRange });
+  let BarChartIncome = resolveBarChart(splitTransactions.income, {
+    graphRange
+  });
+  let BarChartExpense = resolveBarChart(splitTransactions.expense, {
+    graphRange
+  });
   let AccountChart = resolveAccountChart(data, BarChart);
 
   const extractValue = value => {
@@ -131,13 +131,47 @@ const resolveBarChart = (data, { graphRange }) => {
   // for empty data
   if (!data || data.length === 0) return [];
 
-  let arrData = [];
   let keys = [];
 
-  data.forEach(d => {
-    let key = `${d.id ? d.id : d[0].id}`;
+  data.forEach((d, i) => {
+    let key = { value: `${d.id ? d.id : d[0].id}`, index: i };
     keys.push(key);
   });
+
+  let allDates = eachDayOfInterval(graphRange);
+  let stackStructure = allDates.map(day => {
+    let obj = { date: day };
+    keys.forEach(key => {
+      obj[key.value] = Array.isArray(data[key.index])
+        ? { ...data[key.index][0] }
+        : { ...data[key.index] };
+      obj[key.value].y = 0;
+      obj[key.value].dailyRate = 0;
+    });
+    return obj;
+  });
+
+  const replaceWithModified = (oldValue, modification) => {
+    let newValue = oldValue;
+    newValue.y += modification.y;
+    newValue.dailyRate = +modification.dailyRate;
+    return newValue;
+  };
+
+  // return array of modifications to be applied to stackStructure
+  console.log(computeTransactionModifications(data, graphRange));
+  let stackComputed = computeTransactionModifications(data, graphRange).reduce(
+    (structure, modification) => {
+      let modIndex = closestIndexTo(modification.date, allDates);
+      let updatedStructure = structure;
+      updatedStructure[modIndex] = replaceWithModified(
+        updatedStructure[modIndex],
+        modification
+      );
+      return updatedStructure;
+    },
+    stackStructure
+  );
 
   eachDayOfInterval(graphRange).forEach(day => {
     //create object for stack layout
@@ -158,86 +192,6 @@ const resolveBarChart = (data, { graphRange }) => {
     maxHeight: maxHeight,
     dailyRate: d3.max(arrData, d => d[key].dailyRate)
   }));
-};
-
-const stackObj = (day, data) => {
-  let obj = {};
-  obj.date = day;
-  data.forEach(d => {
-    let key = `${d.id ? d.id : d[0].id}`;
-    obj[key] = Array.isArray(d) ? { ...d[0] } : { ...d };
-    obj[key].y = 0;
-    obj[key].dailyRate = 0;
-    let transactions = Array.isArray(d) ? d : [d];
-
-    transactions.forEach(d => {
-      if (isSameDay(day)(d.start) && d.rtype === 'none') {
-        obj[key].y += d.value;
-        obj[key].dailyRate += 0;
-      } else if (isAfter(day)(d.end) && d.end !== 'none') {
-        obj[key].y += 0;
-        obj[key].dailyRate += 0;
-      } else if (
-        d.rtype === 'day' &&
-        d.cycle != null &&
-        differenceInCalendarDays(day)(d.start) % d.cycle < 1
-      ) {
-        obj[key].y += d.value;
-        obj[key].dailyRate += d.value / d.cycle;
-      } else if (
-        d.rtype === 'day of week' &&
-        (isAfter(d.start)(day) || isSameDay(d.start)(day)) &&
-        getDay(day) === d.cycle
-      ) {
-        obj[key].y += d.value;
-        obj[key].dailyRate += d.value / 7;
-      } else if (
-        d.rtype === 'day of month' &&
-        (isAfter(d.start)(day) || isSameDay(d.start)(day)) &&
-        getDate(day) === d.cycle
-      ) {
-        obj[key].y += d.value;
-        obj[key].dailyRate += d.value / 30;
-      } else if (
-        d.rtype === 'bimonthly' &&
-        (isAfter(d.start)(day) || isSameDay(d.start)(day)) &&
-        getDate(day) === d.cycle &&
-        differenceInMonths(day)(d.start) % 2 === 0
-      ) {
-        obj[key].y += d.value;
-        obj[key].dailyRate += d.value / 30 / 2;
-      } else if (
-        d.rtype === 'quarterly' &&
-        (isAfter(d.start)(day) || isSameDay(d.start)(day)) &&
-        getDate(day) === d.cycle &&
-        differenceInMonths(day)(d.start) % 3 === 0
-      ) {
-        obj[key].y += d.value;
-        obj[key].dailyRate += d.value / 30 / 3;
-      } else if (
-        d.rtype === 'semiannually' &&
-        (isAfter(d.start)(day) || isSameDay(d.start)(day)) &&
-        getDate(day) === d.cycle &&
-        differenceInMonths(day)(d.start) % 6 === 0
-      ) {
-        obj[key].y += d.value;
-        obj[key].dailyRate += d.value / 30 / 6;
-      } else if (
-        d.rtype === 'annually' &&
-        (isAfter(d.start)(day) || isSameDay(d.start)(day)) &&
-        getDate(day) === d.cycle &&
-        differenceInMonths(day)(d.start) % 12 === 0
-      ) {
-        obj[key].y += d.value;
-        obj[key].dailyRate += d.value / 365;
-      } else {
-        obj[key].y += 0;
-        obj[key].dailyRate += 0;
-      }
-    });
-  });
-
-  return obj;
 };
 
 const resolveAccountChart = (data, dataMassaged) => {
