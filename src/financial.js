@@ -25,7 +25,7 @@ class Financial extends React.Component {
       cycle: 3,
       value: 150
     };
-    // data.push(dOne);
+    data.push(dOne);
     let dTwo = {
       id: `oasis2`,
       raccount: `account`,
@@ -37,7 +37,7 @@ class Financial extends React.Component {
       cycle: 1,
       value: 100
     };
-    // data.push(dTwo);
+    data.push(dTwo);
     let dThree = {
       id: `oasis3`,
       raccount: `account`,
@@ -61,7 +61,7 @@ class Financial extends React.Component {
       cycle: 1,
       value: 90
     };
-    // data.push(dFour);
+    data.push(dFour);
     let dThreePointFive = {
       id: `oasis92`,
       raccount: `account`,
@@ -72,7 +72,7 @@ class Financial extends React.Component {
       rtype: `none`,
       value: 190
     };
-    // data.push(dThreePointFive);
+    data.push(dThreePointFive);
     let dFive = {
       id: `oasis8`,
       raccount: `account`,
@@ -84,7 +84,7 @@ class Financial extends React.Component {
       cycle: 1,
       value: 112
     };
-    // data.push(dFive);
+    data.push(dFive);
     let dSix = {
       id: `oasis8asg`,
       raccount: `account2`,
@@ -96,7 +96,7 @@ class Financial extends React.Component {
       cycle: 1,
       value: 112
     };
-    // data.push(dSix);
+    data.push(dSix);
 
     let dataArray = {
       transactions: data,

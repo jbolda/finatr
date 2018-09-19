@@ -17,7 +17,9 @@ import differenceInMonths from 'date-fns/fp/differenceInMonths';
 const computeTransactionModifications = (transactions, graphRange) =>
   transactions.reduce((modifications, transaction) => {
     let transactionInterval = {
-      start: subDays(1)(dateMax([graphRange.start, transaction.start])),
+      start: subDays(1)(
+        dateMax([graphRange.start, transaction.start ? transaction.start : 0])
+      ),
       end: addDays(1)(
         dateMax([graphRange.end, transaction.end ? transaction.end : 0])
       )
@@ -59,7 +61,10 @@ const generateModification = (
       modifications,
       occurrences + 1
     );
-  } else if (isBefore(transactionInterval.end)(modification.date)) {
+  } else if (
+    isBefore(transactionInterval.end)(modification.date) &&
+    isAfter(prevDate)(modification.date)
+  ) {
     generateModification(
       transaction,
       transactionInterval,
