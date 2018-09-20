@@ -82,6 +82,8 @@ const generateModification = (
   return modifications;
 };
 
+export { generateModification };
+
 const nextModification = rtype => {
   switch (rtype) {
     case 'none':
@@ -117,7 +119,7 @@ const transactionNoReoccur = (transaction, seedDate) => {
 // when transaction.rtype === 'day'
 const transactionDailyReoccur = (transaction, seedDate) => {
   return {
-    date: addDays(1)(seedDate),
+    date: addDays(transaction.cycle)(seedDate),
     y: transaction.value,
     dailyRate: transaction.value / transaction.cycle
   };
@@ -134,8 +136,15 @@ const transactionDayOfWeekReoccur = (transaction, seedDate) => {
 
 // when transaction.rtype === 'day of month'
 const transactionDayOfMonthReoccur = (transaction, seedDate) => {
+  let monthlyDate;
+  let cycleDate = setDate(transaction.cycle);
+  if (isBefore(seedDate)(cycleDate(seedDate))) {
+    monthlyDate = cycleDate(addMonths(1)(seedDate));
+  } else {
+    monthlyDate = cycleDate(seedDate);
+  }
   return {
-    date: setDate(transaction.cycle)(addMonths(1)(seedDate)),
+    date: monthlyDate,
     y: transaction.value,
     dailyRate: transaction.value / 30
   };
@@ -175,6 +184,17 @@ const transactionAnnuallyReoccur = (transaction, seedDate) => {
     y: transaction.value,
     dailyRate: transaction.value / 365
   };
+};
+
+export {
+  transactionNoReoccur,
+  transactionDailyReoccur,
+  transactionDayOfWeekReoccur,
+  transactionDayOfMonthReoccur,
+  transactionBimonthlyReoccur,
+  transactionQuarterlyReoccur,
+  transactionSemiannuallyReoccur,
+  transactionAnnuallyReoccur
 };
 
 const stackObj = (day, data) => {
