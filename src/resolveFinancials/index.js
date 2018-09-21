@@ -7,8 +7,12 @@ import startOfDay from 'date-fns/fp/startOfDay';
 import computeTransactionModifications from './resolveTransactions.js';
 
 const resolveData = data => {
-  data.transactions.sort(sortTransactionOrder);
   let graphRange = { start: past(), end: future(365) };
+  return resolveDataAtDateRange(data, graphRange);
+};
+
+const resolveDataAtDateRange = (data, graphRange) => {
+  data.transactions.sort(sortTransactionOrder);
 
   let splitTransactions = {
     income: [],
@@ -273,7 +277,7 @@ const resolveAccountChart = (data, dataMassaged) => {
   });
 };
 
-export { resolveBarChart, resolveAccountChart };
+export { resolveDataAtDateRange, resolveBarChart, resolveAccountChart };
 export default resolveData;
 
 const future = daysinfuture => {
