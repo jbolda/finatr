@@ -288,24 +288,4 @@ const past = () => {
   return addDays(1)(startOfDay(new Date()));
 };
 
-// function to convert javascript dates into a pretty format (i.e. '2014-12-03')
-const convertdate = date => {
-  let dd = date.getDate();
-  let mm = date.getMonth() + 1; //January is 0!
-  let yyyy = date.getFullYear();
-
-  if (dd < 10) {
-    dd = '0' + dd;
-  }
-  if (mm < 10) {
-    mm = '0' + mm;
-  }
-
-  return yyyy + '-' + mm + '-' + dd;
-};
-
-const parseDate = date => {
-  return d3.timeParse('%Y-%m-%d')(date);
-};
-
 export { past, future };
