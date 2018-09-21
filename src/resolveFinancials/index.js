@@ -38,11 +38,11 @@ const resolveDataAtDateRange = (data, graphRange) => {
         break;
     }
   });
-  // data.accounts.forEach(account => {
-  //   if (account.vehicle === 'debt' && account.payback) {
-  //     splitTransactions.expense.push([...account.payback]);
-  //   }
-  // });
+  data.accounts.forEach(account => {
+    if (account.vehicle === 'debt' && account.payback) {
+      splitTransactions.expense.push([...account.payback]);
+    }
+  });
 
   let BarChart = resolveBarChart(data.transactions, { graphRange });
   let BarChartIncome = resolveBarChart(splitTransactions.income, {

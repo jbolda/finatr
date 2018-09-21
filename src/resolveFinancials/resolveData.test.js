@@ -95,7 +95,22 @@ let testData = {
       name: 'account',
       starting: 3000,
       interest: 0.01,
-      vehicle: 'operating'
+      vehicle: 'operating',
+      payback: {
+        id: `sasdqljg`,
+        raccount: 'account',
+        description: `payback`,
+        category: 'account payback',
+        type: 'expense',
+        transactions: [
+          {
+            start: `2018-03-22`,
+            rtype: `day`,
+            cycle: 1,
+            value: 112
+          }
+        ]
+      }
     },
     {
       name: 'account2',
@@ -176,5 +191,27 @@ describe(`check resolveData`, () => {
   });
   it(`calcs the correct fiNumber`, () => {
     expect(resolvedTestData.fiNumber).toBeCloseTo(1.47);
+  });
+});
+
+describe(`check resolveData handles paybacks`, () => {
+  it(`has the correct BarChartIncome structure`, () => {
+    expect(resolvedTestData.BarChartIncome).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          category: 'test default',
+          dailyRate: expect.any(Number),
+          description: 'payback',
+          type: 'expense',
+          id: 'sasdqljg',
+          maxHeight: expect.any(Number),
+          raccount: 'account',
+          stack: expect.any(Array)
+        })
+      ])
+    );
+  });
+  it(`returns the correct number of BarChartExpense`, () => {
+    expect(resolvedTestData.BarChartExpense).toHaveLength(1);
   });
 });

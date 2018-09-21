@@ -28,13 +28,26 @@ const computeTransactionModifications = (transactions, graphRange) =>
         ])
       )
     };
+    let coercePaybacksIntoTransactions = !transaction.transactions
+      ? [transaction]
+      : transaction.transactions.map(paybackTransactions => ({
+          ...paybackTransactions,
+          id: transaction.id
+        }));
     return modifications.concat(
-      generateModification(
-        transaction,
-        transactionInterval,
-        transaction.start,
-        [],
-        0
+      coercePaybacksIntoTransactions.reduce(
+        (nestedMods, coercedTransactions) => {
+          nestedMods.concat(
+            generateModification(
+              coercedTransactions,
+              transactionInterval,
+              transaction.start,
+              [],
+              0
+            )
+          );
+        },
+        []
       )
     );
   }, []);
