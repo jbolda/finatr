@@ -160,7 +160,7 @@ describe(`check resolveData`, () => {
     expect(resolvedTestData.BarChartExpense).toHaveLength(1);
   });
   it(`calcs the correct BarChartMax`, () => {
-    expect(resolvedTestData.BarChartMax).toBe(424);
+    expect(resolvedTestData.BarChartMax).toBe(514);
   });
   it(`calcs the correct LineChartMax`, () => {
     expect(resolvedTestData.LineChartMax).toBe(48368);
