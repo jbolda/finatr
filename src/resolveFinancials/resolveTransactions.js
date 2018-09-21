@@ -141,8 +141,10 @@ const transactionDayOfWeekReoccur = (transaction, seedDate) => {
 // when transaction.rtype === 'day of month'
 const transactionDayOfMonthReoccur = (transaction, seedDate) => {
   let monthlyDate;
+  let isOnOrBefore = checkDate =>
+    isBefore(seedDate)(checkDate) || isSameDay(seedDate)(checkDate);
   let cycleDate = setDate(transaction.cycle);
-  if (isBefore(seedDate)(cycleDate(seedDate))) {
+  if (isOnOrBefore(cycleDate(seedDate))) {
     monthlyDate = cycleDate(addMonths(1)(seedDate));
   } else {
     monthlyDate = cycleDate(seedDate);

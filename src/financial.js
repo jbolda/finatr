@@ -80,7 +80,7 @@ class Financial extends React.Component {
       category: `test comp`,
       type: `expense`,
       start: `2018-03-22`,
-      rtype: `day`,
+      rtype: `day of month`,
       cycle: 1,
       value: 112
     };
@@ -158,7 +158,9 @@ class Financial extends React.Component {
   handleUpload = (event, results) => {
     let result = JSON.parse(results[0][0].target.result);
     console.log(result);
-    this.setState(resolveData(result));
+    let calculated = resolveData(result);
+    console.log(calculated);
+    this.setState(calculated);
   };
 
   handleDownload = () => {

@@ -38,11 +38,11 @@ const resolveDataAtDateRange = (data, graphRange) => {
         break;
     }
   });
-  data.accounts.forEach(account => {
-    if (account.vehicle === 'debt' && account.payback) {
-      splitTransactions.expense.push([...account.payback]);
-    }
-  });
+  // data.accounts.forEach(account => {
+  //   if (account.vehicle === 'debt' && account.payback) {
+  //     splitTransactions.expense.push([...account.payback]);
+  //   }
+  // });
 
   let BarChart = resolveBarChart(data.transactions, { graphRange });
   let BarChartIncome = resolveBarChart(splitTransactions.income, {
@@ -157,8 +157,8 @@ const resolveBarChart = (data, { graphRange }) => {
 
   const replaceWithModified = (oldValue, modification) => {
     let newValue = oldValue;
-    newValue.y += modification.y;
-    newValue.dailyRate += modification.dailyRate;
+    newValue.y = oldValue.y + modification.y;
+    newValue.dailyRate = oldValue.dailyRate + modification.dailyRate;
     return newValue;
   };
 

@@ -2,6 +2,7 @@ import startOfDay from 'date-fns/fp/startOfDay';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
 import addDays from 'date-fns/fp/addDays';
 import subDays from 'date-fns/fp/subDays';
+import addMonths from 'date-fns/fp/addMonths';
 
 import {
   transactionNoReoccur,
@@ -175,5 +176,44 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     expect(
       differenceInCalendarDays(graphRange.start)(resolvedTestData.date)
     ).toBe(0);
+  });
+
+  it(`returns progressive cycles`, () => {
+    let testData = { ...transaction, cycle: 16 };
+    let resolvedTestData1 = transactionDayOfMonthReoccur(
+      testData,
+      graphRange.start
+    );
+    let resolvedTestData2 = transactionDayOfMonthReoccur(
+      testData,
+      resolvedTestData1.date
+    );
+    let resolvedTestData3 = transactionDayOfMonthReoccur(
+      testData,
+      resolvedTestData2.date
+    );
+    let resolvedTestData4 = transactionDayOfMonthReoccur(
+      testData,
+      resolvedTestData3.date
+    );
+    let resolvedTestData5 = transactionDayOfMonthReoccur(
+      testData,
+      resolvedTestData4.date
+    );
+    expect(
+      differenceInCalendarDays(graphRange.start)(resolvedTestData1.date)
+    ).toBe(31);
+    expect(
+      differenceInCalendarDays(graphRange.start)(resolvedTestData2.date)
+    ).toBe(59);
+    expect(
+      differenceInCalendarDays(graphRange.start)(resolvedTestData3.date)
+    ).toBe(90);
+    expect(
+      differenceInCalendarDays(graphRange.start)(resolvedTestData4.date)
+    ).toBe(120);
+    expect(
+      differenceInCalendarDays(graphRange.start)(resolvedTestData5.date)
+    ).toBe(151);
   });
 });
