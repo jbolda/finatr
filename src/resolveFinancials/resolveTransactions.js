@@ -21,7 +21,11 @@ const computeTransactionModifications = (transactions, graphRange) =>
         dateMax([graphRange.start, transaction.start ? transaction.start : 0])
       ),
       end: addDays(1)(
-        dateMax([graphRange.end, transaction.end ? transaction.end : 0])
+        dateMax([
+          graphRange.end,
+          transaction.start ? transaction.start : 0,
+          transaction.end ? transaction.end : 0
+        ])
       )
     };
     return modifications.concat(

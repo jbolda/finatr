@@ -40,7 +40,6 @@ describe(`check transactionNoReoccur`, () => {
 
   it(`returns the same date`, () => {
     let resolvedTestData = transactionNoReoccur(transaction, graphRange.start);
-    console.log(resolvedTestData, graphRange);
     expect(
       differenceInCalendarDays(transaction.start)(resolvedTestData.date)
     ).toBe(0);
@@ -140,7 +139,6 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       testData,
       graphRange.start
     );
-    console.log(resolvedTestData);
     expect(
       differenceInCalendarDays(graphRange.start)(resolvedTestData.date)
     ).toBe(16);
