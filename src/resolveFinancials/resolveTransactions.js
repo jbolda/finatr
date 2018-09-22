@@ -37,7 +37,7 @@ const computeTransactionModifications = (transactions, graphRange) =>
     return modifications.concat(
       coercePaybacksIntoTransactions.reduce(
         (nestedMods, coercedTransactions) => {
-          nestedMods.concat(
+          return nestedMods.concat(
             generateModification(
               coercedTransactions,
               transactionInterval,

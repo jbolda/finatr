@@ -159,7 +159,6 @@ class Financial extends React.Component {
     let result = JSON.parse(results[0][0].target.result);
     console.log(result);
     let calculated = resolveData(result);
-    console.log(calculated);
     this.setState(calculated);
   };
 
