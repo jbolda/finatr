@@ -62,7 +62,7 @@ const generateModification = (
 ) => {
   let modification = nextModification(transaction.rtype)(transaction, prevDate);
   modification.mutateKey = transaction.id;
-  if (transaction.id === 'sasdqljg') console.log(prevDate);
+
   // if this is a modification we should use then add it to the list
   // and generate the next one
   if (
@@ -134,7 +134,6 @@ const transactionNoReoccur = (transaction, seedDate) => {
 
 // when transaction.rtype === 'day'
 const transactionDailyReoccur = (transaction, seedDate) => {
-  if (transaction.id === 'sasdqljg') console.log(transaction, seedDate);
   return {
     date: addDays(transaction.cycle)(seedDate),
     y: transaction.value,

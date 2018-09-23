@@ -125,12 +125,14 @@ class Financial extends React.Component {
             type: 'expense',
             transactions: [
               {
+                raccount: 'account',
                 start: `2018-03-22`,
                 rtype: `day`,
                 cycle: 1,
                 value: 112
               },
               {
+                raccount: 'account',
                 type: 'expense',
                 start: `2018-03-22`,
                 rtype: `day`,

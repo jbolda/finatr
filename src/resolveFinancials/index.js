@@ -40,20 +40,37 @@ const resolveDataAtDateRange = (data, graphRange) => {
   });
   data.accounts.forEach(account => {
     if (account.vehicle === 'debt' && account.payback) {
-      splitTransactions.expense.push([
-        ...account.payback.transactions.map(transaction => ({
-          ...transaction,
-          id: account.payback.id,
+      let accountTransactionPush = [];
+      account.payback.transactions.forEach(accountTransaction => {
+        // this one is for the expense on the account
+        // being paid down
+        accountTransactionPush.push({
+          ...accountTransaction,
+          id: `${account.payback.id}-EXP`,
           raccount: account.name,
           description: account.payback.description,
           type: account.payback.type,
           category: account.payback.category
-        }))
-      ]);
+        });
+        // this one is for the account making the payment
+        // (raccount is defined on accountTransaction)
+        accountTransactionPush.push({
+          ...accountTransaction,
+          id: `${account.payback.id}-TRSF`,
+          description: account.payback.description,
+          type: 'transfer',
+          category: account.payback.category,
+          value: -accountTransaction.value
+        });
+      });
+      splitTransactions.expense.push(accountTransactionPush);
     }
   });
 
-  let BarChart = resolveBarChart(data.transactions, { graphRange });
+  let BarChart = resolveBarChart(
+    [...splitTransactions.income, ...splitTransactions.expense],
+    { graphRange }
+  );
   let BarChartIncome = resolveBarChart(splitTransactions.income, {
     graphRange
   });
@@ -147,8 +164,15 @@ const resolveBarChart = (data, { graphRange }) => {
   let keys = [];
 
   data.forEach((d, i) => {
-    let key = { value: `${d.id ? d.id : d[0].id}`, index: i };
-    keys.push(key);
+    if (Array.isArray(d)) {
+      d.forEach((d2, i2) => {
+        let key = { value: d2.id, index: i, indexNested: i2 };
+        keys.push(key);
+      });
+    } else {
+      let key = { value: d.id, index: i };
+      keys.push(key);
+    }
   });
 
   let allDates = eachDayOfInterval(graphRange);
@@ -156,7 +180,7 @@ const resolveBarChart = (data, { graphRange }) => {
     let obj = { date: day };
     keys.forEach(key => {
       obj[key.value] = Array.isArray(data[key.index])
-        ? { ...data[key.index][0] }
+        ? { ...data[key.index][key.indexNested] }
         : { ...data[key.index] };
       obj[key.value].y = 0;
       obj[key.value].dailyRate = 0;
@@ -166,12 +190,13 @@ const resolveBarChart = (data, { graphRange }) => {
 
   const replaceWithModified = (oldValue, modification) => {
     let newValue = oldValue;
-    newValue.y = oldValue.y + modification.y;
-    newValue.dailyRate = oldValue.dailyRate + modification.dailyRate;
+    newValue.y += modification.y;
+    newValue.dailyRate += modification.dailyRate;
     return newValue;
   };
 
   // return array of modifications to be applied to stackStructure
+  // console.log(computeTransactionModifications(data, graphRange));
   let stackComputed = computeTransactionModifications(data, graphRange).reduce(
     (structure, modification) => {
       let modIndex = closestIndexTo(modification.date, allDates);
@@ -180,6 +205,7 @@ const resolveBarChart = (data, { graphRange }) => {
         updatedStructure[modIndex][modification.mutateKey],
         modification
       );
+      // if (modification.mutateKey === 'sasdqljg') console.log(updatedStructure);
       return updatedStructure;
     },
     stackStructure

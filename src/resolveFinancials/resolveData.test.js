@@ -95,34 +95,42 @@ let testData = {
       name: 'account',
       starting: 3000,
       interest: 0.01,
-      vehicle: 'operating',
-      payback: {
-        id: `sasdqljg`,
-        raccount: 'account',
-        description: `payback`,
-        category: 'account payback',
-        type: 'expense',
-        transactions: [
-          {
-            start: `2018-03-22`,
-            rtype: `day`,
-            cycle: 1,
-            value: 112
-          },
-          {
-            start: `2018-03-22`,
-            rtype: `day`,
-            cycle: 3,
-            value: 38
-          }
-        ]
-      }
+      vehicle: 'operating'
     },
     {
       name: 'account2',
       starting: 30000,
       interest: 0.01,
       vehicle: 'investment'
+    },
+    {
+      name: 'account3',
+      starting: 30000,
+      interest: 6.0,
+      vehicle: 'debt',
+      payback: {
+        id: `sasdqljg`,
+        description: `payback`,
+        category: 'account3 payback',
+        type: 'expense',
+        transactions: [
+          {
+            raccount: 'account',
+            start: `2018-03-22`,
+            rtype: `day`,
+            cycle: 1,
+            value: 112
+          },
+          {
+            raccount: 'account',
+            type: 'expense',
+            start: `2018-03-22`,
+            rtype: `day`,
+            cycle: 3,
+            value: 78
+          }
+        ]
+      }
     }
   ],
   transactionForm: {
@@ -155,7 +163,7 @@ describe(`check resolveData`, () => {
     expect(resolvedTestData.transactions).toHaveLength(7);
   });
   it(`returns the correct number of accounts`, () => {
-    expect(resolvedTestData.accounts).toHaveLength(2);
+    expect(resolvedTestData.accounts).toHaveLength(3);
   });
   it(`returns the correct number of BarChartIncome`, () => {
     expect(resolvedTestData.BarChartIncome).toHaveLength(6);
@@ -178,7 +186,7 @@ describe(`check resolveData`, () => {
     );
   });
   it(`returns the correct number of BarChartExpense`, () => {
-    expect(resolvedTestData.BarChartExpense).toHaveLength(1);
+    expect(resolvedTestData.BarChartExpense).toHaveLength(2);
   });
   it(`calcs the correct BarChartMax`, () => {
     expect(resolvedTestData.BarChartMax).toBe(514);
@@ -201,8 +209,8 @@ describe(`check resolveData`, () => {
 });
 
 describe(`check resolveData handles paybacks`, () => {
-  it(`has the correct BarChartIncome structure`, () => {
-    expect(resolvedTestData.BarChartIncome).toEqual(
+  it(`has the correct BarChartExpense structure`, () => {
+    expect(resolvedTestData.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           id: 'sasdqljg'
