@@ -1,11 +1,17 @@
 import * as d3 from 'd3';
-import getDay from 'date-fns/fp/getDay';
-import getDate from 'date-fns/fp/getDate';
+import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval';
+import closestIndexTo from 'date-fns/closestIndexTo';
 import addDays from 'date-fns/fp/addDays';
 import startOfDay from 'date-fns/fp/startOfDay';
-import differenceInMonths from 'date-fns/fp/differenceInMonths';
+
+import computeTransactionModifications from './resolveTransactions.js';
 
 const resolveData = data => {
+  let graphRange = { start: past(), end: future(365) };
+  return resolveDataAtDateRange(data, graphRange);
+};
+
+const resolveDataAtDateRange = (data, graphRange) => {
   data.transactions.sort(sortTransactionOrder);
 
   let splitTransactions = {
@@ -34,13 +40,43 @@ const resolveData = data => {
   });
   data.accounts.forEach(account => {
     if (account.vehicle === 'debt' && account.payback) {
-      splitTransactions.expense.push([...account.payback]);
+      let accountTransactionPush = [];
+      account.payback.transactions.forEach(accountTransaction => {
+        // this one is for the expense on the account
+        // being paid down
+        accountTransactionPush.push({
+          ...accountTransaction,
+          id: `${account.payback.id}-EXP`,
+          raccount: account.name,
+          description: account.payback.description,
+          type: account.payback.type,
+          category: account.payback.category
+        });
+        // this one is for the account making the payment
+        // (raccount is defined on accountTransaction)
+        accountTransactionPush.push({
+          ...accountTransaction,
+          id: `${account.payback.id}-TRSF`,
+          description: account.payback.description,
+          type: 'transfer',
+          category: account.payback.category,
+          value: -accountTransaction.value
+        });
+      });
+      splitTransactions.expense.push(accountTransactionPush);
     }
   });
 
-  let BarChart = resolveBarChart(data.transactions);
-  let BarChartIncome = resolveBarChart(splitTransactions.income);
-  let BarChartExpense = resolveBarChart(splitTransactions.expense);
+  let BarChart = resolveBarChart(
+    [...splitTransactions.income, ...splitTransactions.expense],
+    { graphRange }
+  );
+  let BarChartIncome = resolveBarChart(splitTransactions.income, {
+    graphRange
+  });
+  let BarChartExpense = resolveBarChart(splitTransactions.expense, {
+    graphRange
+  });
   let AccountChart = resolveAccountChart(data, BarChart);
 
   const extractValue = value => {
@@ -120,123 +156,75 @@ const sortTransactionOrder = (a, b) => {
   return comparison;
 };
 
-const resolveBarChart = (data, width) => {
+const resolveBarChart = (data, { graphRange }) => {
   // return early with an empty array
   // for empty data
   if (!data || data.length === 0) return [];
 
-  let arrData = [];
   let keys = [];
 
-  data.forEach(d => {
-    let key = `${d.id ? d.id : d[0].id}`;
-    keys.push(key);
+  data.forEach((d, i) => {
+    if (Array.isArray(d)) {
+      d.forEach((d2, i2) => {
+        let key = { value: d2.id, index: i, indexNested: i2 };
+        keys.push(key);
+      });
+    } else {
+      let key = { value: d.id, index: i };
+      keys.push(key);
+    }
   });
 
-  let numberofFutureDays = daysinfuture(width);
-  let graphRange = graphrange(past(), future(numberofFutureDays));
-  let minX = min_x(graphRange);
-  let maxX = max_x(graphRange);
+  let allDates = eachDayOfInterval(graphRange);
+  let stackStructure = allDates.map(day => {
+    let obj = { date: day };
+    keys.forEach(key => {
+      obj[key.value] = Array.isArray(data[key.index])
+        ? { ...data[key.index][key.indexNested] }
+        : { ...data[key.index] };
+      obj[key.value].y = 0;
+      obj[key.value].dailyRate = 0;
+    });
+    return obj;
+  });
 
-  for (let i = minX; i <= maxX; i.setDate(i.getDate() + 1)) {
-    //create object for stack layout
-    arrData.push(stackObj(i, data));
-  }
+  const replaceWithModified = (oldValue, modification) => {
+    let newValue = oldValue;
+    newValue.y += modification.y;
+    newValue.dailyRate += modification.dailyRate;
+    return newValue;
+  };
+
+  // return array of modifications to be applied to stackStructure
+  // console.log(computeTransactionModifications(data, graphRange));
+  let stackComputed = computeTransactionModifications(data, graphRange).reduce(
+    (structure, modification) => {
+      let modIndex = closestIndexTo(modification.date, allDates);
+      let updatedStructure = structure;
+      updatedStructure[modIndex][modification.mutateKey] = replaceWithModified(
+        updatedStructure[modIndex][modification.mutateKey],
+        modification
+      );
+      // if (modification.mutateKey === 'sasdqljg') console.log(updatedStructure);
+      return updatedStructure;
+    },
+    stackStructure
+  );
 
   let stack = d3
     .stack()
-    .value((d, key) => d[key].y)
+    .value((d, key) => d[key.value].y)
     .keys(keys);
 
-  let stacked = stack(arrData);
+  let stacked = stack(stackComputed);
   let maxHeight = d3.max(stacked.reduce((a, b) => a.concat(b)), d => d[1]);
 
   return keys.map((key, index) => ({
-    ...arrData[0][key],
+    ...stackComputed[0][key.value],
     stack: stacked[index],
     maxHeight: maxHeight,
-    dailyRate: d3.max(arrData, d => d[key].dailyRate)
+    dailyRate: d3.max(stackComputed, d => d[key.value].dailyRate)
   }));
-};
-
-const stackObj = (i, data) => {
-  let obj = {};
-  obj.date = new Date(i);
-  data.forEach(d => {
-    let key = `${d.id ? d.id : d[0].id}`;
-    obj[key] = Array.isArray(d) ? { ...d[0] } : { ...d };
-    obj[key].y = 0;
-    obj[key].dailyRate = 0;
-    let transactions = Array.isArray(d) ? d : [d];
-
-    transactions.forEach(d => {
-      if (convertdate(i) === d.start && d.rtype === 'none') {
-        obj[key].y += d.value;
-        obj[key].dailyRate += 0;
-      } else if (convertdate(i) > d.end && d.end !== 'none') {
-        obj[key].y += 0;
-        obj[key].dailyRate += 0;
-      } else if (
-        d.rtype === 'day' &&
-        d.cycle != null &&
-        ((i - parseDate(d.start)) / (24 * 60 * 60 * 1000)) % d.cycle < 1
-      ) {
-        obj[key].y += d.value;
-        obj[key].dailyRate += d.value / d.cycle;
-      } else if (
-        d.rtype === 'day of week' &&
-        convertdate(i) >= d.start &&
-        getDay(i) === d.cycle
-      ) {
-        obj[key].y += d.value;
-        obj[key].dailyRate += d.value / 7;
-      } else if (
-        d.rtype === 'day of month' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle
-      ) {
-        obj[key].y += d.value;
-        obj[key].dailyRate += d.value / 30;
-      } else if (
-        d.rtype === 'bimonthly' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle &&
-        differenceInMonths(i)(d.start) % 2 === 0
-      ) {
-        obj[key].y += d.value;
-        obj[key].dailyRate += d.value / 30 / 2;
-      } else if (
-        d.rtype === 'quarterly' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle &&
-        differenceInMonths(i)(d.start) % 3 === 0
-      ) {
-        obj[key].y += d.value;
-        obj[key].dailyRate += d.value / 30 / 3;
-      } else if (
-        d.rtype === 'semiannually' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle &&
-        differenceInMonths(i)(d.start) % 6 === 0
-      ) {
-        obj[key].y += d.value;
-        obj[key].dailyRate += d.value / 30 / 6;
-      } else if (
-        d.rtype === 'annually' &&
-        convertdate(i) >= d.start &&
-        getDate(i) === d.cycle &&
-        differenceInMonths(i)(d.start) % 12 === 0
-      ) {
-        obj[key].y += d.value;
-        obj[key].dailyRate += d.value / 365;
-      } else {
-        obj[key].y += 0;
-        obj[key].dailyRate += 0;
-      }
-    });
-  });
-
-  return obj;
 };
 
 const resolveAccountChart = (data, dataMassaged) => {
@@ -324,37 +312,8 @@ const resolveAccountChart = (data, dataMassaged) => {
   });
 };
 
-export { resolveBarChart, resolveAccountChart };
+export { resolveDataAtDateRange, resolveBarChart, resolveAccountChart };
 export default resolveData;
-
-const daysinfuture = divWidth => {
-  if (divWidth > 1000) {
-    return 240;
-  } else {
-    return 120;
-  }
-};
-
-const margin = () => {
-  return { top: 10, right: 20, bottom: 40, left: 40 };
-};
-
-const width = (divWidth, margin, daysinfuture) => {
-  return;
-  divWidth - margin.left - margin.right + daysinfuture * 20;
-};
-
-const height = (divWidth, margin) => {
-  return d3.min([divWidth * 0.5 - margin.top - margin.bottom, 350]);
-};
-
-const shift = (width, daysinfuture) => {
-  return width / daysinfuture;
-};
-
-const today = () => {
-  return startOfDay(new Date());
-};
 
 const future = daysinfuture => {
   return addDays(daysinfuture)(startOfDay(new Date()));
@@ -364,34 +323,4 @@ const past = () => {
   return addDays(1)(startOfDay(new Date()));
 };
 
-const graphrange = (past, future) => {
-  return [convertdate(past), convertdate(future)];
-};
-
-const min_x = graphrange => {
-  return parseDate(graphrange[0]);
-};
-
-const max_x = graphrange => {
-  return parseDate(graphrange[1]);
-};
-
-// function to convert javascript dates into a pretty format (i.e. '2014-12-03')
-const convertdate = date => {
-  let dd = date.getDate();
-  let mm = date.getMonth() + 1; //January is 0!
-  let yyyy = date.getFullYear();
-
-  if (dd < 10) {
-    dd = '0' + dd;
-  }
-  if (mm < 10) {
-    mm = '0' + mm;
-  }
-
-  return yyyy + '-' + mm + '-' + dd;
-};
-
-const parseDate = date => {
-  return d3.timeParse('%Y-%m-%d')(date);
-};
+export { past, future };

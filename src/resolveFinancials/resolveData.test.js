@@ -1,4 +1,5 @@
-import resolveData from './resolveFinancials.js';
+import { resolveDataAtDateRange } from './index.js';
+import startOfDay from 'date-fns/fp/startOfDay';
 
 let data = [];
 let dOne = {
@@ -101,6 +102,35 @@ let testData = {
       starting: 30000,
       interest: 0.01,
       vehicle: 'investment'
+    },
+    {
+      name: 'account3',
+      starting: 30000,
+      interest: 6.0,
+      vehicle: 'debt',
+      payback: {
+        id: `sasdqljg`,
+        description: `payback`,
+        category: 'account3 payback',
+        type: 'expense',
+        transactions: [
+          {
+            raccount: 'account',
+            start: `2018-03-22`,
+            rtype: `day`,
+            cycle: 1,
+            value: 112
+          },
+          {
+            raccount: 'account',
+            type: 'expense',
+            start: `2018-03-22`,
+            rtype: `day`,
+            cycle: 3,
+            value: 78
+          }
+        ]
+      }
     }
   ],
   transactionForm: {
@@ -122,54 +152,89 @@ let testData = {
   }
 };
 
-let resolvedTestData = resolveData(testData);
+let graphRange = {
+  start: startOfDay('2018-03-01'),
+  end: startOfDay('2018-09-01')
+};
+let resolvedTestData = resolveDataAtDateRange(testData, graphRange);
 
 describe(`check resolveData`, () => {
   it(`returns the correct number of transactions`, () => {
     expect(resolvedTestData.transactions).toHaveLength(7);
   });
   it(`returns the correct number of accounts`, () => {
-    expect(resolvedTestData.accounts).toHaveLength(2);
+    expect(resolvedTestData.accounts).toHaveLength(3);
   });
   it(`returns the correct number of BarChartIncome`, () => {
     expect(resolvedTestData.BarChartIncome).toHaveLength(6);
   });
   it(`has the correct BarChartIncome structure`, () => {
-    let expected = [
-      expect.objectContaining({
-        category: 'test default',
-        cycle: 3,
-        dailyRate: 50,
-        description: 'description',
-        id: 'oasidjas1',
-        maxHeight: 402,
-        raccount: 'account',
-        rtype: 'day'
-      })
-    ];
     expect(resolvedTestData.BarChartIncome).toEqual(
-      expect.arrayContaining(expected)
+      expect.arrayContaining([
+        expect.objectContaining({
+          category: 'test default',
+          cycle: 3,
+          dailyRate: expect.any(Number),
+          description: 'description',
+          id: 'oasidjas1',
+          maxHeight: expect.any(Number),
+          raccount: 'account',
+          rtype: 'day',
+          stack: expect.any(Array)
+        })
+      ])
     );
   });
   it(`returns the correct number of BarChartExpense`, () => {
-    expect(resolvedTestData.BarChartExpense).toHaveLength(1);
+    expect(resolvedTestData.BarChartExpense).toHaveLength(5);
   });
   it(`calcs the correct BarChartMax`, () => {
-    expect(resolvedTestData.BarChartMax).toBe(402);
+    expect(resolvedTestData.BarChartMax).toBe(514);
   });
   it(`calcs the correct LineChartMax`, () => {
-    expect(resolvedTestData.LineChartMax).toBe(43440);
+    expect(resolvedTestData.LineChartMax).toBe(48368);
   });
   it(`calcs the correct dailyIncome`, () => {
-    expect(resolvedTestData.dailyIncome).toBe(158);
+    expect(resolvedTestData.dailyIncome).toBe(258);
   });
   it(`calcs the correct dailyExpense`, () => {
-    expect(resolvedTestData.dailyExpense).toBe(112);
+    expect(resolvedTestData.dailyExpense).toBe(672);
   });
   it(`calcs the correct savingsRate`, () => {
-    expect(resolvedTestData.savingsRate).toBe(100);
+    expect(resolvedTestData.savingsRate).toBeCloseTo(33.33);
   });
   it(`calcs the correct fiNumber`, () => {
-    expect(resolvedTestData.fiNumber).toBeCloseTo(2.94);
+    expect(resolvedTestData.fiNumber).toBeCloseTo(0.489);
   });
 });
+
+describe(`check resolveData handles paybacks`, () => {
+  it(`has the correct BarChartExpense structure`, () => {
+    expect(resolvedTestData.BarChartExpense).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'sasdqljg-EXP'
+        })
+      ])
+    );
+
+    expect(resolvedTestData.BarChartExpense).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'sasdqljg-TRSF'
+        })
+      ])
+    );
+  });
+});
+
+/*
+          category: 'test default',
+          dailyRate: expect.any(Number),
+          description: 'payback',
+          type: 'expense',
+          id: 'sasdqljg',
+          maxHeight: expect.any(Number),
+          raccount: 'account',
+          stack: expect.any(Array)
+*/

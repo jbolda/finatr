@@ -80,7 +80,7 @@ class Financial extends React.Component {
       category: `test comp`,
       type: `expense`,
       start: `2018-03-22`,
-      rtype: `day`,
+      rtype: `day of month`,
       cycle: 1,
       value: 112
     };
@@ -118,19 +118,29 @@ class Financial extends React.Component {
           starting: 30000,
           interest: 6.0,
           vehicle: 'debt',
-          payback: [
-            {
-              id: `sasdqljg`,
-              raccount: 'account3',
-              description: `payback`,
-              category: 'account3 payback',
-              type: 'expense',
-              start: `2018-03-22`,
-              rtype: `day`,
-              cycle: 1,
-              value: 112
-            }
-          ]
+          payback: {
+            id: `sasdqljg`,
+            description: `payback`,
+            category: 'account3 payback',
+            type: 'expense',
+            transactions: [
+              {
+                raccount: 'account',
+                start: `2018-03-22`,
+                rtype: `day`,
+                cycle: 1,
+                value: 112
+              },
+              {
+                raccount: 'account',
+                type: 'expense',
+                start: `2018-03-22`,
+                rtype: `day`,
+                cycle: 3,
+                value: 78
+              }
+            ]
+          }
         }
       ],
       transactionForm: {
@@ -158,7 +168,8 @@ class Financial extends React.Component {
   handleUpload = (event, results) => {
     let result = JSON.parse(results[0][0].target.result);
     console.log(result);
-    this.setState(resolveData(result));
+    let calculated = resolveData(result);
+    this.setState(calculated);
   };
 
   handleDownload = () => {
@@ -514,7 +525,7 @@ const debtTable = (data, actions) =>
   ));
 
 const paybackTable = (data, actions) =>
-  data.map(payback => (
+  data.transactions.map(payback => (
     <div className="media" key={payback.id}>
       <div className="media-content">
         <p>
