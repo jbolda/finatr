@@ -30,9 +30,10 @@ class Financial extends React.Component {
       id: `oasis2`,
       raccount: `account`,
       description: `description`,
-      category: `test default`,
+      category: `test default occurences`,
       type: `income`,
-      start: `2018-03-22`,
+      start: `2018-09-22`,
+      occurences: 7,
       rtype: `day`,
       cycle: 1,
       value: 100
