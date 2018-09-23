@@ -40,7 +40,16 @@ const resolveDataAtDateRange = (data, graphRange) => {
   });
   data.accounts.forEach(account => {
     if (account.vehicle === 'debt' && account.payback) {
-      splitTransactions.expense.push([...account.payback]);
+      splitTransactions.expense.push([
+        ...account.payback.transactions.map(transaction => ({
+          ...transaction,
+          id: account.payback.id,
+          raccount: account.name,
+          description: account.payback.description,
+          type: account.payback.type,
+          category: account.payback.category
+        }))
+      ]);
     }
   });
 

@@ -118,19 +118,27 @@ class Financial extends React.Component {
           starting: 30000,
           interest: 6.0,
           vehicle: 'debt',
-          payback: [
-            {
-              id: `sasdqljg`,
-              raccount: 'account3',
-              description: `payback`,
-              category: 'account3 payback',
-              type: 'expense',
-              start: `2018-03-22`,
-              rtype: `day`,
-              cycle: 1,
-              value: 112
-            }
-          ]
+          payback: {
+            id: `sasdqljg`,
+            description: `payback`,
+            category: 'account3 payback',
+            type: 'expense',
+            transactions: [
+              {
+                start: `2018-03-22`,
+                rtype: `day`,
+                cycle: 1,
+                value: 112
+              },
+              {
+                type: 'expense',
+                start: `2018-03-22`,
+                rtype: `day`,
+                cycle: 3,
+                value: 78
+              }
+            ]
+          }
         }
       ],
       transactionForm: {
@@ -515,7 +523,7 @@ const debtTable = (data, actions) =>
   ));
 
 const paybackTable = (data, actions) =>
-  data.map(payback => (
+  data.transactions.map(payback => (
     <div className="media" key={payback.id}>
       <div className="media-content">
         <p>
