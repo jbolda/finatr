@@ -186,7 +186,7 @@ describe(`check resolveData`, () => {
     );
   });
   it(`returns the correct number of BarChartExpense`, () => {
-    expect(resolvedTestData.BarChartExpense).toHaveLength(2);
+    expect(resolvedTestData.BarChartExpense).toHaveLength(5);
   });
   it(`calcs the correct BarChartMax`, () => {
     expect(resolvedTestData.BarChartMax).toBe(514);
@@ -198,13 +198,13 @@ describe(`check resolveData`, () => {
     expect(resolvedTestData.dailyIncome).toBe(258);
   });
   it(`calcs the correct dailyExpense`, () => {
-    expect(resolvedTestData.dailyExpense).toBe(224);
+    expect(resolvedTestData.dailyExpense).toBe(672);
   });
   it(`calcs the correct savingsRate`, () => {
-    expect(resolvedTestData.savingsRate).toBe(100);
+    expect(resolvedTestData.savingsRate).toBeCloseTo(33.33);
   });
   it(`calcs the correct fiNumber`, () => {
-    expect(resolvedTestData.fiNumber).toBeCloseTo(1.47);
+    expect(resolvedTestData.fiNumber).toBeCloseTo(0.489);
   });
 });
 
@@ -213,7 +213,15 @@ describe(`check resolveData handles paybacks`, () => {
     expect(resolvedTestData.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: 'sasdqljg'
+          id: 'sasdqljg-EXP'
+        })
+      ])
+    );
+
+    expect(resolvedTestData.BarChartExpense).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'sasdqljg-TRSF'
         })
       ])
     );
