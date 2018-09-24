@@ -5,6 +5,7 @@ import makeUUID from './makeUUID.js';
 
 import TransactionInput from './transactionInput';
 import AccountInput from './accountInput';
+import AccountTransactionInput from './accountTransactionInput';
 import YNABInput from './ynabInput.js';
 
 import fileDownload from 'js-file-download';
@@ -253,6 +254,26 @@ class Financial extends React.Component {
     this.setState(resolveData(newState));
   };
 
+  addAccountTransaction = result => {
+    console.log(result);
+    let newState = { ...this.state };
+    if (result.id || result.id !== '') {
+      let existingTransactionIndex = newState.accounts.payback
+        .map(t => t.id)
+        .indexOf(result.id);
+      if (existingTransactionIndex === -1) {
+        newState.transactions.push(result);
+      } else {
+        newState.transactions.splice(existingTransactionIndex, 1, result);
+      }
+    } else {
+      newState.transactions.push({ ...result, id: makeUUID() });
+    }
+    newState.transactionForm.id = '';
+    this.setState(resolveData(newState));
+    this.transactionTabs.tabClick(0);
+  };
+
   addYNAB = (tokens, resultantAccounts, resultantTransactions) => {
     let newState = { ...this.state };
     let indexed = {};
@@ -285,6 +306,7 @@ class Financial extends React.Component {
   };
 
   render() {
+    console.log(this);
     return (
       <React.Fragment>
         <section className="section">
@@ -378,10 +400,18 @@ class Financial extends React.Component {
                 addAccount={this.addAccount}
                 initialValues={this.state.accountForm}
               />,
-              debtTable(this.state.accounts, {
-                modifyAccount: this.modifyAccount,
-                deleteAccount: this.deleteAccount
-              })
+              <React.Fragment>
+                {debtTable(this.state.accounts, {
+                  modifyAccount: this.modifyAccount,
+                  deleteAccount: this.deleteAccount
+                })}
+                <AccountTransactionInput
+                  ref={ref => (this.AccountTransactionForm = ref)}
+                  accounts={this.state.accounts}
+                  addAccountTransaction={this.addAccountTransaction}
+                  initialValues={this.state.transactionForm}
+                />
+              </React.Fragment>
             ]}
           />
         </section>
@@ -511,6 +541,12 @@ const debtTable = (data, actions) =>
         {account.payback ? paybackTable(account.payback, actions) : null}
       </div>
       <div className="media-right">
+        <button
+          className="button is-rounded is-small is-success"
+          onClick={actions.toggleAccountTransactionVisibility}
+        >
+          +
+        </button>
         <button
           className="button is-rounded is-small is-info"
           onClick={actions.modifyAccount.bind(this, account.name)}
