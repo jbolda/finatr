@@ -5,6 +5,7 @@ import makeUUID from './makeUUID.js';
 
 import TransactionInput from './transactionInput';
 import AccountInput from './accountInput';
+import AccountTransactionInput from './accountTransactionInput';
 import YNABInput from './ynabInput.js';
 
 import fileDownload from 'js-file-download';
@@ -30,9 +31,10 @@ class Financial extends React.Component {
       id: `oasis2`,
       raccount: `account`,
       description: `description`,
-      category: `test default`,
+      category: `test default occurences`,
       type: `income`,
-      start: `2018-03-22`,
+      start: `2018-09-22`,
+      occurences: 7,
       rtype: `day`,
       cycle: 1,
       value: 100
@@ -133,7 +135,6 @@ class Financial extends React.Component {
               },
               {
                 raccount: 'account',
-                type: 'expense',
                 start: `2018-03-22`,
                 rtype: `day`,
                 cycle: 3,
@@ -159,6 +160,16 @@ class Financial extends React.Component {
         starting: 1000,
         interest: 0.0,
         vehicle: 'operating'
+      },
+      accountTransactionForm: {
+        id: ``,
+        debtAccount: `account`,
+        raccount: `account`,
+        start: `2018-03-22`,
+        rtype: `day`,
+        cycle: 3,
+        occurences: 0,
+        value: 150
       }
     };
 
@@ -249,6 +260,28 @@ class Financial extends React.Component {
       this.state.accounts.findIndex(element => element.name === name),
       1
     );
+    this.setState(resolveData(newState));
+  };
+
+  addAccountTransaction = result => {
+    let newState = { ...this.state };
+    let accountIndex = newState.accounts
+      .map(a => a.name)
+      .indexOf(result.debtAccount);
+    let payback = { ...newState.accounts[accountIndex].payback };
+    payback.id = makeUUID();
+    if (!payback.transactions) {
+      payback.transactions = [];
+    }
+    payback.transactions.push({
+      raccount: result.raccount,
+      start: result.start,
+      rtype: result.rtype,
+      cycle: result.cycle,
+      occurences: result.occurences,
+      value: result.value
+    });
+    newState.accountTransactionForm.id = '';
     this.setState(resolveData(newState));
   };
 
@@ -377,10 +410,18 @@ class Financial extends React.Component {
                 addAccount={this.addAccount}
                 initialValues={this.state.accountForm}
               />,
-              debtTable(this.state.accounts, {
-                modifyAccount: this.modifyAccount,
-                deleteAccount: this.deleteAccount
-              })
+              <React.Fragment>
+                {debtTable(this.state.accounts, {
+                  modifyAccount: this.modifyAccount,
+                  deleteAccount: this.deleteAccount
+                })}
+                <AccountTransactionInput
+                  ref={ref => (this.AccountTransactionForm = ref)}
+                  accounts={this.state.accounts}
+                  addAccountTransaction={this.addAccountTransaction}
+                  initialValues={this.state.accountTransactionForm}
+                />
+              </React.Fragment>
             ]}
           />
         </section>
@@ -510,6 +551,12 @@ const debtTable = (data, actions) =>
         {account.payback ? paybackTable(account.payback, actions) : null}
       </div>
       <div className="media-right">
+        <button
+          className="button is-rounded is-small is-success"
+          onClick={actions.toggleAccountTransactionVisibility}
+        >
+          +
+        </button>
         <button
           className="button is-rounded is-small is-info"
           onClick={actions.modifyAccount.bind(this, account.name)}

@@ -7,7 +7,7 @@ import startOfDay from 'date-fns/fp/startOfDay';
 import computeTransactionModifications from './resolveTransactions.js';
 
 const resolveData = data => {
-  let graphRange = { start: past(), end: future(365) };
+  let graphRange = { start: past(), end: future(30) };
   return resolveDataAtDateRange(data, graphRange);
 };
 

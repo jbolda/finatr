@@ -1,16 +1,25 @@
 import React from 'react';
 import { Formik, Field } from 'formik';
 
-class TransactionInput extends React.Component {
+class AccountTransactionInput extends React.Component {
+  constructor() {
+    super();
+    this.state = { visible: true };
+  }
+
+  toggleAccountTransactionVisibility() {
+    this.setState((prevState, props) => ({ visible: !prevState.visible }));
+  }
+
   render() {
     const { accounts } = this.props;
-    return (
-      <React.Fragment>
-        <h1 className="title has-text-centered">Add a Transaction</h1>
+    return this.state.visible ? (
+      <div className="box">
+        <h1 className="title has-text-centered">Add Debt Payback</h1>
         <Formik
           initialValues={this.props.initialValues}
           onSubmit={(values, actions) => {
-            this.props.addTransaction(values);
+            this.props.addAccountTransaction(values);
             actions.setSubmitting(false);
             actions.resetForm();
           }}
@@ -32,6 +41,28 @@ class TransactionInput extends React.Component {
               />
               <div className="field is-horizontal">
                 <div className="field-label is-normal">
+                  <label className="label">debt account</label>
+                </div>
+                <div className="field-body">
+                  <div className="field">
+                    <div className="control">
+                      <div className="select">
+                        <Field component="select" name="debtAccount">
+                          {accounts.map(account => (
+                            <option key={account.name} value={account.name}>
+                              {account.name}
+                            </option>
+                          ))}
+                        </Field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {touched.debtAccount &&
+                  errors.debtAccount && <div>{errors.debtAccount}</div>}
+              </div>
+              <div className="field is-horizontal">
+                <div className="field-label is-normal">
                   <label className="label">account</label>
                 </div>
                 <div className="field-body">
@@ -51,54 +82,6 @@ class TransactionInput extends React.Component {
                 </div>
                 {touched.raccount &&
                   errors.raccount && <div>{errors.raccount}</div>}
-              </div>
-              <div className="field is-horizontal">
-                <div className="field-label is-normal">
-                  <label className="label">description</label>
-                </div>
-                <div className="field-body">
-                  <div className="field">
-                    <p className="control">
-                      <Field type="text" name="description" className="input" />
-                    </p>
-                  </div>
-                </div>
-
-                {touched.description &&
-                  errors.description && <div>{errors.description}</div>}
-              </div>
-              <div className="field is-horizontal">
-                <div className="field-label is-normal">
-                  <label className="label">category</label>
-                </div>
-                <div className="field-body">
-                  <div className="field">
-                    <p className="control">
-                      <Field type="text" name="category" className="input" />
-                    </p>
-                  </div>
-                </div>
-                {touched.category &&
-                  errors.category && <div>{errors.category}</div>}
-              </div>
-              <div className="field is-horizontal">
-                <div className="field-label is-normal">
-                  <label className="label">type</label>
-                </div>
-                <div className="field-body">
-                  <div className="field">
-                    <div className="control">
-                      <div className="select">
-                        <Field component="select" name="type">
-                          <option value="income">Income</option>
-                          <option value="expense">Expense</option>
-                          <option value="transfer">Transfer</option>
-                        </Field>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {touched.type && errors.type && <div>{errors.type}</div>}
               </div>
               <div className="field is-horizontal">
                 <div className="field-label is-normal">
@@ -207,9 +190,9 @@ class TransactionInput extends React.Component {
             </form>
           )}
         />
-      </React.Fragment>
-    );
+      </div>
+    ) : null;
   }
 }
 
-export default TransactionInput;
+export default AccountTransactionInput;
