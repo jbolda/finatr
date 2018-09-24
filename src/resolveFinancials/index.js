@@ -7,7 +7,7 @@ import startOfDay from 'date-fns/fp/startOfDay';
 import computeTransactionModifications from './resolveTransactions.js';
 
 const resolveData = data => {
-  let graphRange = { start: past(), end: future(30) };
+  let graphRange = { start: past(), end: future(365) };
   return resolveDataAtDateRange(data, graphRange);
 };
 
@@ -44,13 +44,18 @@ const resolveDataAtDateRange = (data, graphRange) => {
       account.payback.transactions.forEach(accountTransaction => {
         // this one is for the expense on the account
         // being paid down
+        let amount =
+          typeof accountTransaction.value === 'string'
+            ? account.payback[accountTransaction.value]
+            : accountTransaction.value;
         accountTransactionPush.push({
           ...accountTransaction,
           id: `${account.payback.id}-EXP`,
           raccount: account.name,
           description: account.payback.description,
           type: account.payback.type,
-          category: account.payback.category
+          category: account.payback.category,
+          value: amount
         });
         // this one is for the account making the payment
         // (raccount is defined on accountTransaction)
@@ -60,7 +65,7 @@ const resolveDataAtDateRange = (data, graphRange) => {
           description: account.payback.description,
           type: 'transfer',
           category: account.payback.category,
-          value: -accountTransaction.value
+          value: -amount
         });
       });
       splitTransactions.expense.push(accountTransactionPush);

@@ -125,20 +125,22 @@ class Financial extends React.Component {
             description: `payback`,
             category: 'account3 payback',
             type: 'expense',
+            payoffBalance: 1500,
             transactions: [
               {
                 raccount: 'account',
                 start: `2018-03-22`,
-                rtype: `day`,
-                cycle: 1,
+                rtype: `day of month`,
+                cycle: 15,
                 value: 112
               },
               {
                 raccount: 'account',
                 start: `2018-03-22`,
-                rtype: `day`,
-                cycle: 3,
-                value: 78
+                rtype: `day of month`,
+                cycle: 15,
+                occurences: 1,
+                value: 'payoffBalance'
               }
             ]
           }
