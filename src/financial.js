@@ -135,7 +135,6 @@ class Financial extends React.Component {
               },
               {
                 raccount: 'account',
-                type: 'expense',
                 start: `2018-03-22`,
                 rtype: `day`,
                 cycle: 3,
@@ -161,6 +160,16 @@ class Financial extends React.Component {
         starting: 1000,
         interest: 0.0,
         vehicle: 'operating'
+      },
+      accountTransactionForm: {
+        id: ``,
+        debtAccount: `account`,
+        raccount: `account`,
+        start: `2018-03-22`,
+        rtype: `day`,
+        cycle: 3,
+        occurences: 0,
+        value: 150
       }
     };
 
@@ -255,23 +264,25 @@ class Financial extends React.Component {
   };
 
   addAccountTransaction = result => {
-    console.log(result);
     let newState = { ...this.state };
-    if (result.id || result.id !== '') {
-      let existingTransactionIndex = newState.accounts.payback
-        .map(t => t.id)
-        .indexOf(result.id);
-      if (existingTransactionIndex === -1) {
-        newState.transactions.push(result);
-      } else {
-        newState.transactions.splice(existingTransactionIndex, 1, result);
-      }
-    } else {
-      newState.transactions.push({ ...result, id: makeUUID() });
+    let accountIndex = newState.accounts
+      .map(a => a.name)
+      .indexOf(result.debtAccount);
+    let payback = { ...newState.accounts[accountIndex].payback };
+    payback.id = makeUUID();
+    if (!payback.transactions) {
+      payback.transactions = [];
     }
-    newState.transactionForm.id = '';
+    payback.transactions.push({
+      raccount: result.raccount,
+      start: result.start,
+      rtype: result.rtype,
+      cycle: result.cycle,
+      occurences: result.occurences,
+      value: result.value
+    });
+    newState.accountTransactionForm.id = '';
     this.setState(resolveData(newState));
-    this.transactionTabs.tabClick(0);
   };
 
   addYNAB = (tokens, resultantAccounts, resultantTransactions) => {
@@ -306,7 +317,6 @@ class Financial extends React.Component {
   };
 
   render() {
-    console.log(this);
     return (
       <React.Fragment>
         <section className="section">
@@ -409,7 +419,7 @@ class Financial extends React.Component {
                   ref={ref => (this.AccountTransactionForm = ref)}
                   accounts={this.state.accounts}
                   addAccountTransaction={this.addAccountTransaction}
-                  initialValues={this.state.transactionForm}
+                  initialValues={this.state.accountTransactionForm}
                 />
               </React.Fragment>
             ]}
