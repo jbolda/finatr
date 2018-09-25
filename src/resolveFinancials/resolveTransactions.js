@@ -72,7 +72,7 @@ const generateModification = (
 
   let hasNotHitNumberOfOccurences =
     (!!transaction && !transaction.occurences) ||
-    visibleOccurrences <= transaction.occurences;
+    visibleOccurrences + 1 <= transaction.occurences;
 
   // if this is a modification we should use then add it to the list
   // and generate the next one

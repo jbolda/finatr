@@ -242,4 +242,35 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     );
     expect(resolvedTestData).toHaveLength(3);
   });
+
+  it(`returns correct number of modifications based on occurences`, () => {
+    let testData1 = {
+      ...transaction,
+      start: graphRange.start,
+      cycle: 17,
+      occurences: 1
+    };
+    let testRange = { start: graphRange.start, end: '2018-12-01' };
+
+    let resolvedTestData1 = generateModification(
+      testData1,
+      graphRange,
+      graphRange.start,
+      [],
+      0,
+      0
+    );
+    expect(resolvedTestData1).toHaveLength(1);
+
+    let testData2 = { ...testData1, occurences: 2 };
+    let resolvedTestData2 = generateModification(
+      testData2,
+      graphRange,
+      graphRange.start,
+      [],
+      0,
+      0
+    );
+    expect(resolvedTestData2).toHaveLength(2);
+  });
 });
