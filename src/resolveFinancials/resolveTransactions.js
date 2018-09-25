@@ -71,8 +71,9 @@ const generateModification = (
   modification.mutateKey = transaction.id;
 
   let hasNotHitNumberOfOccurences =
-    (!!transaction && !transaction.occurences) ||
-    visibleOccurrences + 1 <= transaction.occurences;
+    (!!transaction && !transaction.generatedOccurences) ||
+    visibleOccurrences + 1 <= transaction.visibleOccurrences ||
+    generatedOccurences + 1 <= transaction.generatedOccurences;
 
   // if this is a modification we should use then add it to the list
   // and generate the next one

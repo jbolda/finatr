@@ -248,7 +248,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       ...transaction,
       start: graphRange.start,
       cycle: 17,
-      occurences: 1
+      generatedOccurences: 1
     };
     let testRange = { start: graphRange.start, end: '2018-12-01' };
 
@@ -262,7 +262,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     );
     expect(resolvedTestData1).toHaveLength(1);
 
-    let testData2 = { ...testData1, occurences: 2 };
+    let testData2 = { ...testData1, generatedOccurences: 2 };
     let resolvedTestData2 = generateModification(
       testData2,
       graphRange,
