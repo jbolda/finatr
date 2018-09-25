@@ -5,6 +5,7 @@ import subDays from 'date-fns/fp/subDays';
 import addMonths from 'date-fns/fp/addMonths';
 
 import {
+  generateModification,
   transactionNoReoccur,
   transactionDailyReoccur,
   transactionDayOfWeekReoccur,
@@ -118,7 +119,7 @@ describe(`check transactionDailyReoccur`, () => {
 
 describe(`check transactionDayOfMonthReoccur`, () => {
   const transaction = {
-    id: `oasidjas1`,
+    id: `check transactionDayOfMonthReoccur`,
     raccount: `account`,
     description: `description`,
     category: `test default`,
@@ -185,7 +186,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     expect(differenceInCalendarDays(seedDate)(resolvedTestData.date)).toBe(0);
   });
 
-  it(`returns progressive cycles`, () => {
+  it(`returns progressive cycle with correct dates`, () => {
     let testData = { ...transaction, cycle: 16 };
     let resolvedTestData1 = transactionDayOfMonthReoccur({
       transaction: testData,
@@ -227,5 +228,18 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     expect(
       differenceInCalendarDays(graphRange.start)(resolvedTestData5.date)
     ).toBe(120);
+  });
+
+  it(`returns correct number of modifications for range`, () => {
+    let testData = { ...transaction, start: graphRange.start, cycle: 17 };
+    let resolvedTestData = generateModification(
+      testData,
+      graphRange,
+      graphRange.start,
+      [],
+      0,
+      0
+    );
+    expect(resolvedTestData).toHaveLength(3);
   });
 });
