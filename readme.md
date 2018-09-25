@@ -13,7 +13,6 @@ Most apps track your historical information and help you set up a budget. Arguea
 The immediate plan is to get the site into a state that is usable for 90%+ of individuals. I suspect we are nearly there. The most important item is representing debt payback. Below is a list of known TODO items. Eventually these will be moved into issues/projects as the background information reaches a certain depth.
 
 #### Items in Order of Priority
-- [ ] convert resolve functions to take a date that tests are consistently repeatable
 - [ ] increase test base especially to test number crunching functions (this makes adding big.js easier)
 - [ ] incorporate big.js into arithmatic and number output
 - [ ] clean up YNAB import
