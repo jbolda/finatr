@@ -42,6 +42,7 @@ const computeTransactionModifications = (transactions, graphRange) =>
               transactionInterval,
               coercedTransactions.start,
               [],
+              0,
               0
             )
           );
@@ -58,14 +59,21 @@ const generateModification = (
   transactionInterval,
   prevDate,
   modifications,
-  occurrences
+  visibleOccurrences,
+  generatedOccurences
 ) => {
-  let modification = nextModification(transaction.rtype)(transaction, prevDate);
+  let modification = nextModification(transaction.rtype)({
+    transaction: transaction,
+    seedDate: prevDate,
+    visibleOccurences: visibleOccurrences,
+    generatedOccurences: generatedOccurences
+  });
   modification.mutateKey = transaction.id;
 
   let hasNotHitNumberOfOccurences =
-    (!!transaction && !transaction.occurences) ||
-    occurrences <= transaction.occurences;
+    (!!transaction && !transaction.generatedOccurences) ||
+    visibleOccurrences + 1 <= transaction.visibleOccurrences ||
+    generatedOccurences + 1 <= transaction.generatedOccurences;
 
   // if this is a modification we should use then add it to the list
   // and generate the next one
@@ -73,7 +81,7 @@ const generateModification = (
     isWithinInterval(transactionInterval)(modification.date) &&
     isAfter(prevDate)(modification.date) &&
     hasNotHitNumberOfOccurences &&
-    occurrences < 365
+    generatedOccurences < 365
   ) {
     modifications.push(modification);
     generateModification(
@@ -81,22 +89,25 @@ const generateModification = (
       transactionInterval,
       modification.date,
       modifications,
-      occurrences + 1
+      visibleOccurrences + 1,
+      generatedOccurences + 1
     );
+
     // this isn't a modification we want because it is before
     //  our graph starts, but we need to keep generating to confirm
     // that none of the future ones fall within our graphRange
   } else if (
     isBefore(transactionInterval.end)(modification.date) &&
     isAfter(prevDate)(modification.date) &&
-    occurrences < 365
+    generatedOccurences < 365
   ) {
     generateModification(
       transaction,
       transactionInterval,
       modification.date,
       modifications,
-      occurrences
+      visibleOccurrences,
+      generatedOccurences + 1
     );
   }
   return modifications;
@@ -128,7 +139,7 @@ const nextModification = rtype => {
 };
 
 // when transaction.rtype === 'none'
-const transactionNoReoccur = (transaction, seedDate) => {
+const transactionNoReoccur = ({ transaction, seedDate }) => {
   return {
     date: transaction.start,
     y: transaction.value,
@@ -137,7 +148,7 @@ const transactionNoReoccur = (transaction, seedDate) => {
 };
 
 // when transaction.rtype === 'day'
-const transactionDailyReoccur = (transaction, seedDate) => {
+const transactionDailyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addDays(transaction.cycle)(seedDate),
     y: transaction.value,
@@ -146,7 +157,7 @@ const transactionDailyReoccur = (transaction, seedDate) => {
 };
 
 // when transaction.rtype === 'day of week'
-const transactionDayOfWeekReoccur = (transaction, seedDate) => {
+const transactionDayOfWeekReoccur = ({ transaction, seedDate }) => {
   return {
     date: addDays(7 + getDay(seedDate) - transaction.cycle)(seedDate),
     y: transaction.value,
@@ -155,12 +166,15 @@ const transactionDayOfWeekReoccur = (transaction, seedDate) => {
 };
 
 // when transaction.rtype === 'day of month'
-const transactionDayOfMonthReoccur = (transaction, seedDate) => {
+const transactionDayOfMonthReoccur = ({
+  transaction,
+  seedDate,
+  generatedOccurences
+}) => {
   let monthlyDate;
-  let isOnOrBefore = checkDate =>
-    isBefore(seedDate)(checkDate) || isSameDay(seedDate)(checkDate);
+  let isBeforeSeedDate = isBefore(seedDate);
   let cycleDate = setDate(transaction.cycle);
-  if (isOnOrBefore(cycleDate(seedDate))) {
+  if (isBeforeSeedDate(cycleDate(seedDate)) || generatedOccurences !== 0) {
     monthlyDate = cycleDate(addMonths(1)(seedDate));
   } else {
     monthlyDate = cycleDate(seedDate);
@@ -173,7 +187,7 @@ const transactionDayOfMonthReoccur = (transaction, seedDate) => {
 };
 
 // when transaction.rtype === 'bimonthly'
-const transactionBimonthlyReoccur = (transaction, seedDate) => {
+const transactionBimonthlyReoccur = ({ transaction, seedDate }) => {
   return {
     date: setDate(transaction.cycle)(addMonths(2)(seedDate)),
     y: transaction.value,
@@ -182,7 +196,7 @@ const transactionBimonthlyReoccur = (transaction, seedDate) => {
 };
 
 // when transaction.rtype === 'quarterly'
-const transactionQuarterlyReoccur = (transaction, seedDate) => {
+const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addQuarters(transaction.cycle)(seedDate),
     y: transaction.value,
@@ -191,7 +205,7 @@ const transactionQuarterlyReoccur = (transaction, seedDate) => {
 };
 
 // when transaction.rtype === 'semiannually'
-const transactionSemiannuallyReoccur = (transaction, seedDate) => {
+const transactionSemiannuallyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addYears(0.5)(seedDate),
     y: transaction.value,
@@ -200,7 +214,7 @@ const transactionSemiannuallyReoccur = (transaction, seedDate) => {
 };
 
 // when transaction.rtype === 'annually'
-const transactionAnnuallyReoccur = (transaction, seedDate) => {
+const transactionAnnuallyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addYears(1)(seedDate),
     y: transaction.value,
