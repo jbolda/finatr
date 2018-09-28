@@ -139,7 +139,7 @@ class Financial extends React.Component {
                 start: `2018-03-22`,
                 rtype: `day of month`,
                 cycle: 15,
-                generatedOccurences: 1,
+                visibleOccurrences: 1,
                 value: 'payoffBalance'
               }
             ]
