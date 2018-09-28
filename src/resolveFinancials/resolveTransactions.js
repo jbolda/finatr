@@ -70,17 +70,16 @@ const generateModification = (
   });
   modification.mutateKey = transaction.id;
 
-  let hasNotHitNumberOfOccurences =
-    (!!transaction && !transaction.generatedOccurences) ||
-    visibleOccurrences + 1 <= transaction.visibleOccurrences ||
-    generatedOccurences + 1 <= transaction.generatedOccurences;
-
   // if this is a modification we should use then add it to the list
   // and generate the next one
   if (
     isWithinInterval(transactionInterval)(modification.date) &&
     isAfter(prevDate)(modification.date) &&
-    hasNotHitNumberOfOccurences &&
+    hasNotHitNumberOfOccurences(
+      transaction,
+      visibleOccurrences,
+      generatedOccurences
+    ) &&
     generatedOccurences < 365
   ) {
     modifications.push(modification);
@@ -114,6 +113,16 @@ const generateModification = (
 };
 
 export { generateModification };
+
+const hasNotHitNumberOfOccurences = (
+  transaction,
+  visibleOccurrences,
+  generatedOccurences
+) =>
+  ((!!transaction && !transaction.visibleOccurrences) ||
+    visibleOccurrences + 1 <= transaction.visibleOccurrences) &&
+  ((!!transaction && !transaction.generatedOccurences) ||
+    generatedOccurences + 1 <= transaction.generatedOccurences);
 
 const nextModification = rtype => {
   switch (rtype) {
