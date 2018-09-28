@@ -41,7 +41,7 @@ const resolveDataAtDateRange = (data, graphRange) => {
   data.accounts.forEach(account => {
     if (account.vehicle === 'debt' && account.payback) {
       let accountTransactionPush = [];
-      account.payback.transactions.forEach(accountTransaction => {
+      account.payback.transactions.forEach((accountTransaction, index) => {
         // this one is for the expense on the account
         // being paid down
         let amount =
@@ -50,7 +50,7 @@ const resolveDataAtDateRange = (data, graphRange) => {
             : accountTransaction.value;
         accountTransactionPush.push({
           ...accountTransaction,
-          id: `${account.payback.id}-EXP`,
+          id: `${account.payback.id}-${index}EXP`,
           raccount: account.name,
           description: account.payback.description,
           type: account.payback.type,
@@ -61,7 +61,7 @@ const resolveDataAtDateRange = (data, graphRange) => {
         // (raccount is defined on accountTransaction)
         accountTransactionPush.push({
           ...accountTransaction,
-          id: `${account.payback.id}-TRSF`,
+          id: `${account.payback.id}-${index}TRSF`,
           description: account.payback.description,
           type: 'transfer',
           category: account.payback.category,
@@ -201,7 +201,6 @@ const resolveBarChart = (data, { graphRange }) => {
   };
 
   // return array of modifications to be applied to stackStructure
-  // console.log(computeTransactionModifications(data, graphRange));
   let stackComputed = computeTransactionModifications(data, graphRange).reduce(
     (structure, modification) => {
       let modIndex = closestIndexTo(modification.date, allDates);
