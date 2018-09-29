@@ -209,7 +209,6 @@ const resolveBarChart = (data, { graphRange }) => {
         updatedStructure[modIndex][modification.mutateKey],
         modification
       );
-      // if (modification.mutateKey === 'sasdqljg') console.log(updatedStructure);
       return updatedStructure;
     },
     stackStructure

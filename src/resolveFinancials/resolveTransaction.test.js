@@ -3,8 +3,10 @@ import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
 import addDays from 'date-fns/fp/addDays';
 import subDays from 'date-fns/fp/subDays';
 import addMonths from 'date-fns/fp/addMonths';
+import subMonths from 'date-fns/fp/subMonths';
+import getDate from 'date-fns/fp/getDate';
 
-import {
+import computeTransactionModifications, {
   generateModification,
   hasNotHitNumberOfOccurences,
   transactionNoReoccur,
@@ -124,7 +126,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     raccount: `account`,
     description: `description`,
     category: `test default`,
-    type: `income`,
+    type: `expense`,
     start: `2018-03-22`,
     rtype: `day of month`,
     cycle: 1,
@@ -242,6 +244,38 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       0
     );
     expect(resolvedTestData).toHaveLength(3);
+  });
+
+  it(`returns correct number of modifications if start and cycle are the same`, () => {
+    let testData = {
+      id: 'the-id',
+      raccount: 'checking',
+      description: 'Electric',
+      category: 'Living',
+      type: 'expense',
+      start: '2017-08-22',
+      rtype: 'day of month',
+      cycle: 22,
+      value: 150
+    };
+    let testRange = {
+      start: startOfDay('2018-01-16'),
+      end: startOfDay('2018-08-01')
+    };
+    let resolvedTestData1 = generateModification(
+      testData,
+      testRange,
+      testRange.start,
+      [],
+      0,
+      0
+    );
+    expect(resolvedTestData1).toHaveLength(7);
+    let resolvedTestData2 = computeTransactionModifications(
+      [testData],
+      testRange
+    );
+    expect(resolvedTestData2).toHaveLength(7);
   });
 
   it(`returns correct number of modifications based on generated occurences`, () => {
