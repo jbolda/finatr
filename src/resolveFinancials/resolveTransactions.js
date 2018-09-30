@@ -106,7 +106,8 @@ const generateModification = (
     // that none of the future ones fall within our graphRange
   } else if (
     isBefore(transactionInterval.end)(modification.date) &&
-    isAfter(prevDate)(modification.date) &&
+    (isAfter(prevDate)(modification.date) ||
+      (generatedOccurences === 0 && isSameDay(prevDate)(modification.date))) &&
     generatedOccurences < 365
   ) {
     generateModification(

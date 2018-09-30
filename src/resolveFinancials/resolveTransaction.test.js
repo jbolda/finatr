@@ -309,6 +309,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       start: startOfDay('2018-01-16'),
       end: startOfDay('2018-08-01')
     };
+    let testData1 = { ...testData, id: 'the-id1' };
     let resolvedTestData1 = generateModification(
       testData,
       testRange,
@@ -318,8 +319,9 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       0
     );
     expect(resolvedTestData1).toHaveLength(7);
+    let testData2 = { ...testData, id: 'the-id2' };
     let resolvedTestData2 = computeTransactionModifications(
-      [testData],
+      [testData2],
       testRange
     );
     expect(resolvedTestData2).toHaveLength(7);
