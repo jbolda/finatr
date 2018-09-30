@@ -129,14 +129,14 @@ class Financial extends React.Component {
             transactions: [
               {
                 raccount: 'account',
-                start: `2018-03-22`,
+                start: `2018-03-15`,
                 rtype: `day of month`,
                 cycle: 15,
                 value: 112
               },
               {
                 raccount: 'account',
-                start: `2018-03-22`,
+                start: `2018-03-15`,
                 rtype: `day of month`,
                 cycle: 15,
                 visibleOccurrences: 1,

@@ -3,8 +3,11 @@ import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
 import addDays from 'date-fns/fp/addDays';
 import subDays from 'date-fns/fp/subDays';
 import addMonths from 'date-fns/fp/addMonths';
+import subMonths from 'date-fns/fp/subMonths';
+import getDate from 'date-fns/fp/getDate';
 
-import {
+import computeTransactionModifications, {
+  convertRangeToInterval,
   generateModification,
   hasNotHitNumberOfOccurences,
   transactionNoReoccur,
@@ -16,6 +19,52 @@ import {
   transactionSemiannuallyReoccur,
   transactionAnnuallyReoccur
 } from './resolveTransactions.js';
+
+describe(`check convertRangeToInterval`, () => {
+  it(`returns range start shifted forward`, () => {
+    const transaction = { start: `2018-03-22` };
+    let graphRange = {
+      start: startOfDay('2018-01-01'),
+      end: startOfDay('2018-06-01')
+    };
+    let interval = convertRangeToInterval(transaction, graphRange);
+    expect(interval.start).toEqual(startOfDay('2018-03-21'));
+    expect(interval.end).toEqual(startOfDay('2018-06-02'));
+  });
+
+  it(`returns range start before`, () => {
+    const transaction = { start: `2017-08-01` };
+    let graphRange = {
+      start: startOfDay('2018-01-15'),
+      end: startOfDay('2018-06-01')
+    };
+    let interval = convertRangeToInterval(transaction, graphRange);
+    expect(interval.start).toEqual(startOfDay('2018-01-14'));
+    expect(interval.end).toEqual(startOfDay('2018-06-02'));
+  });
+
+  it(`returns range end shifted back`, () => {
+    const transaction = { start: `2018-03-22`, end: '2018-05-02' };
+    let graphRange = {
+      start: startOfDay('2018-01-01'),
+      end: startOfDay('2018-06-01')
+    };
+    let interval = convertRangeToInterval(transaction, graphRange);
+    expect(interval.start).toEqual(startOfDay('2018-03-21'));
+    expect(interval.end).toEqual(startOfDay('2018-05-03'));
+  });
+
+  it(`returns range end after`, () => {
+    const transaction = { start: `2017-08-22`, end: '2018-08-02' };
+    let graphRange = {
+      start: startOfDay('2018-01-15'),
+      end: startOfDay('2018-06-01')
+    };
+    let interval = convertRangeToInterval(transaction, graphRange);
+    expect(interval.start).toEqual(startOfDay('2018-01-14'));
+    expect(interval.end).toEqual(startOfDay('2018-06-02'));
+  });
+});
 
 describe(`check transactionNoReoccur`, () => {
   const transaction = {
@@ -124,7 +173,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     raccount: `account`,
     description: `description`,
     category: `test default`,
-    type: `income`,
+    type: `expense`,
     start: `2018-03-22`,
     rtype: `day of month`,
     cycle: 1,
@@ -242,6 +291,40 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       0
     );
     expect(resolvedTestData).toHaveLength(3);
+  });
+
+  it(`returns correct number of modifications if start and cycle are the same`, () => {
+    let testData = {
+      id: 'the-id',
+      raccount: 'checking',
+      description: 'Electric',
+      category: 'Living',
+      type: 'expense',
+      start: '2017-08-22',
+      rtype: 'day of month',
+      cycle: 22,
+      value: 150
+    };
+    let testRange = {
+      start: startOfDay('2018-01-16'),
+      end: startOfDay('2018-08-01')
+    };
+    let testData1 = { ...testData, id: 'the-id1' };
+    let resolvedTestData1 = generateModification(
+      testData,
+      testRange,
+      testRange.start,
+      [],
+      0,
+      0
+    );
+    expect(resolvedTestData1).toHaveLength(7);
+    let testData2 = { ...testData, id: 'the-id2' };
+    let resolvedTestData2 = computeTransactionModifications(
+      [testData2],
+      testRange
+    );
+    expect(resolvedTestData2).toHaveLength(7);
   });
 
   it(`returns correct number of modifications based on generated occurences`, () => {
