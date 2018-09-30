@@ -1,6 +1,23 @@
 import React from 'react';
 import { Formik, Field } from 'formik';
 
+import * as Form from './components/bootstrap/Form';
+
+function FieldInput({ fieldName, touched, errors, fieldType = 'text' }) {
+  return (
+    <React.Fragment>
+      <Form.Field>
+        <Form.FieldLabel>{fieldName}</Form.FieldLabel>
+        <Form.FieldControl>
+          <Field type={fieldType} name={fieldName} className="input" />
+        </Form.FieldControl>
+      </Form.Field>
+      {touched[fieldName] &&
+        errors[fieldName] && <div>{errors[fieldName]}</div>}
+    </React.Fragment>
+  );
+}
+
 class TransactionInput extends React.Component {
   render() {
     const { accounts } = this.props;
@@ -30,57 +47,35 @@ class TransactionInput extends React.Component {
                 className="input"
                 style={{ display: 'none' }}
               />
-              <div className="field is-horizontal">
-                <div className="field-label is-normal">
-                  <label className="label">account</label>
-                </div>
-                <div className="field-body">
-                  <div className="field">
-                    <div className="control">
-                      <div className="select">
-                        <Field component="select" name="raccount">
-                          {accounts.map(account => (
-                            <option key={account.name} value={account.name}>
-                              {account.name}
-                            </option>
-                          ))}
-                        </Field>
-                      </div>
-                    </div>
+              <Form.Field>
+                <Form.FieldLabel>account</Form.FieldLabel>
+                <Form.FieldControl>
+                  <div className="select">
+                    <Field component="select" name="raccount">
+                      {accounts.map(account => (
+                        <option key={account.name} value={account.name}>
+                          {account.name}
+                        </option>
+                      ))}
+                    </Field>
                   </div>
-                </div>
-                {touched.raccount &&
-                  errors.raccount && <div>{errors.raccount}</div>}
-              </div>
-              <div className="field is-horizontal">
-                <div className="field-label is-normal">
-                  <label className="label">description</label>
-                </div>
-                <div className="field-body">
-                  <div className="field">
-                    <p className="control">
-                      <Field type="text" name="description" className="input" />
-                    </p>
-                  </div>
-                </div>
+                </Form.FieldControl>
+              </Form.Field>
+              {touched.raccount &&
+                errors.raccount && <div>{errors.raccount}</div>}
 
-                {touched.description &&
-                  errors.description && <div>{errors.description}</div>}
-              </div>
-              <div className="field is-horizontal">
-                <div className="field-label is-normal">
-                  <label className="label">category</label>
-                </div>
-                <div className="field-body">
-                  <div className="field">
-                    <p className="control">
-                      <Field type="text" name="category" className="input" />
-                    </p>
-                  </div>
-                </div>
-                {touched.category &&
-                  errors.category && <div>{errors.category}</div>}
-              </div>
+              <FieldInput
+                errors={errors}
+                fieldName="description"
+                touched={touched}
+              />
+
+              <FieldInput
+                errors={errors}
+                fieldName="category"
+                touched={touched}
+              />
+
               <div className="field is-horizontal">
                 <div className="field-label is-normal">
                   <label className="label">type</label>
@@ -100,37 +95,16 @@ class TransactionInput extends React.Component {
                 </div>
                 {touched.type && errors.type && <div>{errors.type}</div>}
               </div>
-              <div className="field is-horizontal">
-                <div className="field-label is-normal">
-                  <label className="label">start</label>
-                </div>
-                <div className="field-body">
-                  <div className="field">
-                    <p className="control">
-                      <Field type="text" name="start" className="input" />
-                    </p>
-                  </div>
-                </div>
-                {touched.start && errors.start && <div>{errors.start}</div>}
-              </div>
-              <div className="field is-horizontal">
-                <div className="field-label is-normal">
-                  <label className="label">occurences</label>
-                </div>
-                <div className="field-body">
-                  <div className="field">
-                    <p className="control">
-                      <Field
-                        type="number"
-                        name="occurences"
-                        className="input"
-                      />
-                    </p>
-                  </div>
-                </div>
-                {touched.occurences &&
-                  errors.occurences && <div>{errors.occurences}</div>}
-              </div>
+
+              <FieldInput errors={errors} fieldName="start" touched={touched} />
+
+              <FieldInput
+                errors={errors}
+                fieldName="occurences"
+                touched={touched}
+                fieldType="number"
+              />
+
               <div className="field is-horizontal">
                 <div className="field-label is-normal">
                   <label className="label">rtype</label>
@@ -167,32 +141,21 @@ class TransactionInput extends React.Component {
                 </div>
                 {touched.rtype && errors.rtype && <div>{errors.rtype}</div>}
               </div>
-              <div className="field is-horizontal">
-                <div className="field-label is-normal">
-                  <label className="label">cycle</label>
-                </div>
-                <div className="field-body">
-                  <div className="field">
-                    <p className="control">
-                      <Field type="number" name="cycle" className="input" />
-                    </p>
-                  </div>
-                </div>
-                {touched.cycle && errors.cycle && <div>{errors.cycle}</div>}
-              </div>
-              <div className="field is-horizontal">
-                <div className="field-label is-normal">
-                  <label className="label">value</label>
-                </div>
-                <div className="field-body">
-                  <div className="field">
-                    <p className="control">
-                      <Field type="number" name="value" className="input" />
-                    </p>
-                  </div>
-                </div>
-                {touched.value && errors.value && <div>{errors.value}</div>}
-              </div>
+
+              <FieldInput
+                errors={errors}
+                fieldName="cycle"
+                touched={touched}
+                fieldType="number"
+              />
+
+              <FieldInput
+                errors={errors}
+                fieldName="value"
+                touched={touched}
+                fieldType="number"
+              />
+
               <div className="field is-grouped is-grouped-centered">
                 <div className="control">
                   <button
