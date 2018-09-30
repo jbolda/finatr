@@ -1,4 +1,5 @@
 import dateMax from 'date-fns/fp/max';
+import dateMin from 'date-fns/fp/min';
 import isWithinInterval from 'date-fns/fp/isWithinInterval';
 import addDays from 'date-fns/fp/addDays';
 import subDays from 'date-fns/fp/subDays';
@@ -16,18 +17,7 @@ import differenceInMonths from 'date-fns/fp/differenceInMonths';
 
 const computeTransactionModifications = (transactions, graphRange) =>
   transactions.reduce((modifications, transaction) => {
-    let transactionInterval = {
-      start: subDays(1)(
-        dateMax([graphRange.start, transaction.start ? transaction.start : 0])
-      ),
-      end: addDays(1)(
-        dateMax([
-          graphRange.end,
-          transaction.start ? transaction.start : 0,
-          transaction.end ? transaction.end : 0
-        ])
-      )
-    };
+    let transactionInterval = convertRangeToInterval(transaction, graphRange);
 
     let coercePaybacksIntoTransactions = Array.isArray(transaction)
       ? transaction
@@ -53,6 +43,25 @@ const computeTransactionModifications = (transactions, graphRange) =>
   }, []);
 
 export default computeTransactionModifications;
+
+const convertRangeToInterval = (transaction, graphRange) => ({
+  start: subDays(1)(
+    dateMax([
+      graphRange.start,
+      !!transaction && transaction.start ? transaction.start : 0
+    ])
+  ),
+  end: addDays(1)(
+    dateMin([
+      graphRange.end,
+      !!transaction && transaction.end
+        ? transaction.end
+        : addDays(365)(new Date())
+    ])
+  )
+});
+
+export { convertRangeToInterval };
 
 const generateModification = (
   transaction,
