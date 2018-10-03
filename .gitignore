@@ -1,4 +1,6 @@
 node_modules/
+node_modules_yarn/
+node_modules_npm/
 
 .vscode
 *.log
