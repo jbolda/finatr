@@ -20,9 +20,7 @@
     "react-scripts": "2.0.3",
     "ynab": "1.8.0"
   },
-  "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.1.0"
-  },
+  "devDependencies": {},
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
