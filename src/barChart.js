@@ -486,6 +486,7 @@ barBuild.drawLine = function(
 
   lines
     .transition()
+    .delay((d, i) => 800 + i * 150)
     .duration(3000)
     .attr('d', d => line(d.values))
     .attr('stroke', (d, i) => linecolors(i))
