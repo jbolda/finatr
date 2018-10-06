@@ -14,6 +14,50 @@ import FileReaderInput from 'react-file-reader-input';
 class Financial extends React.Component {
   constructor() {
     super();
+    this.state = {
+      transaction: [],
+      accounts: [],
+      BarChartIncome: [],
+      BarChartExpense: [],
+      BarChartMax: 0,
+      dailyIncome: 0,
+      dailyExpense: 0,
+      dailyRate: 0,
+      savingsRate: 0,
+      fiNumber: 0,
+      AccountChart: [],
+      LineChartMax: 0,
+      transactionForm: {
+        id: ``,
+        raccount: `account`,
+        description: `description`,
+        category: `test default`,
+        type: `income`,
+        start: `2018-03-22`,
+        rtype: `day`,
+        cycle: 3,
+        value: 150
+      },
+      accountForm: {
+        name: 'new account',
+        starting: 1000,
+        interest: 0.0,
+        vehicle: 'operating'
+      },
+      accountTransactionForm: {
+        id: ``,
+        debtAccount: `account`,
+        raccount: `account`,
+        start: `2018-03-22`,
+        rtype: `day`,
+        cycle: 3,
+        generatedOccurences: 0,
+        value: 150
+      }
+    };
+  }
+
+  componentDidMount() {
     let data = [];
     let dOne = {
       id: `oasidjas1`,
@@ -145,37 +189,13 @@ class Financial extends React.Component {
             ]
           }
         }
-      ],
-      transactionForm: {
-        id: ``,
-        raccount: `account`,
-        description: `description`,
-        category: `test default`,
-        type: `income`,
-        start: `2018-03-22`,
-        rtype: `day`,
-        cycle: 3,
-        value: 150
-      },
-      accountForm: {
-        name: 'new account',
-        starting: 1000,
-        interest: 0.0,
-        vehicle: 'operating'
-      },
-      accountTransactionForm: {
-        id: ``,
-        debtAccount: `account`,
-        raccount: `account`,
-        start: `2018-03-22`,
-        rtype: `day`,
-        cycle: 3,
-        generatedOccurences: 0,
-        value: 150
-      }
+      ]
     };
 
-    this.state = resolveData(dataArray);
+    let resolvedData = Promise.resolve(resolveData(dataArray));
+    requestAnimationFrame(() => {
+      resolvedData.then(data => this.setState(data));
+    });
   }
 
   handleUpload = (event, results) => {
@@ -468,33 +488,35 @@ const transactionTable = (data, actions) => (
       </tr>
     </thead>
     <tbody>
-      {data.map(transaction => (
-        <tr key={transaction.id}>
-          <td>{transaction.raccount}</td>
-          <td>{transaction.description}</td>
-          <td>{transaction.category}</td>
-          <td>{transaction.type}</td>
-          <td>{transaction.start}</td>
-          <td>{transaction.rtype}</td>
-          <td>{transaction.cycle}</td>
-          <td>{transaction.value}</td>
-          <td>{transaction.dailyRate}</td>
-          <td>
-            <button
-              className="button is-rounded is-small is-info"
-              onClick={actions.modifyTransaction.bind(this, transaction.id)}
-            >
-              M
-            </button>
-          </td>
-          <td>
-            <button
-              className="delete"
-              onClick={actions.deleteTransaction.bind(this, transaction.id)}
-            />
-          </td>
-        </tr>
-      ))}
+      {!data
+        ? null
+        : data.map(transaction => (
+            <tr key={transaction.id}>
+              <td>{transaction.raccount}</td>
+              <td>{transaction.description}</td>
+              <td>{transaction.category}</td>
+              <td>{transaction.type}</td>
+              <td>{transaction.start}</td>
+              <td>{transaction.rtype}</td>
+              <td>{transaction.cycle}</td>
+              <td>{transaction.value}</td>
+              <td>{transaction.dailyRate}</td>
+              <td>
+                <button
+                  className="button is-rounded is-small is-info"
+                  onClick={actions.modifyTransaction.bind(this, transaction.id)}
+                >
+                  M
+                </button>
+              </td>
+              <td>
+                <button
+                  className="delete"
+                  onClick={actions.deleteTransaction.bind(this, transaction.id)}
+                />
+              </td>
+            </tr>
+          ))}
     </tbody>
   </table>
 );

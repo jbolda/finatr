@@ -347,6 +347,7 @@ barBuild.drawBar = function(
   max_domain,
   tooltip
 ) {
+  if (massagedData.length === 0) return;
   let widths;
   // 100% of shift is the space between ticks
   if (append_class === 'pos') {
@@ -413,6 +414,7 @@ barBuild.drawBar = function(
 
   rects
     .transition()
+    .delay((d, i) => 800 + i * 150)
     .duration(3000)
     .ease(d3.easeBounceOut)
     .attr('class', append_class)
@@ -433,6 +435,7 @@ barBuild.drawBar = function(
     .attr('width', widths.bar)
     .attr('y', d => barBuild.yScale(max_domain)(d[0]))
     .transition()
+    .delay((d, i) => 800 + i * 150)
     .duration(3000)
     .ease(d3.easeBounceOut)
     .attr('y', d => barBuild.yScale(max_domain)(d[1]))
@@ -470,6 +473,7 @@ barBuild.drawLine = function(
   max_domain,
   tooltip
 ) {
+  if (data.length === 0) return;
   let linecolors = d3.scaleOrdinal(d3.schemeCategory10);
   let marginLeft = this.margin().left;
 
