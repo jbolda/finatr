@@ -12,11 +12,4 @@ Most apps track your historical information and help you set up a budget. Arguea
 ## Help Out
 The immediate plan is to get the site into a state that is usable for 90%+ of individuals. I suspect we are nearly there. The most important item is representing debt payback. Below is a list of known TODO items. Eventually these will be moved into issues/projects as the background information reaches a certain depth.
 
-#### Items in Order of Priority
-- [ ] increase test base especially to test number crunching functions (this makes adding big.js easier)
-- [ ] incorporate big.js into arithmatic and number output
-- [ ] clean up YNAB import
-  - [ ] hide section, not everyone will use
-  - [ ] transaction import should deal with positives/negatives better
-  - [ ] transfers should import as two transactions
-- [ ] add date picker to date fields
+See the [Stable Release](https://github.com/jbolda/reaccount/projects/1) project to track progress or find  place to begin helping out. Have something you want to request or help out with that isn't on the list? Feel free to open up a new issue to open the discussion.

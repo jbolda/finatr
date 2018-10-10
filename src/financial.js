@@ -346,25 +346,33 @@ class Financial extends React.Component {
             <div className="level-item has-text-centered">
               <div>
                 <p className="heading">Daily Income</p>
-                <p className="heading">{this.state.dailyIncome}</p>
+                <p className="heading">
+                  ${this.state.dailyIncome.toFixed(2) || null}
+                </p>
               </div>
             </div>
             <div className="level-item has-text-centered">
               <div>
                 <p className="heading">Daily Expenses</p>
-                <p className="heading">{this.state.dailyExpense}</p>
+                <p className="heading">
+                  ${this.state.dailyExpense.toFixed(2) || null}
+                </p>
               </div>
             </div>
             <div className="level-item has-text-centered">
               <div>
                 <p className="heading">Savings Rate</p>
-                <p className="heading">{this.state.savingsRate}%</p>
+                <p className="heading">
+                  {this.state.savingsRate.toFixed(2) || null}%
+                </p>
               </div>
             </div>
             <div className="level-item has-text-centered">
               <div>
                 <p className="heading">% to FI</p>
-                <p className="heading">{this.state.fiNumber}%</p>
+                <p className="heading">
+                  {this.state.fiNumber.toFixed(2) || null}%
+                </p>
               </div>
             </div>
           </div>
