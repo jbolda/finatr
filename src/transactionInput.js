@@ -3,13 +3,13 @@ import { Formik, Field } from 'formik';
 
 import * as Form from './components/bootstrap/Form';
 
-function FieldInput({ fieldName, touched, errors, fieldType = 'text' }) {
+function FieldInput({ fieldName, touched, errors, fieldType = 'text', pattern }) {
   return (
     <React.Fragment>
       <Form.Field>
         <Form.FieldLabel>{fieldName}</Form.FieldLabel>
         <Form.FieldControl>
-          <Field type={fieldType} name={fieldName} className="input" />
+          <Field type={fieldType} name={fieldName} pattern={pattern} className="input" />
         </Form.FieldControl>
       </Form.Field>
       {touched[fieldName] &&
@@ -96,7 +96,7 @@ class TransactionInput extends React.Component {
                 {touched.type && errors.type && <div>{errors.type}</div>}
               </div>
 
-              <FieldInput errors={errors} fieldName="start" touched={touched} />
+              <FieldInput errors={errors} fieldName="start" touched={touched} fieldType="date" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" />
 
               <FieldInput
                 errors={errors}
