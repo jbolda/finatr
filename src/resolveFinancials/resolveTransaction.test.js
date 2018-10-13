@@ -413,4 +413,18 @@ describe('transactionAnnuallyReoccur', () => {
     const next = transactionAnnuallyReoccur({transaction: transaction, seedDate: seedDate});
     expect(next.dailyRate).toEqual(1.5);
   });
+
+  it('fails if transaction is null', () => {
+    const seedDate = startOfDay('2018-01-01');
+    expect(() => {
+      transactionAnnuallyReoccur({ transaction: null, seedDate: seedDate });
+    }).toThrow();
+  })
+
+  it('fails if seedDate is null', () => {
+    const transaction = { value: 365 };
+    expect(() => {
+      transactionAnnuallyReoccur({ transaction: transaction, seedDate: null });
+    }).toThrow();
+  })
 });
