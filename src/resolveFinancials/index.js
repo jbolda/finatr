@@ -199,17 +199,24 @@ const resolveBarChart = (data, { graphRange }) => {
   let stackStructure = allDates.map(day => {
     let obj = { date: day };
     keys.forEach(key => {
-      obj[key.value] = Array.isArray(data[key.index])
-        ? { ...data[key.index][key.indexNested] }
-        : { ...data[key.index] };
-      obj[key.value].value = Big(data[key.index].value);
-      obj[key.value].cycle = Big(data[key.index].cycle);
-      obj[key.value].generatedOccurrences = Big(
-        data[key.index].generatedOccurrences
-      );
-      obj[key.value].visibleOccurrences = Big(
-        data[key.index].visibleOccurrences
-      );
+      let dataAccess = Array.isArray(data[key.index])
+        ? data[key.index][key.indexNested]
+        : data[key.index];
+      obj[key.value] = { ...dataAccess };
+      if (obj[key.value].value) {
+        obj[key.value].value = Big(dataAccess.value);
+      }
+      if (obj[key.value].cycle) {
+        obj[key.value].cycle = Big(dataAccess.cycle);
+      }
+      if (obj[key.value].generatedOccurrences) {
+        obj[key.value].generatedOccurrences = Big(
+          dataAccess.generatedOccurrences
+        );
+      }
+      if (obj[key.value].visibleOccurrences) {
+        obj[key.value].visibleOccurrences = Big(dataAccess.visibleOccurrences);
+      }
       obj[key.value].y = Big(0);
       obj[key.value].dailyRate = Big(0);
     });
