@@ -419,12 +419,12 @@ describe('transactionAnnuallyReoccur', () => {
     expect(() => {
       transactionAnnuallyReoccur({ transaction: null, seedDate: seedDate });
     }).toThrow();
-  })
+  });
 
   it('fails if seedDate is null', () => {
     const transaction = { value: 365 };
     expect(() => {
       transactionAnnuallyReoccur({ transaction: transaction, seedDate: null });
     }).toThrow();
-  })
+  });
 });
