@@ -1,10 +1,5 @@
 import startOfDay from 'date-fns/fp/startOfDay';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
-import addDays from 'date-fns/fp/addDays';
-import subDays from 'date-fns/fp/subDays';
-import addMonths from 'date-fns/fp/addMonths';
-import subMonths from 'date-fns/fp/subMonths';
-import getDate from 'date-fns/fp/getDate';
 
 import computeTransactionModifications, {
   convertRangeToInterval,
