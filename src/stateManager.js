@@ -5,6 +5,8 @@ class AppModel {
   counter = Number;
   counterBig = Big;
   transactionForm = TransactionForm;
+  accountForm = AccountForm;
+  accountTransactionForm = AccountTransactionForm;
 
   modalClick() {
     return this.counter
@@ -23,6 +25,24 @@ class TransactionForm {
   start = String;
   rtype = String;
   cycle = Big;
+  value = Big;
+}
+
+class AccountForm {
+  name = String;
+  starting = Big;
+  interest = Big;
+  vehicle = String;
+}
+
+class AccountTransactionForm {
+  id = String;
+  debtAccount = String;
+  raccount = String;
+  start = String;
+  rtype = String;
+  cycle = Big;
+  generatedOccurences = Big;
   value = Big;
 }
 
