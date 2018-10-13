@@ -3,6 +3,7 @@ import BarChart from './barChart';
 import resolveData from './resolveFinancials';
 import makeUUID from './makeUUID.js';
 
+import TabView from './tabView';
 import TransactionInput from './transactionInput';
 import AccountInput from './accountInput';
 import AccountTransactionInput from './accountTransactionInput';
@@ -629,37 +630,3 @@ const paybackTable = (data, actions) =>
       </div>
     </div>
   ));
-
-class TabView extends React.Component {
-  constructor() {
-    super();
-    this.state = { activeTab: 0 };
-  }
-
-  tabClick(index) {
-    this.setState({ activeTab: index });
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        <div className="tabs">
-          <ul>
-            {this.props.tabTitles.map((tab, index) => (
-              <li
-                key={tab}
-                className={index === this.state.activeTab ? 'is-active' : ''}
-                onClick={this.tabClick.bind(this, index)}
-              >
-                <a>{tab}</a>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="container is-fluid">
-          {this.props.tabContents[this.state.activeTab]}
-        </div>
-      </React.Fragment>
-    );
-  }
-}
