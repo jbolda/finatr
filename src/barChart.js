@@ -74,7 +74,9 @@ export class BarChart extends Component {
       data.LineChartMax,
       tooltipLine
     );
-    let axisLine = barBuild.drawAxis(svgLine, data.LineChartMax, phase);
+
+    // axis line
+    barBuild.drawAxis(svgLine, data.LineChartMax, phase);
   }
 
   renderTooltipBar(coordinates, tooltipData, tooltipTarget) {
