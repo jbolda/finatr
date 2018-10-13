@@ -501,5 +501,12 @@ describe('transactionQuarterlyReoccur', () => {
       transactionQuarterlyReoccur({ transaction: null, seedDate: seedDate });
     }).toThrow();
   });
+
+  it('fails if seedDate is null', () => {
+    const transaction = { value: 182.5 };
+    expect(() => {
+      transactionQuarterlyReoccur({ transaction: transaction, seedDate: null });
+    }).toThrow();
+  });
 });
 
