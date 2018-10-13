@@ -389,3 +389,12 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     expect(resolvedTestData2).toHaveLength(2);
   });
 });
+
+describe('transactionSemiannuallyReoccur', () => {
+  it('has the next date', () => {
+    const transaction = { value: 10 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionSemiannuallyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.date).toEqual(startOfDay('2018-07-01'));
+  });
+});
