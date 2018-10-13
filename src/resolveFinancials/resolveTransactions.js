@@ -75,8 +75,8 @@ const generateModification = (
   let modification = nextModification(transaction.rtype)({
     transaction: transaction,
     seedDate: prevDate,
-    visibleOccurrences: Big(visibleOccurrences),
-    generatedOccurrences: Big(generatedOccurrences)
+    visibleOccurrences: visibleOccurrences,
+    generatedOccurrences: generatedOccurrences
   });
   modification.mutateKey = transaction.id;
 
@@ -90,7 +90,7 @@ const generateModification = (
       visibleOccurrences,
       generatedOccurrences
     ) &&
-    Big(generatedOccurrences).lt(365)
+    Big(generatedOccurrences).lte(365)
   ) {
     modifications.push(modification);
     generateModification(
@@ -133,9 +133,9 @@ const hasNotHitNumberOfOccurrences = (
   ((!!transaction && !transaction.visibleOccurrences) ||
     Big(visibleOccurrences)
       .add(1)
-      .lt(transaction.visibleOccurrences)) &&
+      .lte(transaction.visibleOccurrences)) &&
   ((!!transaction && !transaction.generatedOccurrences) ||
-    generatedOccurrences.add(1).lt(transaction.generatedOccurrences));
+    generatedOccurrences.add(1).lte(transaction.generatedOccurrences));
 
 const nextModification = rtype => {
   switch (rtype) {
@@ -196,7 +196,10 @@ const transactionDayOfMonthReoccur = ({
   let monthlyDate;
   let isBeforeSeedDate = isBefore(seedDate);
   let cycleDate = setDate(transaction.cycle);
-  if (isBeforeSeedDate(cycleDate(seedDate)) || generatedOccurrences !== 0) {
+  if (
+    isBeforeSeedDate(cycleDate(seedDate)) ||
+    (!!generatedOccurrences && !generatedOccurrences.eq(0))
+  ) {
     monthlyDate = cycleDate(addMonths(1)(seedDate));
   } else {
     monthlyDate = cycleDate(seedDate);
