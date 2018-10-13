@@ -393,7 +393,7 @@ describe('transactionAnnuallyReoccur', () => {
     expect(next.date).toEqual(startOfDay('2019-01-01'));
   });
 
-  it('it has a value', () => {
+  it('has a value', () => {
     const transaction = { value: 365 };
     const seedDate = startOfDay('2018-01-01');
     const next = transactionAnnuallyReoccur({transaction: transaction, seedDate: seedDate});
