@@ -213,6 +213,10 @@ const transactionBimonthlyReoccur = ({ transaction, seedDate }) => {
 
 // when transaction.rtype === 'quarterly'
 const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
+  if (!transaction) {
+    throw new Error("transactionQuarterlyReoccur expects { transaction }")
+  }
+
   if (!transaction.cycle) {
     transaction.cycle = 1;
   }

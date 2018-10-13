@@ -494,5 +494,12 @@ describe('transactionQuarterlyReoccur', () => {
     const next = transactionQuarterlyReoccur({ transaction: transaction, seedDate: seedDate });
     expect(next.dailyRate).toEqual(1);
   });
+
+  it('fails if transaction is null', () => {
+    const seedDate = startOfDay('2018-01-01');
+    expect(() => {
+      transactionQuarterlyReoccur({ transaction: null, seedDate: seedDate });
+    }).toThrow();
+  });
 });
 
