@@ -330,6 +330,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
   it(`returns correct number of modifications based on generated occurences`, () => {
     let testData1 = {
       ...transaction,
+      id: `${transaction.id} genOc`,
       start: graphRange.start,
       cycle: 17,
       generatedOccurences: 1

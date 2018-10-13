@@ -116,8 +116,8 @@ const generateModification = (
       transactionInterval,
       modification.date,
       modifications,
-      Big(visibleOccurrences),
-      Big(generatedOccurrences).add(1)
+      visibleOccurrences,
+      generatedOccurrences.add(1)
     );
   }
   return modifications;
@@ -196,6 +196,11 @@ const transactionDayOfMonthReoccur = ({
   let monthlyDate;
   let isBeforeSeedDate = isBefore(seedDate);
   let cycleDate = setDate(transaction.cycle);
+  if (transaction.id === 'check transactionDayOfMonthReoccur genOc')
+    console.log(
+      isBeforeSeedDate(cycleDate(seedDate)),
+      !!generatedOccurrences && !generatedOccurrences.eq(0)
+    );
   if (
     isBeforeSeedDate(cycleDate(seedDate)) ||
     (!!generatedOccurrences && !generatedOccurrences.eq(0))
