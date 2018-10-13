@@ -40,6 +40,7 @@ export class BarChart extends Component {
       unmount: this.unmountTooltip
     };
 
+    // Expenses
     barBuild.drawBar(
       blobs,
       'neg',
@@ -47,6 +48,8 @@ export class BarChart extends Component {
       data.BarChartMax,
       tooltipBar
     );
+
+    // Income
     barBuild.drawBar(
       blobs,
       'pos',
@@ -54,6 +57,8 @@ export class BarChart extends Component {
       data.BarChartMax,
       tooltipBar
     );
+
+    // axis bar
     barBuild.drawAxis(svgBar, data.BarChartMax, phase);
 
     let tooltipLine = {
