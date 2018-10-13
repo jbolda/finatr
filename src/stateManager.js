@@ -1,4 +1,5 @@
 import { default as _Big } from 'big.js';
+import makeUUID from './makeUUID.js';
 
 class AppModel {
   modal = ModalModel;
@@ -7,13 +8,18 @@ class AppModel {
   transactionForm = TransactionForm;
   accountForm = AccountForm;
   accountTransactionForm = AccountTransactionForm;
-
-  modalClick() {
-    return this.counter
-      .increment()
-      .modal.isOpen.toggle()
-      .counterBig.add(2);
-  }
+  transaction = Array;
+  accounts = Array;
+  BarChartIncome = Array;
+  BarChartExpense = Array;
+  BarChartMax = Big;
+  dailyIncome = Big;
+  dailyExpense = Big;
+  dailyRate = Big;
+  savingsRate = Big;
+  fiNumber = Big;
+  AccountChart = Array;
+  LineChartMax = Big;
 }
 
 class TransactionForm {
@@ -62,50 +68,3 @@ class ModalModel {
 }
 
 export default AppModel;
-
-/*
-constructor() {
-  super();
-  this.state = {
-    transaction: [],
-    accounts: [],
-    BarChartIncome: [],
-    BarChartExpense: [],
-    BarChartMax: 0,
-    dailyIncome: 0,
-    dailyExpense: 0,
-    dailyRate: 0,
-    savingsRate: 0,
-    fiNumber: 0,
-    AccountChart: [],
-    LineChartMax: 0,
-    transactionForm: {
-      id: ``,
-      raccount: `account`,
-      description: `description`,
-      category: `test default`,
-      type: `income`,
-      start: `2018-03-22`,
-      rtype: `day`,
-      cycle: 3,
-      value: 150
-    },
-    accountForm: {
-      name: 'new account',
-      starting: 1000,
-      interest: 0.0,
-      vehicle: 'operating'
-    },
-    accountTransactionForm: {
-      id: ``,
-      debtAccount: `account`,
-      raccount: `account`,
-      start: `2018-03-22`,
-      rtype: `day`,
-      cycle: 3,
-      generatedOccurences: 0,
-      value: 150
-    }
-  };
-}
-*/
