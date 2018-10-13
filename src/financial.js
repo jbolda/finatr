@@ -603,7 +603,7 @@ const debtTable = (data, actions) =>
     </div>
   ));
 
-const paybackTable = (data, actions) => {
+const paybackTable = (data, actions) =>
   data.transactions.map(payback => (
     <div className="media" key={payback.id}>
       <div className="media-content">
