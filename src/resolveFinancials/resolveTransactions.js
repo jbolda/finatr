@@ -10,10 +10,7 @@ import addYears from 'date-fns/fp/addYears';
 import isSameDay from 'date-fns/fp/isSameDay';
 import isAfter from 'date-fns/fp/isAfter';
 import isBefore from 'date-fns/fp/isBefore';
-import differenceInCalendarDays from 'date-fns/fp/differenceInCalendarDays';
 import getDay from 'date-fns/fp/getDay';
-import getDate from 'date-fns/fp/getDate';
-import differenceInMonths from 'date-fns/fp/differenceInMonths';
 
 const computeTransactionModifications = (transactions, graphRange) =>
   transactions.reduce((modifications, transaction) => {
