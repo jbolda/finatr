@@ -397,4 +397,11 @@ describe('transactionSemiannuallyReoccur', () => {
     const next = transactionSemiannuallyReoccur({ transaction: transaction, seedDate: seedDate });
     expect(next.date).toEqual(startOfDay('2018-07-01'));
   });
+
+  it('has a value', () => {
+    const transaction = { value: 10 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionSemiannuallyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.y).toEqual(10);
+  });
 });
