@@ -11,17 +11,31 @@ const App = () => (
   <State
     type={AppModel}
     value={{
-      modal: { content: 'Hello World!!!' },
-      counter: 2,
       transactionForm: {
         id: ``,
-        raccount: `account`,
+        raccount: `the account`,
         description: `description`,
         category: `test default`,
         type: `income`,
         start: `2018-03-22`,
         rtype: `day`,
         cycle: 3,
+        value: 150
+      },
+      accountForm: {
+        name: 'the account',
+        starting: 1000,
+        interest: 0.0,
+        vehicle: 'operating'
+      },
+      accountTransactionForm: {
+        id: ``,
+        debtAccount: `the account`,
+        raccount: `the account`,
+        start: `2018-03-22`,
+        rtype: `day`,
+        cycle: 3,
+        generatedOccurences: 0,
         value: 150
       }
     }}
