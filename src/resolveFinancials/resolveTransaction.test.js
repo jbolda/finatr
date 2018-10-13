@@ -1,3 +1,4 @@
+import Big from 'big.js';
 import startOfDay from 'date-fns/fp/startOfDay';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
 import addDays from 'date-fns/fp/addDays';
@@ -199,7 +200,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     let resolvedTestData = transactionDayOfMonthReoccur({
       transaction: testData,
       seedDate: seedDate,
-      generatedOccurences: 0
+      generatedOccurrences: Big(0)
     });
     expect(
       differenceInCalendarDays(graphRange.start)(resolvedTestData.date)
@@ -211,7 +212,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     let resolvedTestData = transactionDayOfMonthReoccur({
       transaction: testData,
       seedDate: seedDate,
-      generatedOccurences: 0
+      generatedOccurrences: Big(0)
     });
     expect(differenceInCalendarDays(seedDate)(resolvedTestData.date)).toBe(2);
   });
@@ -221,7 +222,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     let resolvedTestData = transactionDayOfMonthReoccur({
       transaction: testData,
       seedDate: seedDate,
-      generatedOccurences: 0
+      generatedOccurrences: Big(0)
     });
     expect(differenceInCalendarDays(seedDate)(resolvedTestData.date)).toBe(30);
   });
@@ -231,7 +232,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     let resolvedTestData = transactionDayOfMonthReoccur({
       transaction: testData,
       seedDate: seedDate,
-      generatedOccurences: 0
+      generatedOccurrences: Big(0)
     });
     expect(differenceInCalendarDays(seedDate)(resolvedTestData.date)).toBe(0);
   });
@@ -241,27 +242,27 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     let resolvedTestData1 = transactionDayOfMonthReoccur({
       transaction: testData,
       seedDate: seedDate,
-      generatedOccurences: 0
+      generatedOccurrences: Big(0)
     });
     let resolvedTestData2 = transactionDayOfMonthReoccur({
       transaction: testData,
       seedDate: resolvedTestData1.date,
-      generatedOccurences: 1
+      generatedOccurrences: Big(1)
     });
     let resolvedTestData3 = transactionDayOfMonthReoccur({
       transaction: testData,
       seedDate: resolvedTestData2.date,
-      generatedOccurences: 2
+      generatedOccurrences: Big(2)
     });
     let resolvedTestData4 = transactionDayOfMonthReoccur({
       transaction: testData,
       seedDate: resolvedTestData3.date,
-      generatedOccurences: 3
+      generatedOccurrences: Big(3)
     });
     let resolvedTestData5 = transactionDayOfMonthReoccur({
       transaction: testData,
       seedDate: resolvedTestData4.date,
-      generatedOccurences: 4
+      generatedOccurrences: Big(4)
     });
     expect(
       differenceInCalendarDays(graphRange.start)(resolvedTestData1.date)
@@ -333,7 +334,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       id: `${transaction.id} genOc`,
       start: graphRange.start,
       cycle: 17,
-      generatedOccurences: 1
+      generatedOccurrences: Big(1)
     };
     let testRange = { start: graphRange.start, end: '2018-12-01' };
 
@@ -342,12 +343,12 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       graphRange,
       graphRange.start,
       [],
-      0,
-      0
+      Big(0),
+      Big(0)
     );
     expect(resolvedTestData1).toHaveLength(1);
 
-    let testData2 = { ...testData1, generatedOccurences: 2 };
+    let testData2 = { ...testData1, generatedOccurrences: 2 };
     let resolvedTestData2 = generateModification(
       testData2,
       graphRange,

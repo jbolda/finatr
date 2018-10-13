@@ -79,6 +79,17 @@ const generateModification = (
     generatedOccurrences: generatedOccurrences
   });
   modification.mutateKey = transaction.id;
+  if (transaction.id === 'check transactionDayOfMonthReoccur genOc')
+    console.log(
+      transaction,
+      visibleOccurrences,
+      generatedOccurrences,
+      hasNotHitNumberOfOccurrences(
+        transaction,
+        visibleOccurrences,
+        generatedOccurrences
+      )
+    );
 
   // if this is a modification we should use then add it to the list
   // and generate the next one
@@ -135,7 +146,9 @@ const hasNotHitNumberOfOccurrences = (
       .add(1)
       .lte(transaction.visibleOccurrences)) &&
   ((!!transaction && !transaction.generatedOccurrences) ||
-    generatedOccurrences.add(1).lte(transaction.generatedOccurrences));
+    Big(generatedOccurrences)
+      .add(1)
+      .lte(transaction.generatedOccurrences));
 
 const nextModification = rtype => {
   switch (rtype) {
@@ -196,11 +209,6 @@ const transactionDayOfMonthReoccur = ({
   let monthlyDate;
   let isBeforeSeedDate = isBefore(seedDate);
   let cycleDate = setDate(transaction.cycle);
-  if (transaction.id === 'check transactionDayOfMonthReoccur genOc')
-    console.log(
-      isBeforeSeedDate(cycleDate(seedDate)),
-      !!generatedOccurrences && !generatedOccurrences.eq(0)
-    );
   if (
     isBeforeSeedDate(cycleDate(seedDate)) ||
     (!!generatedOccurrences && !generatedOccurrences.eq(0))
