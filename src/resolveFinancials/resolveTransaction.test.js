@@ -488,6 +488,13 @@ describe('transactionQuarterlyReoccur', () => {
     expect(next.y).toEqual(10);
   });
 
+  it('defaults to a value of 0', () => {
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionQuarterlyReoccur({ transaction: {}, seedDate: seedDate });
+    expect(next.y).toEqual(0);
+  })
+
+
   it('has a daily value', () => {
     const transaction = { value: 90 };
     const seedDate = startOfDay('2018-01-01');

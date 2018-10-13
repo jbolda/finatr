@@ -221,6 +221,10 @@ const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
     throw new Error("transactionSemiannuallyReoccur expects { seedDate }")
   }
 
+  if (!transaction.value) {
+    transaction.value = 0;
+  }
+
   if (!transaction.cycle) {
     transaction.cycle = 1;
   }
