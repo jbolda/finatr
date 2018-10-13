@@ -225,8 +225,8 @@ const resolveBarChart = (data, { graphRange }) => {
 
   const replaceWithModified = (oldValue, modification) => {
     let newValue = oldValue;
-    newValue.y.add(modification.y);
-    newValue.dailyRate.add(modification.dailyRate);
+    newValue.y = oldValue.y.add(modification.y);
+    newValue.dailyRate = oldValue.dailyRate.add(modification.dailyRate);
     return newValue;
   };
 
@@ -250,6 +250,7 @@ const resolveBarChart = (data, { graphRange }) => {
     .keys(keys);
 
   let stacked = stack(stackComputed);
+
   let maxHeight = d3.max(stacked.reduce((a, b) => a.concat(b)), d => d[1]);
 
   return keys.map((key, index) => ({
