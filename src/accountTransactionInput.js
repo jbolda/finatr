@@ -90,7 +90,7 @@ class AccountTransactionInput extends React.Component {
                 <div className="field-body">
                   <div className="field">
                     <p className="control">
-                      <Field type="text" name="start" className="input" type="date" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+                      <Field name="start" className="input" type="date" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
                     </p>
                   </div>
                 </div>
