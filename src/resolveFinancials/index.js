@@ -256,7 +256,7 @@ const resolveBarChart = (data, { graphRange }) => {
   return keys.map((key, index) => ({
     ...stackComputed[0][key.value],
     stack: stacked[index],
-    maxHeight: maxHeight,
+    maxHeight: Big(maxHeight),
     dailyRate: d3.max(stackComputed, d => d[key.value].dailyRate)
   }));
 };
