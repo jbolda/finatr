@@ -70,13 +70,13 @@ const generateModification = (
   prevDate,
   modifications,
   visibleOccurrences,
-  generatedOccurences
+  generatedOccurrences
 ) => {
   let modification = nextModification(transaction.rtype)({
     transaction: transaction,
     seedDate: prevDate,
-    visibleOccurences: visibleOccurrences,
-    generatedOccurences: generatedOccurences
+    visibleOccurrences: Big(visibleOccurrences),
+    generatedOccurrences: Big(generatedOccurrences)
   });
   modification.mutateKey = transaction.id;
 
@@ -85,12 +85,12 @@ const generateModification = (
   if (
     isWithinInterval(transactionInterval)(modification.date) &&
     isAfter(prevDate)(modification.date) &&
-    hasNotHitNumberOfOccurences(
+    hasNotHitNumberOfOccurrences(
       transaction,
       visibleOccurrences,
-      generatedOccurences
+      generatedOccurrences
     ) &&
-    generatedOccurences.lt(365)
+    Big(generatedOccurrences).lt(365)
   ) {
     modifications.push(modification);
     generateModification(
@@ -98,8 +98,8 @@ const generateModification = (
       transactionInterval,
       modification.date,
       modifications,
-      visibleOccurrences.add(1),
-      generatedOccurences.add(1)
+      Big(visibleOccurrences).add(1),
+      Big(generatedOccurrences).add(1)
     );
 
     // this isn't a modification we want because it is before
@@ -108,16 +108,16 @@ const generateModification = (
   } else if (
     isBefore(transactionInterval.end)(modification.date) &&
     (isAfter(prevDate)(modification.date) ||
-      (generatedOccurences.eq(0) && isSameDay(prevDate)(modification.date))) &&
-    generatedOccurences.lt(365)
+      (generatedOccurrences.eq(0) && isSameDay(prevDate)(modification.date))) &&
+    Big(generatedOccurrences).lte(365)
   ) {
     generateModification(
       transaction,
       transactionInterval,
       modification.date,
       modifications,
-      visibleOccurrences,
-      generatedOccurences.add(1)
+      Big(visibleOccurrences),
+      Big(generatedOccurrences).add(1)
     );
   }
   return modifications;
@@ -125,15 +125,17 @@ const generateModification = (
 
 export { generateModification };
 
-const hasNotHitNumberOfOccurences = (
+const hasNotHitNumberOfOccurrences = (
   transaction,
   visibleOccurrences,
-  generatedOccurences
+  generatedOccurrences
 ) =>
   ((!!transaction && !transaction.visibleOccurrences) ||
-    visibleOccurrences.add(1).lte(transaction.visibleOccurrences)) &&
-  ((!!transaction && !transaction.generatedOccurences) ||
-    generatedOccurences.add(1).lte(transaction.generatedOccurences));
+    Big(visibleOccurrences)
+      .add(1)
+      .lt(transaction.visibleOccurrences)) &&
+  ((!!transaction && !transaction.generatedOccurrences) ||
+    generatedOccurrences.add(1).lt(transaction.generatedOccurrences));
 
 const nextModification = rtype => {
   switch (rtype) {
@@ -189,12 +191,12 @@ const transactionDayOfWeekReoccur = ({ transaction, seedDate }) => {
 const transactionDayOfMonthReoccur = ({
   transaction,
   seedDate,
-  generatedOccurences
+  generatedOccurrences
 }) => {
   let monthlyDate;
   let isBeforeSeedDate = isBefore(seedDate);
   let cycleDate = setDate(transaction.cycle);
-  if (isBeforeSeedDate(cycleDate(seedDate)) || generatedOccurences !== 0) {
+  if (isBeforeSeedDate(cycleDate(seedDate)) || generatedOccurrences !== 0) {
     monthlyDate = cycleDate(addMonths(1)(seedDate));
   } else {
     monthlyDate = cycleDate(seedDate);

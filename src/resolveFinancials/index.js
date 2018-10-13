@@ -93,41 +93,51 @@ const resolveDataAtDateRange = (data, graphRange) => {
     }
   };
   let max_domain_bars = d3.max([
-    extractValue(BarChartIncome[0] ? BarChartIncome[0].maxHeight : 0),
-    extractValue(BarChartExpense[0] ? BarChartExpense[0].maxHeight : 0)
+    extractValue(
+      BarChartIncome[0] ? parseFloat(BarChartIncome[0].maxHeight) : 0
+    ),
+    extractValue(
+      BarChartExpense[0] ? parseFloat(BarChartExpense[0].maxHeight) : 0
+    )
   ]);
 
-  let max_domain_line = d3.max(AccountChart, d =>
-    d3.max(d.values, d => d.value)
+  let max_domain_line = Big(
+    d3.max(AccountChart, d => d3.max(d.values, d => d.value))
   );
 
-  let dailyIncome = d3.sum(
-    BarChartIncome,
-    d => (d.type === 'income' ? d.dailyRate : 0)
+  let dailyIncome = Big(
+    d3.sum(
+      BarChartIncome,
+      d => (d.type === 'income' ? parseFloat(d.dailyRate) : 0)
+    )
   );
-  let dailyExpense = d3.sum(
-    BarChartExpense,
-    d => (d.type === 'expense' ? d.dailyRate : 0)
+  let dailyExpense = Big(
+    d3.sum(
+      BarChartExpense,
+      d => (d.type === 'expense' ? parseFloat(d.dailyRate) : 0)
+    )
   );
 
   const sumInvest = d => {
     let accountRaw = data.accounts.find(acc => acc.name === d.raccount);
 
     if (accountRaw && accountRaw.vehicle === 'investment') {
-      return d.dailyRate;
+      return parseFloat(d.dailyRate);
     } else {
       return 0;
     }
   };
-  let dailyInvest = d3.sum(BarChartIncome, sumInvest);
+  let dailyInvest = Big(d3.sum(BarChartIncome, sumInvest));
 
-  let totalInvest = d3.sum(data.accounts, d => {
-    if (d.vehicle === 'investment') {
-      return d.starting;
-    } else {
-      return 0;
-    }
-  });
+  let totalInvest = Big(
+    d3.sum(data.accounts, d => {
+      if (d.vehicle === 'investment') {
+        return d.starting;
+      } else {
+        return 0;
+      }
+    })
+  );
 
   return {
     ...data,
@@ -136,8 +146,12 @@ const resolveDataAtDateRange = (data, graphRange) => {
     BarChartMax: max_domain_bars,
     dailyIncome: dailyIncome,
     dailyExpense: dailyExpense,
-    savingsRate: (100 * dailyInvest) / dailyExpense,
-    fiNumber: (100 * totalInvest) / (dailyExpense * 365) / 25,
+    savingsRate: dailyExpense.eq(0)
+      ? 100
+      : dailyInvest.times(100).div(dailyExpense),
+    fiNumber: dailyExpense.eq(0)
+      ? 100
+      : totalInvest.times(100).div(dailyExpense.times(365).div(25)) || null,
     AccountChart: AccountChart,
     LineChartMax: max_domain_line
   };
@@ -188,6 +202,14 @@ const resolveBarChart = (data, { graphRange }) => {
       obj[key.value] = Array.isArray(data[key.index])
         ? { ...data[key.index][key.indexNested] }
         : { ...data[key.index] };
+      obj[key.value].value = Big(data[key.index].value);
+      obj[key.value].cycle = Big(data[key.index].cycle);
+      obj[key.value].generatedOccurrences = Big(
+        data[key.index].generatedOccurrences
+      );
+      obj[key.value].visibleOccurrences = Big(
+        data[key.index].visibleOccurrences
+      );
       obj[key.value].y = Big(0);
       obj[key.value].dailyRate = Big(0);
     });
