@@ -21,6 +21,15 @@ class TabView extends React.Component {
   }
 
   render() {
+    let tabContents = null;
+    if (
+      this.state.activeTab !== null &&
+      this.props.tabContents &&
+      this.props.tabContents[this.state.activeTab]
+    ) {
+      tabContents = this.props.tabContents[this.state.activeTab];
+    }
+
     return (
       <React.Fragment>
         <div className="tabs">
@@ -37,11 +46,7 @@ class TabView extends React.Component {
           </ul>
         </div>
         <div className="container is-fluid">
-          {
-            this.state.activeTab && this.props.tabContents[this.state.activeTab] ?
-            this.props.tabContents[this.state.activeTab]
-            : null
-          }
+          {tabContents}
         </div>
       </React.Fragment>
     );

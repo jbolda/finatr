@@ -630,4 +630,3 @@ const paybackTable = (data, actions) =>
       </div>
     </div>
   ));
-}

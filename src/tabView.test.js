@@ -36,3 +36,21 @@ describe(`initial state`, () => {
   })
 });
 
+describe(`render`, () => {
+  it(`does not render tab contents`, () => {
+    const component = renderer.create(<TabView />);
+    const content = component.toJSON()[1].children;
+    expect(content).toEqual(null);
+  })
+
+  it('renders tab contents', () => {
+    const props = {
+      tabContents: [(<div>tab one</div>)],
+      tabTitles: ['one'],
+    };
+    const component = renderer.create(<TabView {...props} />);
+    const content = component.toJSON()[1].children[0].children;
+    expect(content).toEqual(['tab one']);
+  });
+});
+
