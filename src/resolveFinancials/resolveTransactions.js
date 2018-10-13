@@ -213,6 +213,10 @@ const transactionBimonthlyReoccur = ({ transaction, seedDate }) => {
 
 // when transaction.rtype === 'quarterly'
 const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
+  if (!transaction.cycle) {
+    transaction.cycle = 1;
+  }
+
   return {
     date: addQuarters(transaction.cycle)(seedDate),
     y: transaction.value,

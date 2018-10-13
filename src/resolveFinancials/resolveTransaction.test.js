@@ -465,3 +465,20 @@ describe('transactionSemiannuallyReoccur', () => {
     }).toThrow();
   });
 });
+
+describe('transactionQuarterlyReoccur', () => {
+  it('has the next date', () => {
+    const transaction = { value: 10, cycle: 1 };
+    const seedDate = startOfDay('2018-02-01');
+    const next = transactionQuarterlyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.date).toEqual(startOfDay('2018-05-01'));
+  });
+
+  it('defaults to cycle=1 when transaction.cycle=null', () => {
+    const transaction = { value: 10 };
+    const seedDate = startOfDay('2018-02-01');
+    const next = transactionQuarterlyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.date).toEqual(startOfDay('2018-05-01'));
+  });
+});
+
