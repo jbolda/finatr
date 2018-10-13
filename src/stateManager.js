@@ -2,9 +2,6 @@ import { default as _Big } from 'big.js';
 import makeUUID from './makeUUID.js';
 
 class AppModel {
-  modal = ModalModel;
-  counter = Number;
-  counterBig = Big;
   transactionForm = TransactionForm;
   accountForm = AccountForm;
   accountTransactionForm = AccountTransactionForm;
@@ -60,11 +57,6 @@ class Big {
   add(value) {
     return this.state.add(value);
   }
-}
-
-class ModalModel {
-  content = String;
-  isOpen = Boolean;
 }
 
 export default AppModel;
