@@ -222,10 +222,18 @@ const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
 
 // when transaction.rtype === 'semiannually'
 const transactionSemiannuallyReoccur = ({ transaction, seedDate }) => {
+  if (!transaction || !transaction.value) {
+    throw new Error("transactionSemiannuallyReoccur expects { transaction }")
+  }
+
+  if (!seedDate) {
+    throw new Error("transactionSemiannuallyReoccur expects { seedDate }")
+  }
+
   return {
-    date: addYears(0.5)(seedDate),
+    date: addMonths(6)(seedDate),
     y: transaction.value,
-    dailyRate: transaction.value / 180
+    dailyRate: transaction.value / 182.5
   };
 };
 
