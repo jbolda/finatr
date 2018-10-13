@@ -1,10 +1,5 @@
 import startOfDay from 'date-fns/fp/startOfDay';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
-import addDays from 'date-fns/fp/addDays';
-import subDays from 'date-fns/fp/subDays';
-import addMonths from 'date-fns/fp/addMonths';
-import subMonths from 'date-fns/fp/subMonths';
-import getDate from 'date-fns/fp/getDate';
 
 import computeTransactionModifications, {
   convertRangeToInterval,
@@ -387,6 +382,50 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       0
     );
     expect(resolvedTestData2).toHaveLength(2);
+  });
+});
+
+describe('transactionAnnuallyReoccur', () => {
+  it('has the next date', () => {
+    const transaction = { value: 365 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionAnnuallyReoccur({transaction: transaction, seedDate: seedDate});
+    expect(next.date).toEqual(startOfDay('2019-01-01'));
+  });
+
+  it('has a value', () => {
+    const transaction = { value: 365 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionAnnuallyReoccur({transaction: transaction, seedDate: seedDate});
+    expect(next.y).toEqual(365);
+  });
+
+  it('calculates the daily rate', () => {
+    const transaction = { value: 365 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionAnnuallyReoccur({transaction: transaction, seedDate: seedDate});
+    expect(next.dailyRate).toEqual(1);
+  });
+
+  it('handles floats for a daily rate', () => {
+    const transaction = { value: 547.5 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionAnnuallyReoccur({transaction: transaction, seedDate: seedDate});
+    expect(next.dailyRate).toEqual(1.5);
+  });
+
+  it('fails if transaction is null', () => {
+    const seedDate = startOfDay('2018-01-01');
+    expect(() => {
+      transactionAnnuallyReoccur({ transaction: null, seedDate: seedDate });
+    }).toThrow();
+  });
+
+  it('fails if seedDate is null', () => {
+    const transaction = { value: 365 };
+    expect(() => {
+      transactionAnnuallyReoccur({ transaction: transaction, seedDate: null });
+    }).toThrow();
   });
 });
 
