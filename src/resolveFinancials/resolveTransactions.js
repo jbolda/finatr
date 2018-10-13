@@ -225,7 +225,7 @@ const transactionSemiannuallyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addMonths(6)(seedDate),
     y: transaction.value,
-    dailyRate: transaction.value / 180
+    dailyRate: transaction.value / 182.5
   };
 };
 
