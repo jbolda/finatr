@@ -1,3 +1,4 @@
+import Big from 'big.js';
 import dateMax from 'date-fns/fp/max';
 import dateMin from 'date-fns/fp/min';
 import isWithinInterval from 'date-fns/fp/isWithinInterval';
@@ -32,8 +33,8 @@ const computeTransactionModifications = (transactions, graphRange) =>
               transactionInterval,
               coercedTransactions.start,
               [],
-              0,
-              0
+              Big(0),
+              Big(0)
             )
           );
         },
@@ -89,7 +90,7 @@ const generateModification = (
       visibleOccurrences,
       generatedOccurences
     ) &&
-    generatedOccurences < 365
+    generatedOccurences.lt(365)
   ) {
     modifications.push(modification);
     generateModification(
@@ -97,8 +98,8 @@ const generateModification = (
       transactionInterval,
       modification.date,
       modifications,
-      visibleOccurrences + 1,
-      generatedOccurences + 1
+      visibleOccurrences.add(1),
+      generatedOccurences.add(1)
     );
 
     // this isn't a modification we want because it is before
@@ -107,8 +108,8 @@ const generateModification = (
   } else if (
     isBefore(transactionInterval.end)(modification.date) &&
     (isAfter(prevDate)(modification.date) ||
-      (generatedOccurences === 0 && isSameDay(prevDate)(modification.date))) &&
-    generatedOccurences < 365
+      (generatedOccurences.eq(0) && isSameDay(prevDate)(modification.date))) &&
+    generatedOccurences.lt(365)
   ) {
     generateModification(
       transaction,
@@ -116,7 +117,7 @@ const generateModification = (
       modification.date,
       modifications,
       visibleOccurrences,
-      generatedOccurences + 1
+      generatedOccurences.add(1)
     );
   }
   return modifications;
@@ -130,9 +131,9 @@ const hasNotHitNumberOfOccurences = (
   generatedOccurences
 ) =>
   ((!!transaction && !transaction.visibleOccurrences) ||
-    visibleOccurrences + 1 <= transaction.visibleOccurrences) &&
+    visibleOccurrences.add(1).lte(transaction.visibleOccurrences)) &&
   ((!!transaction && !transaction.generatedOccurences) ||
-    generatedOccurences + 1 <= transaction.generatedOccurences);
+    generatedOccurences.add(1).lte(transaction.generatedOccurences));
 
 const nextModification = rtype => {
   switch (rtype) {

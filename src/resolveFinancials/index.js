@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import Big from 'big.js';
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval';
 import closestIndexTo from 'date-fns/closestIndexTo';
 import addDays from 'date-fns/fp/addDays';
@@ -187,16 +188,16 @@ const resolveBarChart = (data, { graphRange }) => {
       obj[key.value] = Array.isArray(data[key.index])
         ? { ...data[key.index][key.indexNested] }
         : { ...data[key.index] };
-      obj[key.value].y = 0;
-      obj[key.value].dailyRate = 0;
+      obj[key.value].y = Big(0);
+      obj[key.value].dailyRate = Big(0);
     });
     return obj;
   });
 
   const replaceWithModified = (oldValue, modification) => {
     let newValue = oldValue;
-    newValue.y += modification.y;
-    newValue.dailyRate += modification.dailyRate;
+    newValue.y.add(modification.y);
+    newValue.dailyRate.add(modification.dailyRate);
     return newValue;
   };
 

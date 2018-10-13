@@ -421,7 +421,6 @@ class Financial extends React.Component {
               <TransactionInput
                 accounts={this.state.accounts}
                 addTransaction={this.addTransaction}
-                initialValues={this.state.transactionForm}
               />
             ]}
           />

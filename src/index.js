@@ -1,10 +1,31 @@
 import React from 'react';
 import { render } from 'react-dom';
+
+import State from '@microstates/react';
+import AppModel from './stateManager.js';
+
 import 'bulma/css/bulma.css';
 import Financial from './financial';
 
 const App = () => (
-  <React.Fragment>
+  <State
+    type={AppModel}
+    value={{
+      modal: { content: 'Hello World!!!' },
+      counter: 2,
+      transactionForm: {
+        id: ``,
+        raccount: `account`,
+        description: `description`,
+        category: `test default`,
+        type: `income`,
+        start: `2018-03-22`,
+        rtype: `day`,
+        cycle: 3,
+        value: 150
+      }
+    }}
+  >
     <nav
       className="navbar is-fixed-top is-primary"
       role="navigation"
@@ -19,7 +40,7 @@ const App = () => (
     <section className="section">
       <Financial />
     </section>
-  </React.Fragment>
+  </State>
 );
 
 render(<App />, document.getElementById('root'));
