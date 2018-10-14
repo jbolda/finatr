@@ -108,8 +108,8 @@ describe(`check transactionDailyReoccur`, () => {
     type: `income`,
     start: `2018-03-22`,
     rtype: `day`,
-    cycle: 1,
-    value: 150
+    cycle: Big(1),
+    value: Big(150)
   };
   let graphRange = {
     start: startOfDay('2018-01-01'),
@@ -124,7 +124,7 @@ describe(`check transactionDailyReoccur`, () => {
   });
 
   it(`returns a cycle of 1`, () => {
-    let testData = { ...transaction, cycle: 1 };
+    let testData = { ...transaction, cycle: Big(1) };
     let resolvedTestData = transactionDailyReoccur({
       transaction: testData,
       seedDate: seedDate
@@ -135,7 +135,7 @@ describe(`check transactionDailyReoccur`, () => {
   });
 
   it(`returns a cycle of 3`, () => {
-    let testData = { ...transaction, cycle: 3 };
+    let testData = { ...transaction, cycle: Big(3) };
     let resolvedTestData = transactionDailyReoccur({
       transaction: testData,
       seedDate: seedDate
@@ -146,7 +146,7 @@ describe(`check transactionDailyReoccur`, () => {
   });
 
   it(`returns a cycle of 5`, () => {
-    let testData = { ...transaction, cycle: 5 };
+    let testData = { ...transaction, cycle: Big(5) };
     let resolvedTestData = transactionDailyReoccur({
       transaction: testData,
       seedDate: seedDate
@@ -157,7 +157,7 @@ describe(`check transactionDailyReoccur`, () => {
   });
 
   it(`returns a cycle of 14`, () => {
-    let testData = { ...transaction, cycle: 14 };
+    let testData = { ...transaction, cycle: Big(14) };
     let resolvedTestData = transactionDailyReoccur({
       transaction: testData,
       seedDate: seedDate
@@ -177,8 +177,8 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     type: `expense`,
     start: `2018-03-22`,
     rtype: `day of month`,
-    cycle: 1,
-    value: 150
+    cycle: Big(1),
+    value: Big(150)
   };
   let graphRange = {
     start: startOfDay('2018-01-16'),
@@ -208,7 +208,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
   });
 
   it(`returns a cycle for the 18th of current month`, () => {
-    let testData = { ...transaction, cycle: 18 };
+    let testData = { ...transaction, cycle: Big(18) };
     let resolvedTestData = transactionDayOfMonthReoccur({
       transaction: testData,
       seedDate: seedDate,
@@ -303,8 +303,8 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       type: 'expense',
       start: '2017-08-22',
       rtype: 'day of month',
-      cycle: 22,
-      value: 150
+      cycle: Big(22),
+      value: Big(150)
     };
     let testRange = {
       start: startOfDay('2018-01-16'),
@@ -316,8 +316,8 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       testRange,
       testRange.start,
       [],
-      0,
-      0
+      Big(0),
+      Big(0)
     );
     expect(resolvedTestData1).toHaveLength(7);
     let testData2 = { ...testData, id: 'the-id2' };

@@ -110,7 +110,7 @@ let testData = {
       interest: 6.0,
       vehicle: 'debt',
       payback: {
-        id: `sasdqljg`,
+        id: `payback-test`,
         description: `payback`,
         category: 'account3 payback',
         type: 'expense',
@@ -192,10 +192,10 @@ describe(`check resolveData`, () => {
   });
   it(`handles invalid interval`, () => {
     let resolvedTestData1 = resolveDataAtDateRange(
-      { transactions: [dThreePointFive] },
+      { ...testData, transactions: [dThreePointFive] },
       graphRange
     );
-    expect(resolvedTestData.BarChartIncome.length).toBe(0);
+    expect(resolvedTestData1.BarChartIncome.length).toBe(0);
   });
 });
 
@@ -204,7 +204,7 @@ describe(`check resolveData handles paybacks`, () => {
     expect(resolvedTestData.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: 'sasdqljg-0EXP'
+          id: 'payback-test-0EXP'
         })
       ])
     );
@@ -212,7 +212,7 @@ describe(`check resolveData handles paybacks`, () => {
     expect(resolvedTestData.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: 'sasdqljg-0TRSF'
+          id: 'payback-test-0TRSF'
         })
       ])
     );
