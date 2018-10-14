@@ -220,7 +220,7 @@ const transactionBimonthlyReoccur = ({ transaction, seedDate }) => {
   return {
     date: setDate(transaction.cycle)(addMonths(2)(seedDate)),
     y: transaction.value,
-    dailyRate: transaction.value / 30 / 2
+    dailyRate: transaction.value.div(30).div(2)
   };
 };
 
@@ -229,7 +229,7 @@ const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addQuarters(transaction.cycle)(seedDate),
     y: transaction.value,
-    dailyRate: transaction.value / 30 / 3
+    dailyRate: transaction.value.div(30).div(3)
   };
 };
 
@@ -238,7 +238,7 @@ const transactionSemiannuallyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addYears(0.5)(seedDate),
     y: transaction.value,
-    dailyRate: transaction.value / 180
+    dailyRate: transaction.value.div(180)
   };
 };
 
@@ -247,7 +247,7 @@ const transactionAnnuallyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addYears(1)(seedDate),
     y: transaction.value,
-    dailyRate: transaction.value / 365
+    dailyRate: transaction.value.div(365)
   };
 };
 
