@@ -86,7 +86,8 @@ export class BarChart extends Component {
         <p>{`${tooltipData.type} in ${tooltipData.raccount}`}</p>
         <p>category: {tooltipData.category}</p>
         <p>
-          ${tooltipData.value} | ${tooltipData.dailyRate} per day
+          ${tooltipData.value.toFixed(2)} | ${tooltipData.dailyRate.toFixed(2)}{' '}
+          per day
         </p>
       </div>
     );
