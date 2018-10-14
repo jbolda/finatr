@@ -184,6 +184,7 @@ const transactionDailyReoccur = ({ transaction, seedDate }) => {
 
 // when transaction.rtype === 'day of week'
 const transactionDayOfWeekReoccur = ({ transaction, seedDate }) => {
+  if (transaction.id === 'initial-data-3') console.log(transaction);
   if (typeof transaction.value !== 'object')
     throw new Error(
       `transactionDayOfWeekReoccur expects value as Big: ${JSON.stringify(

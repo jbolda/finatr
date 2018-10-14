@@ -182,14 +182,14 @@ const sortTransactionOrder = (a, b) => {
   return comparison;
 };
 
-const resolveBarChart = (data, { graphRange }) => {
+const resolveBarChart = (dataRaw, { graphRange }) => {
   // return early with an empty array
   // for empty data
-  if (!data || data.length === 0) return [];
+  if (!dataRaw || dataRaw.length === 0) return [];
 
   let keys = [];
 
-  data.forEach((d, i) => {
+  dataRaw.forEach((d, i) => {
     if (Array.isArray(d)) {
       d.forEach((d2, i2) => {
         let key = { value: d2.id, index: i, indexNested: i2 };
@@ -201,28 +201,33 @@ const resolveBarChart = (data, { graphRange }) => {
     }
   });
 
+  // we coerce into Big here temporarily
+  // eventually we need to except it to already be Big
+  let data = keys.map(key => {
+    let dataAccess = Array.isArray(dataRaw[key.index])
+      ? dataRaw[key.index][key.indexNested]
+      : dataRaw[key.index];
+    let newDatum = { ...dataAccess };
+    if (newDatum.value) {
+      newDatum.value = Big(dataAccess.value);
+    }
+    if (newDatum.cycle) {
+      newDatum.cycle = Big(dataAccess.cycle);
+    }
+    if (newDatum.generatedOccurrences) {
+      newDatum.generatedOccurrences = Big(dataAccess.generatedOccurrences);
+    }
+    if (newDatum.visibleOccurrences) {
+      newDatum.visibleOccurrences = Big(dataAccess.visibleOccurrences);
+    }
+    return newDatum;
+  });
+
   let allDates = eachDayOfInterval(graphRange);
   let stackStructure = allDates.map(day => {
     let obj = { date: day };
     keys.forEach(key => {
-      let dataAccess = Array.isArray(data[key.index])
-        ? data[key.index][key.indexNested]
-        : data[key.index];
-      obj[key.value] = { ...dataAccess };
-      if (obj[key.value].value) {
-        obj[key.value].value = Big(dataAccess.value);
-      }
-      if (obj[key.value].cycle) {
-        obj[key.value].cycle = Big(dataAccess.cycle);
-      }
-      if (obj[key.value].generatedOccurrences) {
-        obj[key.value].generatedOccurrences = Big(
-          dataAccess.generatedOccurrences
-        );
-      }
-      if (obj[key.value].visibleOccurrences) {
-        obj[key.value].visibleOccurrences = Big(dataAccess.visibleOccurrences);
-      }
+      obj[key.value] = { ...data[key.index] };
       obj[key.value].y = Big(0);
       obj[key.value].dailyRate = Big(0);
     });

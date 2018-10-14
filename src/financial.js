@@ -85,7 +85,7 @@ class Financial extends React.Component {
     };
     data.push(dTwo);
     let dThree = {
-      id: `oasis3`,
+      id: `initial-data-3`,
       raccount: `account`,
       description: `description`,
       category: `test complex`,
