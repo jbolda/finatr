@@ -36,7 +36,7 @@ let dThree = {
   start: `2018-03-22`,
   rtype: `day of week`,
   cycle: 2,
-  value: 35
+  value: 70
 };
 data.push(dThree);
 let dFour = {
@@ -72,7 +72,7 @@ let dFive = {
   rtype: `day`,
   repeat: 1,
   cycle: 1,
-  value: 112
+  value: 110
 };
 data.push(dFive);
 let dSix = {
@@ -85,7 +85,7 @@ let dSix = {
   rtype: `day`,
   repeat: 1,
   cycle: 1,
-  value: 112
+  value: 120
 };
 data.push(dSix);
 
@@ -120,37 +120,19 @@ let testData = {
             start: `2018-03-22`,
             rtype: `day`,
             cycle: 1,
-            value: 112
+            value: 140
           },
           {
             raccount: 'account',
-            type: 'expense',
             start: `2018-03-22`,
             rtype: `day`,
             cycle: 3,
-            value: 78
+            value: 60
           }
         ]
       }
     }
-  ],
-  transactionForm: {
-    id: `oasid7`,
-    raccount: `account`,
-    description: `description`,
-    category: `test default`,
-    type: `income`,
-    start: `2018-03-22`,
-    rtype: `day`,
-    cycle: 3,
-    value: 150
-  },
-  accountForm: {
-    name: 'new account',
-    starting: 1000,
-    interest: 0.0,
-    vehicle: 'operating'
-  }
+  ]
 };
 
 let graphRange = {
@@ -191,16 +173,16 @@ describe(`check resolveData`, () => {
     expect(resolvedTestData.BarChartExpense).toHaveLength(5);
   });
   it(`calcs the correct BarChartMax`, () => {
-    expect(Number(resolvedTestData.BarChartMax)).toBe(448);
+    expect(Number(resolvedTestData.BarChartMax)).toBe(500);
   });
   it(`calcs the correct LineChartMax`, () => {
-    expect(Number(resolvedTestData.LineChartMax)).toBe(48368);
+    expect(Number(resolvedTestData.LineChartMax)).toBe(49680);
   });
   it(`calcs the correct dailyIncome`, () => {
-    expect(resolvedTestData.dailyIncome).toBe(258);
+    expect(Number(resolvedTestData.dailyIncome)).toBe(163);
   });
   it(`calcs the correct dailyExpense`, () => {
-    expect(resolvedTestData.dailyExpense).toBe(672);
+    expect(Number(resolvedTestData.dailyExpense)).toBe(270);
   });
   it(`calcs the correct savingsRate`, () => {
     expect(Number(resolvedTestData.savingsRate.toFixed(2))).toBe(33.33);

@@ -169,7 +169,7 @@ const transactionNoReoccur = ({ transaction, seedDate }) => {
   return {
     date: transaction.start,
     y: transaction.value,
-    dailyRate: transaction.value
+    dailyRate: Big(0)
   };
 };
 
@@ -178,7 +178,7 @@ const transactionDailyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addDays(transaction.cycle)(seedDate),
     y: transaction.value,
-    dailyRate: transaction.value / transaction.cycle
+    dailyRate: transaction.value.div(transaction.cycle)
   };
 };
 
@@ -187,7 +187,7 @@ const transactionDayOfWeekReoccur = ({ transaction, seedDate }) => {
   return {
     date: addDays(7 + getDay(seedDate) - transaction.cycle)(seedDate),
     y: transaction.value,
-    dailyRate: transaction.value / 7
+    dailyRate: transaction.value.div(7)
   };
 };
 
@@ -211,7 +211,7 @@ const transactionDayOfMonthReoccur = ({
   return {
     date: monthlyDate,
     y: transaction.value,
-    dailyRate: transaction.value / 30
+    dailyRate: transaction.value.div(30)
   };
 };
 

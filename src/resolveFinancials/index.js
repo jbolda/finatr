@@ -106,12 +106,18 @@ const resolveDataAtDateRange = (data, graphRange) => {
   );
 
   let dailyIncome = Big(
-    d3.sum(BarChartIncome, d => (d.type === 'income' ? Number(d.dailyRate) : 0))
+    BarChartIncome.reduce(
+      (currentMax, d) =>
+        Math.max(d.type === 'income' ? d.dailyRate : 0, currentMax),
+      0
+    )
   );
+
   let dailyExpense = Big(
-    d3.sum(
-      BarChartExpense,
-      d => (d.type === 'expense' ? Number(d.dailyRate) : 0)
+    BarChartExpense.reduce(
+      (currentMax, d) =>
+        Math.max(d.type === 'expense' ? d.dailyRate : 0, currentMax),
+      0
     )
   );
 
