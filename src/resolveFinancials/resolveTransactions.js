@@ -19,6 +19,8 @@ import differenceInMonths from 'date-fns/fp/differenceInMonths';
 const computeTransactionModifications = (transactions, graphRange) =>
   transactions.reduce((modifications, transaction) => {
     let transactionInterval = convertRangeToInterval(transaction, graphRange);
+    // early return if end is before start, we will have no modifications
+    if (isBefore(transactionInterval.start)(transactionInterval.end)) return [];
 
     let coercePaybacksIntoTransactions = Array.isArray(transaction)
       ? transaction
@@ -79,17 +81,6 @@ const generateModification = (
     generatedOccurrences: generatedOccurrences
   });
   modification.mutateKey = transaction.id;
-  if (transaction.id === 'check transactionDayOfMonthReoccur genOc')
-    console.log(
-      transaction,
-      visibleOccurrences,
-      generatedOccurrences,
-      hasNotHitNumberOfOccurrences(
-        transaction,
-        visibleOccurrences,
-        generatedOccurrences
-      )
-    );
 
   // if this is a modification we should use then add it to the list
   // and generate the next one

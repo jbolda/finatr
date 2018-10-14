@@ -51,7 +51,7 @@ let dFour = {
 };
 data.push(dFour);
 let dThreePointFive = {
-  id: `oasis92`,
+  id: `oasis92hoogyboogy`,
   raccount: `account`,
   description: `description`,
   category: `test complex`,
@@ -227,14 +227,3 @@ describe(`check resolveData handles paybacks`, () => {
     );
   });
 });
-
-/*
-          category: 'test default',
-          dailyRate: expect.any(Number),
-          description: 'payback',
-          type: 'expense',
-          id: 'sasdqljg',
-          maxHeight: expect.any(Number),
-          raccount: 'account',
-          stack: expect.any(Array)
-*/
