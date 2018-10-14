@@ -1,4 +1,5 @@
 import { resolveDataAtDateRange } from './index.js';
+import Big from 'big.js';
 import startOfDay from 'date-fns/fp/startOfDay';
 
 let data = [];
@@ -157,6 +158,8 @@ let graphRange = {
   end: startOfDay('2018-09-01')
 };
 let resolvedTestData = resolveDataAtDateRange(testData, graphRange);
+resolvedTestData.BarChartIncome.forEach(obj => (obj.stack = null));
+resolvedTestData.BarChartExpense.forEach(obj => (obj.stack = null));
 
 describe(`check resolveData`, () => {
   it(`returns the correct number of transactions`, () => {
@@ -173,14 +176,13 @@ describe(`check resolveData`, () => {
       expect.arrayContaining([
         expect.objectContaining({
           category: 'test default',
-          cycle: 3,
-          dailyRate: expect.any(Number),
+          cycle: Big(3),
+          dailyRate: expect.any(Big),
           description: 'description',
           id: 'oasidjas1',
-          maxHeight: expect.any(Number),
+          maxHeight: expect.any(Big),
           raccount: 'account',
-          rtype: 'day',
-          stack: expect.any(Array)
+          rtype: 'day'
         })
       ])
     );
@@ -189,10 +191,10 @@ describe(`check resolveData`, () => {
     expect(resolvedTestData.BarChartExpense).toHaveLength(5);
   });
   it(`calcs the correct BarChartMax`, () => {
-    expect(resolvedTestData.BarChartMax).toBe(514);
+    expect(Number(resolvedTestData.BarChartMax)).toBe(448);
   });
   it(`calcs the correct LineChartMax`, () => {
-    expect(resolvedTestData.LineChartMax).toBe(48368);
+    expect(Number(resolvedTestData.LineChartMax)).toBe(48368);
   });
   it(`calcs the correct dailyIncome`, () => {
     expect(resolvedTestData.dailyIncome).toBe(258);
@@ -201,10 +203,17 @@ describe(`check resolveData`, () => {
     expect(resolvedTestData.dailyExpense).toBe(672);
   });
   it(`calcs the correct savingsRate`, () => {
-    expect(resolvedTestData.savingsRate).toBeCloseTo(33.33);
+    expect(Number(resolvedTestData.savingsRate.toFixed(2))).toBe(33.33);
   });
   it(`calcs the correct fiNumber`, () => {
-    expect(resolvedTestData.fiNumber).toBeCloseTo(0.489);
+    expect(Number(resolvedTestData.fiNumber.toFixed(3))).toBe(0.489);
+  });
+  it(`handles invalid interval`, () => {
+    let resolvedTestData1 = resolveDataAtDateRange(
+      { transactions: [dThreePointFive] },
+      graphRange
+    );
+    expect(resolvedTestData.BarChartIncome.length).toBe(0);
   });
 });
 
@@ -213,7 +222,7 @@ describe(`check resolveData handles paybacks`, () => {
     expect(resolvedTestData.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: 'sasdqljg-EXP'
+          id: 'sasdqljg-0EXP'
         })
       ])
     );
@@ -221,7 +230,7 @@ describe(`check resolveData handles paybacks`, () => {
     expect(resolvedTestData.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: 'sasdqljg-TRSF'
+          id: 'sasdqljg-0TRSF'
         })
       ])
     );

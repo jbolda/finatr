@@ -157,8 +157,8 @@ BarChart.propTypes = {
         type: PropTypes.oneOf(['income', 'transfer']).isRequired,
         start: PropTypes.string.isRequired,
         rtype: PropTypes.string.isRequired,
-        cycle: PropTypes.number,
-        value: PropTypes.number.isRequired,
+        cycle: PropTypes.object,
+        value: PropTypes.object.isRequired,
         stack: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired))
           .isRequired
       })
@@ -171,8 +171,8 @@ BarChart.propTypes = {
         type: PropTypes.oneOf(['expense', 'transfer']).isRequired,
         start: PropTypes.string.isRequired,
         rtype: PropTypes.string.isRequired,
-        cycle: PropTypes.number,
-        value: PropTypes.number.isRequired,
+        cycle: PropTypes.object,
+        value: PropTypes.object.isRequired,
         stack: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired))
           .isRequired
       })

@@ -92,29 +92,26 @@ const resolveDataAtDateRange = (data, graphRange) => {
       return value;
     }
   };
-  let max_domain_bars = d3.max([
-    extractValue(
-      BarChartIncome[0] ? parseFloat(BarChartIncome[0].maxHeight) : 0
-    ),
-    extractValue(
-      BarChartExpense[0] ? parseFloat(BarChartExpense[0].maxHeight) : 0
-    )
-  ]);
+  let max_domain_bars = Big(
+    d3.max([
+      extractValue(BarChartIncome[0] ? Number(BarChartIncome[0].maxHeight) : 0),
+      extractValue(
+        BarChartExpense[0] ? Number(BarChartExpense[0].maxHeight) : 0
+      )
+    ])
+  );
 
   let max_domain_line = Big(
     d3.max(AccountChart, d => d3.max(d.values, d => d.value))
   );
 
   let dailyIncome = Big(
-    d3.sum(
-      BarChartIncome,
-      d => (d.type === 'income' ? parseFloat(d.dailyRate) : 0)
-    )
+    d3.sum(BarChartIncome, d => (d.type === 'income' ? Number(d.dailyRate) : 0))
   );
   let dailyExpense = Big(
     d3.sum(
       BarChartExpense,
-      d => (d.type === 'expense' ? parseFloat(d.dailyRate) : 0)
+      d => (d.type === 'expense' ? Number(d.dailyRate) : 0)
     )
   );
 
@@ -151,7 +148,10 @@ const resolveDataAtDateRange = (data, graphRange) => {
       : dailyInvest.times(100).div(dailyExpense),
     fiNumber: dailyExpense.eq(0)
       ? 100
-      : totalInvest.times(100).div(dailyExpense.times(365).div(25)) || null,
+      : totalInvest
+          .times(100)
+          .div(dailyExpense.times(365))
+          .div(25) || null,
     AccountChart: AccountChart,
     LineChartMax: max_domain_line
   };
