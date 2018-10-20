@@ -1,21 +1,62 @@
-import { valueOf, NumberType, StringType, BooleanType } from 'microstates';
+import { valueOf, ObjectType, StringType, BooleanType } from 'microstates';
 import { default as _Big } from 'big.js';
 import makeUUID from './makeUUID.js';
 
 class AppModel {
   forms = Forms;
-  transaction = Array;
-  accounts = Array;
+  transaction = [Transaction];
+  accounts = { Account };
   charts = Charts;
   stats = Stats;
 }
 
+class Transaction {
+  id = StringType;
+  raccount = StringType;
+  category = StringType;
+  type = StringType;
+  start = StringType;
+  rtype = StringType;
+  cycle = Big;
+  value = Big;
+}
+
+class Account {
+  account = StringType;
+  interest = Big;
+  vehicle = StringType;
+}
+
 class Charts {
-  BarChartIncome = Array;
-  BarChartExpense = Array;
+  BarChartIncome = [BarChart];
+  BarChartExpense = [BarChart];
   BarChartMax = Big;
-  AccountChart = Array;
+  AccountChart = [LineChart];
   LineChartMax = Big;
+}
+
+class BarChart {
+  id = StringType;
+  raccount = StringType;
+  category = StringType;
+  type = StringType;
+  start = StringType;
+  rtype = StringType;
+  cycle = Big;
+  value = Big;
+  stack = Array;
+}
+
+class LineChart {
+  account = StringType;
+  interest = Big;
+  vehicle = StringType;
+  values = [LineChartValues];
+}
+
+class LineChartValues {
+  date = StringType;
+  value = Big;
 }
 
 class Stats {
