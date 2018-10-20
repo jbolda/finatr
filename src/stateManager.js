@@ -4,10 +4,27 @@ import makeUUID from './makeUUID.js';
 
 class AppModel {
   forms = Forms;
-  transaction = [Transaction];
+  transactions = [Transaction];
   accounts = [Account];
   charts = Charts;
   stats = Stats;
+
+  get state() {
+    return valueOf(this);
+  }
+
+  log() {
+    console.log(valueOf(this));
+    return this;
+  }
+
+  transactionUpsert(value) {
+    return this.transactions.push(value);
+  }
+
+  accountUpsert(value) {
+    return this.accounts.push(value);
+  }
 }
 
 class Transaction {
@@ -64,6 +81,10 @@ class Forms {
   transactionForm = TransactionForm;
   accountForm = AccountForm;
   accountTransactionForm = AccountTransactionForm;
+
+  get state() {
+    return valueOf(this);
+  }
 }
 
 class TransactionForm {
@@ -76,6 +97,10 @@ class TransactionForm {
   rtype = StringType;
   cycle = Big;
   value = Big;
+
+  get state() {
+    return valueOf(this);
+  }
 }
 
 class AccountForm {
@@ -83,6 +108,10 @@ class AccountForm {
   starting = Big;
   interest = Big;
   vehicle = StringType;
+
+  get state() {
+    return valueOf(this);
+  }
 }
 
 class AccountTransactionForm {
@@ -94,6 +123,10 @@ class AccountTransactionForm {
   cycle = Big;
   generatedOccurences = Big;
   value = Big;
+
+  get state() {
+    return valueOf(this);
+  }
 }
 
 class Big {
