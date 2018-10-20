@@ -5,16 +5,24 @@ class AppModel {
   forms = Forms;
   transaction = Array;
   accounts = Array;
+  charts = Charts;
+  stats = Stats;
+}
+
+class Charts {
   BarChartIncome = Array;
   BarChartExpense = Array;
   BarChartMax = Big;
+  AccountChart = Array;
+  LineChartMax = Big;
+}
+
+class Stats {
   dailyIncome = Big;
   dailyExpense = Big;
   dailyRate = Big;
   savingsRate = Big;
   fiNumber = Big;
-  AccountChart = Array;
-  LineChartMax = Big;
 }
 
 class Forms {
