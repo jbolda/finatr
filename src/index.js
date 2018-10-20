@@ -11,6 +11,8 @@ const App = () => (
   <State
     type={AppModel}
     value={{
+      transactions: [],
+      accounts: [],
       forms: {
         transactionForm: {
           id: ``,
