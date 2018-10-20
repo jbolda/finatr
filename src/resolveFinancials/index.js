@@ -15,63 +15,7 @@ const resolveData = data => {
 const resolveDataAtDateRange = (data, graphRange) => {
   data.transactions.sort(sortTransactionOrder);
 
-  let splitTransactions = {
-    income: [],
-    expense: [],
-    transfer: []
-  };
-  data.transactions.forEach(d => {
-    switch (d.type) {
-      case 'income':
-        splitTransactions.income.push(d);
-        break;
-      case 'expense':
-        splitTransactions.expense.push(d);
-        break;
-      case 'transfer':
-        if (d.value <= 0) {
-          splitTransactions.expense.push(d);
-        } else {
-          splitTransactions.income.push(d);
-        }
-        break;
-      default:
-        break;
-    }
-  });
-  data.accounts.forEach(account => {
-    if (account.vehicle === 'debt' && account.payback) {
-      let accountTransactionPush = [];
-      account.payback.transactions.forEach((accountTransaction, index) => {
-        // this one is for the expense on the account
-        // being paid down
-        let amount =
-          typeof accountTransaction.value === 'string'
-            ? account.payback[accountTransaction.value]
-            : accountTransaction.value;
-        accountTransactionPush.push({
-          ...accountTransaction,
-          id: `${account.payback.id}-${index}EXP`,
-          raccount: account.name,
-          description: account.payback.description,
-          type: account.payback.type,
-          category: account.payback.category,
-          value: amount
-        });
-        // this one is for the account making the payment
-        // (raccount is defined on accountTransaction)
-        accountTransactionPush.push({
-          ...accountTransaction,
-          id: `${account.payback.id}-${index}TRSF`,
-          description: account.payback.description,
-          type: 'transfer',
-          category: account.payback.category,
-          value: -amount
-        });
-      });
-      splitTransactions.expense.push(accountTransactionPush);
-    }
-  });
+  let splitTransactions = transactionSplitter(data);
 
   let BarChart = resolveBarChart(
     [...splitTransactions.income, ...splitTransactions.expense],
@@ -180,6 +124,74 @@ const sortTransactionOrder = (a, b) => {
     comparison = -1;
   }
   return comparison;
+};
+
+const transactionSplitter = ({ transactions, accounts }) => {
+  console.log(transactions, accounts);
+  let splitTransactions = {
+    income: [],
+    expense: [],
+    transfer: []
+  };
+
+  if (transactions) {
+    transactions.forEach(d => {
+      switch (d.type) {
+        case 'income':
+          splitTransactions.income.push(d);
+          break;
+        case 'expense':
+          splitTransactions.expense.push(d);
+          break;
+        case 'transfer':
+          if (d.value <= 0) {
+            splitTransactions.expense.push(d);
+          } else {
+            splitTransactions.income.push(d);
+          }
+          break;
+        default:
+          break;
+      }
+    });
+  }
+  if (accounts) {
+    accounts.forEach(account => {
+      if (account.vehicle === 'debt' && account.payback) {
+        let accountTransactionPush = [];
+        account.payback.transactions.forEach((accountTransaction, index) => {
+          // this one is for the expense on the account
+          // being paid down
+          let amount =
+            typeof accountTransaction.value === 'string'
+              ? account.payback[accountTransaction.value]
+              : accountTransaction.value;
+          accountTransactionPush.push({
+            ...accountTransaction,
+            id: `${account.payback.id}-${index}EXP`,
+            raccount: account.name,
+            description: account.payback.description,
+            type: account.payback.type,
+            category: account.payback.category,
+            value: amount
+          });
+          // this one is for the account making the payment
+          // (raccount is defined on accountTransaction)
+          accountTransactionPush.push({
+            ...accountTransaction,
+            id: `${account.payback.id}-${index}TRSF`,
+            description: account.payback.description,
+            type: 'transfer',
+            category: account.payback.category,
+            value: -amount
+          });
+        });
+        splitTransactions.expense.push(accountTransactionPush);
+      }
+    });
+  }
+
+  return splitTransactions;
 };
 
 const resolveBarChart = (dataRaw, { graphRange }) => {
@@ -357,7 +369,12 @@ const resolveAccountChart = (data, dataMassaged) => {
   });
 };
 
-export { resolveDataAtDateRange, resolveBarChart, resolveAccountChart };
+export {
+  resolveDataAtDateRange,
+  transactionSplitter,
+  resolveBarChart,
+  resolveAccountChart
+};
 export default resolveData;
 
 const future = daysinfuture => {

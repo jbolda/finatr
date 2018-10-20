@@ -1,10 +1,12 @@
 import { valueOf, ObjectType, StringType, BooleanType } from 'microstates';
+import { transactionSplitter } from './resolveFinancials';
 import { default as _Big } from 'big.js';
 import makeUUID from './makeUUID.js';
 
 class AppModel {
   forms = Forms;
   transactions = [Transaction];
+  transactionsSplit = ObjectType;
   accounts = [Account];
   charts = Charts;
   stats = Stats;
@@ -19,7 +21,11 @@ class AppModel {
   }
 
   transactionUpsert(value) {
-    return this.transactions.push(value);
+    // console.log(this.state);
+    let nextState = this.transactions.push(value);
+    return this.transactions
+      .set(nextState.transactions)
+      .transactionsSplit.set(transactionSplitter(nextState.state));
   }
 
   accountUpsert(value) {
