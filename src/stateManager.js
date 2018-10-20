@@ -5,7 +5,7 @@ import makeUUID from './makeUUID.js';
 class AppModel {
   forms = Forms;
   transaction = [Transaction];
-  accounts = { Account };
+  accounts = [Account];
   charts = Charts;
   stats = Stats;
 }
@@ -19,6 +19,10 @@ class Transaction {
   rtype = StringType;
   cycle = Big;
   value = Big;
+}
+
+class TransactionMutated extends Transaction {
+  dailyRate = Big;
 }
 
 class Account {
@@ -35,22 +39,11 @@ class Charts {
   LineChartMax = Big;
 }
 
-class BarChart {
-  id = StringType;
-  raccount = StringType;
-  category = StringType;
-  type = StringType;
-  start = StringType;
-  rtype = StringType;
-  cycle = Big;
-  value = Big;
+class BarChart extends Transaction {
   stack = Array;
 }
 
-class LineChart {
-  account = StringType;
-  interest = Big;
-  vehicle = StringType;
+class LineChart extends Account {
   values = [LineChartValues];
 }
 
