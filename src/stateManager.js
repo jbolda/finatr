@@ -1,3 +1,4 @@
+import { valueOf, NumberType, StringType, BooleanType } from 'microstates';
 import { default as _Big } from 'big.js';
 import makeUUID from './makeUUID.js';
 
@@ -32,30 +33,30 @@ class Forms {
 }
 
 class TransactionForm {
-  id = String;
-  raccount = String;
-  description = String;
-  category = String;
-  type = String;
-  start = String;
-  rtype = String;
+  id = StringType;
+  raccount = StringType;
+  description = StringType;
+  category = StringType;
+  type = StringType;
+  start = StringType;
+  rtype = StringType;
   cycle = Big;
   value = Big;
 }
 
 class AccountForm {
-  name = String;
+  name = StringType;
   starting = Big;
   interest = Big;
-  vehicle = String;
+  vehicle = StringType;
 }
 
 class AccountTransactionForm {
-  id = String;
-  debtAccount = String;
-  raccount = String;
-  start = String;
-  rtype = String;
+  id = StringType;
+  debtAccount = StringType;
+  raccount = StringType;
+  start = StringType;
+  rtype = StringType;
   cycle = Big;
   generatedOccurences = Big;
   value = Big;
@@ -63,11 +64,15 @@ class AccountTransactionForm {
 
 class Big {
   initialize(value = 0) {
-    return value instanceof _Big ? value : _Big(Number(value));
+    return value instanceof _Big ? value : _Big(value);
   }
 
   add(value) {
     return this.state.add(value);
+  }
+
+  get state() {
+    return valueOf(this);
   }
 }
 
