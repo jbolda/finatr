@@ -2,9 +2,7 @@ import { default as _Big } from 'big.js';
 import makeUUID from './makeUUID.js';
 
 class AppModel {
-  transactionForm = TransactionForm;
-  accountForm = AccountForm;
-  accountTransactionForm = AccountTransactionForm;
+  forms = Forms;
   transaction = Array;
   accounts = Array;
   BarChartIncome = Array;
@@ -17,6 +15,12 @@ class AppModel {
   fiNumber = Big;
   AccountChart = Array;
   LineChartMax = Big;
+}
+
+class Forms {
+  transactionForm = TransactionForm;
+  accountForm = AccountForm;
+  accountTransactionForm = AccountTransactionForm;
 }
 
 class TransactionForm {
