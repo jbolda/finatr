@@ -1,5 +1,10 @@
 import { valueOf, ObjectType, StringType, BooleanType } from 'microstates';
-import { transactionSplitter } from './resolveFinancials';
+import {
+  transactionSplitter,
+  past,
+  future,
+  resolveBarChart
+} from './resolveFinancials';
 import { default as _Big } from 'big.js';
 import makeUUID from './makeUUID.js';
 
@@ -23,9 +28,11 @@ class AppModel {
   transactionUpsert(value) {
     // console.log(this.state);
     let nextState = this.transactions.push(value);
+    let splitTransactions = transactionSplitter(nextState.state);
     return this.transactions
       .set(nextState.transactions)
-      .transactionsSplit.set(transactionSplitter(nextState.state));
+      .transactionsSplit.set(splitTransactions)
+      .charts.calcBarCharts(splitTransactions);
   }
 
   accountUpsert(value) {
@@ -55,11 +62,29 @@ class Account {
 }
 
 class Charts {
+  // initialize(length = 365) {
+  //   let initialized = this;
+  //   let graphRange = { start: past(), end: future(length) };
+  //   initialized = initialized.GraphRange.set(graphRange);
+  //   return initialized;
+  // }
+
+  GraphRange = ObjectType;
   BarChartIncome = [BarChart];
   BarChartExpense = [BarChart];
   BarChartMax = Big;
   AccountChart = [LineChart];
   LineChartMax = Big;
+
+  calcBarCharts(splitTransactions) {
+    let income = resolveBarChart(splitTransactions.income, {
+      graphRange: valueOf(this.GraphRange)
+    });
+    let expenses = resolveBarChart(splitTransactions.expenses, {
+      graphRange: valueOf(this.GraphRange)
+    });
+    return this.BarChartIncome.set(income).BarChartExpense.set(expenses);
+  }
 }
 
 class BarChart extends Transaction {

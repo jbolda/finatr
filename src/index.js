@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 
 import State from '@microstates/react';
 import AppModel from './stateManager.js';
+import { past, future } from './resolveFinancials';
 
 import 'bulma/css/bulma.css';
 import Financial from './financial';
@@ -13,6 +14,7 @@ const App = () => (
     value={{
       transactions: [],
       accounts: [],
+      charts: { GraphRange: { start: past(), end: future(365) } },
       forms: {
         transactionForm: {
           id: ``,
