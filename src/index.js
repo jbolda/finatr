@@ -13,7 +13,14 @@ const App = () => (
     type={AppModel}
     value={{
       transactions: [],
-      accounts: [],
+      accounts: [
+        {
+          name: 'account',
+          starting: 0,
+          interest: 0,
+          vehicle: 'operating'
+        }
+      ],
       charts: { GraphRange: { start: past(), end: future(365) } },
       forms: {
         transactionForm: {

@@ -127,7 +127,6 @@ const sortTransactionOrder = (a, b) => {
 };
 
 const transactionSplitter = ({ transactions, accounts }) => {
-  console.log(transactions, accounts);
   let splitTransactions = {
     income: [],
     expense: [],
@@ -284,6 +283,69 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
   }));
 };
 
+const resolveAccountChartBetter = ({ accounts, income, expenses }) => {
+  console.log(accounts, income, expenses);
+  return accounts
+    ? accounts.map(account => {
+        let accountStack = {};
+
+        const zipTogethor = arr =>
+          arr.reduce((accumlator, d) => {
+            let flatten = d.stack.map(e => e[1] - e[0]);
+            return accumlator.length === 0
+              ? flatten
+              : accumlator.map((d, i, thisArray) => d + flatten[i]);
+          }, []);
+
+        const extractValue = value => {
+          if (value === undefined) {
+            return 0;
+          } else {
+            return value;
+          }
+        };
+
+        accountStack.income = zipTogethor(income);
+        accountStack.expense = zipTogethor(expenses);
+
+        let arrayLength = Math.max(
+          accountStack.income.length,
+          accountStack.expense.length
+        );
+
+        let finalZippedLine = {
+          account: account,
+          values: [],
+          interest: account.interest,
+          vehicle: account.vehicle
+        };
+
+        for (let iterator = 0; iterator < arrayLength; iterator++) {
+          let prevVal =
+            finalZippedLine.values.length === 0
+              ? extractValue(account.starting)
+              : extractValue(
+                  finalZippedLine.values[finalZippedLine.values.length - 1]
+                    .value
+                );
+          let firstStep =
+            prevVal - extractValue(accountStack.expense[iterator]);
+          let secondStep =
+            firstStep + extractValue(accountStack.income[iterator]);
+          finalZippedLine.values.push({
+            date: [].concat(income, expenses)[0].stack[iterator].data.date,
+            value: firstStep
+          });
+          finalZippedLine.values.push({
+            date: [].concat(income, expenses)[0].stack[iterator].data.date,
+            value: secondStep
+          });
+        }
+        return finalZippedLine;
+      })
+    : [];
+};
+
 const resolveAccountChart = (data, dataMassaged) => {
   let accounts = data.transactions
     .map(d => d.raccount)
@@ -373,7 +435,7 @@ export {
   resolveDataAtDateRange,
   transactionSplitter,
   resolveBarChart,
-  resolveAccountChart
+  resolveAccountChartBetter as resolveAccountChart
 };
 export default resolveData;
 

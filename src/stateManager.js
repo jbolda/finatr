@@ -3,7 +3,8 @@ import {
   transactionSplitter,
   past,
   future,
-  resolveBarChart
+  resolveBarChart,
+  resolveAccountChart
 } from './resolveFinancials';
 import { default as _Big } from 'big.js';
 import makeUUID from './makeUUID.js';
@@ -32,7 +33,7 @@ class AppModel {
     return this.transactions
       .set(nextState.transactions)
       .transactionsSplit.set(splitTransactions)
-      .charts.calcBarCharts(splitTransactions);
+      .charts.calcCharts(splitTransactions, valueOf(this.accounts));
   }
 
   accountUpsert(value) {
@@ -49,6 +50,10 @@ class Transaction {
   rtype = StringType;
   cycle = Big;
   value = Big;
+
+  get state() {
+    return valueOf(this);
+  }
 }
 
 class TransactionMutated extends Transaction {
@@ -59,6 +64,10 @@ class Account {
   account = StringType;
   interest = Big;
   vehicle = StringType;
+
+  get state() {
+    return valueOf(this);
+  }
 }
 
 class Charts {
@@ -76,19 +85,66 @@ class Charts {
   AccountChart = [LineChart];
   LineChartMax = Big;
 
+  calcCharts(splitTransactions, accounts) {
+    return this.calcBarCharts(splitTransactions).calcAccountLine(accounts);
+  }
+
   calcBarCharts(splitTransactions) {
     let income = resolveBarChart(splitTransactions.income, {
       graphRange: valueOf(this.GraphRange)
     });
+
     let expenses = resolveBarChart(splitTransactions.expenses, {
       graphRange: valueOf(this.GraphRange)
     });
-    return this.BarChartIncome.set(income).BarChartExpense.set(expenses);
+
+    let accountLine = resolveAccountChart({
+      transactions: [].concat(
+        splitTransactions.income,
+        splitTransactions.expenses
+      ),
+      income,
+      expenses
+    });
+
+    return this.BarChartIncome.set(income)
+      .BarChartExpense.set(expenses)
+      .BarChartMax.set(
+        Math.max(
+          income.length !== 0 ? income[0].maxHeight || 0 : 0,
+          expenses.length !== 0 ? expenses[0].maxHeight || 0 : 0
+        )
+      );
+  }
+
+  calcAccountLine(accounts) {
+    let accountLine = resolveAccountChart({
+      accounts: accounts,
+      income: valueOf(this.BarChartIncome),
+      expenses: valueOf(this.BarChartExpense)
+    });
+    return this.AccountChart.set(accountLine).LineChartMax.set(
+      accountLine.reduce(
+        (lineMax, line) =>
+          Math.max(
+            lineMax,
+            line.values.reduce(
+              (lineDayMax, day) => Math.max(lineDayMax, day.value),
+              0
+            )
+          ),
+        0
+      )
+    );
   }
 }
 
 class BarChart extends Transaction {
   stack = Array;
+
+  get state() {
+    return valueOf(this);
+  }
 }
 
 class LineChart extends Account {
