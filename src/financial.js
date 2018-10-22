@@ -1,4 +1,5 @@
 import React from 'react';
+import { Consumer } from '@microstates/react';
 import BarChart from './barChart';
 import resolveData from './resolveFinancials';
 import makeUUID from './makeUUID.js';
@@ -340,131 +341,135 @@ class Financial extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
-        <section className="section">
-          <div className="level">
-            <div className="level-item has-text-centered">
-              <div>
-                <p className="heading">Daily Income</p>
-                <p className="heading">
-                  ${this.state.dailyIncome.toFixed(2) || null}
-                </p>
+      <Consumer>
+        {model => (
+          <React.Fragment>
+            <section className="section">
+              <div className="level">
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">Daily Income</p>
+                    <p className="heading">
+                      ${this.state.dailyIncome.toFixed(2) || null}
+                    </p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">Daily Expenses</p>
+                    <p className="heading">
+                      ${this.state.dailyExpense.toFixed(2) || null}
+                    </p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">Savings Rate</p>
+                    <p className="heading">
+                      {this.state.savingsRate.toFixed(2) || null}%
+                    </p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">% to FI</p>
+                    <p className="heading">
+                      {this.state.fiNumber.toFixed(2) || null}%
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="level-item has-text-centered">
-              <div>
-                <p className="heading">Daily Expenses</p>
-                <p className="heading">
-                  ${this.state.dailyExpense.toFixed(2) || null}
-                </p>
-              </div>
-            </div>
-            <div className="level-item has-text-centered">
-              <div>
-                <p className="heading">Savings Rate</p>
-                <p className="heading">
-                  {this.state.savingsRate.toFixed(2) || null}%
-                </p>
-              </div>
-            </div>
-            <div className="level-item has-text-centered">
-              <div>
-                <p className="heading">% to FI</p>
-                <p className="heading">
-                  {this.state.fiNumber.toFixed(2) || null}%
-                </p>
-              </div>
-            </div>
-          </div>
-          <BarChart data={this.state} />
-        </section>
+              <BarChart data={model.charts.state} />
+            </section>
 
-        <nav className="level">
-          <div className="level-left">
-            <div className="level-item has-text-centered">
-              <div>
-                <p className="heading">Get your current</p>
-                <p className="heading">data out:</p>
-                <button
-                  className="button is-success"
-                  onClick={this.handleDownload}
-                >
-                  Download
-                </button>
+            <nav className="level">
+              <div className="level-left">
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">Get your current</p>
+                    <p className="heading">data out:</p>
+                    <button
+                      className="button is-success"
+                      onClick={this.handleDownload}
+                    >
+                      Download
+                    </button>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">Import data from</p>
+                    <p className="heading">your computer:</p>
+                    <FileReaderInput
+                      as="text"
+                      id="my-file-input"
+                      onChange={this.handleUpload}
+                    >
+                      <button className="button is-link">Select a file!</button>
+                    </FileReaderInput>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="level-item has-text-centered">
-              <div>
-                <p className="heading">Import data from</p>
-                <p className="heading">your computer:</p>
-                <FileReaderInput
-                  as="text"
-                  id="my-file-input"
-                  onChange={this.handleUpload}
-                >
-                  <button className="button is-link">Select a file!</button>
-                </FileReaderInput>
-              </div>
-            </div>
-          </div>
-        </nav>
+            </nav>
 
-        <section className="section">
-          <TabView
-            ref={ref => (this.transactionTabs = ref)}
-            tabTitles={['All Transactions', 'Add Transaction']}
-            tabContents={[
-              transactionTable(this.state.transactions, {
-                modifyTransaction: this.modifyTransaction,
-                deleteTransaction: this.deleteTransaction
-              }),
-              <TransactionInput
-                accounts={this.state.accounts}
-                addTransaction={this.addTransaction}
+            <section className="section">
+              <TabView
+                ref={ref => (this.transactionTabs = ref)}
+                tabTitles={['All Transactions', 'Add Transaction']}
+                tabContents={[
+                  transactionTable(this.state.transactions, {
+                    modifyTransaction: this.modifyTransaction,
+                    deleteTransaction: this.deleteTransaction
+                  }),
+                  <TransactionInput
+                    accounts={this.state.accounts}
+                    addTransaction={this.addTransaction}
+                  />
+                ]}
               />
-            ]}
-          />
-        </section>
+            </section>
 
-        <section className="section">
-          <TabView
-            ref={ref => (this.accountTabs = ref)}
-            tabTitles={['All Accounts', 'Add Account', 'Debt']}
-            tabContents={[
-              accountTable(this.state.accounts, {
-                modifyAccount: this.modifyAccount,
-                deleteAccount: this.deleteAccount
-              }),
-              <AccountInput
-                addAccount={this.addAccount}
-                initialValues={this.state.accountForm}
-              />,
-              <React.Fragment>
-                {debtTable(this.state.accounts, {
-                  modifyAccount: this.modifyAccount,
-                  deleteAccount: this.deleteAccount
-                })}
-                <AccountTransactionInput
-                  ref={ref => (this.AccountTransactionForm = ref)}
-                  accounts={this.state.accounts}
-                  addAccountTransaction={this.addAccountTransaction}
-                  initialValues={this.state.accountTransactionForm}
+            <section className="section">
+              <TabView
+                ref={ref => (this.accountTabs = ref)}
+                tabTitles={['All Accounts', 'Add Account', 'Debt']}
+                tabContents={[
+                  accountTable(this.state.accounts, {
+                    modifyAccount: this.modifyAccount,
+                    deleteAccount: this.deleteAccount
+                  }),
+                  <AccountInput
+                    addAccount={this.addAccount}
+                    initialValues={this.state.accountForm}
+                  />,
+                  <React.Fragment>
+                    {debtTable(this.state.accounts, {
+                      modifyAccount: this.modifyAccount,
+                      deleteAccount: this.deleteAccount
+                    })}
+                    <AccountTransactionInput
+                      ref={ref => (this.AccountTransactionForm = ref)}
+                      accounts={this.state.accounts}
+                      addAccountTransaction={this.addAccountTransaction}
+                      initialValues={this.state.accountTransactionForm}
+                    />
+                  </React.Fragment>
+                ]}
+              />
+            </section>
+
+            <section className="section">
+              <div className="container is-fluid">
+                <YNABInput
+                  initialDevToken={this.state.devToken}
+                  initialBudgetId={this.state.budgetId}
+                  addYNAB={this.addYNAB}
                 />
-              </React.Fragment>
-            ]}
-          />
-        </section>
-
-        <section className="section">
-          <div className="container is-fluid">
-            <YNABInput
-              initialDevToken={this.state.devToken}
-              initialBudgetId={this.state.budgetId}
-              addYNAB={this.addYNAB}
-            />
-          </div>
-        </section>
-      </React.Fragment>
+              </div>
+            </section>
+          </React.Fragment>
+        )}
+      </Consumer>
     );
   }
 }

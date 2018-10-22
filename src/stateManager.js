@@ -85,6 +85,10 @@ class Charts {
   AccountChart = [LineChart];
   LineChartMax = Big;
 
+  get state() {
+    return valueOf(this);
+  }
+
   calcCharts(splitTransactions, accounts) {
     return this.calcBarCharts(splitTransactions).calcAccountLine(accounts);
   }

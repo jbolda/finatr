@@ -21,7 +21,11 @@ const App = () => (
           vehicle: 'operating'
         }
       ],
-      charts: { GraphRange: { start: past(), end: future(365) } },
+      charts: {
+        GraphRange: { start: past(), end: future(365) },
+        BarChartIncome: [],
+        BarChartExpense: []
+      },
       forms: {
         transactionForm: {
           id: ``,
