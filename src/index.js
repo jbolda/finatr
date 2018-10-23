@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom';
 
 import State from '@microstates/react';
 import AppModel from './stateManager.js';
@@ -74,4 +74,5 @@ const App = () => (
   </State>
 );
 
-render(<App />, document.getElementById('root'));
+const root = ReactDOM.unstable_createRoot(document.getElementById('root'));
+root.render(<App />);
