@@ -21,7 +21,7 @@ function FieldInput({ fieldName, touched, errors, fieldType = 'text' }) {
 
 class TransactionInput extends React.Component {
   render() {
-    const { accounts, addTransaction } = this.props;
+    const { accounts } = this.props;
     return (
       <React.Fragment>
         <h1 className="title has-text-centered">Add a Transaction</h1>
@@ -30,7 +30,6 @@ class TransactionInput extends React.Component {
             <Formik
               initialValues={model.forms.transactionForm.state}
               onSubmit={(values, actions) => {
-                // addTransaction(values);
                 model.transactionUpsert(values).log();
                 actions.setSubmitting(false);
                 actions.resetForm();

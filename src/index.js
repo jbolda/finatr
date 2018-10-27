@@ -3,60 +3,13 @@ import ReactDOM from 'react-dom';
 
 import State from '@microstates/react';
 import AppModel from './stateManager.js';
-import { past, future } from './resolveFinancials';
+import { seedTwo } from './resolveFinancials/seedData.js';
 
 import 'bulma/css/bulma.css';
 import Financial from './financial';
 
 const App = () => (
-  <State
-    type={AppModel}
-    value={{
-      transactions: [],
-      accounts: [
-        {
-          name: 'account',
-          starting: 0,
-          interest: 0,
-          vehicle: 'operating'
-        }
-      ],
-      charts: {
-        GraphRange: { start: past(), end: future(365) },
-        BarChartIncome: [],
-        BarChartExpense: []
-      },
-      forms: {
-        transactionForm: {
-          id: ``,
-          raccount: `the account`,
-          description: `description`,
-          category: `test default`,
-          type: `income`,
-          start: `2018-03-22`,
-          rtype: `day`,
-          cycle: 3,
-          value: 150
-        },
-        accountForm: {
-          name: 'the account',
-          starting: 1000,
-          interest: 0.0,
-          vehicle: 'operating'
-        },
-        accountTransactionForm: {
-          id: ``,
-          debtAccount: `the account`,
-          raccount: `the account`,
-          start: `2018-03-22`,
-          rtype: `day`,
-          cycle: 3,
-          generatedOccurences: 0,
-          value: 150
-        }
-      }
-    }}
-  >
+  <State type={AppModel} value={seedTwo}>
     <nav
       className="navbar is-fixed-top is-primary"
       role="navigation"
