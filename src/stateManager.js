@@ -176,6 +176,7 @@ class Forms {
   transactionForm = TransactionForm;
   accountForm = AccountForm;
   accountTransactionForm = AccountTransactionForm;
+  ynabForm = YNABForm;
 
   get state() {
     return valueOf(this);
@@ -222,6 +223,11 @@ class AccountTransactionForm {
   get state() {
     return valueOf(this);
   }
+}
+
+class YNABForm {
+  devToken = StringType;
+  budgetId = StringType;
 }
 
 class Big {
