@@ -167,7 +167,7 @@ class Financial extends React.Component {
                   <div>
                     <p className="heading">Daily Income</p>
                     <p className="heading">
-                      ${this.state.dailyIncome.toFixed(2) || null}
+                      ${model.stats.dailyIncome.state.toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -175,7 +175,7 @@ class Financial extends React.Component {
                   <div>
                     <p className="heading">Daily Expenses</p>
                     <p className="heading">
-                      ${this.state.dailyExpense.toFixed(2) || null}
+                      ${model.stats.dailyExpense.state.toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -183,7 +183,7 @@ class Financial extends React.Component {
                   <div>
                     <p className="heading">Savings Rate</p>
                     <p className="heading">
-                      {this.state.savingsRate.toFixed(2) || null}%
+                      {model.stats.savingsRate.state.toFixed(2)}%
                     </p>
                   </div>
                 </div>
@@ -191,7 +191,7 @@ class Financial extends React.Component {
                   <div>
                     <p className="heading">% to FI</p>
                     <p className="heading">
-                      {this.state.fiNumber.toFixed(2) || null}%
+                      {model.stats.fiNumber.state.toFixed(2)}%
                     </p>
                   </div>
                 </div>
@@ -234,12 +234,12 @@ class Financial extends React.Component {
                 ref={ref => (this.transactionTabs = ref)}
                 tabTitles={['All Transactions', 'Add Transaction']}
                 tabContents={[
-                  transactionTable(this.state.transactions, {
+                  transactionTable(model.state.transactions, {
                     modifyTransaction: this.modifyTransaction,
                     deleteTransaction: this.deleteTransaction
                   }),
                   <TransactionInput
-                    accounts={this.state.accounts}
+                    accounts={model.state.accounts}
                     addTransaction={this.addTransaction}
                   />
                 ]}
@@ -251,24 +251,24 @@ class Financial extends React.Component {
                 ref={ref => (this.accountTabs = ref)}
                 tabTitles={['All Accounts', 'Add Account', 'Debt']}
                 tabContents={[
-                  accountTable(this.state.accounts, {
+                  accountTable(model.state.accounts, {
                     modifyAccount: this.modifyAccount,
                     deleteAccount: this.deleteAccount
                   }),
                   <AccountInput
                     addAccount={this.addAccount}
-                    initialValues={this.state.accountForm}
+                    initialValues={model.state.accountForm}
                   />,
                   <React.Fragment>
-                    {debtTable(this.state.accounts, {
+                    {debtTable(model.state.accounts, {
                       modifyAccount: this.modifyAccount,
                       deleteAccount: this.deleteAccount
                     })}
                     <AccountTransactionInput
                       ref={ref => (this.AccountTransactionForm = ref)}
-                      accounts={this.state.accounts}
+                      accounts={model.state.accounts}
                       addAccountTransaction={this.addAccountTransaction}
-                      initialValues={this.state.accountTransactionForm}
+                      initialValues={model.state.accountTransactionForm}
                     />
                   </React.Fragment>
                 ]}
@@ -278,8 +278,8 @@ class Financial extends React.Component {
             <section className="section">
               <div className="container is-fluid">
                 <YNABInput
-                  initialDevToken={this.state.devToken}
-                  initialBudgetId={this.state.budgetId}
+                  initialDevToken={model.state.devToken}
+                  initialBudgetId={model.state.budgetId}
                   addYNAB={this.addYNAB}
                 />
               </div>

@@ -166,6 +166,10 @@ class Stats {
   dailyRate = Big;
   savingsRate = Big;
   fiNumber = Big;
+
+  get state() {
+    return valueOf(this);
+  }
 }
 
 class Forms {

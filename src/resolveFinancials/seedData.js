@@ -15,6 +15,13 @@ let seedOne = {
     BarChartIncome: [],
     BarChartExpense: []
   },
+  stats: {
+    dailyIncome: 0,
+    dailyExpenses: 0,
+    dailyRate: 0,
+    savingsRate: 0,
+    fiNumber: 0
+  },
   forms: {
     transactionForm: {
       id: ``,
