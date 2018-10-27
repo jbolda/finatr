@@ -1,4 +1,4 @@
-import { past, future } from './index';
+import resolveData, { past, future } from './index';
 
 let seedOne = {
   transactions: [],
