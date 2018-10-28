@@ -106,8 +106,8 @@ export class BarChart extends Component {
     const tooltipComponent = (
       <div className="notification is-primary" id="tooltipLine" style={styles}>
         {tooltipData.map(line => (
-          <p key={line.data.account}>
-            {line.data.account} ${line.value}
+          <p key={line.data.account.name}>
+            {line.data.account.name} ${line.value}
           </p>
         ))}
       </div>
