@@ -10,7 +10,7 @@ class AccountInput extends React.Component {
         <Consumer>
           {model => (
             <Formik
-              initialValues={model.state.accountForm}
+              initialValues={model.forms.accountForm.state}
               onSubmit={(values, actions) => {
                 this.props.addAccount(values);
                 actions.setSubmitting(false);
