@@ -21,23 +21,82 @@ class AppModel {
     return valueOf(this);
   }
 
-  log() {
-    console.log(valueOf(this));
+  log(message = 'AppModel logged') {
+    console.log(message, valueOf(this));
     return this;
   }
 
   transactionUpsert(value) {
-    // console.log(this.state);
-    let nextState = this.transactions.push(value);
-    let splitTransactions = transactionSplitter(nextState.state);
+    let nextState = this.state.transactions;
+    if (value.id || value.id !== '') {
+      let existingTransactionIndex = nextState.map(t => t.id).indexOf(value.id);
+      if (existingTransactionIndex === -1) {
+        nextState.push(value);
+      } else {
+        nextState.splice(existingTransactionIndex, 1, value);
+      }
+    } else {
+      nextState.push({ ...value, id: makeUUID() });
+    }
+    let splitTransactions = transactionSplitter({
+      transactions: nextState,
+      accounts: this.state.accounts
+    });
     return this.transactions
-      .set(nextState.transactions)
+      .set(nextState)
       .transactionsSplit.set(splitTransactions)
-      .charts.calcCharts(splitTransactions, valueOf(this.accounts));
+      .charts.calcCharts(splitTransactions, valueOf(this.accounts))
+      .forms.transactionForm.id.set('');
   }
 
-  accountUpsert(value) {
-    return this.accounts.push(value);
+  modifyTransaction(id) {
+    return this.forms.transactionForm.set(
+      this.state.transactions.find(element => element.id === id)
+    );
+  }
+
+  deleteTransaction(id) {
+    return this.transactions.filter(t => t.id !== id);
+  }
+
+  upsertAccount(value) {
+    let nextState = this.state.accounts;
+    let existingAccountIndex = nextState.map(t => t.name).indexOf(value.name);
+    if (existingAccountIndex === -1) {
+      nextState.push(value);
+    } else {
+      nextState.splice(existingAccountIndex, 1, value);
+    }
+    return this.accounts.set(nextState).forms.accountForm.name.set('');
+  }
+
+  modifyAccount(name) {
+    return this.forms.accountForm.set(
+      this.accounts.state.find(element => element.name === name)
+    );
+  }
+
+  deleteAccount(name) {
+    return this.accounts.filter(a => a.name !== name);
+  }
+
+  addAccountTransaction(result) {
+    let nextState = this.state.accounts;
+    let accountIndex = nextState.map(a => a.name).indexOf(result.debtAccount);
+    let payback = { ...nextState[accountIndex].payback };
+    payback.id = makeUUID();
+    if (!payback.transactions) {
+      payback.transactions = [];
+    }
+    payback.transactions.push({
+      raccount: result.raccount,
+      start: result.start,
+      rtype: result.rtype,
+      cycle: result.cycle,
+      occurences: result.occurences,
+      value: result.value
+    });
+    return this.accounts.set(nextState).forms.accountTransactionForm.id.set('');
   }
 }
 

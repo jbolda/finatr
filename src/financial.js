@@ -31,97 +31,6 @@ class Financial extends React.Component {
     fileDownload(fileData, 'financials.json');
   };
 
-  addTransaction = result => {
-    let newState = { ...this.state };
-    if (result.id || result.id !== '') {
-      let existingTransactionIndex = newState.transactions
-        .map(t => t.id)
-        .indexOf(result.id);
-      if (existingTransactionIndex === -1) {
-        newState.transactions.push(result);
-      } else {
-        newState.transactions.splice(existingTransactionIndex, 1, result);
-      }
-    } else {
-      newState.transactions.push({ ...result, id: makeUUID() });
-    }
-    newState.transactionForm.id = '';
-    this.setState(resolveData(newState));
-    this.transactionTabs.tabClick(0);
-  };
-
-  modifyTransaction = id => {
-    let newState = { ...this.state };
-    newState.transactionForm = this.state.transactions.find(
-      element => element.id === id
-    );
-    this.setState(resolveData(newState));
-    this.transactionTabs.tabClick(1);
-  };
-
-  deleteTransaction = id => {
-    let newState = { ...this.state };
-    newState.transactions.splice(
-      this.state.transactions.findIndex(element => element.id === id),
-      1
-    );
-    this.setState(resolveData(newState));
-  };
-
-  addAccount = result => {
-    let newState = { ...this.state };
-    let existingAccountIndex = newState.accounts
-      .map(t => t.name)
-      .indexOf(result.name);
-    if (existingAccountIndex === -1) {
-      newState.accounts.push(result);
-    } else {
-      newState.accounts.splice(existingAccountIndex, 1, result);
-    }
-    this.setState(resolveData(newState));
-    this.accountTabs.tabClick(0);
-  };
-
-  modifyAccount = name => {
-    let newState = { ...this.state };
-    newState.accountForm = this.state.accounts.find(
-      element => element.name === name
-    );
-    this.setState(resolveData(newState));
-    this.accountTabs.tabClick(1);
-  };
-
-  deleteAccount = name => {
-    let newState = { ...this.state };
-    newState.accounts.splice(
-      this.state.accounts.findIndex(element => element.name === name),
-      1
-    );
-    this.setState(resolveData(newState));
-  };
-
-  addAccountTransaction = result => {
-    let newState = { ...this.state };
-    let accountIndex = newState.accounts
-      .map(a => a.name)
-      .indexOf(result.debtAccount);
-    let payback = { ...newState.accounts[accountIndex].payback };
-    payback.id = makeUUID();
-    if (!payback.transactions) {
-      payback.transactions = [];
-    }
-    payback.transactions.push({
-      raccount: result.raccount,
-      start: result.start,
-      rtype: result.rtype,
-      cycle: result.cycle,
-      occurences: result.occurences,
-      value: result.value
-    });
-    newState.accountTransactionForm.id = '';
-    this.setState(resolveData(newState));
-  };
-
   addYNAB = (tokens, resultantAccounts, resultantTransactions) => {
     let newState = { ...this.state };
     let indexed = {};
@@ -154,9 +63,6 @@ class Financial extends React.Component {
   };
 
   render() {
-    const { transactionTabs } = this.refs;
-    console.log(this.refs.transactionTabs);
-
     return (
       <Consumer>
         {model => (
@@ -235,13 +141,10 @@ class Financial extends React.Component {
                 tabTitles={['All Transactions', 'Add Transaction']}
                 tabContents={[
                   transactionTable(model.state.transactions, {
-                    modifyTransaction: this.modifyTransaction,
-                    deleteTransaction: this.deleteTransaction
+                    modifyTransaction: model.modifyTransaction,
+                    deleteTransaction: model.deleteTransaction
                   }),
-                  <TransactionInput
-                    accounts={model.state.accounts}
-                    addTransaction={this.addTransaction}
-                  />
+                  <TransactionInput />
                 ]}
               />
             </section>
@@ -252,23 +155,17 @@ class Financial extends React.Component {
                 tabTitles={['All Accounts', 'Add Account', 'Debt']}
                 tabContents={[
                   accountTable(model.state.accounts, {
-                    modifyAccount: this.modifyAccount,
-                    deleteAccount: this.deleteAccount
+                    modifyAccount: model.modifyAccount,
+                    deleteAccount: model.deleteAccount
                   }),
-                  <AccountInput
-                    addAccount={this.addAccount}
-                    initialValues={model.state.accountForm}
-                  />,
+                  <AccountInput />,
                   <React.Fragment>
                     {debtTable(model.state.accounts, {
-                      modifyAccount: this.modifyAccount,
-                      deleteAccount: this.deleteAccount
+                      modifyAccount: model.modifyAccount,
+                      deleteAccount: model.deleteAccount
                     })}
                     <AccountTransactionInput
                       ref={ref => (this.AccountTransactionForm = ref)}
-                      accounts={model.state.accounts}
-                      addAccountTransaction={this.addAccountTransaction}
-                      initialValues={model.state.accountTransactionForm}
                     />
                   </React.Fragment>
                 ]}

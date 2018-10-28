@@ -284,7 +284,6 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
 };
 
 const resolveAccountChartBetter = ({ accounts, income, expenses }) => {
-  console.log(accounts, income, expenses);
   return accounts
     ? accounts.map(account => {
         let accountStack = {};

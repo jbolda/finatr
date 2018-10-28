@@ -13,7 +13,6 @@ class AccountTransactionInput extends React.Component {
   }
 
   render() {
-    const { accounts } = this.props;
     return this.state.visible ? (
       <div className="box">
         <h1 className="title has-text-centered">Add Debt Payback</h1>
@@ -22,7 +21,7 @@ class AccountTransactionInput extends React.Component {
             <Formik
               initialValues={model.forms.accountTransactionForm.state}
               onSubmit={(values, actions) => {
-                this.props.addAccountTransaction(values);
+                model.addAccountTransaction(values);
                 actions.setSubmitting(false);
                 actions.resetForm();
               }}
@@ -51,7 +50,7 @@ class AccountTransactionInput extends React.Component {
                         <div className="control">
                           <div className="select">
                             <Field component="select" name="debtAccount">
-                              {accounts.map(account => (
+                              {model.state.accounts.map(account => (
                                 <option key={account.name} value={account.name}>
                                   {account.name}
                                 </option>
@@ -73,7 +72,7 @@ class AccountTransactionInput extends React.Component {
                         <div className="control">
                           <div className="select">
                             <Field component="select" name="raccount">
-                              {accounts.map(account => (
+                              {model.state.accounts.map(account => (
                                 <option key={account.name} value={account.name}>
                                   {account.name}
                                 </option>
