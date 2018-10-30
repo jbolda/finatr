@@ -17,6 +17,39 @@ class AppModel {
   charts = Charts;
   stats = Stats;
 
+  initialize() {
+    if (this.transactions.length === 0 && this.accounts.length === 0) {
+      let defaultAccount = {
+        name: 'account',
+        starting: 0,
+        interest: 0,
+        vehicle: 'operating'
+      };
+      let defaultTransaction = {
+        id: `seed-data-id`,
+        raccount: `account`,
+        description: `seed data`,
+        category: `default transaction`,
+        type: `income`,
+        start: `2018-08-01`,
+        rtype: `day`,
+        cycle: 3,
+        value: 150
+      };
+      let splitTransactions = transactionSplitter({
+        transactions: [defaultTransaction],
+        accounts: [defaultAccount]
+      });
+      return this.transactions
+        .set([defaultTransaction])
+        .accounts.set([defaultAccount])
+        .transactionsSplit.set(splitTransactions)
+        .charts.calcCharts(splitTransactions, [defaultAccount]);
+    } else {
+      return this;
+    }
+  }
+
   get state() {
     return valueOf(this);
   }
@@ -130,19 +163,24 @@ class Account {
 }
 
 class Charts {
-  // initialize(length = 365) {
-  //   let initialized = this;
-  //   let graphRange = { start: past(), end: future(length) };
-  //   initialized = initialized.GraphRange.set(graphRange);
-  //   return initialized;
-  // }
-
   GraphRange = ObjectType;
   BarChartIncome = [BarChart];
   BarChartExpense = [BarChart];
   BarChartMax = Big;
   AccountChart = [LineChart];
   LineChartMax = Big;
+
+  initialize(length = 365) {
+    if (!this.GraphRange) {
+      let graphRange = { start: past(), end: future(length) };
+      return this.GraphRange.set(graphRange)
+        .BarChartIncome.set([])
+        .BarChartExpense.set([])
+        .AccountChart.set([]);
+    } else {
+      return this;
+    }
+  }
 
   get state() {
     return valueOf(this);
@@ -153,12 +191,17 @@ class Charts {
   }
 
   calcBarCharts(splitTransactions) {
+    let graphRange = this.GraphRange.state || {
+      start: past(),
+      end: future(365)
+    };
+
     let income = resolveBarChart(splitTransactions.income, {
-      graphRange: valueOf(this.GraphRange)
+      graphRange
     });
 
     let expenses = resolveBarChart(splitTransactions.expenses, {
-      graphRange: valueOf(this.GraphRange)
+      graphRange
     });
 
     let accountLine = resolveAccountChart({

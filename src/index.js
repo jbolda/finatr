@@ -9,7 +9,7 @@ import 'bulma/css/bulma.css';
 import Financial from './financial';
 
 const App = () => (
-  <State type={AppModel} value={seedTwo}>
+  <State type={AppModel}>
     <nav
       className="navbar is-fixed-top is-primary"
       role="navigation"
