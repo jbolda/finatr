@@ -1,4 +1,5 @@
 import { resolveDataAtDateRange } from './index.js';
+import Big from 'big.js';
 import startOfDay from 'date-fns/fp/startOfDay';
 
 let data = [];
@@ -35,7 +36,7 @@ let dThree = {
   start: `2018-03-22`,
   rtype: `day of week`,
   cycle: 2,
-  value: 35
+  value: 70
 };
 data.push(dThree);
 let dFour = {
@@ -51,7 +52,7 @@ let dFour = {
 };
 data.push(dFour);
 let dThreePointFive = {
-  id: `oasis92`,
+  id: `oasis92hoogyboogy`,
   raccount: `account`,
   description: `description`,
   category: `test complex`,
@@ -71,7 +72,7 @@ let dFive = {
   rtype: `day`,
   repeat: 1,
   cycle: 1,
-  value: 112
+  value: 110
 };
 data.push(dFive);
 let dSix = {
@@ -84,7 +85,7 @@ let dSix = {
   rtype: `day`,
   repeat: 1,
   cycle: 1,
-  value: 112
+  value: 120
 };
 data.push(dSix);
 
@@ -109,7 +110,7 @@ let testData = {
       interest: 6.0,
       vehicle: 'debt',
       payback: {
-        id: `sasdqljg`,
+        id: `payback-test`,
         description: `payback`,
         category: 'account3 payback',
         type: 'expense',
@@ -119,37 +120,19 @@ let testData = {
             start: `2018-03-22`,
             rtype: `day`,
             cycle: 1,
-            value: 112
+            value: 140
           },
           {
             raccount: 'account',
-            type: 'expense',
             start: `2018-03-22`,
             rtype: `day`,
             cycle: 3,
-            value: 78
+            value: 60
           }
         ]
       }
     }
-  ],
-  transactionForm: {
-    id: `oasid7`,
-    raccount: `account`,
-    description: `description`,
-    category: `test default`,
-    type: `income`,
-    start: `2018-03-22`,
-    rtype: `day`,
-    cycle: 3,
-    value: 150
-  },
-  accountForm: {
-    name: 'new account',
-    starting: 1000,
-    interest: 0.0,
-    vehicle: 'operating'
-  }
+  ]
 };
 
 let graphRange = {
@@ -157,6 +140,8 @@ let graphRange = {
   end: startOfDay('2018-09-01')
 };
 let resolvedTestData = resolveDataAtDateRange(testData, graphRange);
+resolvedTestData.BarChartIncome.forEach(obj => (obj.stack = null));
+resolvedTestData.BarChartExpense.forEach(obj => (obj.stack = null));
 
 describe(`check resolveData`, () => {
   it(`returns the correct number of transactions`, () => {
@@ -173,14 +158,13 @@ describe(`check resolveData`, () => {
       expect.arrayContaining([
         expect.objectContaining({
           category: 'test default',
-          cycle: 3,
-          dailyRate: expect.any(Number),
+          cycle: Big(3),
+          dailyRate: expect.any(Big),
           description: 'description',
           id: 'oasidjas1',
-          maxHeight: expect.any(Number),
+          maxHeight: expect.any(Big),
           raccount: 'account',
-          rtype: 'day',
-          stack: expect.any(Array)
+          rtype: 'day'
         })
       ])
     );
@@ -189,22 +173,29 @@ describe(`check resolveData`, () => {
     expect(resolvedTestData.BarChartExpense).toHaveLength(5);
   });
   it(`calcs the correct BarChartMax`, () => {
-    expect(resolvedTestData.BarChartMax).toBe(514);
+    expect(Number(resolvedTestData.BarChartMax)).toBe(500);
   });
   it(`calcs the correct LineChartMax`, () => {
-    expect(resolvedTestData.LineChartMax).toBe(48368);
+    expect(Number(resolvedTestData.LineChartMax)).toBe(49680);
   });
   it(`calcs the correct dailyIncome`, () => {
-    expect(resolvedTestData.dailyIncome).toBe(258);
+    expect(Number(resolvedTestData.dailyIncome)).toBe(163);
   });
   it(`calcs the correct dailyExpense`, () => {
-    expect(resolvedTestData.dailyExpense).toBe(672);
+    expect(Number(resolvedTestData.dailyExpense)).toBe(270);
   });
   it(`calcs the correct savingsRate`, () => {
-    expect(resolvedTestData.savingsRate).toBeCloseTo(33.33);
+    expect(Number(resolvedTestData.savingsRate.toFixed(2))).toBe(33.33);
   });
   it(`calcs the correct fiNumber`, () => {
-    expect(resolvedTestData.fiNumber).toBeCloseTo(0.489);
+    expect(Number(resolvedTestData.fiNumber.toFixed(3))).toBe(0.489);
+  });
+  it(`handles invalid interval`, () => {
+    let resolvedTestData1 = resolveDataAtDateRange(
+      { ...testData, transactions: [dThreePointFive] },
+      graphRange
+    );
+    expect(resolvedTestData1.BarChartIncome.length).toBe(0);
   });
 });
 
@@ -213,7 +204,7 @@ describe(`check resolveData handles paybacks`, () => {
     expect(resolvedTestData.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: 'sasdqljg-EXP'
+          id: 'payback-test-0EXP'
         })
       ])
     );
@@ -221,20 +212,9 @@ describe(`check resolveData handles paybacks`, () => {
     expect(resolvedTestData.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: 'sasdqljg-TRSF'
+          id: 'payback-test-0TRSF'
         })
       ])
     );
   });
 });
-
-/*
-          category: 'test default',
-          dailyRate: expect.any(Number),
-          description: 'payback',
-          type: 'expense',
-          id: 'sasdqljg',
-          maxHeight: expect.any(Number),
-          raccount: 'account',
-          stack: expect.any(Array)
-*/

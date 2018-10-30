@@ -91,7 +91,8 @@ export class BarChart extends Component {
         <p>{`${tooltipData.type} in ${tooltipData.raccount}`}</p>
         <p>category: {tooltipData.category}</p>
         <p>
-          ${tooltipData.value} | ${tooltipData.dailyRate} per day
+          ${tooltipData.value.toFixed(2)} | ${tooltipData.dailyRate.toFixed(2)}{' '}
+          per day
         </p>
       </div>
     );
@@ -110,8 +111,8 @@ export class BarChart extends Component {
     const tooltipComponent = (
       <div className="notification is-primary" id="tooltipLine" style={styles}>
         {tooltipData.map(line => (
-          <p key={line.data.account}>
-            {line.data.account} ${line.value}
+          <p key={line.data.account.name}>
+            {line.data.account.name} ${line.value}
           </p>
         ))}
       </div>
@@ -162,8 +163,8 @@ BarChart.propTypes = {
         type: PropTypes.oneOf(['income', 'transfer']).isRequired,
         start: PropTypes.string.isRequired,
         rtype: PropTypes.string.isRequired,
-        cycle: PropTypes.number,
-        value: PropTypes.number.isRequired,
+        cycle: PropTypes.object,
+        value: PropTypes.object.isRequired,
         stack: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired))
           .isRequired
       })
@@ -176,8 +177,8 @@ BarChart.propTypes = {
         type: PropTypes.oneOf(['expense', 'transfer']).isRequired,
         start: PropTypes.string.isRequired,
         rtype: PropTypes.string.isRequired,
-        cycle: PropTypes.number,
-        value: PropTypes.number.isRequired,
+        cycle: PropTypes.object,
+        value: PropTypes.object.isRequired,
         stack: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired))
           .isRequired
       })
@@ -478,7 +479,7 @@ barBuild.drawLine = function(
   max_domain,
   tooltip
 ) {
-  if (data.length === 0) return;
+  if (!data || data.length === 0) return;
   let linecolors = d3.scaleOrdinal(d3.schemeCategory10);
   let marginLeft = this.margin().left;
 

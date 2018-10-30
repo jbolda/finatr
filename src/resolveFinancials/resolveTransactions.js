@@ -1,3 +1,4 @@
+import Big from 'big.js';
 import dateMax from 'date-fns/fp/max';
 import dateMin from 'date-fns/fp/min';
 import isWithinInterval from 'date-fns/fp/isWithinInterval';
@@ -15,6 +16,8 @@ import getDay from 'date-fns/fp/getDay';
 const computeTransactionModifications = (transactions, graphRange) =>
   transactions.reduce((modifications, transaction) => {
     let transactionInterval = convertRangeToInterval(transaction, graphRange);
+    // early return if end is before start, we will have no modifications
+    if (isBefore(transactionInterval.start)(transactionInterval.end)) return [];
 
     let coercePaybacksIntoTransactions = Array.isArray(transaction)
       ? transaction
@@ -29,8 +32,8 @@ const computeTransactionModifications = (transactions, graphRange) =>
               transactionInterval,
               coercedTransactions.start,
               [],
-              0,
-              0
+              Big(0),
+              Big(0)
             )
           );
         },
@@ -66,13 +69,13 @@ const generateModification = (
   prevDate,
   modifications,
   visibleOccurrences,
-  generatedOccurences
+  generatedOccurrences
 ) => {
   let modification = nextModification(transaction.rtype)({
     transaction: transaction,
     seedDate: prevDate,
-    visibleOccurences: visibleOccurrences,
-    generatedOccurences: generatedOccurences
+    visibleOccurrences: visibleOccurrences,
+    generatedOccurrences: generatedOccurrences
   });
   modification.mutateKey = transaction.id;
 
@@ -81,12 +84,12 @@ const generateModification = (
   if (
     isWithinInterval(transactionInterval)(modification.date) &&
     isAfter(prevDate)(modification.date) &&
-    hasNotHitNumberOfOccurences(
+    hasNotHitNumberOfOccurrences(
       transaction,
       visibleOccurrences,
-      generatedOccurences
+      generatedOccurrences
     ) &&
-    generatedOccurences < 365
+    Big(generatedOccurrences).lte(365)
   ) {
     modifications.push(modification);
     generateModification(
@@ -94,8 +97,8 @@ const generateModification = (
       transactionInterval,
       modification.date,
       modifications,
-      visibleOccurrences + 1,
-      generatedOccurences + 1
+      Big(visibleOccurrences).add(1),
+      Big(generatedOccurrences).add(1)
     );
 
     // this isn't a modification we want because it is before
@@ -104,8 +107,8 @@ const generateModification = (
   } else if (
     isBefore(transactionInterval.end)(modification.date) &&
     (isAfter(prevDate)(modification.date) ||
-      (generatedOccurences === 0 && isSameDay(prevDate)(modification.date))) &&
-    generatedOccurences < 365
+      (generatedOccurrences.eq(0) && isSameDay(prevDate)(modification.date))) &&
+    Big(generatedOccurrences).lte(365)
   ) {
     generateModification(
       transaction,
@@ -113,7 +116,7 @@ const generateModification = (
       modification.date,
       modifications,
       visibleOccurrences,
-      generatedOccurences + 1
+      generatedOccurrences.add(1)
     );
   }
   return modifications;
@@ -121,15 +124,19 @@ const generateModification = (
 
 export { generateModification };
 
-const hasNotHitNumberOfOccurences = (
+const hasNotHitNumberOfOccurrences = (
   transaction,
   visibleOccurrences,
-  generatedOccurences
+  generatedOccurrences
 ) =>
   ((!!transaction && !transaction.visibleOccurrences) ||
-    visibleOccurrences + 1 <= transaction.visibleOccurrences) &&
-  ((!!transaction && !transaction.generatedOccurences) ||
-    generatedOccurences + 1 <= transaction.generatedOccurences);
+    Big(visibleOccurrences)
+      .add(1)
+      .lte(transaction.visibleOccurrences)) &&
+  ((!!transaction && !transaction.generatedOccurrences) ||
+    Big(generatedOccurrences)
+      .add(1)
+      .lte(transaction.generatedOccurrences));
 
 const nextModification = rtype => {
   switch (rtype) {
@@ -159,7 +166,7 @@ const transactionNoReoccur = ({ transaction, seedDate }) => {
   return {
     date: transaction.start,
     y: transaction.value,
-    dailyRate: transaction.value
+    dailyRate: Big(0)
   };
 };
 
@@ -168,7 +175,7 @@ const transactionDailyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addDays(transaction.cycle)(seedDate),
     y: transaction.value,
-    dailyRate: transaction.value / transaction.cycle
+    dailyRate: transaction.value.div(transaction.cycle)
   };
 };
 
@@ -177,7 +184,7 @@ const transactionDayOfWeekReoccur = ({ transaction, seedDate }) => {
   return {
     date: addDays(7 + getDay(seedDate) - transaction.cycle)(seedDate),
     y: transaction.value,
-    dailyRate: transaction.value / 7
+    dailyRate: transaction.value.div(7)
   };
 };
 
@@ -185,12 +192,15 @@ const transactionDayOfWeekReoccur = ({ transaction, seedDate }) => {
 const transactionDayOfMonthReoccur = ({
   transaction,
   seedDate,
-  generatedOccurences
+  generatedOccurrences
 }) => {
   let monthlyDate;
   let isBeforeSeedDate = isBefore(seedDate);
   let cycleDate = setDate(transaction.cycle);
-  if (isBeforeSeedDate(cycleDate(seedDate)) || generatedOccurences !== 0) {
+  if (
+    isBeforeSeedDate(cycleDate(seedDate)) ||
+    (!!generatedOccurrences && !generatedOccurrences.eq(0))
+  ) {
     monthlyDate = cycleDate(addMonths(1)(seedDate));
   } else {
     monthlyDate = cycleDate(seedDate);
@@ -198,7 +208,7 @@ const transactionDayOfMonthReoccur = ({
   return {
     date: monthlyDate,
     y: transaction.value,
-    dailyRate: transaction.value / 30
+    dailyRate: transaction.value.div(30)
   };
 };
 
@@ -223,7 +233,7 @@ const transactionBimonthlyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addMonths(2*transaction.cycle)(seedDate),
     y: transaction.value,
-    dailyRate: transaction.value / 30 / 2
+    dailyRate: transaction.value.div(30).div(2)
   };
 };
 
@@ -248,7 +258,7 @@ const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addQuarters(transaction.cycle)(seedDate),
     y: transaction.value,
-    dailyRate: transaction.value / 30 / 3
+    dailyRate: transaction.value.div(30).div(3)
   };
 };
 
@@ -269,7 +279,7 @@ const transactionSemiannuallyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addMonths(6)(seedDate),
     y: transaction.value,
-    dailyRate: transaction.value / 182.5
+    dailyRate: transaction.value.div(182.5)
   };
 };
 
@@ -290,7 +300,7 @@ const transactionAnnuallyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addYears(1)(seedDate),
     y: transaction.value,
-    dailyRate: transaction.value / 365
+    dailyRate: transaction.value.div(365)
   };
 };
 
