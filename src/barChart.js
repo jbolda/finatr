@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-import getDay from 'date-fns/fp/getDay';
-import getDate from 'date-fns/fp/getDate';
 
 export class BarChart extends Component {
   componentDidMount() {
@@ -42,28 +40,33 @@ export class BarChart extends Component {
       unmount: this.unmountTooltip
     };
 
-    let barExpense = barBuild.drawBar(
+    // Expenses
+    barBuild.drawBar(
       blobs,
       'neg',
       data.BarChartExpense,
       data.BarChartMax,
       tooltipBar
     );
-    let barIncome = barBuild.drawBar(
+
+    // Income
+    barBuild.drawBar(
       blobs,
       'pos',
       data.BarChartIncome,
       data.BarChartMax,
       tooltipBar
     );
-    let axisBar = barBuild.drawAxis(svgBar, data.BarChartMax, phase);
+
+    // axis bar
+    barBuild.drawAxis(svgBar, data.BarChartMax, phase);
 
     let tooltipLine = {
       target: this.tooltipTarget,
       render: this.renderTooltipLine,
       unmount: this.unmountTooltip
     };
-    let line = barBuild.drawLine(
+    barBuild.drawLine(
       d3.select('.line-section'),
       initLine.lineGroup,
       initLine.tooltipLine,
@@ -71,7 +74,9 @@ export class BarChart extends Component {
       data.LineChartMax,
       tooltipLine
     );
-    let axisLine = barBuild.drawAxis(svgLine, data.LineChartMax, phase);
+
+    // axis line
+    barBuild.drawAxis(svgLine, data.LineChartMax, phase);
   }
 
   renderTooltipBar(coordinates, tooltipData, tooltipTarget) {

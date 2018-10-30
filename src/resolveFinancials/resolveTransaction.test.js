@@ -1,11 +1,6 @@
 import Big from 'big.js';
 import startOfDay from 'date-fns/fp/startOfDay';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
-import addDays from 'date-fns/fp/addDays';
-import subDays from 'date-fns/fp/subDays';
-import addMonths from 'date-fns/fp/addMonths';
-import subMonths from 'date-fns/fp/subMonths';
-import getDate from 'date-fns/fp/getDate';
 
 import computeTransactionModifications, {
   convertRangeToInterval,
@@ -389,5 +384,207 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       0
     );
     expect(resolvedTestData2).toHaveLength(2);
+  });
+});
+
+describe('transactionAnnuallyReoccur', () => {
+  it('has the next date', () => {
+    const transaction = { value: 365 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionAnnuallyReoccur({transaction: transaction, seedDate: seedDate});
+    expect(next.date).toEqual(startOfDay('2019-01-01'));
+  });
+
+  it('has a value', () => {
+    const transaction = { value: 365 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionAnnuallyReoccur({transaction: transaction, seedDate: seedDate});
+    expect(next.y).toEqual(365);
+  });
+
+  it('has a default value of 0', () => {
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionAnnuallyReoccur({transaction: {}, seedDate: seedDate});
+    expect(next.y).toEqual(0);
+  });
+
+  it('calculates the daily rate', () => {
+    const transaction = { value: 365 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionAnnuallyReoccur({transaction: transaction, seedDate: seedDate});
+    expect(next.dailyRate).toEqual(1);
+  });
+
+  it('handles floats for a daily rate', () => {
+    const transaction = { value: 547.5 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionAnnuallyReoccur({transaction: transaction, seedDate: seedDate});
+    expect(next.dailyRate).toEqual(1.5);
+  });
+
+  it('fails if transaction is null', () => {
+    const seedDate = startOfDay('2018-01-01');
+    expect(() => {
+      transactionAnnuallyReoccur({ transaction: null, seedDate: seedDate });
+    }).toThrow();
+  });
+
+  it('fails if seedDate is null', () => {
+    const transaction = { value: 365 };
+    expect(() => {
+      transactionAnnuallyReoccur({ transaction: transaction, seedDate: null });
+    }).toThrow();
+  });
+});
+
+describe('transactionSemiannuallyReoccur', () => {
+  it('has the next date', () => {
+    const transaction = { value: 10 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionSemiannuallyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.date).toEqual(startOfDay('2018-07-01'));
+  });
+
+  it('has a value', () => {
+    const transaction = { value: 10 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionSemiannuallyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.y).toEqual(10);
+  });
+
+  it('has a default value of 0', () => {
+    const transaction = {};
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionSemiannuallyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.y).toEqual(0);
+  });
+
+  it('has a daily value', () => {
+    const transaction = { value: 182.5 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionSemiannuallyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.dailyRate).toEqual(1);
+  });
+
+  it('fails if transaction is null', () => {
+    const seedDate = startOfDay('2018-01-01');
+    expect(() => {
+      transactionSemiannuallyReoccur({ transaction: null, seedDate: seedDate });
+    }).toThrow();
+  });
+
+  it('fails if seedDate is null', () => {
+    const transaction = { value: 182.5 };
+    expect(() => {
+      transactionSemiannuallyReoccur({ transaction: transaction, seedDate: null });
+    }).toThrow();
+  });
+});
+
+describe('transactionQuarterlyReoccur', () => {
+  it('has the next date', () => {
+    const transaction = { value: 10, cycle: 1 };
+    const seedDate = startOfDay('2018-02-01');
+    const next = transactionQuarterlyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.date).toEqual(startOfDay('2018-05-01'));
+  });
+
+  it('defaults to cycle=1 when transaction.cycle=null', () => {
+    const transaction = { value: 10 };
+    const seedDate = startOfDay('2018-02-01');
+    const next = transactionQuarterlyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.date).toEqual(startOfDay('2018-05-01'));
+  });
+
+  it('has a value', () => {
+    const transaction = { value: 10 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionQuarterlyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.y).toEqual(10);
+  });
+
+  it('defaults to a value of 0', () => {
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionQuarterlyReoccur({ transaction: {}, seedDate: seedDate });
+    expect(next.y).toEqual(0);
+  })
+
+
+  it('has a daily value', () => {
+    const transaction = { value: 90 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionQuarterlyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.dailyRate).toEqual(1);
+  });
+
+  it('fails if transaction is null', () => {
+    const seedDate = startOfDay('2018-01-01');
+    expect(() => {
+      transactionQuarterlyReoccur({ transaction: null, seedDate: seedDate });
+    }).toThrow();
+  });
+
+  it('fails if seedDate is null', () => {
+    const transaction = { value: 182.5 };
+    expect(() => {
+      transactionQuarterlyReoccur({ transaction: transaction, seedDate: null });
+    }).toThrow();
+  });
+});
+
+describe('transactionBimonthlyReoccur', () => {
+  it('has the next date', () => {
+    const transaction = { value: 10, cycle: 1 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionBimonthlyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.date).toEqual(startOfDay('2018-03-01'));
+  });
+
+  it('defaults to a cycle of 1', () => {
+    const transaction = { value: 10 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionBimonthlyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.date).toEqual(startOfDay('2018-03-01'));
+  })
+
+  it('defaults to a value of 0', () => {
+    const transaction = {};
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionBimonthlyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.y).toEqual(0);
+  })
+
+  it('calculates a cycle of 2 (4 months)', () => {
+    const transaction = { value: 10, cycle: 2 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionBimonthlyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.date).toEqual(startOfDay('2018-05-01'));
+  });
+
+  it('has a value', () => {
+    const transaction = { value: 10 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionBimonthlyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.y).toEqual(10);
+  });
+
+  it('has a daily value', () => {
+    const transaction = { value: 60 };
+    const seedDate = startOfDay('2018-01-01');
+    const next = transactionBimonthlyReoccur({ transaction: transaction, seedDate: seedDate });
+    expect(next.dailyRate).toEqual(1);
+  });
+
+  it('fails if transaction is null', () => {
+    const seedDate = startOfDay('2018-01-01');
+    expect(() => {
+      transactionBimonthlyReoccur({ transaction: null, seedDate: seedDate });
+    }).toThrow();
+  });
+
+  it('fails if seedDate is null', () => {
+    expect(() => {
+      transactionBimonthlyReoccur({ transaction: {}, seedDate: null });
+    }).toThrow();
   });
 });

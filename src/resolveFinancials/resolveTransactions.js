@@ -11,10 +11,7 @@ import addYears from 'date-fns/fp/addYears';
 import isSameDay from 'date-fns/fp/isSameDay';
 import isAfter from 'date-fns/fp/isAfter';
 import isBefore from 'date-fns/fp/isBefore';
-import differenceInCalendarDays from 'date-fns/fp/differenceInCalendarDays';
 import getDay from 'date-fns/fp/getDay';
-import getDate from 'date-fns/fp/getDate';
-import differenceInMonths from 'date-fns/fp/differenceInMonths';
 
 const computeTransactionModifications = (transactions, graphRange) =>
   transactions.reduce((modifications, transaction) => {
@@ -217,8 +214,24 @@ const transactionDayOfMonthReoccur = ({
 
 // when transaction.rtype === 'bimonthly'
 const transactionBimonthlyReoccur = ({ transaction, seedDate }) => {
+  if (!transaction) {
+    throw new Error("transactionSemiannuallyReoccur expects { transaction }")
+  }
+
+  if (!transaction.value) {
+    transaction.value = 0;
+  }
+
+  if (!transaction.cycle) {
+    transaction.cycle = 1;
+  }
+
+  if (!seedDate) {
+    throw new Error("transactionSemiannuallyReoccur expects { seedDate }")
+  }
+
   return {
-    date: setDate(transaction.cycle)(addMonths(2)(seedDate)),
+    date: addMonths(2*transaction.cycle)(seedDate),
     y: transaction.value,
     dailyRate: transaction.value.div(30).div(2)
   };
@@ -226,6 +239,22 @@ const transactionBimonthlyReoccur = ({ transaction, seedDate }) => {
 
 // when transaction.rtype === 'quarterly'
 const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
+  if (!transaction) {
+    throw new Error("transactionQuarterlyReoccur expects { transaction }")
+  }
+
+  if (!seedDate) {
+    throw new Error("transactionSemiannuallyReoccur expects { seedDate }")
+  }
+
+  if (!transaction.value) {
+    transaction.value = 0;
+  }
+
+  if (!transaction.cycle) {
+    transaction.cycle = 1;
+  }
+
   return {
     date: addQuarters(transaction.cycle)(seedDate),
     y: transaction.value,
@@ -235,15 +264,39 @@ const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
 
 // when transaction.rtype === 'semiannually'
 const transactionSemiannuallyReoccur = ({ transaction, seedDate }) => {
+  if (!transaction) {
+    throw new Error("transactionSemiannuallyReoccur expects { transaction }")
+  }
+
+  if (!seedDate) {
+    throw new Error("transactionSemiannuallyReoccur expects { seedDate }")
+  }
+
+  if (!transaction.value) {
+    transaction.value = 0;
+  }
+
   return {
-    date: addYears(0.5)(seedDate),
+    date: addMonths(6)(seedDate),
     y: transaction.value,
-    dailyRate: transaction.value.div(180)
+    dailyRate: transaction.value.div(182.5)
   };
 };
 
 // when transaction.rtype === 'annually'
 const transactionAnnuallyReoccur = ({ transaction, seedDate }) => {
+  if (!transaction) {
+    throw new Error("transactionAnnuallyReoccur expects { transaction }")
+  }
+
+  if (!seedDate) {
+    throw new Error("transactionAnnuallyReoccur expects { seedDate }")
+  }
+
+  if (!transaction.value) {
+    transaction.value = 0;
+  }
+
   return {
     date: addYears(1)(seedDate),
     y: transaction.value,
