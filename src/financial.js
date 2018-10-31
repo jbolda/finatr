@@ -1,8 +1,6 @@
 import React from 'react';
 import { Consumer } from '@microstates/react';
 import BarChart from './barChart';
-import resolveData from './resolveFinancials';
-import makeUUID from './makeUUID.js';
 
 import TabView from './tabView';
 import TransactionInput from './transactionInput';
@@ -30,37 +28,6 @@ class Financial extends React.Component {
     };
     let fileData = JSON.stringify(outputData);
     fileDownload(fileData, 'financials.json');
-  };
-
-  addYNAB = (tokens, resultantAccounts, resultantTransactions) => {
-    let newState = { ...this.state };
-    let indexed = {};
-    resultantAccounts.forEach(resultAccount => {
-      indexed[resultAccount.name] = resultAccount;
-    });
-    this.state.accounts.forEach(existingAccount => {
-      if (!indexed[existingAccount.name]) {
-        indexed[existingAccount.name] = existingAccount;
-      } else {
-        indexed[existingAccount.name] = {
-          name: existingAccount.name,
-          starting: indexed[existingAccount.name].starting,
-          interest: existingAccount.interest ? existingAccount.interest : 0,
-          vehicle: existingAccount.vehicle
-            ? existingAccount.vehicle
-            : 'operating'
-        };
-      }
-    });
-
-    newState.accounts = Object.keys(indexed).map(key => indexed[key]);
-    newState.transactions = [
-      ...this.state.transactions,
-      ...resultantTransactions
-    ];
-    newState.devToken = tokens.devToken;
-    newState.budgetId = tokens.budgetId;
-    this.setState(resolveData(newState));
   };
 
   render() {
