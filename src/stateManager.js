@@ -8,7 +8,7 @@ import {
   resolveAccountChart
 } from './resolveFinancials';
 import { default as _Big } from 'big.js';
-import makeUUID from './makeUUID.js';
+import makeUUID from '/src/resolveFinancials/makeUUID.js';
 
 class AppModel {
   forms = Forms;

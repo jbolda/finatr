@@ -2,11 +2,11 @@ import React from 'react';
 import { Consumer } from '@microstates/react';
 import BarChart from './barChart';
 
-import TabView from './tabView';
-import TransactionInput from './transactionInput';
-import AccountInput from './accountInput';
-import AccountTransactionInput from './accountTransactionInput';
-import YNABInput from './ynabInput.js';
+import TabView from '/src/components/view/tabView';
+import TransactionInput from '/src/forms/transactionInput';
+import AccountInput from '/src/forms/accountInput';
+import AccountTransactionInput from '/src/forms/accountTransactionInput';
+import YNABInput from '/src/forms/ynabInput.js';
 
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';
