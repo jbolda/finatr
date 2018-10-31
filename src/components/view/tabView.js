@@ -16,7 +16,7 @@ class TabView extends React.Component {
 
   computeUrl(tabName) {
     let url = tabName.toLowerCase();
-    url = url.replace(" ", "_");
+    url = url.replace(' ', '_');
     return url;
   }
 
@@ -40,14 +40,12 @@ class TabView extends React.Component {
                 className={index === this.state.activeTab ? 'is-active' : ''}
                 onClick={this.tabClick.bind(this, index)}
               >
-                <a href={`#/${this.computeUrl(tab)}`}>{tab}</a>
+                <a>{tab}</a>
               </li>
             ))}
           </ul>
         </div>
-        <div className="container is-fluid">
-          {tabContents}
-        </div>
+        <div className="container is-fluid">{tabContents}</div>
       </React.Fragment>
     );
   }
@@ -55,12 +53,12 @@ class TabView extends React.Component {
 
 TabView.defaultProps = {
   tabTitles: [],
-  tabContents: null,
-}
+  tabContents: null
+};
 
 TabView.propTypes = {
   tabTitles: PropTypes.array,
-  tabContents: PropTypes.node,
-}
+  tabContents: PropTypes.node
+};
 
 export default TabView;
