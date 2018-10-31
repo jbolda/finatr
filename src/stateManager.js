@@ -1,5 +1,6 @@
 import { valueOf, ObjectType, StringType, BooleanType } from 'microstates';
 import {
+  sortTransactionOrder,
   transactionSplitter,
   past,
   future,
@@ -77,6 +78,7 @@ class AppModel {
     });
     return this.transactions
       .set(nextState)
+      .sort(sortTransactionOrder)
       .transactionsSplit.set(splitTransactions)
       .charts.calcCharts(splitTransactions, valueOf(this.accounts))
       .forms.transactionForm.id.set('');
