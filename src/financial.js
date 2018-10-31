@@ -6,30 +6,10 @@ import TabView from '/src/components/view/tabView';
 import TransactionInput from '/src/forms/transactionInput';
 import AccountInput from '/src/forms/accountInput';
 import AccountTransactionInput from '/src/forms/accountTransactionInput';
+import Importing from '/src/importing.js';
 import YNABInput from '/src/forms/ynabInput.js';
 
-import fileDownload from 'js-file-download';
-import FileReaderInput from 'react-file-reader-input';
-
 class Financial extends React.Component {
-  handleUpload = (event, results) => {
-    let result = JSON.parse(results[0][0].target.result);
-    console.log(result);
-    let calculated = resolveData(result);
-    this.setState(calculated);
-  };
-
-  handleDownload = () => {
-    let outputData = {
-      transactions: [...this.state.transactions],
-      accounts: [...this.state.accounts],
-      devToken: this.state.devToken,
-      budgetId: this.state.budgetId
-    };
-    let fileData = JSON.stringify(outputData);
-    fileDownload(fileData, 'financials.json');
-  };
-
   render() {
     return (
       <Consumer>
@@ -73,36 +53,6 @@ class Financial extends React.Component {
               <BarChart data={model.charts.state} />
             </section>
 
-            <nav className="level">
-              <div className="level-left">
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">Get your current</p>
-                    <p className="heading">data out:</p>
-                    <button
-                      className="button is-success"
-                      onClick={this.handleDownload}
-                    >
-                      Download
-                    </button>
-                  </div>
-                </div>
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">Import data from</p>
-                    <p className="heading">your computer:</p>
-                    <FileReaderInput
-                      as="text"
-                      id="my-file-input"
-                      onChange={this.handleUpload}
-                    >
-                      <button className="button is-link">Select a file!</button>
-                    </FileReaderInput>
-                  </div>
-                </div>
-              </div>
-            </nav>
-
             <section className="section">
               <TabView
                 ref={ref => (this.transactionTabs = ref)}
@@ -141,6 +91,7 @@ class Financial extends React.Component {
             </section>
 
             <section className="section">
+              <Importing />
               <div className="container is-fluid">
                 <YNABInput
                   initialDevToken={model.state.devToken}
