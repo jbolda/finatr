@@ -7,7 +7,6 @@ import TransactionInput from '/src/forms/transactionInput';
 import AccountInput from '/src/forms/accountInput';
 import AccountTransactionInput from '/src/forms/accountTransactionInput';
 import Importing from '/src/importing.js';
-import YNABInput from '/src/forms/ynabInput.js';
 
 class Financial extends React.Component {
   render() {
@@ -92,13 +91,6 @@ class Financial extends React.Component {
 
             <section className="section">
               <Importing />
-              <div className="container is-fluid">
-                <YNABInput
-                  initialDevToken={model.state.devToken}
-                  initialBudgetId={model.state.budgetId}
-                  addYNAB={this.addYNAB}
-                />
-              </div>
             </section>
           </React.Fragment>
         )}
