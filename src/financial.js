@@ -1,68 +1,14 @@
 import React from 'react';
 import { Consumer } from '@microstates/react';
 import BarChart from './barChart';
-import resolveData from './resolveFinancials';
-import makeUUID from './makeUUID.js';
 
-import TabView from './tabView';
-import TransactionInput from './transactionInput';
-import AccountInput from './accountInput';
-import AccountTransactionInput from './accountTransactionInput';
-import YNABInput from './ynabInput.js';
-
-import fileDownload from 'js-file-download';
-import FileReaderInput from 'react-file-reader-input';
+import TabView from '/src/components/view/tabView';
+import TransactionInput from '/src/forms/transactionInput';
+import AccountInput from '/src/forms/accountInput';
+import AccountTransactionInput from '/src/forms/accountTransactionInput';
+import Importing from '/src/importing.js';
 
 class Financial extends React.Component {
-  handleUpload = (event, results) => {
-    let result = JSON.parse(results[0][0].target.result);
-    console.log(result);
-    let calculated = resolveData(result);
-    this.setState(calculated);
-  };
-
-  handleDownload = () => {
-    let outputData = {
-      transactions: [...this.state.transactions],
-      accounts: [...this.state.accounts],
-      devToken: this.state.devToken,
-      budgetId: this.state.budgetId
-    };
-    let fileData = JSON.stringify(outputData);
-    fileDownload(fileData, 'financials.json');
-  };
-
-  addYNAB = (tokens, resultantAccounts, resultantTransactions) => {
-    let newState = { ...this.state };
-    let indexed = {};
-    resultantAccounts.forEach(resultAccount => {
-      indexed[resultAccount.name] = resultAccount;
-    });
-    this.state.accounts.forEach(existingAccount => {
-      if (!indexed[existingAccount.name]) {
-        indexed[existingAccount.name] = existingAccount;
-      } else {
-        indexed[existingAccount.name] = {
-          name: existingAccount.name,
-          starting: indexed[existingAccount.name].starting,
-          interest: existingAccount.interest ? existingAccount.interest : 0,
-          vehicle: existingAccount.vehicle
-            ? existingAccount.vehicle
-            : 'operating'
-        };
-      }
-    });
-
-    newState.accounts = Object.keys(indexed).map(key => indexed[key]);
-    newState.transactions = [
-      ...this.state.transactions,
-      ...resultantTransactions
-    ];
-    newState.devToken = tokens.devToken;
-    newState.budgetId = tokens.budgetId;
-    this.setState(resolveData(newState));
-  };
-
   render() {
     return (
       <Consumer>
@@ -106,36 +52,6 @@ class Financial extends React.Component {
               <BarChart data={model.charts.state} />
             </section>
 
-            <nav className="level">
-              <div className="level-left">
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">Get your current</p>
-                    <p className="heading">data out:</p>
-                    <button
-                      className="button is-success"
-                      onClick={this.handleDownload}
-                    >
-                      Download
-                    </button>
-                  </div>
-                </div>
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">Import data from</p>
-                    <p className="heading">your computer:</p>
-                    <FileReaderInput
-                      as="text"
-                      id="my-file-input"
-                      onChange={this.handleUpload}
-                    >
-                      <button className="button is-link">Select a file!</button>
-                    </FileReaderInput>
-                  </div>
-                </div>
-              </div>
-            </nav>
-
             <section className="section">
               <TabView
                 ref={ref => (this.transactionTabs = ref)}
@@ -174,13 +90,7 @@ class Financial extends React.Component {
             </section>
 
             <section className="section">
-              <div className="container is-fluid">
-                <YNABInput
-                  initialDevToken={model.state.devToken}
-                  initialBudgetId={model.state.budgetId}
-                  addYNAB={this.addYNAB}
-                />
-              </div>
+              <Importing />
             </section>
           </React.Fragment>
         )}

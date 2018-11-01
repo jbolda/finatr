@@ -96,7 +96,8 @@ class AccountTransactionInput extends React.Component {
                             name="start"
                             className="input"
                             type="date"
-                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" />
+                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                          />
                         </p>
                       </div>
                     </div>

@@ -1,5 +1,6 @@
 import { valueOf, ObjectType, StringType, BooleanType } from 'microstates';
 import {
+  sortTransactionOrder,
   transactionSplitter,
   past,
   future,
@@ -7,7 +8,7 @@ import {
   resolveAccountChart
 } from './resolveFinancials';
 import { default as _Big } from 'big.js';
-import makeUUID from './makeUUID.js';
+import makeUUID from '/src/resolveFinancials/makeUUID.js';
 
 class AppModel {
   forms = Forms;
@@ -77,6 +78,7 @@ class AppModel {
     });
     return this.transactions
       .set(nextState)
+      .sort(sortTransactionOrder)
       .transactionsSplit.set(splitTransactions)
       .charts.calcCharts(splitTransactions, valueOf(this.accounts))
       .forms.transactionForm.id.set('');
@@ -130,6 +132,42 @@ class AppModel {
       value: result.value
     });
     return this.accounts.set(nextState).forms.accountTransactionForm.id.set('');
+  }
+
+  addYNAB(tokens, resultantAccounts, resultantTransactions) {
+    let nextState = this.state;
+    let indexed = {};
+    resultantAccounts.forEach(resultAccount => {
+      indexed[resultAccount.name] = resultAccount;
+    });
+    nextState.accounts.forEach(existingAccount => {
+      if (!indexed[existingAccount.name]) {
+        indexed[existingAccount.name] = existingAccount;
+      } else {
+        indexed[existingAccount.name] = {
+          name: existingAccount.name,
+          starting: indexed[existingAccount.name].starting,
+          interest: existingAccount.interest ? existingAccount.interest : 0,
+          vehicle: existingAccount.vehicle
+            ? existingAccount.vehicle
+            : 'operating'
+        };
+      }
+    });
+
+    nextState.accounts = Object.keys(indexed).map(key => indexed[key]);
+    nextState.transactions = [
+      ...this.state.transactions,
+      ...resultantTransactions
+    ];
+    nextState.devToken = tokens.devToken;
+    nextState.budgetId = tokens.budgetId;
+
+    return this.transactions
+      .set(nextState.transactions)
+      .accounts.set(nextState.accounts)
+      .forms.ynabForm.devToken.set(nextState.devToken)
+      .forms.ynabForm.budgetId.set(nextState.budgetId);
   }
 }
 

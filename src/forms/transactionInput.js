@@ -2,15 +2,26 @@ import React from 'react';
 import { Consumer } from '@microstates/react';
 import { Formik, Field } from 'formik';
 
-import * as Form from './components/bootstrap/Form';
+import * as Form from '/src/components/bootstrap/Form';
 
-function FieldInput({ fieldName, touched, errors, fieldType = 'text', pattern }) {
+function FieldInput({
+  fieldName,
+  touched,
+  errors,
+  fieldType = 'text',
+  pattern
+}) {
   return (
     <React.Fragment>
       <Form.Field>
         <Form.FieldLabel>{fieldName}</Form.FieldLabel>
         <Form.FieldControl>
-          <Field type={fieldType} name={fieldName} pattern={pattern} className="input" />
+          <Field
+            type={fieldType}
+            name={fieldName}
+            pattern={pattern}
+            className="input"
+          />
         </Form.FieldControl>
       </Form.Field>
       {touched[fieldName] &&
