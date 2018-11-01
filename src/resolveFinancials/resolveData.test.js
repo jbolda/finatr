@@ -1,4 +1,9 @@
-import { resolveDataAtDateRange } from './index.js';
+import { create } from 'microstates';
+import AppModel from '/src/stateManager.js';
+import {
+  sortTransactionOrder,
+  transactionSplitter
+} from '/src/resolveFinancials';
 import Big from 'big.js';
 import startOfDay from 'date-fns/fp/startOfDay';
 
@@ -139,11 +144,16 @@ let graphRange = {
   start: startOfDay('2018-03-01'),
   end: startOfDay('2018-09-01')
 };
-let resolvedTestData = resolveDataAtDateRange(testData, graphRange);
-resolvedTestData.BarChartIncome.forEach(obj => (obj.stack = null));
-resolvedTestData.BarChartExpense.forEach(obj => (obj.stack = null));
 
-describe(`check resolveData`, () => {
+let splitTransactions = transactionSplitter({
+  transactions: testData.transactions,
+  accounts: testData.accounts
+});
+let resolvedTestData = create(AppModel, testData)
+  .transactionsSplit.set(splitTransactions)
+  .charts.calcCharts(splitTransactions, testData.accounts);
+
+describe(`check state creation`, () => {
   it(`returns the correct number of transactions`, () => {
     expect(resolvedTestData.transactions).toHaveLength(7);
   });
@@ -151,10 +161,10 @@ describe(`check resolveData`, () => {
     expect(resolvedTestData.accounts).toHaveLength(3);
   });
   it(`returns the correct number of BarChartIncome`, () => {
-    expect(resolvedTestData.BarChartIncome).toHaveLength(6);
+    expect(resolvedTestData.charts.BarChartIncome).toHaveLength(6);
   });
   it(`has the correct BarChartIncome structure`, () => {
-    expect(resolvedTestData.BarChartIncome).toEqual(
+    expect(resolvedTestData.charts.state.BarChartIncome).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           category: 'test default',
@@ -170,32 +180,32 @@ describe(`check resolveData`, () => {
     );
   });
   it(`returns the correct number of BarChartExpense`, () => {
-    expect(resolvedTestData.BarChartExpense).toHaveLength(5);
+    expect(resolvedTestData.charts.state.BarChartExpense).toHaveLength(5);
   });
   it(`calcs the correct BarChartMax`, () => {
-    expect(Number(resolvedTestData.BarChartMax)).toBe(500);
+    expect(Number(resolvedTestData.charts.BarChartMax)).toBe(500);
   });
   it(`calcs the correct LineChartMax`, () => {
-    expect(Number(resolvedTestData.LineChartMax)).toBe(49680);
+    expect(Number(resolvedTestData.charts.LineChartMax)).toBe(49680);
   });
   it(`calcs the correct dailyIncome`, () => {
-    expect(Number(resolvedTestData.dailyIncome)).toBe(163);
+    expect(Number(resolvedTestData.stats.dailyIncome)).toBe(163);
   });
   it(`calcs the correct dailyExpense`, () => {
-    expect(Number(resolvedTestData.dailyExpense)).toBe(270);
+    expect(Number(resolvedTestData.stats.dailyExpense)).toBe(270);
   });
   it(`calcs the correct savingsRate`, () => {
-    expect(Number(resolvedTestData.savingsRate.toFixed(2))).toBe(33.33);
+    expect(Number(resolvedTestData.stats.savingsRate.toFixed(2))).toBe(33.33);
   });
   it(`calcs the correct fiNumber`, () => {
-    expect(Number(resolvedTestData.fiNumber.toFixed(3))).toBe(0.489);
+    expect(Number(resolvedTestData.stats.fiNumber.toFixed(3))).toBe(0.489);
   });
   it(`handles invalid interval`, () => {
-    let resolvedTestData1 = resolveDataAtDateRange(
-      { ...testData, transactions: [dThreePointFive] },
-      graphRange
-    );
-    expect(resolvedTestData1.BarChartIncome.length).toBe(0);
+    let resolvedTestData1 = transactionSplitter({
+      accounts: testData.accounts,
+      transactions: [dThreePointFive]
+    });
+    expect(resolvedTestData1.charts.BarChartIncome.length).toBe(0);
   });
 });
 
