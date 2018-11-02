@@ -155,13 +155,13 @@ let resolvedTestData = create(AppModel, testData)
 
 describe(`check state creation`, () => {
   it(`returns the correct number of transactions`, () => {
-    expect(resolvedTestData.transactions).toHaveLength(7);
+    expect(resolvedTestData.state.transactions).toHaveLength(7);
   });
   it(`returns the correct number of accounts`, () => {
-    expect(resolvedTestData.accounts).toHaveLength(3);
+    expect(resolvedTestData.state.accounts).toHaveLength(3);
   });
   it(`returns the correct number of BarChartIncome`, () => {
-    expect(resolvedTestData.charts.BarChartIncome).toHaveLength(6);
+    expect(resolvedTestData.charts.state.BarChartIncome).toHaveLength(6);
   });
   it(`has the correct BarChartIncome structure`, () => {
     expect(resolvedTestData.charts.state.BarChartIncome).toEqual(
@@ -195,10 +195,10 @@ describe(`check state creation`, () => {
     expect(Number(resolvedTestData.stats.dailyExpense)).toBe(270);
   });
   it(`calcs the correct savingsRate`, () => {
-    expect(Number(resolvedTestData.stats.savingsRate.toFixed(2))).toBe(33.33);
+    expect(Number(resolvedTestData.stats.savingsRate)).toBe(33.33);
   });
   it(`calcs the correct fiNumber`, () => {
-    expect(Number(resolvedTestData.stats.fiNumber.toFixed(3))).toBe(0.489);
+    expect(Number(resolvedTestData.stats.fiNumber)).toBe(0.489);
   });
   it(`handles invalid interval`, () => {
     let resolvedTestData1 = transactionSplitter({
