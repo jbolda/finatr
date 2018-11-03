@@ -149,9 +149,10 @@ let splitTransactions = transactionSplitter({
   transactions: testData.transactions,
   accounts: testData.accounts
 });
+
 let resolvedTestData = create(AppModel, testData)
   .transactionsSplit.set(splitTransactions)
-  .charts.calcCharts(splitTransactions, testData.accounts);
+  .reCalc();
 
 describe(`check state creation`, () => {
   it(`returns the correct number of transactions`, () => {
@@ -183,22 +184,22 @@ describe(`check state creation`, () => {
     expect(resolvedTestData.charts.state.BarChartExpense).toHaveLength(5);
   });
   it(`calcs the correct BarChartMax`, () => {
-    expect(Number(resolvedTestData.charts.BarChartMax)).toBe(500);
+    expect(resolvedTestData.charts.BarChartMax.toNumber).toBe(500);
   });
   it(`calcs the correct LineChartMax`, () => {
-    expect(Number(resolvedTestData.charts.LineChartMax)).toBe(49680);
+    expect(resolvedTestData.charts.LineChartMax.toNumber).toBe(49680);
   });
   it(`calcs the correct dailyIncome`, () => {
-    expect(Number(resolvedTestData.stats.dailyIncome)).toBe(163);
+    expect(resolvedTestData.stats.dailyIncome.toNumber).toBe(163);
   });
   it(`calcs the correct dailyExpense`, () => {
-    expect(Number(resolvedTestData.stats.dailyExpense)).toBe(270);
+    expect(resolvedTestData.stats.dailyExpense.toNumber).toBe(270);
   });
   it(`calcs the correct savingsRate`, () => {
-    expect(Number(resolvedTestData.stats.savingsRate)).toBe(33.33);
+    expect(resolvedTestData.stats.savingsRate.toNumber).toBe(33.33);
   });
   it(`calcs the correct fiNumber`, () => {
-    expect(Number(resolvedTestData.stats.fiNumber)).toBe(0.489);
+    expect(resolvedTestData.stats.fiNumber.toNumber).toBe(0.489);
   });
   it(`handles invalid interval`, () => {
     let resolvedTestData1 = transactionSplitter({

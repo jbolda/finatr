@@ -29,8 +29,7 @@ const sortTransactionOrder = (a, b) => {
 const transactionSplitter = ({ transactions, accounts }) => {
   let splitTransactions = {
     income: [],
-    expense: [],
-    transfer: []
+    expense: []
   };
 
   if (transactions) {

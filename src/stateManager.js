@@ -45,7 +45,7 @@ class AppModel {
         .set([defaultTransaction])
         .accounts.set([defaultAccount])
         .transactionsSplit.set(splitTransactions)
-        .charts.calcCharts(splitTransactions, [defaultAccount]);
+        .reCalc();
     } else {
       return this;
     }
@@ -66,7 +66,11 @@ class AppModel {
       transactionsSplit,
       accounts
     );
-    return chartsCalced.stats.reCalc(this.state, this.charts.state);
+
+    return chartsCalced.stats.reCalc(
+      chartsCalced.state,
+      chartsCalced.charts.state
+    );
   }
 
   transactionUpsert(value) {
@@ -92,7 +96,7 @@ class AppModel {
     let nextSetState = this.transactions
       .set(sortedNextState)
       .transactionsSplit.set(splitTransactions);
-    console.log(nextSetState.state);
+
     return nextSetState.reCalc().forms.transactionForm.id.set('');
   }
 
@@ -206,6 +210,7 @@ class TransactionMutated extends Transaction {
 
 class Account {
   account = StringType;
+  starting = Big;
   interest = Big;
   vehicle = StringType;
 
@@ -354,11 +359,11 @@ class Stats {
 
     let totalInvest = accounts.reduce((accumulator, d) => {
       if (d.vehicle === 'investment') {
-        return d.starting.add(accumulator);
+        return _Big(d.starting).add(accumulator);
       } else {
         return accumulator;
       }
-    });
+    }, 0);
 
     return this.dailyIncome
       .set(dailyIncome)
@@ -446,6 +451,14 @@ class Big {
 
   eq(value) {
     return this.state.eq(value);
+  }
+
+  get toFixed() {
+    return this.state.toFixed(2);
+  }
+
+  get toNumber() {
+    return Number(this.state);
   }
 
   get state() {
