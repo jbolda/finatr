@@ -244,7 +244,13 @@ class Charts {
   }
 
   calcCharts(transactionsSplit, accounts) {
-    return this.calcBarCharts(transactionsSplit).calcAccountLine(accounts);
+    let nextState
+    if (!this.GraphRange.state) {
+      nextState = this.GraphRange.set({ start: past(), end: future(365) });
+    } else {
+      nextState = this;
+    }
+    return nextState.calcBarCharts(transactionsSplit).calcAccountLine(accounts);
   }
 
   calcBarCharts(transactionsSplit) {
@@ -257,25 +263,25 @@ class Charts {
       graphRange
     });
 
-    let expenses = resolveBarChart(transactionsSplit.expenses, {
+    let expense = resolveBarChart(transactionsSplit.expense, {
       graphRange
     });
 
     let accountLine = resolveAccountChart({
       transactions: [].concat(
         transactionsSplit.income,
-        transactionsSplit.expenses
+        transactionsSplit.expense
       ),
       income,
-      expenses
+      expense
     });
 
     return this.BarChartIncome.set(income)
-      .BarChartExpense.set(expenses)
+      .BarChartExpense.set(expense)
       .BarChartMax.set(
         Math.max(
           income.length !== 0 ? income[0].maxHeight || 0 : 0,
-          expenses.length !== 0 ? expenses[0].maxHeight || 0 : 0
+          expense.length !== 0 ? expense[0].maxHeight || 0 : 0
         )
       );
   }
