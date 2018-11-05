@@ -182,7 +182,7 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
   }));
 };
 
-const resolveAccountChart = ({ accounts, income, expenses }) => {
+const resolveAccountChart = ({ accounts, income, expense }) => {
   return accounts
     ? accounts.map(account => {
         let accountStack = {};
@@ -204,7 +204,7 @@ const resolveAccountChart = ({ accounts, income, expenses }) => {
         };
 
         accountStack.income = zipTogethor(income);
-        accountStack.expense = zipTogethor(expenses);
+        accountStack.expense = zipTogethor(expense);
 
         let arrayLength = Math.max(
           accountStack.income.length,
@@ -231,11 +231,11 @@ const resolveAccountChart = ({ accounts, income, expenses }) => {
           let secondStep =
             firstStep + extractValue(accountStack.income[iterator]);
           finalZippedLine.values.push({
-            date: [].concat(income, expenses)[0].stack[iterator].data.date,
+            date: [].concat(income, expense)[0].stack[iterator].data.date,
             value: firstStep
           });
           finalZippedLine.values.push({
-            date: [].concat(income, expenses)[0].stack[iterator].data.date,
+            date: [].concat(income, expense)[0].stack[iterator].data.date,
             value: secondStep
           });
         }

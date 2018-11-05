@@ -1,4 +1,10 @@
-import { valueOf, ObjectType, StringType, BooleanType } from 'microstates';
+import {
+  valueOf,
+  create,
+  ObjectType,
+  StringType,
+  BooleanType
+} from 'microstates';
 import {
   sortTransactionOrder,
   transactionSplitter,
@@ -221,19 +227,16 @@ class Account {
 
 class Charts {
   GraphRange = ObjectType;
-  BarChartIncome = [BarChart];
-  BarChartExpense = [BarChart];
+  BarChartIncome = create([BarChart], [{ id: 'default' }]);
+  BarChartExpense = create([BarChart], [{ id: 'default' }]);
   BarChartMax = Big;
-  AccountChart = [LineChart];
+  AccountChart = create([LineChart], [{ id: 'default' }]);
   LineChartMax = Big;
 
   initialize(length = 365) {
-    if (!this.GraphRange) {
+    if (!this.GraphRange.start) {
       let graphRange = { start: past(), end: future(length) };
-      return this.GraphRange.set(graphRange)
-        .BarChartIncome.set([])
-        .BarChartExpense.set([])
-        .AccountChart.set([]);
+      return this.GraphRange.set(graphRange);
     } else {
       return this;
     }
@@ -244,36 +247,16 @@ class Charts {
   }
 
   calcCharts(transactionsSplit, accounts) {
-    let nextState
-    if (!this.GraphRange.state) {
-      nextState = this.GraphRange.set({ start: past(), end: future(365) });
-    } else {
-      nextState = this;
-    }
-    return nextState.calcBarCharts(transactionsSplit).calcAccountLine(accounts);
+    return this.calcBarCharts(transactionsSplit).calcAccountLine(accounts);
   }
 
   calcBarCharts(transactionsSplit) {
-    let graphRange = this.GraphRange.state || {
-      start: past(),
-      end: future(365)
-    };
-
     let income = resolveBarChart(transactionsSplit.income, {
-      graphRange
+      graphRange: this.state.GraphRange
     });
 
     let expense = resolveBarChart(transactionsSplit.expense, {
-      graphRange
-    });
-
-    let accountLine = resolveAccountChart({
-      transactions: [].concat(
-        transactionsSplit.income,
-        transactionsSplit.expense
-      ),
-      income,
-      expense
+      graphRange: this.state.GraphRange
     });
 
     return this.BarChartIncome.set(income)
@@ -290,7 +273,7 @@ class Charts {
     let accountLine = resolveAccountChart({
       accounts: accounts,
       income: valueOf(this.BarChartIncome),
-      expenses: valueOf(this.BarChartExpense)
+      expense: valueOf(this.BarChartExpense)
     });
     return this.AccountChart.set(accountLine).LineChartMax.set(
       accountLine.reduce(

@@ -149,7 +149,6 @@ let splitTransactions = transactionSplitter({
   transactions: testData.transactions,
   accounts: testData.accounts
 });
-
 let resolvedTestData = create(AppModel, testData)
   .transactionsSplit.set(splitTransactions)
   .reCalc();
@@ -211,8 +210,9 @@ describe(`check state creation`, () => {
 });
 
 describe(`check resolveData handles paybacks`, () => {
+  console.log('test thing', resolvedTestData.charts.state);
   it(`has the correct BarChartExpense structure`, () => {
-    expect(resolvedTestData.BarChartExpense).toEqual(
+    expect(resolvedTestData.charts.state.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           id: 'payback-test-0EXP'
@@ -220,7 +220,7 @@ describe(`check resolveData handles paybacks`, () => {
       ])
     );
 
-    expect(resolvedTestData.BarChartExpense).toEqual(
+    expect(resolvedTestData.charts.state.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           id: 'payback-test-0TRSF'
