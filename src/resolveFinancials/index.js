@@ -136,10 +136,10 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
   let allDates = eachDayOfInterval(graphRange);
   let stackStructure = allDates.map(day => {
     let obj = { date: day };
-    keys.forEach(key => {
-      obj[key.value] = { ...data[key.index] };
-      obj[key.value].y = Big(0);
-      obj[key.value].dailyRate = Big(0);
+    data.forEach(datum => {
+      obj[datum.id] = { ...datum };
+      obj[datum.id].y = Big(0);
+      obj[datum.id].dailyRate = Big(0);
     });
     return obj;
   });
