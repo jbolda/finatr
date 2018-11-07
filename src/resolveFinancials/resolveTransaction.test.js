@@ -24,7 +24,7 @@ describe(`check convertRangeToInterval`, () => {
       end: startOfDay('2018-06-01')
     };
     let interval = convertRangeToInterval(transaction, graphRange);
-    expect(interval.start).toEqual(startOfDay('2018-03-21'));
+    expect(interval.start).toEqual(startOfDay('2018-03-22'));
     expect(interval.end).toEqual(startOfDay('2018-06-02'));
   });
 
@@ -35,7 +35,7 @@ describe(`check convertRangeToInterval`, () => {
       end: startOfDay('2018-06-01')
     };
     let interval = convertRangeToInterval(transaction, graphRange);
-    expect(interval.start).toEqual(startOfDay('2018-01-14'));
+    expect(interval.start).toEqual(startOfDay('2018-01-15'));
     expect(interval.end).toEqual(startOfDay('2018-06-02'));
   });
 
@@ -46,7 +46,7 @@ describe(`check convertRangeToInterval`, () => {
       end: startOfDay('2018-06-01')
     };
     let interval = convertRangeToInterval(transaction, graphRange);
-    expect(interval.start).toEqual(startOfDay('2018-03-21'));
+    expect(interval.start).toEqual(startOfDay('2018-03-22'));
     expect(interval.end).toEqual(startOfDay('2018-05-03'));
   });
 
@@ -57,7 +57,7 @@ describe(`check convertRangeToInterval`, () => {
       end: startOfDay('2018-06-01')
     };
     let interval = convertRangeToInterval(transaction, graphRange);
-    expect(interval.start).toEqual(startOfDay('2018-01-14'));
+    expect(interval.start).toEqual(startOfDay('2018-01-15'));
     expect(interval.end).toEqual(startOfDay('2018-06-02'));
   });
 });

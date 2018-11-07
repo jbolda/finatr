@@ -160,15 +160,6 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
         updatedStructure[modIndex][modification.mutateKey],
         modification
       );
-      // if (modification.mutateKey === 'oasis2')
-      //   console.log(
-      //     modIndex,
-      //     updatedStructure[0].oasis2.dailyRate.toFixed(2),
-      //     modification.dailyRate.toFixed(2),
-      //     modification,
-      //     allDates[0],
-      //     graphRange
-      //   );
       return updatedStructure;
     },
     stackStructure
