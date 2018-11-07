@@ -1,4 +1,5 @@
 import resolveData, { past, future } from './index';
+import { resolvedTestData } from './resolveData.test.js';
 
 let seedOne = {
   transactions: [],
@@ -182,4 +183,4 @@ let seedTwo = {
   ]
 };
 
-export { seedTwo };
+export { seedTwo, resolvedTestData };

@@ -165,6 +165,8 @@ let resolvedTestData = create(AppModel, testData)
   .transactionsSplit.set(splitTransactions)
   .reCalc();
 
+export { resolvedTestData };
+
 describe(`check state creation`, () => {
   it(`returns the correct number of transactions`, () => {
     expect(resolvedTestData.state.transactions).toHaveLength(7);
@@ -195,7 +197,7 @@ describe(`check state creation`, () => {
     expect(resolvedTestData.charts.state.BarChartExpense).toHaveLength(5);
   });
   it(`calcs the correct BarChartMax`, () => {
-    expect(resolvedTestData.charts.BarChartMax.toNumber).toBe(500);
+    expect(resolvedTestData.charts.BarChartMax.toNumber).toBe(460);
   });
   it(`calcs the correct LineChartMax`, () => {
     expect(resolvedTestData.charts.LineChartMax.toNumber).toBe(49680);
@@ -222,16 +224,6 @@ describe(`check state creation`, () => {
 });
 
 describe(`check resolveData handles paybacks`, () => {
-  // console.log('test thing', resolvedTestData.charts.state);
-  // resolvedTestData.charts.state.BarChartIncome.forEach(datum => {
-  //   console.log(
-  //     datum.id,
-  //     datum.dailyRate.toFixed(2),
-  //     datum.value.toFixed(2),
-  //     datum.cycle.toFixed(0),
-  //     datum.value.div(datum.cycle).toFixed(2)
-  //   );
-  // });
   it(`has the correct BarChartExpense structure`, () => {
     expect(resolvedTestData.charts.state.BarChartExpense).toEqual(
       expect.arrayContaining([

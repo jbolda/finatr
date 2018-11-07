@@ -270,23 +270,22 @@ class Charts {
   }
 
   calcAccountLine(accounts) {
+    let { BarChartIncome, BarChartExpense } = this.state;
     let accountLine = resolveAccountChart({
       accounts: accounts,
-      income: valueOf(this.BarChartIncome),
-      expense: valueOf(this.BarChartExpense)
+      income: BarChartIncome,
+      expense: BarChartExpense
     });
     return this.AccountChart.set(accountLine).LineChartMax.set(
-      accountLine.reduce(
-        (lineMax, line) =>
-          Math.max(
-            lineMax,
-            line.values.reduce(
-              (lineDayMax, day) => Math.max(lineDayMax, day.value),
-              0
-            )
-          ),
-        0
-      )
+      accountLine.reduce((lineMax, line) => {
+        return Math.max(
+          lineMax,
+          line.values.reduce(
+            (lineDayMax, day) => Math.max(lineDayMax, day.value),
+            0
+          )
+        );
+      }, 0)
     );
   }
 }
@@ -319,10 +318,11 @@ class Stats {
   }
 
   reCalc({ accounts }, { BarChartIncome, BarChartExpense }) {
-    let dailyIncome = BarChartIncome.reduce((accumulator, d) => {
-      if (d.type === 'income') console.log(d.dailyRate.toFixed(2));
-      return d.type === 'income' ? d.dailyRate.add(accumulator) : accumulator;
-    }, _Big(0));
+    let dailyIncome = BarChartIncome.reduce(
+      (accumulator, d) =>
+        d.type === 'income' ? d.dailyRate.add(accumulator) : accumulator,
+      _Big(0)
+    );
 
     let dailyExpense = BarChartExpense.reduce(
       (accumulator, d) =>
