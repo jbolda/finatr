@@ -19,6 +19,8 @@ let dOne = {
   cycle: 3,
   value: 150
 };
+// daily rate of 50
+// cumulative income of 50
 data.push(dOne);
 let dTwo = {
   id: `oasis2`,
@@ -31,6 +33,8 @@ let dTwo = {
   cycle: 1,
   value: 100
 };
+// daily rate of 100
+// cumulative income of 150
 data.push(dTwo);
 let dThree = {
   id: `oasis3`,
@@ -43,6 +47,8 @@ let dThree = {
   cycle: 2,
   value: 70
 };
+// daily rate of 10
+// cumulative income of 160
 data.push(dThree);
 let dFour = {
   id: `oasis6`,
@@ -55,6 +61,8 @@ let dFour = {
   cycle: 1,
   value: 90
 };
+// daily rate of 3
+// cumulative income of 163
 data.push(dFour);
 let dThreePointFive = {
   id: `oasis92hoogyboogy`,
@@ -66,6 +74,8 @@ let dThreePointFive = {
   rtype: `none`,
   value: 190
 };
+// daily rate of 0
+// cumulative income of 163
 data.push(dThreePointFive);
 let dFive = {
   id: `oasis8`,
@@ -75,10 +85,11 @@ let dFive = {
   type: `expense`,
   start: `2018-03-22`,
   rtype: `day`,
-  repeat: 1,
   cycle: 1,
   value: 110
 };
+// daily rate of 110
+// cumulative expense of 110
 data.push(dFive);
 let dSix = {
   id: `oasis8asg`,
@@ -88,7 +99,6 @@ let dSix = {
   type: `transfer`,
   start: `2018-03-22`,
   rtype: `day`,
-  repeat: 1,
   cycle: 1,
   value: 120
 };
@@ -139,6 +149,8 @@ let testData = {
     }
   ]
 };
+// paybacks give daily rate of 140 and 20
+// cumulative expense of 270
 
 let graphRange = {
   start: startOfDay('2018-03-01'),
@@ -210,7 +222,16 @@ describe(`check state creation`, () => {
 });
 
 describe(`check resolveData handles paybacks`, () => {
-  console.log('test thing', resolvedTestData.charts.state);
+  // console.log('test thing', resolvedTestData.charts.state);
+  // resolvedTestData.charts.state.BarChartIncome.forEach(datum => {
+  //   console.log(
+  //     datum.id,
+  //     datum.dailyRate.toFixed(2),
+  //     datum.value.toFixed(2),
+  //     datum.cycle.toFixed(0),
+  //     datum.value.div(datum.cycle).toFixed(2)
+  //   );
+  // });
   it(`has the correct BarChartExpense structure`, () => {
     expect(resolvedTestData.charts.state.BarChartExpense).toEqual(
       expect.arrayContaining([

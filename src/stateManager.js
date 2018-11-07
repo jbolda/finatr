@@ -319,25 +319,16 @@ class Stats {
   }
 
   reCalc({ accounts }, { BarChartIncome, BarChartExpense }) {
-    const maxReduction = (arrayToReduce, maxType) =>
-      _Big(
-        arrayToReduce.reduce(
-          (currentMax, d) =>
-            Math.max(
-              d.type === maxType
-                ? d.dailyRate
-                : Array.isArray(d)
-                  ? maxReduction(d, maxType)
-                  : 0,
-              currentMax
-            ),
-          0
-        )
-      );
+    let dailyIncome = BarChartIncome.reduce((accumulator, d) => {
+      if (d.type === 'income') console.log(d.dailyRate.toFixed(2));
+      return d.type === 'income' ? d.dailyRate.add(accumulator) : accumulator;
+    }, _Big(0));
 
-    let dailyIncome = maxReduction(BarChartIncome, 'income');
-
-    let dailyExpense = maxReduction(BarChartExpense, 'expense');
+    let dailyExpense = BarChartExpense.reduce(
+      (accumulator, d) =>
+        d.type === 'expense' ? d.dailyRate.add(accumulator) : accumulator,
+      _Big(0)
+    );
 
     const sumInvest = (accumulator, d) => {
       let accountRaw = accounts.find(acc => acc.name === d.raccount);
