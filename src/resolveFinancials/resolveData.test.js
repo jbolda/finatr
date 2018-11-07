@@ -200,7 +200,7 @@ describe(`check state creation`, () => {
     expect(resolvedTestData.charts.BarChartMax.toNumber).toBe(460);
   });
   it(`calcs the correct LineChartMax`, () => {
-    expect(resolvedTestData.charts.LineChartMax.toNumber).toBe(49680);
+    expect(resolvedTestData.charts.LineChartMax.toNumber).toBe(50110);
   });
   it(`calcs the correct dailyIncome`, () => {
     expect(resolvedTestData.stats.dailyIncome.toNumber).toBe(163);

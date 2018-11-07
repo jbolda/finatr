@@ -189,10 +189,14 @@ const resolveAccountChart = ({ accounts, income, expense }) => {
 
         const zipTogethor = arr =>
           arr.reduce((accumlator, d) => {
-            let flatten = d.stack.map(e => e[1] - e[0]);
-            return accumlator.length === 0
-              ? flatten
-              : accumlator.map((d, i, thisArray) => d + flatten[i]);
+            if (d.raccount === account.name) {
+              let flatten = d.stack.map(e => e[1] - e[0]);
+              return accumlator.length === 0
+                ? flatten
+                : accumlator.map((d, i, thisArray) => d + flatten[i]);
+            } else {
+              return accumlator;
+            }
           }, []);
 
         const extractValue = value => {
@@ -218,14 +222,8 @@ const resolveAccountChart = ({ accounts, income, expense }) => {
           vehicle: account.vehicle
         };
 
+        let prevVal = extractValue(account.starting);
         for (let iterator = 0; iterator < arrayLength; iterator++) {
-          let prevVal =
-            finalZippedLine.values.length === 0
-              ? extractValue(account.starting)
-              : extractValue(
-                  finalZippedLine.values[finalZippedLine.values.length - 1]
-                    .value
-                );
           let firstStep =
             prevVal - extractValue(accountStack.expense[iterator]);
           let secondStep =
@@ -238,6 +236,7 @@ const resolveAccountChart = ({ accounts, income, expense }) => {
             date: [].concat(income, expense)[0].stack[iterator].data.date,
             value: secondStep
           });
+          prevVal = secondStep;
         }
         return finalZippedLine;
       })
