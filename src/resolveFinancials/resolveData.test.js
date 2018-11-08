@@ -163,6 +163,7 @@ let splitTransactions = transactionSplitter({
 });
 let resolvedTestData = create(AppModel, testData)
   .transactionsSplit.set(splitTransactions)
+  .charts.GraphRange.set(graphRange)
   .reCalc();
 
 export { resolvedTestData };
