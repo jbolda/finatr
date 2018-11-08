@@ -330,7 +330,7 @@ class Stats {
       _Big(0)
     );
 
-    const sumInvest = (accumulator, d) => {
+    let dailyInvest = BarChartIncome.reduce((accumulator, d) => {
       let accountRaw = accounts.find(acc => acc.name === d.raccount);
 
       if (accountRaw && accountRaw.vehicle === 'investment') {
@@ -338,8 +338,7 @@ class Stats {
       } else {
         return accumulator;
       }
-    };
-    let dailyInvest = BarChartIncome.reduce(sumInvest, 0);
+    }, 0);
 
     let totalInvest = accounts.reduce((accumulator, d) => {
       if (d.vehicle === 'investment') {

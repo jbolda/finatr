@@ -209,7 +209,7 @@ describe(`check state creation`, () => {
     expect(resolvedTestData.stats.dailyExpense.toNumber).toBe(270);
   });
   it(`calcs the correct savingsRate`, () => {
-    expect(resolvedTestData.stats.savingsRate.toNumber).toBe(33.33);
+    expect(resolvedTestData.stats.savingsRate.toNumber).toBeCloseTo(44.44);
   });
   it(`calcs the correct fiNumber`, () => {
     expect(resolvedTestData.stats.fiNumber.toNumber).toBe(0.489);
