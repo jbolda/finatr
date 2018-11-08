@@ -156,14 +156,15 @@ let graphRange = {
   start: startOfDay('2018-03-01'),
   end: startOfDay('2018-09-01')
 };
-
+testData.charts = {};
+testData.charts.GraphRange = graphRange;
 let splitTransactions = transactionSplitter({
   transactions: testData.transactions,
   accounts: testData.accounts
 });
+
 let resolvedTestData = create(AppModel, testData)
   .transactionsSplit.set(splitTransactions)
-  .charts.GraphRange.set(graphRange)
   .reCalc();
 
 export { resolvedTestData };

@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom';
 
 import State from '@microstates/react';
 import AppModel from './stateManager.js';
-import { seedTwo, resolvedTestData } from './resolveFinancials/seedData.js';
+import { seedTwo } from './resolveFinancials/seedData.js';
 
 import 'bulma/css/bulma.css';
 import Financial from './financial';
 
 const App = () => (
-  <State type={AppModel} value={resolvedTestData}>
+  <State type={AppModel}>
     <nav
       className="navbar is-fixed-top is-primary"
       role="navigation"

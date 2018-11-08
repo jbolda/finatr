@@ -68,15 +68,11 @@ class AppModel {
 
   reCalc() {
     let { transactionsSplit, accounts } = this.state;
-    let chartsCalced = this.log('recalc').charts.calcCharts(
-      transactionsSplit,
-      accounts
-    );
+    let chartsCalced = this.charts.calcCharts(transactionsSplit, accounts);
 
-    return chartsCalced.stats.reCalc(
-      chartsCalced.state,
-      chartsCalced.charts.state
-    );
+    return chartsCalced.stats
+      .reCalc(chartsCalced.state, chartsCalced.charts.state)
+      .log('recalc');
   }
 
   transactionUpsert(value) {
