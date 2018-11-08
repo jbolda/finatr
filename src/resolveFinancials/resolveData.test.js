@@ -212,7 +212,7 @@ describe(`check state creation`, () => {
     expect(resolvedTestData.stats.savingsRate.toNumber).toBeCloseTo(44.44);
   });
   it(`calcs the correct fiNumber`, () => {
-    expect(resolvedTestData.stats.fiNumber.toNumber).toBe(0.489);
+    expect(resolvedTestData.stats.fiNumber.toNumber).toBeCloseTo(1.218);
   });
   it(`handles invalid interval`, () => {
     let resolvedTestData1 = transactionSplitter({
