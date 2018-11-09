@@ -92,6 +92,23 @@ const transactionSplitter = ({ transactions, accounts }) => {
   return splitTransactions;
 };
 
+const replaceWithModified = (oldValue, modification) => {
+  let newValue = oldValue;
+  newValue.y = oldValue.y.add(modification.y);
+  newValue.dailyRate = oldValue.dailyRate.add(modification.dailyRate);
+  return newValue;
+};
+
+const applyModifications = allDates => (structure, modification) => {
+  let modIndex = closestIndexTo(modification.date, allDates);
+  let updatedStructure = structure;
+  updatedStructure[modIndex][modification.mutateKey] = replaceWithModified(
+    updatedStructure[modIndex][modification.mutateKey],
+    modification
+  );
+  return updatedStructure;
+};
+
 const resolveBarChart = (dataRaw, { graphRange }) => {
   // return early with an empty array
   // for empty data
@@ -144,24 +161,9 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
     return obj;
   });
 
-  const replaceWithModified = (oldValue, modification) => {
-    let newValue = oldValue;
-    newValue.y = oldValue.y.add(modification.y);
-    newValue.dailyRate = oldValue.dailyRate.add(modification.dailyRate);
-    return newValue;
-  };
-
   // return array of modifications to be applied to stackStructure
   let stackComputed = computeTransactionModifications(data, graphRange).reduce(
-    (structure, modification) => {
-      let modIndex = closestIndexTo(modification.date, allDates);
-      let updatedStructure = structure;
-      updatedStructure[modIndex][modification.mutateKey] = replaceWithModified(
-        updatedStructure[modIndex][modification.mutateKey],
-        modification
-      );
-      return updatedStructure;
-    },
+    applyModifications(allDates),
     stackStructure
   );
 
