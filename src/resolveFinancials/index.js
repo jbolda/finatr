@@ -109,6 +109,25 @@ const applyModifications = allDates => (structure, modification) => {
   return updatedStructure;
 };
 
+const buildStack = (data, graphRange) => {
+  let allDates = eachDayOfInterval(graphRange);
+  let stackStructure = allDates.map(day => {
+    let obj = { date: day };
+    data.forEach(datum => {
+      obj[datum.id] = { ...datum };
+      obj[datum.id].y = Big(0);
+      obj[datum.id].dailyRate = Big(0);
+    });
+    return obj;
+  });
+
+  // return array of modifications to be applied to stackStructure
+  return computeTransactionModifications(data, graphRange).reduce(
+    applyModifications(allDates),
+    stackStructure
+  );
+};
+
 const resolveBarChart = (dataRaw, { graphRange }) => {
   // return early with an empty array
   // for empty data
@@ -150,22 +169,7 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
     return newDatum;
   });
 
-  let allDates = eachDayOfInterval(graphRange);
-  let stackStructure = allDates.map(day => {
-    let obj = { date: day };
-    data.forEach(datum => {
-      obj[datum.id] = { ...datum };
-      obj[datum.id].y = Big(0);
-      obj[datum.id].dailyRate = Big(0);
-    });
-    return obj;
-  });
-
-  // return array of modifications to be applied to stackStructure
-  let stackComputed = computeTransactionModifications(data, graphRange).reduce(
-    applyModifications(allDates),
-    stackStructure
-  );
+  let stackComputed = buildStack(data, graphRange);
 
   let stack = d3
     .stack()
@@ -248,6 +252,8 @@ const resolveAccountChart = ({ accounts, income, expense }) => {
 export {
   sortTransactionOrder,
   transactionSplitter,
+  applyModifications,
+  buildStack,
   resolveBarChart,
   resolveAccountChart
 };

@@ -314,14 +314,6 @@ class Stats {
   }
 
   reCalc({ accounts }, { BarChartIncome, BarChartExpense }) {
-    console.log(BarChartIncome);
-    BarChartIncome.forEach(bar =>
-      console.log(
-        bar.value.toFixed(0),
-        bar.y.toFixed(0),
-        bar.dailyRate.toFixed(0)
-      )
-    );
     let dailyIncome = BarChartIncome.reduce(
       (accumulator, d) =>
         d.type === 'income' ? d.dailyRate.add(accumulator) : accumulator,
