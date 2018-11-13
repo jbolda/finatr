@@ -184,7 +184,11 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
     ...stackComputed[0][key.value],
     stack: stacked[index],
     maxHeight: Big(maxHeight),
-    dailyRate: d3.max(stackComputed, d => d[key.value].dailyRate)
+    dailyRate: stackComputed.reduce(
+      (prevMax, d) =>
+        d[key.value].dailyRate.gt(prevMax) ? d[key.value].dailyRate : prevMax,
+      Big(0)
+    )
   }));
 };
 

@@ -1,6 +1,8 @@
 import Big from 'big.js';
 import startOfDay from 'date-fns/fp/startOfDay';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
+import getDate from 'date-fns/fp/getDate';
+import getMonth from 'date-fns/fp/getMonth';
 
 import computeTransactionModifications, {
   convertRangeToInterval,
@@ -116,6 +118,16 @@ describe(`check transactionDailyReoccur`, () => {
     expect(resolvedTestData).toHaveProperty('date');
     expect(resolvedTestData).toHaveProperty('y');
     expect(resolvedTestData).toHaveProperty('dailyRate');
+  });
+
+  it(`returns the correct first date`, () => {
+    let resolvedTestData = transactionDailyReoccur({
+      transaction,
+      seedDate
+    });
+    expect(resolvedTestData.date).toBe(1);
+    expect(getMonth(resolvedTestData.date)).toBe(3);
+    expect(getDate(resolvedTestData.date)).toBe(22);
   });
 
   it(`returns a cycle of 1`, () => {

@@ -148,6 +148,15 @@ describe('checks modifications', () => {
   });
 
   it('correctly applies a modification', () => {
+    expect(testMods[0]).toEqual(
+      expect.objectContaining({
+        date: new Date('2018-03-22T05:00:00.000Z'),
+        mutateKey: 'test-data-2',
+        y: '150',
+        dailyRate: '50'
+      })
+    );
+
     expect(modOneApplied[21]).toEqual(
       expect.objectContaining({
         'test-data-2': {
