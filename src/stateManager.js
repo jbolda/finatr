@@ -7,6 +7,7 @@ import {
 } from 'microstates';
 import {
   sortTransactionOrder,
+  coercePaybacks,
   transactionSplitter,
   past,
   future,
@@ -64,12 +65,17 @@ class AppModel {
   }
 
   reCalc() {
-    let init = this.transactionsComputed.set(this.state.transactions);
+    let { accounts } = this.state;
+    let transactionPaybacks = coercePaybacks({ accounts });
+    let init = this.transactionsComputed.set([
+      ...this.state.transactions,
+      ...transactionPaybacks
+    ]);
     let computedTransactions = init.transactionsComputed.map(transaction =>
       transactionCompute({ transaction })
     );
 
-    let { transactionsComputed, accounts } = computedTransactions.state;
+    let { transactionsComputed } = computedTransactions.state;
     let splitTransactions = transactionSplitter({
       transactions: transactionsComputed,
       accounts: accounts

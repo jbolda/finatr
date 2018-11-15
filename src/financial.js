@@ -135,8 +135,8 @@ const transactionTable = (data, actions) => (
               <td>{transaction.type}</td>
               <td>{transaction.start}</td>
               <td>{transaction.rtype}</td>
-              <td>{transaction.cycle.toFixed(0)}</td>
-              <td>{transaction.value.toFixed(2)}</td>
+              <td>{!transaction.cycle ? '' : transaction.cycle.toFixed(0)}</td>
+              <td>{!transaction.value ? '' : transaction.value.toFixed(2)}</td>
               <td>{transaction.dailyRate.toFixed(2)}</td>
               <td>
                 <button

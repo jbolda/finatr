@@ -26,6 +26,44 @@ const sortTransactionOrder = (a, b) => {
   return comparison;
 };
 
+const coercePaybacks = ({ accounts }) => {
+  let transactions = [];
+  if (accounts) {
+    accounts.forEach(account => {
+      if (account.vehicle === 'debt' && account.payback) {
+        account.payback.transactions.forEach((accountTransaction, index) => {
+          // this one is for the expense on the account
+          // being paid down
+          let amount =
+            typeof accountTransaction.value === 'string'
+              ? account.payback[accountTransaction.value]
+              : accountTransaction.value;
+          transactions.push({
+            ...accountTransaction,
+            id: `${account.payback.id}-${index}EXP`,
+            raccount: account.name,
+            description: account.payback.description,
+            type: account.payback.type,
+            category: account.payback.category,
+            value: amount
+          });
+          // this one is for the account making the payment
+          // (raccount is defined on accountTransaction)
+          transactions.push({
+            ...accountTransaction,
+            id: `${account.payback.id}-${index}TRSF`,
+            description: account.payback.description,
+            type: 'transfer',
+            category: account.payback.category,
+            value: -amount
+          });
+        });
+      }
+    });
+  }
+  return transactions;
+};
+
 const transactionSplitter = ({ transactions, accounts }) => {
   let splitTransactions = {
     income: [],
@@ -50,41 +88,6 @@ const transactionSplitter = ({ transactions, accounts }) => {
           break;
         default:
           break;
-      }
-    });
-  }
-  if (accounts) {
-    accounts.forEach(account => {
-      if (account.vehicle === 'debt' && account.payback) {
-        let accountTransactionPush = [];
-        account.payback.transactions.forEach((accountTransaction, index) => {
-          // this one is for the expense on the account
-          // being paid down
-          let amount =
-            typeof accountTransaction.value === 'string'
-              ? account.payback[accountTransaction.value]
-              : accountTransaction.value;
-          accountTransactionPush.push({
-            ...accountTransaction,
-            id: `${account.payback.id}-${index}EXP`,
-            raccount: account.name,
-            description: account.payback.description,
-            type: account.payback.type,
-            category: account.payback.category,
-            value: amount
-          });
-          // this one is for the account making the payment
-          // (raccount is defined on accountTransaction)
-          accountTransactionPush.push({
-            ...accountTransaction,
-            id: `${account.payback.id}-${index}TRSF`,
-            description: account.payback.description,
-            type: 'transfer',
-            category: account.payback.category,
-            value: -amount
-          });
-        });
-        splitTransactions.expense.push(accountTransactionPush);
       }
     });
   }
@@ -252,6 +255,7 @@ const resolveAccountChart = ({ accounts, income, expense }) => {
 
 export {
   sortTransactionOrder,
+  coercePaybacks,
   transactionSplitter,
   applyModifications,
   buildStack,
