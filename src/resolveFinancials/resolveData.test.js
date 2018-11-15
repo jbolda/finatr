@@ -25,11 +25,7 @@ let splitTransactions = transactionSplitter({
   accounts: testData.accounts
 });
 
-let resolvedTestData = create(AppModel, testData)
-  .transactionsSplit.set(splitTransactions)
-  .reCalc();
-
-export { resolvedTestData };
+let resolvedTestData = create(AppModel, testData).reCalc();
 
 describe(`check state creation`, () => {
   it(`returns the correct number of transactions`, () => {
@@ -125,7 +121,6 @@ describe('checks modifications', () => {
     testData2.forEach(datum => {
       obj[datum.id] = { ...datum };
       obj[datum.id].y = Big(0);
-      obj[datum.id].dailyRate = Big(0);
     });
     return obj;
   });
@@ -140,8 +135,7 @@ describe('checks modifications', () => {
       expect.arrayContaining([
         expect.objectContaining({
           mutateKey: 'test-data-2',
-          y: '150',
-          dailyRate: '50'
+          y: '150'
         })
       ])
     );

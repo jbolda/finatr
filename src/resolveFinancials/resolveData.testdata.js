@@ -157,7 +157,8 @@ let testData2 = [
     start: `2018-03-22`,
     rtype: `day`,
     cycle: Big(3),
-    value: Big(150)
+    value: Big(150),
+    dailyRate: Big(50)
   }
 ];
 

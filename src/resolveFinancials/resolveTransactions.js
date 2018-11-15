@@ -161,32 +161,60 @@ const nextModification = rtype => {
   }
 };
 
+const transactionCompute = ({ transaction }) => {
+  switch (transaction.rtype.state) {
+    case 'none':
+      return transactionNoReoccurCompute({ transaction });
+    case 'day':
+      return transactionDailyReoccurCompute({ transaction });
+    case 'day of week':
+      return transactionDayOfWeekReoccurCompute({ transaction });
+    case 'day of month':
+      return transactionDayOfMonthReoccurCompute({ transaction });
+    case 'bimonthy':
+      return transactionBimonthlyReoccurCompute({ transaction });
+    case 'quarterly':
+      return transactionQuarterlyReoccurCompute({ transaction });
+    case 'semiannually':
+      return transactionSemiannuallyReoccurCompute({ transaction });
+    case 'annually':
+      return transactionAnnuallyReoccurCompute({ transaction });
+    default:
+      return transactionNoReoccurCompute({ transaction });
+  }
+};
+
 // when transaction.rtype === 'none'
 const transactionNoReoccur = ({ transaction, seedDate }) => {
   return {
     date: transaction.start,
-    y: transaction.value,
-    dailyRate: Big(0)
+    y: transaction.value
   };
 };
+const transactionNoReoccurCompute = ({ transaction }) =>
+  transaction.dailyRate.set(0);
 
 // when transaction.rtype === 'day'
 const transactionDailyReoccur = ({ transaction, seedDate }) => {
   return {
     date: addDays(transaction.cycle)(seedDate),
-    y: transaction.value,
-    dailyRate: transaction.value.div(transaction.cycle)
+    y: transaction.value
   };
 };
+const transactionDailyReoccurCompute = ({ transaction }) =>
+  transaction.dailyRate.set(
+    transaction.value.state.div(transaction.cycle.state)
+  );
 
 // when transaction.rtype === 'day of week'
 const transactionDayOfWeekReoccur = ({ transaction, seedDate }) => {
   return {
     date: addDays(7 + getDay(seedDate) - transaction.cycle)(seedDate),
-    y: transaction.value,
-    dailyRate: transaction.value.div(7)
+    y: transaction.value
   };
 };
+const transactionDayOfWeekReoccurCompute = ({ transaction }) =>
+  transaction.dailyRate.set(transaction.value.state.div(7));
 
 // when transaction.rtype === 'day of month'
 const transactionDayOfMonthReoccur = ({
@@ -207,10 +235,11 @@ const transactionDayOfMonthReoccur = ({
   }
   return {
     date: monthlyDate,
-    y: transaction.value,
-    dailyRate: transaction.value.div(30)
+    y: transaction.value
   };
 };
+const transactionDayOfMonthReoccurCompute = ({ transaction }) =>
+  transaction.dailyRate.set(transaction.value.state.div(30));
 
 // when transaction.rtype === 'bimonthly'
 const transactionBimonthlyReoccur = ({ transaction, seedDate }) => {
@@ -232,10 +261,11 @@ const transactionBimonthlyReoccur = ({ transaction, seedDate }) => {
 
   return {
     date: addMonths(2 * transaction.cycle)(seedDate),
-    y: transaction.value,
-    dailyRate: transaction.value.div(30).div(2)
+    y: transaction.value
   };
 };
+const transactionBimonthlyReoccurCompute = ({ transaction }) =>
+  transaction.dailyRate.set(transaction.value.state.div(30).div(2));
 
 // when transaction.rtype === 'quarterly'
 const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
@@ -257,10 +287,11 @@ const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
 
   return {
     date: addQuarters(transaction.cycle)(seedDate),
-    y: transaction.value,
-    dailyRate: transaction.value.div(30).div(3)
+    y: transaction.value
   };
 };
+const transactionQuarterlyReoccurCompute = ({ transaction }) =>
+  transaction.dailyRate.set(transaction.value.state.div(30).div(3));
 
 // when transaction.rtype === 'semiannually'
 const transactionSemiannuallyReoccur = ({ transaction, seedDate }) => {
@@ -278,10 +309,11 @@ const transactionSemiannuallyReoccur = ({ transaction, seedDate }) => {
 
   return {
     date: addMonths(6)(seedDate),
-    y: transaction.value,
-    dailyRate: transaction.value.div(182.5)
+    y: transaction.value
   };
 };
+const transactionSemiannuallyReoccurCompute = ({ transaction }) =>
+  transaction.dailyRate.set(transaction.value.state.div(182.5));
 
 // when transaction.rtype === 'annually'
 const transactionAnnuallyReoccur = ({ transaction, seedDate }) => {
@@ -299,10 +331,11 @@ const transactionAnnuallyReoccur = ({ transaction, seedDate }) => {
 
   return {
     date: addYears(1)(seedDate),
-    y: transaction.value,
-    dailyRate: transaction.value.div(365)
+    y: transaction.value
   };
 };
+const transactionAnnuallyReoccurCompute = ({ transaction }) =>
+  transaction.dailyRate.set(transaction.value.state.div(365));
 
 export {
   transactionNoReoccur,
@@ -312,5 +345,14 @@ export {
   transactionBimonthlyReoccur,
   transactionQuarterlyReoccur,
   transactionSemiannuallyReoccur,
-  transactionAnnuallyReoccur
+  transactionAnnuallyReoccur,
+  transactionCompute,
+  transactionNoReoccurCompute,
+  transactionDailyReoccurCompute,
+  transactionDayOfWeekReoccurCompute,
+  transactionDayOfMonthReoccurCompute,
+  transactionBimonthlyReoccurCompute,
+  transactionQuarterlyReoccurCompute,
+  transactionSemiannuallyReoccurCompute,
+  transactionAnnuallyReoccurCompute
 };

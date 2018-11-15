@@ -85,7 +85,6 @@ describe(`check transactionNoReoccur`, () => {
     let resolvedTestData = transactionNoReoccur({ transaction, seedDate });
     expect(resolvedTestData).toHaveProperty('date');
     expect(resolvedTestData).toHaveProperty('y');
-    expect(resolvedTestData).toHaveProperty('dailyRate');
   });
 
   it(`returns the same date`, () => {
@@ -117,7 +116,6 @@ describe(`check transactionDailyReoccur`, () => {
     let resolvedTestData = transactionDailyReoccur({ transaction, seedDate });
     expect(resolvedTestData).toHaveProperty('date');
     expect(resolvedTestData).toHaveProperty('y');
-    expect(resolvedTestData).toHaveProperty('dailyRate');
   });
 
   it(`returns the correct first date`, () => {
@@ -125,9 +123,8 @@ describe(`check transactionDailyReoccur`, () => {
       transaction,
       seedDate
     });
-    expect(resolvedTestData.date).toBe(1);
-    expect(getMonth(resolvedTestData.date)).toBe(3);
-    expect(getDate(resolvedTestData.date)).toBe(22);
+    expect(getMonth(resolvedTestData.date)).toBe(0);
+    expect(getDate(resolvedTestData.date)).toBe(2);
   });
 
   it(`returns a cycle of 1`, () => {
@@ -199,7 +196,6 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     });
     expect(resolvedTestData).toHaveProperty('date');
     expect(resolvedTestData).toHaveProperty('y');
-    expect(resolvedTestData).toHaveProperty('dailyRate');
   });
 
   it(`returns a cycle for 1st of next month`, () => {
@@ -431,23 +427,25 @@ describe('transactionAnnuallyReoccur', () => {
   });
 
   it('calculates the daily rate', () => {
-    const transaction = { value: Big(365) };
-    const seedDate = startOfDay('2018-01-01');
-    const next = transactionAnnuallyReoccur({
-      transaction: transaction,
-      seedDate: seedDate
-    });
-    expect(Number(next.dailyRate)).toEqual(1);
+    // const transaction = { value: Big(365) };
+    // const seedDate = startOfDay('2018-01-01');
+    // const next = transactionAnnuallyReoccur({
+    //   transaction: transaction,
+    //   seedDate: seedDate
+    // });
+    // expect(Number(next.dailyRate)).toEqual(1);
+    // this is done at the state level now
   });
 
   it('handles floats for a daily rate', () => {
-    const transaction = { value: Big(547.5) };
-    const seedDate = startOfDay('2018-01-01');
-    const next = transactionAnnuallyReoccur({
-      transaction: transaction,
-      seedDate: seedDate
-    });
-    expect(Number(next.dailyRate)).toEqual(1.5);
+    // const transaction = { value: Big(547.5) };
+    // const seedDate = startOfDay('2018-01-01');
+    // const next = transactionAnnuallyReoccur({
+    //   transaction: transaction,
+    //   seedDate: seedDate
+    // });
+    // expect(Number(next.dailyRate)).toEqual(1.5);
+    // this is done at the state level now
   });
 
   it('fails if transaction is null', () => {
@@ -498,13 +496,14 @@ describe('transactionSemiannuallyReoccur', () => {
   });
 
   it('has a daily value', () => {
-    const transaction = { value: Big(182.5) };
-    const seedDate = startOfDay('2018-01-01');
-    const next = transactionSemiannuallyReoccur({
-      transaction: transaction,
-      seedDate: seedDate
-    });
-    expect(Number(next.dailyRate)).toEqual(1);
+    // const transaction = { value: Big(182.5) };
+    // const seedDate = startOfDay('2018-01-01');
+    // const next = transactionSemiannuallyReoccur({
+    //   transaction: transaction,
+    //   seedDate: seedDate
+    // });
+    // expect(Number(next.dailyRate)).toEqual(1);
+    // this is done at the state level now
   });
 
   it('fails if transaction is null', () => {
@@ -567,13 +566,14 @@ describe('transactionQuarterlyReoccur', () => {
   });
 
   it('has a daily value', () => {
-    const transaction = { value: Big(90) };
-    const seedDate = startOfDay('2018-01-01');
-    const next = transactionQuarterlyReoccur({
-      transaction: transaction,
-      seedDate: seedDate
-    });
-    expect(Number(next.dailyRate)).toEqual(1);
+    // const transaction = { value: Big(90) };
+    // const seedDate = startOfDay('2018-01-01');
+    // const next = transactionQuarterlyReoccur({
+    //   transaction: transaction,
+    //   seedDate: seedDate
+    // });
+    // expect(Number(next.dailyRate)).toEqual(1);
+    // this is done at the state level now
   });
 
   it('fails if transaction is null', () => {
@@ -644,13 +644,14 @@ describe('transactionBimonthlyReoccur', () => {
   });
 
   it('has a daily value', () => {
-    const transaction = { value: Big(60) };
-    const seedDate = startOfDay('2018-01-01');
-    const next = transactionBimonthlyReoccur({
-      transaction: transaction,
-      seedDate: seedDate
-    });
-    expect(Number(next.dailyRate)).toEqual(1);
+    // const transaction = { value: Big(60) };
+    // const seedDate = startOfDay('2018-01-01');
+    // const next = transactionBimonthlyReoccur({
+    //   transaction: transaction,
+    //   seedDate: seedDate
+    // });
+    // expect(Number(next.dailyRate)).toEqual(1);
+    // this is done at the state level now
   });
 
   it('fails if transaction is null', () => {

@@ -95,7 +95,6 @@ const transactionSplitter = ({ transactions, accounts }) => {
 const replaceWithModified = (oldValue, modification) => {
   let newValue = oldValue;
   newValue.y = oldValue.y.add(modification.y);
-  newValue.dailyRate = oldValue.dailyRate.add(modification.dailyRate);
   return newValue;
 };
 
@@ -116,7 +115,7 @@ const buildStack = (data, graphRange) => {
     data.forEach(datum => {
       obj[datum.id] = { ...datum };
       obj[datum.id].y = Big(0);
-      obj[datum.id].dailyRate = Big(0);
+      // obj[datum.id].dailyRate = Big(0);
     });
     return obj;
   });
@@ -166,6 +165,9 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
     if (newDatum.visibleOccurrences) {
       newDatum.visibleOccurrences = Big(dataAccess.visibleOccurrences);
     }
+
+    newDatum.dailyRate = Big(dataAccess.dailyRate || 0);
+
     return newDatum;
   });
 
@@ -181,14 +183,9 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
   let maxHeight = d3.max(stacked.reduce((a, b) => a.concat(b)), d => d[1]);
 
   return keys.map((key, index) => ({
-    ...stackComputed[0][key.value],
+    ...data[index],
     stack: stacked[index],
-    maxHeight: Big(maxHeight),
-    dailyRate: stackComputed.reduce(
-      (prevMax, d) =>
-        d[key.value].dailyRate.gt(prevMax) ? d[key.value].dailyRate : prevMax,
-      Big(0)
-    )
+    maxHeight: Big(maxHeight)
   }));
 };
 

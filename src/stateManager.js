@@ -13,12 +13,14 @@ import {
   resolveBarChart,
   resolveAccountChart
 } from './resolveFinancials';
+import { transactionCompute } from '/src/resolveFinancials/resolveTransactions.js';
 import { default as _Big } from 'big.js';
 import makeUUID from '/src/resolveFinancials/makeUUID.js';
 
 class AppModel {
   forms = Forms;
   transactions = [Transaction];
+  transactionsComputed = [TransactionComputed];
   transactionsSplit = ObjectType;
   accounts = [Account];
   charts = Charts;
@@ -43,14 +45,9 @@ class AppModel {
         cycle: 3,
         value: 150
       };
-      let splitTransactions = transactionSplitter({
-        transactions: [defaultTransaction],
-        accounts: [defaultAccount]
-      });
       return this.transactions
         .set([defaultTransaction])
         .accounts.set([defaultAccount])
-        .transactionsSplit.set(splitTransactions)
         .reCalc();
     } else {
       return this;
@@ -67,8 +64,20 @@ class AppModel {
   }
 
   reCalc() {
-    let { transactionsSplit, accounts } = this.state;
-    let chartsCalced = this.charts.calcCharts(transactionsSplit, accounts);
+    let init = this.transactionsComputed.set(this.state.transactions);
+    let computedTransactions = init.transactionsComputed.map(transaction =>
+      transactionCompute({ transaction })
+    );
+
+    let { transactionsComputed, accounts } = computedTransactions.state;
+    let splitTransactions = transactionSplitter({
+      transactions: transactionsComputed,
+      accounts: accounts
+    });
+
+    let chartsCalced = computedTransactions.transactionsSplit
+      .set(splitTransactions)
+      .charts.calcCharts(splitTransactions, accounts);
 
     return chartsCalced.stats
       .reCalc(chartsCalced.state, chartsCalced.charts.state)
@@ -90,16 +99,11 @@ class AppModel {
     }
     // let sortedNextState = nextState.sort(sortTransactionOrder);
     let sortedNextState = nextState;
-    let splitTransactions = transactionSplitter({
-      transactions: sortedNextState,
-      accounts: this.state.accounts
-    });
 
-    let nextSetState = this.transactions
+    return this.transactions
       .set(sortedNextState)
-      .transactionsSplit.set(splitTransactions);
-
-    return nextSetState.reCalc().forms.transactionForm.id.set('');
+      .reCalc()
+      .forms.transactionForm.id.set('');
   }
 
   modifyTransaction(id) {
@@ -194,6 +198,7 @@ class AppModel {
 class Transaction {
   id = StringType;
   raccount = StringType;
+  description = StringType;
   category = StringType;
   type = StringType;
   start = StringType;
@@ -206,8 +211,9 @@ class Transaction {
   }
 }
 
-class TransactionMutated extends Transaction {
+class TransactionComputed extends Transaction {
   dailyRate = Big;
+  y = Big;
 }
 
 class Account {
@@ -426,6 +432,10 @@ class Big {
 
   add(value) {
     return this.state.add(value);
+  }
+
+  div(value) {
+    return this.state.div(value);
   }
 
   eq(value) {
