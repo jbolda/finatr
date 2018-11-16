@@ -26,11 +26,48 @@ const sortTransactionOrder = (a, b) => {
   return comparison;
 };
 
+const coercePaybacks = ({ accounts }) => {
+  let transactions = [];
+  if (accounts) {
+    accounts.forEach(account => {
+      if (account.vehicle === 'debt' && account.payback) {
+        account.payback.transactions.forEach((accountTransaction, index) => {
+          // this one is for the expense on the account
+          // being paid down
+          let amount =
+            typeof accountTransaction.value === 'string'
+              ? account.payback[accountTransaction.value]
+              : accountTransaction.value;
+          transactions.push({
+            ...accountTransaction,
+            id: `${account.payback.id}-${index}EXP`,
+            raccount: account.name,
+            description: account.payback.description,
+            type: account.payback.type,
+            category: account.payback.category,
+            value: amount
+          });
+          // this one is for the account making the payment
+          // (raccount is defined on accountTransaction)
+          transactions.push({
+            ...accountTransaction,
+            id: `${account.payback.id}-${index}TRSF`,
+            description: account.payback.description,
+            type: 'transfer',
+            category: account.payback.category,
+            value: -amount
+          });
+        });
+      }
+    });
+  }
+  return transactions;
+};
+
 const transactionSplitter = ({ transactions, accounts }) => {
   let splitTransactions = {
     income: [],
-    expense: [],
-    transfer: []
+    expense: []
   };
 
   if (transactions) {
@@ -54,43 +91,43 @@ const transactionSplitter = ({ transactions, accounts }) => {
       }
     });
   }
-  if (accounts) {
-    accounts.forEach(account => {
-      if (account.vehicle === 'debt' && account.payback) {
-        let accountTransactionPush = [];
-        account.payback.transactions.forEach((accountTransaction, index) => {
-          // this one is for the expense on the account
-          // being paid down
-          let amount =
-            typeof accountTransaction.value === 'string'
-              ? account.payback[accountTransaction.value]
-              : accountTransaction.value;
-          accountTransactionPush.push({
-            ...accountTransaction,
-            id: `${account.payback.id}-${index}EXP`,
-            raccount: account.name,
-            description: account.payback.description,
-            type: account.payback.type,
-            category: account.payback.category,
-            value: amount
-          });
-          // this one is for the account making the payment
-          // (raccount is defined on accountTransaction)
-          accountTransactionPush.push({
-            ...accountTransaction,
-            id: `${account.payback.id}-${index}TRSF`,
-            description: account.payback.description,
-            type: 'transfer',
-            category: account.payback.category,
-            value: -amount
-          });
-        });
-        splitTransactions.expense.push(accountTransactionPush);
-      }
-    });
-  }
 
   return splitTransactions;
+};
+
+const replaceWithModified = (oldValue, modification) => {
+  let newValue = oldValue;
+  newValue.y = oldValue.y.add(modification.y);
+  return newValue;
+};
+
+const applyModifications = allDates => (structure, modification) => {
+  let modIndex = closestIndexTo(modification.date, allDates);
+  let updatedStructure = structure;
+  updatedStructure[modIndex][modification.mutateKey] = replaceWithModified(
+    updatedStructure[modIndex][modification.mutateKey],
+    modification
+  );
+  return updatedStructure;
+};
+
+const buildStack = (data, graphRange) => {
+  let allDates = eachDayOfInterval(graphRange);
+  let stackStructure = allDates.map(day => {
+    let obj = { date: day };
+    data.forEach(datum => {
+      obj[datum.id] = { ...datum };
+      obj[datum.id].y = Big(0);
+      // obj[datum.id].dailyRate = Big(0);
+    });
+    return obj;
+  });
+
+  // return array of modifications to be applied to stackStructure
+  return computeTransactionModifications(data, graphRange).reduce(
+    applyModifications(allDates),
+    stackStructure
+  );
 };
 
 const resolveBarChart = (dataRaw, { graphRange }) => {
@@ -131,40 +168,13 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
     if (newDatum.visibleOccurrences) {
       newDatum.visibleOccurrences = Big(dataAccess.visibleOccurrences);
     }
+
+    newDatum.dailyRate = Big(dataAccess.dailyRate || 0);
+
     return newDatum;
   });
 
-  let allDates = eachDayOfInterval(graphRange);
-  let stackStructure = allDates.map(day => {
-    let obj = { date: day };
-    keys.forEach(key => {
-      obj[key.value] = { ...data[key.index] };
-      obj[key.value].y = Big(0);
-      obj[key.value].dailyRate = Big(0);
-    });
-    return obj;
-  });
-
-  const replaceWithModified = (oldValue, modification) => {
-    let newValue = oldValue;
-    newValue.y = oldValue.y.add(modification.y);
-    newValue.dailyRate = oldValue.dailyRate.add(modification.dailyRate);
-    return newValue;
-  };
-
-  // return array of modifications to be applied to stackStructure
-  let stackComputed = computeTransactionModifications(data, graphRange).reduce(
-    (structure, modification) => {
-      let modIndex = closestIndexTo(modification.date, allDates);
-      let updatedStructure = structure;
-      updatedStructure[modIndex][modification.mutateKey] = replaceWithModified(
-        updatedStructure[modIndex][modification.mutateKey],
-        modification
-      );
-      return updatedStructure;
-    },
-    stackStructure
-  );
+  let stackComputed = buildStack(data, graphRange);
 
   let stack = d3
     .stack()
@@ -176,24 +186,27 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
   let maxHeight = d3.max(stacked.reduce((a, b) => a.concat(b)), d => d[1]);
 
   return keys.map((key, index) => ({
-    ...stackComputed[0][key.value],
+    ...data[index],
     stack: stacked[index],
-    maxHeight: Big(maxHeight),
-    dailyRate: d3.max(stackComputed, d => d[key.value].dailyRate)
+    maxHeight: Big(maxHeight)
   }));
 };
 
-const resolveAccountChart = ({ accounts, income, expenses }) => {
+const resolveAccountChart = ({ accounts, income, expense }) => {
   return accounts
     ? accounts.map(account => {
         let accountStack = {};
 
         const zipTogethor = arr =>
           arr.reduce((accumlator, d) => {
-            let flatten = d.stack.map(e => e[1] - e[0]);
-            return accumlator.length === 0
-              ? flatten
-              : accumlator.map((d, i, thisArray) => d + flatten[i]);
+            if (d.raccount === account.name) {
+              let flatten = d.stack.map(e => e[1] - e[0]);
+              return accumlator.length === 0
+                ? flatten
+                : accumlator.map((d, i, thisArray) => d + flatten[i]);
+            } else {
+              return accumlator;
+            }
           }, []);
 
         const extractValue = value => {
@@ -205,7 +218,7 @@ const resolveAccountChart = ({ accounts, income, expenses }) => {
         };
 
         accountStack.income = zipTogethor(income);
-        accountStack.expense = zipTogethor(expenses);
+        accountStack.expense = zipTogethor(expense);
 
         let arrayLength = Math.max(
           accountStack.income.length,
@@ -219,26 +232,21 @@ const resolveAccountChart = ({ accounts, income, expenses }) => {
           vehicle: account.vehicle
         };
 
+        let prevVal = extractValue(account.starting);
         for (let iterator = 0; iterator < arrayLength; iterator++) {
-          let prevVal =
-            finalZippedLine.values.length === 0
-              ? extractValue(account.starting)
-              : extractValue(
-                  finalZippedLine.values[finalZippedLine.values.length - 1]
-                    .value
-                );
           let firstStep =
             prevVal - extractValue(accountStack.expense[iterator]);
           let secondStep =
             firstStep + extractValue(accountStack.income[iterator]);
           finalZippedLine.values.push({
-            date: [].concat(income, expenses)[0].stack[iterator].data.date,
+            date: [].concat(income, expense)[0].stack[iterator].data.date,
             value: firstStep
           });
           finalZippedLine.values.push({
-            date: [].concat(income, expenses)[0].stack[iterator].data.date,
+            date: [].concat(income, expense)[0].stack[iterator].data.date,
             value: secondStep
           });
+          prevVal = secondStep;
         }
         return finalZippedLine;
       })
@@ -247,7 +255,10 @@ const resolveAccountChart = ({ accounts, income, expenses }) => {
 
 export {
   sortTransactionOrder,
+  coercePaybacks,
   transactionSplitter,
+  applyModifications,
+  buildStack,
   resolveBarChart,
   resolveAccountChart
 };

@@ -1,160 +1,49 @@
-import { resolveDataAtDateRange } from './index.js';
+import { create } from 'microstates';
+import AppModel from '/src/stateManager.js';
+import {
+  sortTransactionOrder,
+  transactionSplitter,
+  applyModifications,
+  replaceWithModified,
+  buildStack
+} from '/src/resolveFinancials';
+import computeTransactionModifications, {
+  convertRangeToInterval
+} from './resolveTransactions.js';
 import Big from 'big.js';
 import startOfDay from 'date-fns/fp/startOfDay';
+import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval';
+import format from 'date-fns/fp/format';
 
-let data = [];
-let dOne = {
-  id: `oasidjas1`,
-  raccount: `account`,
-  description: `description`,
-  category: `test default`,
-  type: `income`,
-  start: `2018-03-22`,
-  rtype: `day`,
-  cycle: 3,
-  value: 150
-};
-data.push(dOne);
-let dTwo = {
-  id: `oasis2`,
-  raccount: `account`,
-  description: `description`,
-  category: `test default`,
-  type: `income`,
-  start: `2018-03-22`,
-  rtype: `day`,
-  cycle: 1,
-  value: 100
-};
-data.push(dTwo);
-let dThree = {
-  id: `oasis3`,
-  raccount: `account`,
-  description: `description`,
-  category: `test complex`,
-  type: `income`,
-  start: `2018-03-22`,
-  rtype: `day of week`,
-  cycle: 2,
-  value: 70
-};
-data.push(dThree);
-let dFour = {
-  id: `oasis6`,
-  raccount: `account`,
-  description: `description`,
-  category: `test complex`,
-  type: `income`,
-  start: `2018-03-22`,
-  rtype: `day of month`,
-  cycle: 1,
-  value: 90
-};
-data.push(dFour);
-let dThreePointFive = {
-  id: `oasis92hoogyboogy`,
-  raccount: `account`,
-  description: `description`,
-  category: `test complex`,
-  type: `income`,
-  start: `2018-09-22`,
-  rtype: `none`,
-  value: 190
-};
-data.push(dThreePointFive);
-let dFive = {
-  id: `oasis8`,
-  raccount: `account`,
-  description: `description`,
-  category: `test comp`,
-  type: `expense`,
-  start: `2018-03-22`,
-  rtype: `day`,
-  repeat: 1,
-  cycle: 1,
-  value: 110
-};
-data.push(dFive);
-let dSix = {
-  id: `oasis8asg`,
-  raccount: `account2`,
-  description: `description`,
-  category: `test comp`,
-  type: `transfer`,
-  start: `2018-03-22`,
-  rtype: `day`,
-  repeat: 1,
-  cycle: 1,
-  value: 120
-};
-data.push(dSix);
+import { testData, testData2 } from './resolveData.testdata.js';
 
-let testData = {
-  transactions: data,
-  accounts: [
-    {
-      name: 'account',
-      starting: 3000,
-      interest: 0.01,
-      vehicle: 'operating'
-    },
-    {
-      name: 'account2',
-      starting: 30000,
-      interest: 0.01,
-      vehicle: 'investment'
-    },
-    {
-      name: 'account3',
-      starting: 30000,
-      interest: 6.0,
-      vehicle: 'debt',
-      payback: {
-        id: `payback-test`,
-        description: `payback`,
-        category: 'account3 payback',
-        type: 'expense',
-        transactions: [
-          {
-            raccount: 'account',
-            start: `2018-03-22`,
-            rtype: `day`,
-            cycle: 1,
-            value: 140
-          },
-          {
-            raccount: 'account',
-            start: `2018-03-22`,
-            rtype: `day`,
-            cycle: 3,
-            value: 60
-          }
-        ]
-      }
-    }
-  ]
-};
+const formatDate = format('yyyy-MM-dd kkmmss');
 
 let graphRange = {
   start: startOfDay('2018-03-01'),
   end: startOfDay('2018-09-01')
 };
-let resolvedTestData = resolveDataAtDateRange(testData, graphRange);
-resolvedTestData.BarChartIncome.forEach(obj => (obj.stack = null));
-resolvedTestData.BarChartExpense.forEach(obj => (obj.stack = null));
+testData.charts = {};
+testData.charts.GraphRange = graphRange;
+let splitTransactions = transactionSplitter({
+  transactions: testData.transactions,
+  accounts: testData.accounts
+});
 
-describe(`check resolveData`, () => {
+let resolvedTestData = create(AppModel, testData).reCalc();
+
+describe(`check state creation`, () => {
   it(`returns the correct number of transactions`, () => {
-    expect(resolvedTestData.transactions).toHaveLength(7);
+    expect(resolvedTestData.state.transactions).toHaveLength(7);
   });
   it(`returns the correct number of accounts`, () => {
-    expect(resolvedTestData.accounts).toHaveLength(3);
+    expect(resolvedTestData.state.accounts).toHaveLength(3);
   });
   it(`returns the correct number of BarChartIncome`, () => {
-    expect(resolvedTestData.BarChartIncome).toHaveLength(6);
+    expect(resolvedTestData.charts.state.BarChartIncome).toHaveLength(6);
   });
   it(`has the correct BarChartIncome structure`, () => {
-    expect(resolvedTestData.BarChartIncome).toEqual(
+    expect(resolvedTestData.charts.state.BarChartIncome).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           category: 'test default',
@@ -170,38 +59,49 @@ describe(`check resolveData`, () => {
     );
   });
   it(`returns the correct number of BarChartExpense`, () => {
-    expect(resolvedTestData.BarChartExpense).toHaveLength(5);
+    expect(resolvedTestData.charts.state.BarChartExpense).toHaveLength(5);
   });
   it(`calcs the correct BarChartMax`, () => {
-    expect(Number(resolvedTestData.BarChartMax)).toBe(500);
+    expect(resolvedTestData.charts.BarChartMax.toNumber).toBe(250);
   });
   it(`calcs the correct LineChartMax`, () => {
-    expect(Number(resolvedTestData.LineChartMax)).toBe(49680);
+    expect(resolvedTestData.charts.LineChartMax.toNumber).toBe(49680);
   });
   it(`calcs the correct dailyIncome`, () => {
-    expect(Number(resolvedTestData.dailyIncome)).toBe(163);
+    expect(resolvedTestData.stats.dailyIncome.toNumber).toBe(163);
   });
   it(`calcs the correct dailyExpense`, () => {
-    expect(Number(resolvedTestData.dailyExpense)).toBe(270);
+    expect(resolvedTestData.stats.dailyExpense.toNumber).toBe(270);
   });
   it(`calcs the correct savingsRate`, () => {
-    expect(Number(resolvedTestData.savingsRate.toFixed(2))).toBe(33.33);
+    expect(resolvedTestData.stats.savingsRate.toNumber).toBeCloseTo(44.44);
   });
   it(`calcs the correct fiNumber`, () => {
-    expect(Number(resolvedTestData.fiNumber.toFixed(3))).toBe(0.489);
+    expect(resolvedTestData.stats.fiNumber.toNumber).toBeCloseTo(1.218);
   });
-  it(`handles invalid interval`, () => {
-    let resolvedTestData1 = resolveDataAtDateRange(
-      { ...testData, transactions: [dThreePointFive] },
-      graphRange
-    );
-    expect(resolvedTestData1.BarChartIncome.length).toBe(0);
-  });
+  // it(`handles invalid interval`, () => {
+  //   let resolvedTestData1 = transactionSplitter({
+  //     accounts: testData.accounts,
+  //     transactions: [
+  //       {
+  //         id: `oasis92hoogyboogy`,
+  //         raccount: `account`,
+  //         description: `description`,
+  //         category: `test complex`,
+  //         type: `income`,
+  //         start: `2018-09-22`,
+  //         rtype: `none`,
+  //         value: 190
+  //       }
+  //     ]
+  //   });
+  //   expect(resolvedTestData1.charts.BarChartIncome.length).toBe(0);
+  // });
 });
 
 describe(`check resolveData handles paybacks`, () => {
   it(`has the correct BarChartExpense structure`, () => {
-    expect(resolvedTestData.BarChartExpense).toEqual(
+    expect(resolvedTestData.charts.state.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           id: 'payback-test-0EXP'
@@ -209,12 +109,51 @@ describe(`check resolveData handles paybacks`, () => {
       ])
     );
 
-    expect(resolvedTestData.BarChartExpense).toEqual(
+    expect(resolvedTestData.charts.state.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           id: 'payback-test-0TRSF'
         })
       ])
     );
+  });
+});
+
+describe('checks modifications', () => {
+  let allDates = eachDayOfInterval(graphRange);
+  let stackStructure = allDates.map(day => {
+    let obj = { date: day };
+    testData2.forEach(datum => {
+      obj[datum.id] = { ...datum };
+      obj[datum.id].y = Big(0);
+    });
+    return obj;
+  });
+  console.log(convertRangeToInterval(testData2[0], graphRange));
+  // return array of modifications to be applied to stackStructure
+  let testMods = computeTransactionModifications(testData2, graphRange);
+  let modOneApplied = applyModifications(allDates)(stackStructure, testMods[0]);
+  let stackComputed = buildStack(testData2, graphRange);
+
+  it('provides correct modification array', () => {
+    expect(formatDate(testMods[0].date)).toBe('2018-03-22 240000');
+    expect(testMods[0].mutateKey).toBe('test-data-2');
+    expect(testMods[0].y.toFixed(0)).toBe('150');
+  });
+
+  it('correctly applies a modification', () => {
+    expect(formatDate(modOneApplied[21].date)).toBe('2018-03-22 240000');
+    expect(modOneApplied[21]['test-data-2'].id).toBe('test-data-2');
+    expect(modOneApplied[21]['test-data-2'].value.toFixed(0)).toBe('150');
+    expect(modOneApplied[21]['test-data-2'].y.toFixed(0)).toBe('150');
+  });
+
+  it('provides correctly modified date array', () => {
+    expect(stackComputed).toHaveLength(185);
+
+    expect(formatDate(stackComputed[24].date)).toBe('2018-03-25 240000');
+    expect(stackComputed[24]['test-data-2'].id).toBe('test-data-2');
+    expect(stackComputed[24]['test-data-2'].value.toFixed(0)).toBe('150');
+    expect(stackComputed[24]['test-data-2'].y.toFixed(0)).toBe('150');
   });
 });

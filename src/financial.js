@@ -57,7 +57,7 @@ class Financial extends React.Component {
                 ref={ref => (this.transactionTabs = ref)}
                 tabTitles={['All Transactions', 'Add Transaction']}
                 tabContents={[
-                  transactionTable(model.state.transactions, {
+                  transactionTable(model.state.transactionsComputed, {
                     modifyTransaction: model.modifyTransaction,
                     deleteTransaction: model.deleteTransaction
                   }),
@@ -135,9 +135,9 @@ const transactionTable = (data, actions) => (
               <td>{transaction.type}</td>
               <td>{transaction.start}</td>
               <td>{transaction.rtype}</td>
-              <td>{transaction.cycle}</td>
-              <td>{transaction.value}</td>
-              <td>{transaction.dailyRate}</td>
+              <td>{!transaction.cycle ? '' : transaction.cycle.toFixed(0)}</td>
+              <td>{!transaction.value ? '' : transaction.value.toFixed(2)}</td>
+              <td>{transaction.dailyRate.toFixed(2)}</td>
               <td>
                 <button
                   className="button is-rounded is-small is-info"
@@ -200,37 +200,39 @@ const accountTable = (data, actions) => (
 );
 
 const debtTable = (data, actions) =>
-  data.filter(account => account.vehicle === 'debt').map(account => (
-    <div className="media box" key={account.name}>
-      <div className="media-content">
-        <div className="content">
-          <p>
-            <strong>{account.name}</strong>{' '}
-            <small>{`$${account.starting} @ ${account.interest}%`}</small>
-          </p>
+  data
+    .filter(account => account.vehicle === 'debt')
+    .map(account => (
+      <div className="media box" key={account.name}>
+        <div className="media-content">
+          <div className="content">
+            <p>
+              <strong>{account.name}</strong>{' '}
+              <small>{`$${account.starting} @ ${account.interest}%`}</small>
+            </p>
+          </div>
+          {account.payback ? paybackTable(account.payback, actions) : null}
         </div>
-        {account.payback ? paybackTable(account.payback, actions) : null}
+        <div className="media-right">
+          <button
+            className="button is-rounded is-small is-success"
+            onClick={actions.toggleAccountTransactionVisibility}
+          >
+            +
+          </button>
+          <button
+            className="button is-rounded is-small is-info"
+            onClick={actions.modifyAccount.bind(this, account.name)}
+          >
+            M
+          </button>
+          <button
+            className="delete"
+            onClick={actions.deleteAccount.bind(this, account.name)}
+          />
+        </div>
       </div>
-      <div className="media-right">
-        <button
-          className="button is-rounded is-small is-success"
-          onClick={actions.toggleAccountTransactionVisibility}
-        >
-          +
-        </button>
-        <button
-          className="button is-rounded is-small is-info"
-          onClick={actions.modifyAccount.bind(this, account.name)}
-        >
-          M
-        </button>
-        <button
-          className="delete"
-          onClick={actions.deleteAccount.bind(this, account.name)}
-        />
-      </div>
-    </div>
-  ));
+    ));
 
 const paybackTable = (data, actions) =>
   data.transactions.map(payback => (

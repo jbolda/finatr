@@ -1,18 +1,27 @@
-import { valueOf, ObjectType, StringType, BooleanType } from 'microstates';
+import {
+  valueOf,
+  create,
+  ObjectType,
+  StringType,
+  BooleanType
+} from 'microstates';
 import {
   sortTransactionOrder,
+  coercePaybacks,
   transactionSplitter,
   past,
   future,
   resolveBarChart,
   resolveAccountChart
 } from './resolveFinancials';
+import { transactionCompute } from '/src/resolveFinancials/resolveTransactions.js';
 import { default as _Big } from 'big.js';
 import makeUUID from '/src/resolveFinancials/makeUUID.js';
 
 class AppModel {
   forms = Forms;
   transactions = [Transaction];
+  transactionsComputed = [TransactionComputed];
   transactionsSplit = ObjectType;
   accounts = [Account];
   charts = Charts;
@@ -32,20 +41,15 @@ class AppModel {
         description: `seed data`,
         category: `default transaction`,
         type: `income`,
-        start: `2018-08-01`,
+        start: `2018-11-01`,
         rtype: `day`,
         cycle: 3,
         value: 150
       };
-      let splitTransactions = transactionSplitter({
-        transactions: [defaultTransaction],
-        accounts: [defaultAccount]
-      });
       return this.transactions
         .set([defaultTransaction])
         .accounts.set([defaultAccount])
-        .transactionsSplit.set(splitTransactions)
-        .charts.calcCharts(splitTransactions, [defaultAccount]);
+        .reCalc();
     } else {
       return this;
     }
@@ -60,9 +64,35 @@ class AppModel {
     return this;
   }
 
+  reCalc() {
+    let { accounts } = this.state;
+    let transactionPaybacks = coercePaybacks({ accounts });
+    let init = this.transactionsComputed.set([
+      ...this.state.transactions,
+      ...transactionPaybacks
+    ]);
+    let computedTransactions = init.transactionsComputed.map(transaction =>
+      transactionCompute({ transaction })
+    );
+
+    let { transactionsComputed } = computedTransactions.state;
+    let splitTransactions = transactionSplitter({
+      transactions: transactionsComputed,
+      accounts: accounts
+    });
+
+    let chartsCalced = computedTransactions.transactionsSplit
+      .set(splitTransactions)
+      .charts.calcCharts(splitTransactions, accounts);
+
+    return chartsCalced.stats
+      .reCalc(chartsCalced.state, chartsCalced.charts.state)
+      .log('recalc');
+  }
+
   transactionUpsert(value) {
     let nextState = this.state.transactions;
-    if (value.id || value.id !== '') {
+    if (value.id && value.id !== '') {
       let existingTransactionIndex = nextState.map(t => t.id).indexOf(value.id);
       if (existingTransactionIndex === -1) {
         nextState.push(value);
@@ -70,17 +100,15 @@ class AppModel {
         nextState.splice(existingTransactionIndex, 1, value);
       }
     } else {
-      nextState.push({ ...value, id: makeUUID() });
+      let nextValue = { ...value, id: makeUUID() };
+      nextState.push(nextValue);
     }
-    let splitTransactions = transactionSplitter({
-      transactions: nextState,
-      accounts: this.state.accounts
-    });
+    // let sortedNextState = nextState.sort(sortTransactionOrder);
+    let sortedNextState = nextState;
+
     return this.transactions
-      .set(nextState)
-      .sort(sortTransactionOrder)
-      .transactionsSplit.set(splitTransactions)
-      .charts.calcCharts(splitTransactions, valueOf(this.accounts))
+      .set(sortedNextState)
+      .reCalc()
       .forms.transactionForm.id.set('');
   }
 
@@ -91,7 +119,9 @@ class AppModel {
   }
 
   deleteTransaction(id) {
-    return this.transactions.filter(t => t.id !== id);
+    let deleted = this.transactions.filter(t => t.id !== id);
+    let nextSetState = this.transactions.set(deleted);
+    return nextSetState.reCalc();
   }
 
   upsertAccount(value) {
@@ -102,7 +132,8 @@ class AppModel {
     } else {
       nextState.splice(existingAccountIndex, 1, value);
     }
-    return this.accounts.set(nextState).forms.accountForm.name.set('');
+    let nextSetState = this.accounts.set(nextState);
+    return nextSetState.reCalc().forms.accountForm.name.set('');
   }
 
   modifyAccount(name) {
@@ -112,7 +143,9 @@ class AppModel {
   }
 
   deleteAccount(name) {
-    return this.accounts.filter(a => a.name !== name);
+    let deleted = this.accounts.filter(a => a.name !== name);
+    let nextSetState = this.accounts.set(deleted);
+    return nextSetState.reCalc();
   }
 
   addAccountTransaction(result) {
@@ -131,16 +164,18 @@ class AppModel {
       occurences: result.occurences,
       value: result.value
     });
-    return this.accounts.set(nextState).forms.accountTransactionForm.id.set('');
+
+    let nextSetState = this.accounts.set(nextState);
+    return nextSetState.reCalc().forms.accountTransactionForm.id.set('');
   }
 
   addYNAB(tokens, resultantAccounts, resultantTransactions) {
-    let nextState = this.state;
+    let nextState = this;
     let indexed = {};
     resultantAccounts.forEach(resultAccount => {
       indexed[resultAccount.name] = resultAccount;
     });
-    nextState.accounts.forEach(existingAccount => {
+    nextState.state.accounts.forEach(existingAccount => {
       if (!indexed[existingAccount.name]) {
         indexed[existingAccount.name] = existingAccount;
       } else {
@@ -155,25 +190,21 @@ class AppModel {
       }
     });
 
-    nextState.accounts = Object.keys(indexed).map(key => indexed[key]);
-    nextState.transactions = [
-      ...this.state.transactions,
-      ...resultantTransactions
-    ];
-    nextState.devToken = tokens.devToken;
-    nextState.budgetId = tokens.budgetId;
+    let nextSetState = this.transactions
+      .set([...this.state.transactions, ...resultantTransactions])
+      .accounts.set(Object.keys(indexed).map(key => indexed[key]));
 
-    return this.transactions
-      .set(nextState.transactions)
-      .accounts.set(nextState.accounts)
-      .forms.ynabForm.devToken.set(nextState.devToken)
-      .forms.ynabForm.budgetId.set(nextState.budgetId);
+    return nextSetState
+      .reCalc()
+      .forms.ynabForm.devToken.set(tokens.devToken)
+      .forms.ynabForm.budgetId.set(tokens.budgetId);
   }
 }
 
 class Transaction {
   id = StringType;
   raccount = StringType;
+  description = StringType;
   category = StringType;
   type = StringType;
   start = StringType;
@@ -186,12 +217,14 @@ class Transaction {
   }
 }
 
-class TransactionMutated extends Transaction {
+class TransactionComputed extends Transaction {
   dailyRate = Big;
+  y = Big;
 }
 
 class Account {
   account = StringType;
+  starting = Big;
   interest = Big;
   vehicle = StringType;
 
@@ -202,19 +235,16 @@ class Account {
 
 class Charts {
   GraphRange = ObjectType;
-  BarChartIncome = [BarChart];
-  BarChartExpense = [BarChart];
+  BarChartIncome = create([BarChart], [{ id: 'default' }]);
+  BarChartExpense = create([BarChart], [{ id: 'default' }]);
   BarChartMax = Big;
-  AccountChart = [LineChart];
+  AccountChart = create([LineChart], [{ id: 'default' }]);
   LineChartMax = Big;
 
   initialize(length = 365) {
-    if (!this.GraphRange) {
+    if (!this.GraphRange.start) {
       let graphRange = { start: past(), end: future(length) };
-      return this.GraphRange.set(graphRange)
-        .BarChartIncome.set([])
-        .BarChartExpense.set([])
-        .AccountChart.set([]);
+      return this.GraphRange.set(graphRange);
     } else {
       return this;
     }
@@ -224,61 +254,46 @@ class Charts {
     return valueOf(this);
   }
 
-  calcCharts(splitTransactions, accounts) {
-    return this.calcBarCharts(splitTransactions).calcAccountLine(accounts);
+  calcCharts(transactionsSplit, accounts) {
+    return this.calcBarCharts(transactionsSplit).calcAccountLine(accounts);
   }
 
-  calcBarCharts(splitTransactions) {
-    let graphRange = this.GraphRange.state || {
-      start: past(),
-      end: future(365)
-    };
-
-    let income = resolveBarChart(splitTransactions.income, {
-      graphRange
+  calcBarCharts(transactionsSplit) {
+    let income = resolveBarChart(transactionsSplit.income, {
+      graphRange: this.state.GraphRange
     });
 
-    let expenses = resolveBarChart(splitTransactions.expenses, {
-      graphRange
-    });
-
-    let accountLine = resolveAccountChart({
-      transactions: [].concat(
-        splitTransactions.income,
-        splitTransactions.expenses
-      ),
-      income,
-      expenses
+    let expense = resolveBarChart(transactionsSplit.expense, {
+      graphRange: this.state.GraphRange
     });
 
     return this.BarChartIncome.set(income)
-      .BarChartExpense.set(expenses)
+      .BarChartExpense.set(expense)
       .BarChartMax.set(
         Math.max(
           income.length !== 0 ? income[0].maxHeight || 0 : 0,
-          expenses.length !== 0 ? expenses[0].maxHeight || 0 : 0
+          expense.length !== 0 ? expense[0].maxHeight || 0 : 0
         )
       );
   }
 
   calcAccountLine(accounts) {
+    let { BarChartIncome, BarChartExpense } = this.state;
     let accountLine = resolveAccountChart({
       accounts: accounts,
-      income: valueOf(this.BarChartIncome),
-      expenses: valueOf(this.BarChartExpense)
+      income: BarChartIncome,
+      expense: BarChartExpense
     });
     return this.AccountChart.set(accountLine).LineChartMax.set(
-      accountLine.reduce(
-        (lineMax, line) =>
-          Math.max(
-            lineMax,
-            line.values.reduce(
-              (lineDayMax, day) => Math.max(lineDayMax, day.value),
-              0
-            )
-          ),
-        0
-      )
+      accountLine.reduce((lineMax, line) => {
+        return Math.max(
+          lineMax,
+          line.values.reduce(
+            (lineDayMax, day) => Math.max(lineDayMax, day.value),
+            0
+          )
+        );
+      }, 0)
     );
   }
 }
@@ -303,12 +318,58 @@ class LineChartValues {
 class Stats {
   dailyIncome = Big;
   dailyExpense = Big;
-  dailyRate = Big;
   savingsRate = Big;
   fiNumber = Big;
 
   get state() {
     return valueOf(this);
+  }
+
+  reCalc({ accounts }, { BarChartIncome, BarChartExpense }) {
+    let dailyIncome = BarChartIncome.reduce(
+      (accumulator, d) =>
+        d.type === 'income' ? d.dailyRate.add(accumulator) : accumulator,
+      _Big(0)
+    );
+
+    let dailyExpense = BarChartExpense.reduce(
+      (accumulator, d) =>
+        d.type === 'expense' ? d.dailyRate.add(accumulator) : accumulator,
+      _Big(0)
+    );
+
+    let dailyInvest = BarChartIncome.reduce((accumulator, d) => {
+      let accountRaw = accounts.find(acc => acc.name === d.raccount);
+
+      if (accountRaw && accountRaw.vehicle === 'investment') {
+        return d.dailyRate.add(accumulator);
+      } else {
+        return accumulator;
+      }
+    }, 0);
+
+    let totalInvest = accounts.reduce((accumulator, d) => {
+      if (d.vehicle === 'investment') {
+        return _Big(d.starting).add(accumulator);
+      } else {
+        return accumulator;
+      }
+    }, 0);
+
+    return this.dailyIncome
+      .set(dailyIncome)
+      .dailyExpense.set(dailyExpense)
+      .savingsRate.set(
+        dailyExpense.eq(0) ? 100 : dailyInvest.times(100).div(dailyExpense)
+      )
+      .fiNumber.set(
+        dailyExpense.eq(0)
+          ? 100
+          : totalInvest
+              .times(100)
+              .div(dailyExpense.times(365))
+              .div(25) || null
+      );
   }
 }
 
@@ -377,6 +438,22 @@ class Big {
 
   add(value) {
     return this.state.add(value);
+  }
+
+  div(value) {
+    return this.state.div(value);
+  }
+
+  eq(value) {
+    return this.state.eq(value);
+  }
+
+  get toFixed() {
+    return this.state.toFixed(2);
+  }
+
+  get toNumber() {
+    return Number(this.state);
   }
 
   get state() {
