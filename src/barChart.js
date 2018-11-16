@@ -212,11 +212,7 @@ let barBuild = {
     return 600;
   },
   daysinfuture: function() {
-    if (this.div_width() > 1000) {
-      return 240;
-    } else {
-      return 120;
-    }
+    return 365;
   },
   margin: function() {
     return { top: 10, right: 0, bottom: 20, left: 40 };
