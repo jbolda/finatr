@@ -45,20 +45,16 @@ const computeTransactionModifications = (transactions, graphRange) =>
 export default computeTransactionModifications;
 
 const convertRangeToInterval = (transaction, graphRange) => ({
-  start: subDays(0)(
-    dateMax([
-      graphRange.start,
-      !!transaction && transaction.start ? transaction.start : 0
-    ])
-  ),
-  end: addDays(1)(
-    dateMin([
-      graphRange.end,
-      !!transaction && transaction.end
-        ? transaction.end
-        : addDays(365)(new Date())
-    ])
-  )
+  start: dateMax([
+    graphRange.start,
+    !!transaction && transaction.start ? transaction.start : 0
+  ]),
+  end: dateMin([
+    graphRange.end,
+    !!transaction && transaction.end
+      ? transaction.end
+      : addDays(365)(new Date())
+  ])
 });
 
 export { convertRangeToInterval };

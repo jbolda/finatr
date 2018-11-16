@@ -1,3 +1,0 @@
-# things
-
-- [] check ending interval

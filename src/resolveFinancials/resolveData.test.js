@@ -60,10 +60,10 @@ describe(`check state creation`, () => {
     expect(resolvedTestData.charts.state.BarChartExpense).toHaveLength(5);
   });
   it(`calcs the correct BarChartMax`, () => {
-    expect(resolvedTestData.charts.BarChartMax.toNumber).toBe(500);
+    expect(resolvedTestData.charts.BarChartMax.toNumber).toBe(250);
   });
   it(`calcs the correct LineChartMax`, () => {
-    expect(resolvedTestData.charts.LineChartMax.toNumber).toBe(49680);
+    expect(resolvedTestData.charts.LineChartMax.toNumber).toBe(49560);
   });
   it(`calcs the correct dailyIncome`, () => {
     expect(resolvedTestData.stats.dailyIncome.toNumber).toBe(163);
@@ -134,17 +134,13 @@ describe('checks modifications', () => {
   let stackComputed = buildStack(testData2, graphRange);
 
   it('provides correct modification array', () => {
-    expect(formatDate(testMods[0].date)).toBe('2018-03-25 240000');
+    expect(formatDate(testMods[0].date)).toBe('2018-03-22 240000');
     expect(testMods[0].mutateKey).toBe('test-data-2');
     expect(testMods[0].y.toFixed(0)).toBe('150');
   });
 
   it('correctly applies a modification', () => {
-    expect(formatDate(testMods[0].date)).toBe('2018-03-22 240000');
-    expect(testMods[0].mutateKey).toBe('test-data-2');
-    expect(testMods[0].y.toFixed(0)).toBe('150');
-
-    expect(formatDate(modOneApplied[21].date)).toBe('2018-03-25 240000');
+    expect(formatDate(modOneApplied[21].date)).toBe('2018-03-22 240000');
     expect(modOneApplied[21]['test-data-2'].id).toBe('test-data-2');
     expect(modOneApplied[21]['test-data-2'].value.toFixed(0)).toBe('150');
     expect(modOneApplied[21]['test-data-2'].y.toFixed(0)).toBe('150');

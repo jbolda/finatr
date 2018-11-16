@@ -41,7 +41,7 @@ class AppModel {
         description: `seed data`,
         category: `default transaction`,
         type: `income`,
-        start: `2018-08-01`,
+        start: `2018-11-01`,
         rtype: `day`,
         cycle: 3,
         value: 150
