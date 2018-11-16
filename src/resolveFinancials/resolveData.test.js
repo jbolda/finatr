@@ -60,10 +60,10 @@ describe(`check state creation`, () => {
     expect(resolvedTestData.charts.state.BarChartExpense).toHaveLength(5);
   });
   it(`calcs the correct BarChartMax`, () => {
-    expect(resolvedTestData.charts.BarChartMax.toNumber).toBe(460);
+    expect(resolvedTestData.charts.BarChartMax.toNumber).toBe(500);
   });
   it(`calcs the correct LineChartMax`, () => {
-    expect(resolvedTestData.charts.LineChartMax.toNumber).toBe(50110);
+    expect(resolvedTestData.charts.LineChartMax.toNumber).toBe(49680);
   });
   it(`calcs the correct dailyIncome`, () => {
     expect(resolvedTestData.stats.dailyIncome.toNumber).toBe(163);
