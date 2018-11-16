@@ -7,7 +7,9 @@ import {
   replaceWithModified,
   buildStack
 } from '/src/resolveFinancials';
-import computeTransactionModifications from './resolveTransactions.js';
+import computeTransactionModifications, {
+  convertRangeToInterval
+} from './resolveTransactions.js';
 import Big from 'big.js';
 import startOfDay from 'date-fns/fp/startOfDay';
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval';
@@ -63,7 +65,7 @@ describe(`check state creation`, () => {
     expect(resolvedTestData.charts.BarChartMax.toNumber).toBe(250);
   });
   it(`calcs the correct LineChartMax`, () => {
-    expect(resolvedTestData.charts.LineChartMax.toNumber).toBe(49560);
+    expect(resolvedTestData.charts.LineChartMax.toNumber).toBe(49680);
   });
   it(`calcs the correct dailyIncome`, () => {
     expect(resolvedTestData.stats.dailyIncome.toNumber).toBe(163);
@@ -127,7 +129,7 @@ describe('checks modifications', () => {
     });
     return obj;
   });
-
+  console.log(convertRangeToInterval(testData2[0], graphRange));
   // return array of modifications to be applied to stackStructure
   let testMods = computeTransactionModifications(testData2, graphRange);
   let modOneApplied = applyModifications(allDates)(stackStructure, testMods[0]);

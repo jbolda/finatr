@@ -79,7 +79,8 @@ const generateModification = (
   // and generate the next one
   if (
     isWithinInterval(transactionInterval)(modification.date) &&
-    isAfter(prevDate)(modification.date) &&
+    (isAfter(prevDate)(modification.date) ||
+      isSameDay(prevDate)(modification.date)) &&
     hasNotHitNumberOfOccurrences(
       transaction,
       visibleOccurrences,
@@ -87,6 +88,7 @@ const generateModification = (
     ) &&
     Big(generatedOccurrences).lte(365)
   ) {
+    if (transaction.id === 'test-data-2') console.log(modification);
     modifications.push(modification);
     generateModification(
       transaction,
@@ -191,9 +193,17 @@ const transactionNoReoccurCompute = ({ transaction }) =>
   transaction.dailyRate.set(0);
 
 // when transaction.rtype === 'day'
-const transactionDailyReoccur = ({ transaction, seedDate }) => {
+const transactionDailyReoccur = ({
+  transaction,
+  seedDate,
+  generatedOccurrences
+}) => {
+  let cycle =
+    !!generatedOccurrences && generatedOccurrences.eq(0)
+      ? 0
+      : transaction.cycle;
   return {
-    date: addDays(transaction.cycle)(seedDate),
+    date: addDays(cycle)(seedDate),
     y: transaction.value
   };
 };
