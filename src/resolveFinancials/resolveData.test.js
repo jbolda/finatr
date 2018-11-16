@@ -11,8 +11,11 @@ import computeTransactionModifications from './resolveTransactions.js';
 import Big from 'big.js';
 import startOfDay from 'date-fns/fp/startOfDay';
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval';
+import format from 'date-fns/fp/format';
 
 import { testData, testData2 } from './resolveData.testdata.js';
+
+const formatDate = format('yyyy-MM-dd kkmmss');
 
 let graphRange = {
   start: startOfDay('2018-03-01'),
@@ -131,50 +134,28 @@ describe('checks modifications', () => {
   let stackComputed = buildStack(testData2, graphRange);
 
   it('provides correct modification array', () => {
-    expect(testMods).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          mutateKey: 'test-data-2',
-          y: '150'
-        })
-      ])
-    );
+    expect(formatDate(testMods[0].date)).toBe('2018-03-25 240000');
+    expect(testMods[0].mutateKey).toBe('test-data-2');
+    expect(testMods[0].y.toFixed(0)).toBe('150');
   });
 
   it('correctly applies a modification', () => {
-    expect(testMods[0]).toEqual(
-      expect.objectContaining({
-        date: new Date('2018-03-22T05:00:00.000Z'),
-        mutateKey: 'test-data-2',
-        y: '150'
-      })
-    );
+    expect(formatDate(testMods[0].date)).toBe('2018-03-22 240000');
+    expect(testMods[0].mutateKey).toBe('test-data-2');
+    expect(testMods[0].y.toFixed(0)).toBe('150');
 
-    expect(modOneApplied[21]).toEqual(
-      expect.objectContaining({
-        'test-data-2': {
-          id: 'test-data-2',
-          value: '150',
-          y: '150'
-        }
-      })
-    );
+    expect(formatDate(modOneApplied[21].date)).toBe('2018-03-25 240000');
+    expect(modOneApplied[21]['test-data-2'].id).toBe('test-data-2');
+    expect(modOneApplied[21]['test-data-2'].value.toFixed(0)).toBe('150');
+    expect(modOneApplied[21]['test-data-2'].y.toFixed(0)).toBe('150');
   });
 
   it('provides correctly modified date array', () => {
     expect(stackComputed).toHaveLength(185);
 
-    expect(stackComputed).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          'test-data-2': {
-            id: 'test-data-2',
-            value: '150',
-            y: '150',
-            dailyRate: '50'
-          }
-        })
-      ])
-    );
+    expect(formatDate(stackComputed[24].date)).toBe('2018-03-25 240000');
+    expect(stackComputed[24]['test-data-2'].id).toBe('test-data-2');
+    expect(stackComputed[24]['test-data-2'].value.toFixed(0)).toBe('150');
+    expect(stackComputed[24]['test-data-2'].y.toFixed(0)).toBe('150');
   });
 });
