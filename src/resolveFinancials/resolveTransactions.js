@@ -88,7 +88,6 @@ const generateModification = (
     ) &&
     Big(generatedOccurrences).lte(365)
   ) {
-    if (transaction.id === 'test-data-2') console.log(modification);
     modifications.push(modification);
     generateModification(
       transaction,

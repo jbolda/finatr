@@ -25,10 +25,6 @@ let graphRange = {
 };
 testData.charts = {};
 testData.charts.GraphRange = graphRange;
-let splitTransactions = transactionSplitter({
-  transactions: testData.transactions,
-  accounts: testData.accounts
-});
 
 let resolvedTestData = create(AppModel, testData).reCalc();
 
@@ -79,24 +75,54 @@ describe(`check state creation`, () => {
   it(`calcs the correct fiNumber`, () => {
     expect(resolvedTestData.stats.fiNumber.toNumber).toBeCloseTo(1.218);
   });
-  // it(`handles invalid interval`, () => {
-  //   let resolvedTestData1 = transactionSplitter({
-  //     accounts: testData.accounts,
-  //     transactions: [
-  //       {
-  //         id: `oasis92hoogyboogy`,
-  //         raccount: `account`,
-  //         description: `description`,
-  //         category: `test complex`,
-  //         type: `income`,
-  //         start: `2018-09-22`,
-  //         rtype: `none`,
-  //         value: 190
-  //       }
-  //     ]
-  //   });
-  //   expect(resolvedTestData1.charts.BarChartIncome.length).toBe(0);
-  // });
+  it(`handles invalid interval on single transaction`, () => {
+    let testData1 = {
+      accounts: testData.accounts,
+      transactions: [
+        {
+          id: `oasis92hoogyboogy`,
+          raccount: `account`,
+          description: `description`,
+          category: `test complex`,
+          type: `income`,
+          start: `2018-09-22`,
+          rtype: `none`,
+          value: Big(190),
+          dailyRate: Big(0)
+        }
+      ]
+    };
+    testData1.charts = {};
+    testData1.charts.GraphRange = graphRange;
+
+    let resolvedTestData1 = create(AppModel, testData1).reCalc();
+    expect(resolvedTestData1.charts.state.BarChartIncome.length).toBe(1);
+  });
+
+  it(`handles invalid interval on single transaction of many`, () => {
+    let testData1 = {
+      accounts: testData.accounts,
+      transactions: [
+        ...testData.transactions,
+        {
+          id: `oasis92hoogyboogy`,
+          raccount: `account`,
+          description: `description`,
+          category: `test complex`,
+          type: `income`,
+          start: `2018-09-22`,
+          rtype: `none`,
+          value: Big(190),
+          dailyRate: Big(0)
+        }
+      ]
+    };
+    testData1.charts = {};
+    testData1.charts.GraphRange = graphRange;
+
+    let resolvedTestData1 = create(AppModel, testData1).reCalc();
+    expect(resolvedTestData1.charts.state.BarChartIncome.length).toBe(7);
+  });
 });
 
 describe(`check resolveData handles paybacks`, () => {
@@ -129,7 +155,7 @@ describe('checks modifications', () => {
     });
     return obj;
   });
-  console.log(convertRangeToInterval(testData2[0], graphRange));
+
   // return array of modifications to be applied to stackStructure
   let testMods = computeTransactionModifications(testData2, graphRange);
   let modOneApplied = applyModifications(allDates)(stackStructure, testMods[0]);

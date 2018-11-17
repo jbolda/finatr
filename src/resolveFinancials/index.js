@@ -123,11 +123,10 @@ const buildStack = (data, graphRange) => {
     return obj;
   });
 
+  let computedTMods = computeTransactionModifications(data, graphRange);
+
   // return array of modifications to be applied to stackStructure
-  return computeTransactionModifications(data, graphRange).reduce(
-    applyModifications(allDates),
-    stackStructure
-  );
+  return computedTMods.reduce(applyModifications(allDates), stackStructure);
 };
 
 const resolveBarChart = (dataRaw, { graphRange }) => {

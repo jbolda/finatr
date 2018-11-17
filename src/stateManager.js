@@ -346,7 +346,7 @@ class Stats {
       } else {
         return accumulator;
       }
-    }, 0);
+    }, _Big(0));
 
     let totalInvest = accounts.reduce((accumulator, d) => {
       if (d.vehicle === 'investment') {
@@ -354,7 +354,7 @@ class Stats {
       } else {
         return accumulator;
       }
-    }, 0);
+    }, _Big(0));
 
     return this.dailyIncome
       .set(dailyIncome)
