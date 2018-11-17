@@ -56,6 +56,14 @@ const generateModification = (
   visibleOccurrences,
   generatedOccurrences
 ) => {
+  if (!transaction) {
+    throw new Error('generateModification expects transaction');
+  }
+
+  if (!prevDate) {
+    throw new Error('generateModification expects prevDate');
+  }
+
   let modification = nextModification(transaction.rtype)({
     transaction: transaction,
     seedDate: prevDate,
@@ -172,6 +180,14 @@ const transactionCompute = ({ transaction }) => {
 
 // when transaction.rtype === 'none'
 const transactionNoReoccur = ({ transaction, seedDate }) => {
+  if (!transaction.start) {
+    throw new Error('transactionNoReoccur expects transaction.start');
+  }
+
+  if (!transaction.value) {
+    throw new Error('transactionNoReoccur expects transaction.value');
+  }
+
   return {
     date: transaction.start,
     y: transaction.value
@@ -186,10 +202,20 @@ const transactionDailyReoccur = ({
   seedDate,
   generatedOccurrences
 }) => {
-  let cycle =
-    !!generatedOccurrences && generatedOccurrences.eq(0)
-      ? 0
-      : transaction.cycle;
+  if (!transaction.value) {
+    throw new Error('transactionDailyReoccur expects transaction.value');
+  }
+
+  if (!transaction.cycle) {
+    throw new Error('transactionDailyReoccur expects transaction.cycle');
+  }
+
+  if (!generatedOccurrences) {
+    console.log(generatedOccurrences);
+    throw new Error('transactionDailyReoccur expects generatedOccurrences');
+  }
+
+  let cycle = generatedOccurrences.eq(0) ? 0 : transaction.cycle;
   return {
     date: addDays(cycle)(seedDate),
     y: transaction.value
@@ -202,6 +228,14 @@ const transactionDailyReoccurCompute = ({ transaction }) =>
 
 // when transaction.rtype === 'day of week'
 const transactionDayOfWeekReoccur = ({ transaction, seedDate }) => {
+  if (!transaction.value) {
+    throw new Error('transactionDayOfWeekReoccur expects transaction.value');
+  }
+
+  if (!transaction.cycle) {
+    throw new Error('transactionDayOfWeekReoccur expects transaction.cycle');
+  }
+
   return {
     date: addDays(7 + getDay(seedDate) - transaction.cycle)(seedDate),
     y: transaction.value
@@ -216,6 +250,20 @@ const transactionDayOfMonthReoccur = ({
   seedDate,
   generatedOccurrences
 }) => {
+  if (!transaction.value) {
+    throw new Error('transactionDayOfMonthReoccur expects transaction.value');
+  }
+
+  if (!transaction.cycle) {
+    throw new Error('transactionDayOfMonthReoccur expects transaction.cycle');
+  }
+
+  if (!generatedOccurrences) {
+    throw new Error(
+      'transactionDayOfMonthReoccur expects generatedOccurrences'
+    );
+  }
+
   let monthlyDate;
   let isBeforeSeedDate = isBefore(seedDate);
   let cycleDate = setDate(transaction.cycle);
@@ -237,20 +285,12 @@ const transactionDayOfMonthReoccurCompute = ({ transaction }) =>
 
 // when transaction.rtype === 'bimonthly'
 const transactionBimonthlyReoccur = ({ transaction, seedDate }) => {
-  if (!transaction) {
-    throw new Error('transactionSemiannuallyReoccur expects { transaction }');
-  }
-
   if (!transaction.value) {
-    transaction.value = 0;
+    throw new Error('transactionBimonthlyReoccur expects transaction.value');
   }
 
   if (!transaction.cycle) {
-    transaction.cycle = 1;
-  }
-
-  if (!seedDate) {
-    throw new Error('transactionSemiannuallyReoccur expects { seedDate }');
+    throw new Error('transactionBimonthlyReoccur expects transaction.cycle');
   }
 
   return {
@@ -263,20 +303,12 @@ const transactionBimonthlyReoccurCompute = ({ transaction }) =>
 
 // when transaction.rtype === 'quarterly'
 const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
-  if (!transaction) {
-    throw new Error('transactionQuarterlyReoccur expects { transaction }');
-  }
-
-  if (!seedDate) {
-    throw new Error('transactionSemiannuallyReoccur expects { seedDate }');
-  }
-
   if (!transaction.value) {
-    transaction.value = 0;
+    throw new Error('transactionQuarterlyReoccur expects transaction.value');
   }
 
   if (!transaction.cycle) {
-    transaction.cycle = 1;
+    throw new Error('transactionQuarterlyReoccur expects transaction.cycle');
   }
 
   return {
@@ -289,16 +321,8 @@ const transactionQuarterlyReoccurCompute = ({ transaction }) =>
 
 // when transaction.rtype === 'semiannually'
 const transactionSemiannuallyReoccur = ({ transaction, seedDate }) => {
-  if (!transaction) {
-    throw new Error('transactionSemiannuallyReoccur expects { transaction }');
-  }
-
-  if (!seedDate) {
-    throw new Error('transactionSemiannuallyReoccur expects { seedDate }');
-  }
-
   if (!transaction.value) {
-    transaction.value = 0;
+    throw new Error('transactionSemiannuallyReoccur expects transaction.value');
   }
 
   return {
@@ -311,16 +335,8 @@ const transactionSemiannuallyReoccurCompute = ({ transaction }) =>
 
 // when transaction.rtype === 'annually'
 const transactionAnnuallyReoccur = ({ transaction, seedDate }) => {
-  if (!transaction) {
-    throw new Error('transactionAnnuallyReoccur expects { transaction }');
-  }
-
-  if (!seedDate) {
-    throw new Error('transactionAnnuallyReoccur expects { seedDate }');
-  }
-
   if (!transaction.value) {
-    transaction.value = 0;
+    throw new Error('transactionAnnuallyReoccur expects transaction.value');
   }
 
   return {
