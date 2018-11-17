@@ -19,25 +19,14 @@ const computeTransactionModifications = (transactions, graphRange) =>
     // early return if end is before start, we will have no modifications
     if (isBefore(transactionInterval.start)(transactionInterval.end)) return [];
 
-    let coercePaybacksIntoTransactions = Array.isArray(transaction)
-      ? transaction
-      : [transaction];
-
     return modifications.concat(
-      coercePaybacksIntoTransactions.reduce(
-        (nestedMods, coercedTransactions) => {
-          return nestedMods.concat(
-            generateModification(
-              coercedTransactions,
-              transactionInterval,
-              coercedTransactions.start,
-              [],
-              Big(0),
-              Big(0)
-            )
-          );
-        },
-        []
+      generateModification(
+        transaction,
+        transactionInterval,
+        transactionInterval.start,
+        [],
+        Big(0),
+        Big(0)
       )
     );
   }, []);

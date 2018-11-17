@@ -137,23 +137,14 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
   let keys = [];
 
   dataRaw.forEach((d, i) => {
-    if (Array.isArray(d)) {
-      d.forEach((d2, i2) => {
-        let key = { value: d2.id, index: i, indexNested: i2 };
-        keys.push(key);
-      });
-    } else {
-      let key = { value: d.id, index: i };
-      keys.push(key);
-    }
+    let key = { value: d.id, index: i };
+    keys.push(key);
   });
 
   // we coerce into Big here temporarily
   // eventually we need to except it to already be Big
   let data = keys.map(key => {
-    let dataAccess = Array.isArray(dataRaw[key.index])
-      ? dataRaw[key.index][key.indexNested]
-      : dataRaw[key.index];
+    let dataAccess = dataRaw[key.index];
     let newDatum = { ...dataAccess };
     if (newDatum.value) {
       newDatum.value = Big(dataAccess.value);
