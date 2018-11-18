@@ -2,7 +2,10 @@ import Big from 'big.js';
 import startOfDay from 'date-fns/fp/startOfDay';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
 
-import { transactionDayOfMonthReoccur } from './index.js';
+import computeTransactionModifications, {
+  transactionDayOfMonthReoccur,
+  generateModification
+} from './index.js';
 
 describe(`check transactionDayOfMonthReoccur`, () => {
   const transaction = {

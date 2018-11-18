@@ -3,7 +3,6 @@ import dateMax from 'date-fns/fp/max';
 import dateMin from 'date-fns/fp/min';
 import isWithinInterval from 'date-fns/fp/isWithinInterval';
 import addDays from 'date-fns/fp/addDays';
-import subDays from 'date-fns/fp/subDays';
 import addMonths from 'date-fns/fp/addMonths';
 import setDate from 'date-fns/fp/setDate';
 import addQuarters from 'date-fns/fp/addQuarters';
