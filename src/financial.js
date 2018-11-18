@@ -2,11 +2,11 @@ import React from 'react';
 import { Consumer } from '@microstates/react';
 import BarChart from './barChart';
 
-import TabView from '/src/components/view/tabView';
-import TransactionInput from '/src/forms/transactionInput';
-import AccountInput from '/src/forms/accountInput';
-import AccountTransactionInput from '/src/forms/accountTransactionInput';
-import Importing from '/src/importing.js';
+import TabView from './components/view/tabView';
+import TransactionInput from './forms/transactionInput';
+import AccountInput from './forms/accountInput';
+import AccountTransactionInput from './forms/accountTransactionInput';
+import Importing from './importing.js';
 
 class Financial extends React.Component {
   constructor(props) {
