@@ -1,10 +1,10 @@
 import React from 'react';
 import { Consumer } from '@microstates/react';
-import TabView from '/src/components/view/tabView';
+import TabView from './components/view/tabView';
 
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';
-import YNABInput from '/src/forms/ynabInput.js';
+import YNABInput from './forms/ynabInput.js';
 
 class Importing extends React.Component {
   constructor(props) {
