@@ -2,7 +2,7 @@ import React from 'react';
 import { Consumer } from '@microstates/react';
 import { Formik, Field } from 'formik';
 
-import * as Form from './components/bootstrap/Form';
+import * as Form from './../components/bootstrap/Form';
 
 function FieldInput({
   fieldName,
