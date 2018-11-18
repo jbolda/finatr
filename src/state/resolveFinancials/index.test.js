@@ -1,12 +1,12 @@
 import { create } from 'microstates';
-import AppModel from '/src/stateManager.js';
+import AppModel from '/src/state';
 import {
   sortTransactionOrder,
   transactionSplitter,
   applyModifications,
   replaceWithModified,
   buildStack
-} from '/src/resolveFinancials';
+} from './index.js';
 import computeTransactionModifications, {
   convertRangeToInterval
 } from './resolveTransactions.js';
@@ -15,7 +15,7 @@ import startOfDay from 'date-fns/fp/startOfDay';
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval';
 import format from 'date-fns/fp/format';
 
-import { testData, testData2 } from './resolveData.testdata.js';
+import { testData, testData2 } from './index.testdata.js';
 
 const formatDate = format('yyyy-MM-dd kkmmss');
 

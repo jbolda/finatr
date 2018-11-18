@@ -2,8 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import State from '@microstates/react';
-import AppModel from './stateManager.js';
-import { seedTwo } from './resolveFinancials/seedData.js';
+import AppModel from '/src/state';
 
 import 'bulma/css/bulma.css';
 import Financial from './financial';

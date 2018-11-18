@@ -5,7 +5,7 @@ import closestIndexTo from 'date-fns/closestIndexTo';
 import addDays from 'date-fns/fp/addDays';
 import startOfDay from 'date-fns/fp/startOfDay';
 
-import computeTransactionModifications from './resolveTransactions.js';
+import computeTransactionModifications from './resolveTransactions';
 
 const sortTransactionOrder = (a, b) => {
   const typeA = a.type.toUpperCase();

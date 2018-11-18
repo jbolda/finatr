@@ -1,12 +1,5 @@
+import { valueOf, create, ObjectType, StringType } from 'microstates';
 import {
-  valueOf,
-  create,
-  ObjectType,
-  StringType,
-  BooleanType
-} from 'microstates';
-import {
-  sortTransactionOrder,
   coercePaybacks,
   transactionSplitter,
   past,
@@ -14,9 +7,9 @@ import {
   resolveBarChart,
   resolveAccountChart
 } from './resolveFinancials';
-import { transactionCompute } from '/src/resolveFinancials/resolveTransactions.js';
+import { transactionCompute } from './resolveFinancials/resolveTransactions';
 import { default as _Big } from 'big.js';
-import makeUUID from '/src/resolveFinancials/makeUUID.js';
+import makeUUID from './resolveFinancials/makeUUID.js';
 
 class AppModel {
   forms = Forms;
