@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import State from '@microstates/react';
-import AppModel from '/src/state';
+import AppModel from './state';
 
 import 'bulma/css/bulma.css';
 import Financial from './financial';
