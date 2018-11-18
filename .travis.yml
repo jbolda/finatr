@@ -22,7 +22,7 @@ jobs:
       name: Test on Node 10
       node_js: '10'
      - &build
-      stage: test
+      stage: build
       name: Test on Node 8
       node_js: '8'
       install:
