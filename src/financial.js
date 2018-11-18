@@ -9,6 +9,22 @@ import AccountTransactionInput from '/src/forms/accountTransactionInput';
 import Importing from '/src/importing.js';
 
 class Financial extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      activeTabTransactions: 0,
+      activeTabAccounts: 0
+    };
+  }
+
+  tabClickTransactions(index) {
+    this.setState({ activeTabTransactions: index });
+  }
+
+  tabClickAccounts(index) {
+    this.setState({ activeTabAccounts: index });
+  }
+
   render() {
     return (
       <Consumer>
@@ -54,7 +70,8 @@ class Financial extends React.Component {
 
             <section className="section">
               <TabView
-                ref={ref => (this.transactionTabs = ref)}
+                activeTab={this.state.activeTabTransactions}
+                tabClick={this.tabClickTransactions.bind(this)}
                 tabTitles={['All Transactions', 'Add Transaction']}
                 tabContents={[
                   transactionTable(model.state.transactionsComputed, {
@@ -68,7 +85,8 @@ class Financial extends React.Component {
 
             <section className="section">
               <TabView
-                ref={ref => (this.accountTabs = ref)}
+                activeTab={this.state.activeTabAccounts}
+                tabClick={this.tabClickAccounts.bind(this)}
                 tabTitles={['All Accounts', 'Add Account', 'Debt']}
                 tabContents={[
                   accountTable(model.state.accounts, {

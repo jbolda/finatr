@@ -7,6 +7,17 @@ import FileReaderInput from 'react-file-reader-input';
 import YNABInput from '/src/forms/ynabInput.js';
 
 class Importing extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      activeTab: 0
+    };
+  }
+
+  tabClick(index) {
+    this.setState({ activeTab: index });
+  }
+
   handleUpload = (model, results) => {
     let result = JSON.parse(results[0][0].target.result);
     console.log(result);
@@ -33,7 +44,8 @@ class Importing extends React.Component {
       <Consumer>
         {model => (
           <TabView
-            ref={ref => (this.transactionTabs = ref)}
+            activeTab={this.state.activeTab}
+            tabClick={this.tabClick.bind(this)}
             tabTitles={['Import From YNAB', 'Manual Upload/Download']}
             tabContents={[
               <div className="container is-fluid">

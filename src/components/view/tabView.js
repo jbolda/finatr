@@ -11,7 +11,11 @@ class TabView extends React.Component {
   }
 
   tabClick(index) {
-    this.setState({ activeTab: index });
+    if (this.props.tabClick) {
+      this.props.tabClick(index);
+    } else {
+      this.setState({ activeTab: index });
+    }
   }
 
   computeUrl(tabName) {
@@ -22,12 +26,16 @@ class TabView extends React.Component {
 
   render() {
     let tabContents = null;
+    let activeTab = this.props.activeTab
+      ? this.props.activeTab
+      : this.state.activeTab;
+
     if (
-      this.state.activeTab !== null &&
+      activeTab !== null &&
       this.props.tabContents &&
-      this.props.tabContents[this.state.activeTab]
+      this.props.tabContents[activeTab]
     ) {
-      tabContents = this.props.tabContents[this.state.activeTab];
+      tabContents = this.props.tabContents[activeTab];
     }
 
     return (
@@ -37,7 +45,7 @@ class TabView extends React.Component {
             {this.props.tabTitles.map((tab, index) => (
               <li
                 key={tab}
-                className={index === this.state.activeTab ? 'is-active' : ''}
+                className={index === activeTab ? 'is-active' : ''}
                 onClick={this.tabClick.bind(this, index)}
               >
                 <a>{tab}</a>
