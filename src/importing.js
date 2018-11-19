@@ -47,7 +47,7 @@ class Importing extends React.Component {
           <TabView
             activeTab={this.state.activeTab}
             tabClick={this.tabClick.bind(this)}
-            tabTitles={['Import From YNAB', 'Manual Upload/Download']}
+            tabTitles={['Manual Upload/Download', 'Import From YNAB']}
             tabContents={[
               <nav className="level">
                 <div className="level-left">
