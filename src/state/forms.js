@@ -1,17 +1,6 @@
 import { valueOf, StringType } from 'microstates';
 import { Big } from './customTypes.js';
 
-class Forms {
-  transactionForm = TransactionForm;
-  accountForm = AccountForm;
-  accountTransactionForm = AccountTransactionForm;
-  ynabForm = YNABForm;
-
-  get state() {
-    return valueOf(this);
-  }
-}
-
 class TransactionForm {
   id = StringType;
   raccount = StringType;
@@ -57,6 +46,17 @@ class AccountTransactionForm {
 class YNABForm {
   devToken = StringType;
   budgetId = StringType;
+}
+
+class Forms {
+  transactionForm = TransactionForm;
+  accountForm = AccountForm;
+  accountTransactionForm = AccountTransactionForm;
+  ynabForm = YNABForm;
+
+  get state() {
+    return valueOf(this);
+  }
 }
 
 export { Forms };

@@ -9,6 +9,23 @@ import {
   resolveAccountChart
 } from './resolveFinancials';
 
+class BarChart extends TransactionComputed {
+  stack = Array;
+
+  get state() {
+    return valueOf(this);
+  }
+}
+
+class LineChart extends Account {
+  values = [LineChartValues];
+}
+
+class LineChartValues {
+  date = StringType;
+  value = Big;
+}
+
 class Charts {
   GraphRange = ObjectType;
   BarChartIncome = create([BarChart], [{ id: 'default' }]);
@@ -72,23 +89,6 @@ class Charts {
       }, 0)
     );
   }
-}
-
-class BarChart extends TransactionComputed {
-  stack = Array;
-
-  get state() {
-    return valueOf(this);
-  }
-}
-
-class LineChart extends Account {
-  values = [LineChartValues];
-}
-
-class LineChartValues {
-  date = StringType;
-  value = Big;
 }
 
 export { Charts };
