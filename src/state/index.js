@@ -1,4 +1,6 @@
 import { valueOf, create, ObjectType, StringType } from 'microstates';
+import { Big } from './customTypes.js';
+import { default as _Big } from 'big.js';
 import {
   coercePaybacks,
   transactionSplitter,
@@ -8,7 +10,6 @@ import {
   resolveAccountChart
 } from './resolveFinancials';
 import { transactionCompute } from './resolveFinancials/resolveTransactions';
-import { default as _Big } from 'big.js';
 import makeUUID from './resolveFinancials/makeUUID.js';
 
 class AppModel {
@@ -422,36 +423,6 @@ class AccountTransactionForm {
 class YNABForm {
   devToken = StringType;
   budgetId = StringType;
-}
-
-class Big {
-  initialize(value = 0) {
-    return value instanceof _Big ? value : _Big(value);
-  }
-
-  add(value) {
-    return this.state.add(value);
-  }
-
-  div(value) {
-    return this.state.div(value);
-  }
-
-  eq(value) {
-    return this.state.eq(value);
-  }
-
-  get toFixed() {
-    return this.state.toFixed(2);
-  }
-
-  get toNumber() {
-    return Number(this.state);
-  }
-
-  get state() {
-    return valueOf(this);
-  }
 }
 
 export default AppModel;
