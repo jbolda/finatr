@@ -1,5 +1,5 @@
 import { create } from 'microstates';
-import AppModel from './../state';
+import AppModel from './../../state';
 import { applyModifications, buildStack } from './index.js';
 import computeTransactionModifications from './resolveTransactions';
 import Big from 'big.js';
