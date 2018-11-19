@@ -10,7 +10,8 @@ class TabView extends React.Component {
     }
   }
 
-  tabClick(index) {
+  tabClick(index, event) {
+    event.preventDefault();
     if (this.props.tabClick) {
       this.props.tabClick(index);
     } else {
@@ -19,6 +20,7 @@ class TabView extends React.Component {
   }
 
   computeUrl(tabName) {
+    // href={`#/${this.computeUrl(tab)}`}
     let url = tabName.toLowerCase();
     url = url.replace(' ', '_');
     return url;
@@ -43,12 +45,10 @@ class TabView extends React.Component {
         <div className="tabs">
           <ul>
             {this.props.tabTitles.map((tab, index) => (
-              <li
-                key={tab}
-                className={index === activeTab ? 'is-active' : ''}
-                onClick={this.tabClick.bind(this, index)}
-              >
-                <a>{tab}</a>
+              <li key={tab} className={index === activeTab ? 'is-active' : ''}>
+                <a href="" onClick={this.tabClick.bind(this, index)}>
+                  {tab}
+                </a>
               </li>
             ))}
           </ul>
