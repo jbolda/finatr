@@ -19,6 +19,7 @@ class Importing extends React.Component {
   }
 
   handleUpload = (model, results) => {
+    console.log(results);
     let result = JSON.parse(results[0][0].target.result);
     console.log(result);
     model.transactions
@@ -48,13 +49,6 @@ class Importing extends React.Component {
             tabClick={this.tabClick.bind(this)}
             tabTitles={['Import From YNAB', 'Manual Upload/Download']}
             tabContents={[
-              <div className="container is-fluid">
-                <YNABInput
-                  initialDevToken={model.state.devToken}
-                  initialBudgetId={model.state.budgetId}
-                  addYNAB={this.addYNAB}
-                />
-              </div>,
               <nav className="level">
                 <div className="level-left">
                   <div className="level-item has-text-centered">
@@ -85,7 +79,14 @@ class Importing extends React.Component {
                     </div>
                   </div>
                 </div>
-              </nav>
+              </nav>,
+              <div className="container is-fluid">
+                <YNABInput
+                  initialDevToken={model.state.devToken}
+                  initialBudgetId={model.state.budgetId}
+                  addYNAB={this.addYNAB}
+                />
+              </div>
             ]}
           />
         )}
