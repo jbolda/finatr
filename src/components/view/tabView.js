@@ -11,7 +11,7 @@ class TabView extends React.Component {
   }
 
   tabClick(index, event) {
-    event.preventDefault();
+    if (event) event.preventDefault();
     if (this.props.tabClick) {
       this.props.tabClick(index);
     } else {
