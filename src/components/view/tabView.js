@@ -20,6 +20,13 @@ class TabView extends React.Component {
     }
   }
 
+  computeUrl(tabName) {
+    // href={`#/${this.computeUrl(tab)}`}
+    let url = tabName.toLowerCase();
+    url = url.replace(' ', '_');
+    return url;
+  }
+
   render() {
     let tabContents = null;
     let activeTab = this.props.activeTab
@@ -41,7 +48,7 @@ class TabView extends React.Component {
             {this.props.tabTitles.map((tab, index) => (
               <li key={tab} className={index === activeTab ? 'is-active' : ''}>
                 <a
-                  href={computeUrl(tab)}
+                  href={`#/${this.computeUrl(tab)}`}
                   onClick={this.tabClick.bind(this, index)}
                 >
                   {tab}
@@ -67,10 +74,3 @@ TabView.propTypes = {
 };
 
 export default TabView;
-
-const computeUrl = tabName => {
-  // href={`#/${this.computeUrl(tab)}`}
-  let url = tabName.toLowerCase();
-  url = url.replace(' ', '_');
-  return `/#/${url}`;
-};
