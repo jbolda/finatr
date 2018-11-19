@@ -17,13 +17,13 @@ class BarChart extends TransactionComputed {
   }
 }
 
-class LineChart extends Account {
-  values = [LineChartValues];
-}
-
 class LineChartValues {
   date = StringType;
   value = Big;
+}
+
+class LineChart extends Account {
+  values = [LineChartValues];
 }
 
 class Charts {

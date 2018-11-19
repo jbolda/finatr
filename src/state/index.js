@@ -1,4 +1,4 @@
-import { valueOf, create, ObjectType, StringType } from 'microstates';
+import { valueOf, ObjectType } from 'microstates';
 import { Transaction, TransactionComputed } from './transactions.js';
 import { Account } from './accounts.js';
 import { Charts } from './charts.js';
