@@ -18,15 +18,15 @@ class Importing extends React.Component {
     this.setState({ activeTab: index });
   }
 
-  handleUpload = (model, results) => {
-    console.log(results);
+  handleUpload = (model, event, results) => {
     let result = JSON.parse(results[0][0].target.result);
-    console.log(result);
+    console.log('file upload result', result);
     model.transactions
       .set(result.transactions)
       .accounts.set(result.transactions)
       .forms.ynabForm.devToken.set(result.devToken)
-      .forms.ynabForm.budgetId.set(result.budgetId);
+      .forms.ynabForm.budgetId.set(result.budgetId)
+      .reCalc();
   };
 
   handleDownload = model => {
