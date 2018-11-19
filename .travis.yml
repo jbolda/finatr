@@ -21,7 +21,8 @@ jobs:
     - <<: *test
       name: Test on Node 10
       node_js: '10'
-     - &build
+
+    - &build
       stage: build
       name: Test on Node 8
       node_js: '8'
