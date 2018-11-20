@@ -1,10 +1,14 @@
 import React from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom';
+
+import State from '@microstates/react';
+import AppModel from './state';
+
 import 'bulma/css/bulma.css';
 import Financial from './financial';
 
 const App = () => (
-  <React.Fragment>
+  <State type={AppModel}>
     <nav
       className="navbar is-fixed-top is-primary"
       role="navigation"
@@ -19,7 +23,8 @@ const App = () => (
     <section className="section">
       <Financial />
     </section>
-  </React.Fragment>
+  </State>
 );
 
-render(<App />, document.getElementById('root'));
+const root = ReactDOM.unstable_createRoot(document.getElementById('root'));
+root.render(<App />);

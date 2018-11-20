@@ -1,5 +1,5 @@
 {
-  "name": "Reaccount",
+  "name": "finatr",
   "version": "1.0.0-alpha.0",
   "description": "",
   "keywords": [],
@@ -8,21 +8,25 @@
     "node": ">=8.10.0"
   },
   "dependencies": {
-    "bulma": "0.7.1",
+    "@microstates/react": "0.9.0",
+    "big.js": "5.2.2",
+    "bulma": "0.7.2",
     "d3": "5.7.0",
-    "date-fns": "2.0.0-alpha.16",
-    "formik": "1.3.1",
+    "date-fns": "2.0.0-alpha.25 - next",
+    "formik": "1.3.2",
     "js-file-download": "0.4.4",
+    "microstates": "0.12.0",
     "prop-types": "15.6.2",
-    "react": "16.5.2",
-    "react-dom": "16.5.2",
+    "react": "16.6.3",
+    "react-dom": "16.6.3",
     "react-file-reader-input": "2.0.0",
-    "react-scripts": "2.0.3",
-    "ynab": "1.8.0"
+    "react-scripts": "2.1.1",
+    "ynab": "1.9.0"
   },
   "devDependencies": {
     "jest": "^23.6.0",
-    "prettier": "^1.14.3"
+    "prettier": "^1.14.3",
+    "react-test-renderer": "^16.6.3"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,472 +1,118 @@
 import React from 'react';
+import { Consumer } from '@microstates/react';
 import BarChart from './barChart';
-import resolveData from './resolveFinancials';
-import makeUUID from './makeUUID.js';
 
-import TabView from './tabView';
-import TransactionInput from './transactionInput';
-import AccountInput from './accountInput';
-import AccountTransactionInput from './accountTransactionInput';
-import YNABInput from './ynabInput.js';
-
-import fileDownload from 'js-file-download';
-import FileReaderInput from 'react-file-reader-input';
+import TabView from './components/view/tabView';
+import TransactionInput from './forms/transactionInput';
+import AccountInput from './forms/accountInput';
+import AccountTransactionInput from './forms/accountTransactionInput';
+import Importing from './importing.js';
 
 class Financial extends React.Component {
-  constructor() {
+  constructor(props) {
     super();
     this.state = {
-      transaction: [],
-      accounts: [],
-      BarChartIncome: [],
-      BarChartExpense: [],
-      BarChartMax: 0,
-      dailyIncome: 0,
-      dailyExpense: 0,
-      dailyRate: 0,
-      savingsRate: 0,
-      fiNumber: 0,
-      AccountChart: [],
-      LineChartMax: 0,
-      transactionForm: {
-        id: ``,
-        raccount: `account`,
-        description: `description`,
-        category: `test default`,
-        type: `income`,
-        start: `2018-03-22`,
-        rtype: `day`,
-        cycle: 3,
-        value: 150
-      },
-      accountForm: {
-        name: 'new account',
-        starting: 1000,
-        interest: 0.0,
-        vehicle: 'operating'
-      },
-      accountTransactionForm: {
-        id: ``,
-        debtAccount: `account`,
-        raccount: `account`,
-        start: `2018-03-22`,
-        rtype: `day`,
-        cycle: 3,
-        generatedOccurences: 0,
-        value: 150
-      }
+      activeTabTransactions: 0,
+      activeTabAccounts: 0
     };
   }
 
-  componentDidMount() {
-    let data = [];
-    let dOne = {
-      id: `oasidjas1`,
-      raccount: `account`,
-      description: `description`,
-      category: `test default`,
-      type: `income`,
-      start: `2018-03-22`,
-      rtype: `day`,
-      cycle: 3,
-      value: 150
-    };
-    data.push(dOne);
-    let dTwo = {
-      id: `oasis2`,
-      raccount: `account`,
-      description: `description`,
-      category: `test default occurences`,
-      type: `income`,
-      start: `2018-09-22`,
-      occurences: 7,
-      rtype: `day`,
-      cycle: 1,
-      value: 100
-    };
-    data.push(dTwo);
-    let dThree = {
-      id: `oasis3`,
-      raccount: `account`,
-      description: `description`,
-      category: `test complex`,
-      type: `income`,
-      start: `2018-03-22`,
-      rtype: `day of week`,
-      cycle: 2,
-      value: 35
-    };
-    data.push(dThree);
-    let dFour = {
-      id: `oasis6`,
-      raccount: `account`,
-      description: `description`,
-      category: `test complex`,
-      type: `income`,
-      start: `2018-03-22`,
-      rtype: `day of month`,
-      cycle: 1,
-      value: 90
-    };
-    data.push(dFour);
-    let dThreePointFive = {
-      id: `oasis92`,
-      raccount: `account`,
-      description: `description`,
-      category: `test complex`,
-      type: `income`,
-      start: `2018-09-22`,
-      rtype: `none`,
-      value: 190
-    };
-    data.push(dThreePointFive);
-    let dFive = {
-      id: `oasis8`,
-      raccount: `account`,
-      description: `description`,
-      category: `test comp`,
-      type: `expense`,
-      start: `2018-03-22`,
-      rtype: `day of month`,
-      cycle: 1,
-      value: 112
-    };
-    data.push(dFive);
-    let dSix = {
-      id: `oasis8asg`,
-      raccount: `account2`,
-      description: `description`,
-      category: `test comp`,
-      type: `transfer`,
-      start: `2018-03-22`,
-      rtype: `day`,
-      cycle: 1,
-      value: 112
-    };
-    data.push(dSix);
-
-    let dataArray = {
-      transactions: data,
-      accounts: [
-        {
-          name: 'account',
-          starting: 3000,
-          interest: 0.01,
-          vehicle: 'operating'
-        },
-        {
-          name: 'account2',
-          starting: 30000,
-          interest: 0.01,
-          vehicle: 'investment'
-        },
-        {
-          name: 'account3',
-          starting: 30000,
-          interest: 6.0,
-          vehicle: 'debt',
-          payback: {
-            id: `sasdqljg`,
-            description: `payback`,
-            category: 'account3 payback',
-            type: 'expense',
-            payoffBalance: 1500,
-            transactions: [
-              {
-                raccount: 'account',
-                start: `2018-03-15`,
-                rtype: `day of month`,
-                cycle: 15,
-                value: 112
-              },
-              {
-                raccount: 'account',
-                start: `2018-03-15`,
-                rtype: `day of month`,
-                cycle: 15,
-                visibleOccurrences: 1,
-                value: 'payoffBalance'
-              }
-            ]
-          }
-        }
-      ]
-    };
-
-    let resolvedData = Promise.resolve(resolveData(dataArray));
-    requestAnimationFrame(() => {
-      resolvedData.then(data => this.setState(data));
-    });
+  tabClickTransactions(index) {
+    this.setState({ activeTabTransactions: index });
   }
 
-  handleUpload = (event, results) => {
-    let result = JSON.parse(results[0][0].target.result);
-    console.log(result);
-    let calculated = resolveData(result);
-    this.setState(calculated);
-  };
-
-  handleDownload = () => {
-    let outputData = {
-      transactions: [...this.state.transactions],
-      accounts: [...this.state.accounts],
-      devToken: this.state.devToken,
-      budgetId: this.state.budgetId
-    };
-    let fileData = JSON.stringify(outputData);
-    fileDownload(fileData, 'financials.json');
-  };
-
-  addTransaction = result => {
-    let newState = { ...this.state };
-    if (result.id || result.id !== '') {
-      let existingTransactionIndex = newState.transactions
-        .map(t => t.id)
-        .indexOf(result.id);
-      if (existingTransactionIndex === -1) {
-        newState.transactions.push(result);
-      } else {
-        newState.transactions.splice(existingTransactionIndex, 1, result);
-      }
-    } else {
-      newState.transactions.push({ ...result, id: makeUUID() });
-    }
-    newState.transactionForm.id = '';
-    this.setState(resolveData(newState));
-    this.transactionTabs.tabClick(0);
-  };
-
-  modifyTransaction = id => {
-    let newState = { ...this.state };
-    newState.transactionForm = this.state.transactions.find(
-      element => element.id === id
-    );
-    this.setState(resolveData(newState));
-    this.transactionTabs.tabClick(1);
-  };
-
-  deleteTransaction = id => {
-    let newState = { ...this.state };
-    newState.transactions.splice(
-      this.state.transactions.findIndex(element => element.id === id),
-      1
-    );
-    this.setState(resolveData(newState));
-  };
-
-  addAccount = result => {
-    let newState = { ...this.state };
-    let existingAccountIndex = newState.accounts
-      .map(t => t.name)
-      .indexOf(result.name);
-    if (existingAccountIndex === -1) {
-      newState.accounts.push(result);
-    } else {
-      newState.accounts.splice(existingAccountIndex, 1, result);
-    }
-    this.setState(resolveData(newState));
-    this.accountTabs.tabClick(0);
-  };
-
-  modifyAccount = name => {
-    let newState = { ...this.state };
-    newState.accountForm = this.state.accounts.find(
-      element => element.name === name
-    );
-    this.setState(resolveData(newState));
-    this.accountTabs.tabClick(1);
-  };
-
-  deleteAccount = name => {
-    let newState = { ...this.state };
-    newState.accounts.splice(
-      this.state.accounts.findIndex(element => element.name === name),
-      1
-    );
-    this.setState(resolveData(newState));
-  };
-
-  addAccountTransaction = result => {
-    let newState = { ...this.state };
-    let accountIndex = newState.accounts
-      .map(a => a.name)
-      .indexOf(result.debtAccount);
-    let payback = { ...newState.accounts[accountIndex].payback };
-    payback.id = makeUUID();
-    if (!payback.transactions) {
-      payback.transactions = [];
-    }
-    payback.transactions.push({
-      raccount: result.raccount,
-      start: result.start,
-      rtype: result.rtype,
-      cycle: result.cycle,
-      occurences: result.occurences,
-      value: result.value
-    });
-    newState.accountTransactionForm.id = '';
-    this.setState(resolveData(newState));
-  };
-
-  addYNAB = (tokens, resultantAccounts, resultantTransactions) => {
-    let newState = { ...this.state };
-    let indexed = {};
-    resultantAccounts.forEach(resultAccount => {
-      indexed[resultAccount.name] = resultAccount;
-    });
-    this.state.accounts.forEach(existingAccount => {
-      if (!indexed[existingAccount.name]) {
-        indexed[existingAccount.name] = existingAccount;
-      } else {
-        indexed[existingAccount.name] = {
-          name: existingAccount.name,
-          starting: indexed[existingAccount.name].starting,
-          interest: existingAccount.interest ? existingAccount.interest : 0,
-          vehicle: existingAccount.vehicle
-            ? existingAccount.vehicle
-            : 'operating'
-        };
-      }
-    });
-
-    newState.accounts = Object.keys(indexed).map(key => indexed[key]);
-    newState.transactions = [
-      ...this.state.transactions,
-      ...resultantTransactions
-    ];
-    newState.devToken = tokens.devToken;
-    newState.budgetId = tokens.budgetId;
-    this.setState(resolveData(newState));
-  };
+  tabClickAccounts(index) {
+    this.setState({ activeTabAccounts: index });
+  }
 
   render() {
     return (
-      <React.Fragment>
-        <section className="section">
-          <div className="level">
-            <div className="level-item has-text-centered">
-              <div>
-                <p className="heading">Daily Income</p>
-                <p className="heading">
-                  ${this.state.dailyIncome.toFixed(2) || null}
-                </p>
+      <Consumer>
+        {model => (
+          <React.Fragment>
+            <section className="section">
+              <div className="level">
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">Daily Income</p>
+                    <p className="heading">
+                      ${model.stats.dailyIncome.state.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">Daily Expenses</p>
+                    <p className="heading">
+                      ${model.stats.dailyExpense.state.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">Savings Rate</p>
+                    <p className="heading">
+                      {model.stats.savingsRate.state.toFixed(2)}%
+                    </p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">% to FI</p>
+                    <p className="heading">
+                      {model.stats.fiNumber.state.toFixed(2)}%
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="level-item has-text-centered">
-              <div>
-                <p className="heading">Daily Expenses</p>
-                <p className="heading">
-                  ${this.state.dailyExpense.toFixed(2) || null}
-                </p>
-              </div>
-            </div>
-            <div className="level-item has-text-centered">
-              <div>
-                <p className="heading">Savings Rate</p>
-                <p className="heading">
-                  {this.state.savingsRate.toFixed(2) || null}%
-                </p>
-              </div>
-            </div>
-            <div className="level-item has-text-centered">
-              <div>
-                <p className="heading">% to FI</p>
-                <p className="heading">
-                  {this.state.fiNumber.toFixed(2) || null}%
-                </p>
-              </div>
-            </div>
-          </div>
-          <BarChart data={this.state} />
-        </section>
+              <BarChart data={model.charts.state} />
+            </section>
 
-        <nav className="level">
-          <div className="level-left">
-            <div className="level-item has-text-centered">
-              <div>
-                <p className="heading">Get your current</p>
-                <p className="heading">data out:</p>
-                <button
-                  className="button is-success"
-                  onClick={this.handleDownload}
-                >
-                  Download
-                </button>
-              </div>
-            </div>
-            <div className="level-item has-text-centered">
-              <div>
-                <p className="heading">Import data from</p>
-                <p className="heading">your computer:</p>
-                <FileReaderInput
-                  as="text"
-                  id="my-file-input"
-                  onChange={this.handleUpload}
-                >
-                  <button className="button is-link">Select a file!</button>
-                </FileReaderInput>
-              </div>
-            </div>
-          </div>
-        </nav>
-
-        <section className="section">
-          <TabView
-            ref={ref => (this.transactionTabs = ref)}
-            tabTitles={['All Transactions', 'Add Transaction']}
-            tabContents={[
-              transactionTable(this.state.transactions, {
-                modifyTransaction: this.modifyTransaction,
-                deleteTransaction: this.deleteTransaction
-              }),
-              <TransactionInput
-                accounts={this.state.accounts}
-                addTransaction={this.addTransaction}
-                initialValues={this.state.transactionForm}
+            <section className="section">
+              <TabView
+                activeTab={this.state.activeTabTransactions}
+                tabClick={this.tabClickTransactions.bind(this)}
+                tabTitles={['All Transactions', 'Add Transaction']}
+                tabContents={[
+                  transactionTable(model.state.transactionsComputed, {
+                    modifyTransaction: model.modifyTransaction,
+                    deleteTransaction: model.deleteTransaction
+                  }),
+                  <TransactionInput />
+                ]}
               />
-            ]}
-          />
-        </section>
+            </section>
 
-        <section className="section">
-          <TabView
-            ref={ref => (this.accountTabs = ref)}
-            tabTitles={['All Accounts', 'Add Account', 'Debt']}
-            tabContents={[
-              accountTable(this.state.accounts, {
-                modifyAccount: this.modifyAccount,
-                deleteAccount: this.deleteAccount
-              }),
-              <AccountInput
-                addAccount={this.addAccount}
-                initialValues={this.state.accountForm}
-              />,
-              <React.Fragment>
-                {debtTable(this.state.accounts, {
-                  modifyAccount: this.modifyAccount,
-                  deleteAccount: this.deleteAccount
-                })}
-                <AccountTransactionInput
-                  ref={ref => (this.AccountTransactionForm = ref)}
-                  accounts={this.state.accounts}
-                  addAccountTransaction={this.addAccountTransaction}
-                  initialValues={this.state.accountTransactionForm}
-                />
-              </React.Fragment>
-            ]}
-          />
-        </section>
+            <section className="section">
+              <TabView
+                activeTab={this.state.activeTabAccounts}
+                tabClick={this.tabClickAccounts.bind(this)}
+                tabTitles={['All Accounts', 'Add Account', 'Debt']}
+                tabContents={[
+                  accountTable(model.state.accounts, {
+                    modifyAccount: model.modifyAccount,
+                    deleteAccount: model.deleteAccount
+                  }),
+                  <AccountInput />,
+                  <React.Fragment>
+                    {debtTable(model.state.accounts, {
+                      modifyAccount: model.modifyAccount,
+                      deleteAccount: model.deleteAccount
+                    })}
+                    <AccountTransactionInput
+                      ref={ref => (this.AccountTransactionForm = ref)}
+                    />
+                  </React.Fragment>
+                ]}
+              />
+            </section>
 
-        <section className="section">
-          <div className="container is-fluid">
-            <YNABInput
-              initialDevToken={this.state.devToken}
-              initialBudgetId={this.state.budgetId}
-              addYNAB={this.addYNAB}
-            />
-          </div>
-        </section>
-      </React.Fragment>
+            <section className="section">
+              <Importing />
+            </section>
+          </React.Fragment>
+        )}
+      </Consumer>
     );
   }
 }
@@ -507,9 +153,9 @@ const transactionTable = (data, actions) => (
               <td>{transaction.type}</td>
               <td>{transaction.start}</td>
               <td>{transaction.rtype}</td>
-              <td>{transaction.cycle}</td>
-              <td>{transaction.value}</td>
-              <td>{transaction.dailyRate}</td>
+              <td>{!transaction.cycle ? '' : transaction.cycle.toFixed(0)}</td>
+              <td>{!transaction.value ? '' : transaction.value.toFixed(2)}</td>
+              <td>{transaction.dailyRate.toFixed(2)}</td>
               <td>
                 <button
                   className="button is-rounded is-small is-info"
@@ -572,37 +218,39 @@ const accountTable = (data, actions) => (
 );
 
 const debtTable = (data, actions) =>
-  data.filter(account => account.vehicle === 'debt').map(account => (
-    <div className="media box" key={account.name}>
-      <div className="media-content">
-        <div className="content">
-          <p>
-            <strong>{account.name}</strong>{' '}
-            <small>{`$${account.starting} @ ${account.interest}%`}</small>
-          </p>
+  data
+    .filter(account => account.vehicle === 'debt')
+    .map(account => (
+      <div className="media box" key={account.name}>
+        <div className="media-content">
+          <div className="content">
+            <p>
+              <strong>{account.name}</strong>{' '}
+              <small>{`$${account.starting} @ ${account.interest}%`}</small>
+            </p>
+          </div>
+          {account.payback ? paybackTable(account.payback, actions) : null}
         </div>
-        {account.payback ? paybackTable(account.payback, actions) : null}
+        <div className="media-right">
+          <button
+            className="button is-rounded is-small is-success"
+            onClick={actions.toggleAccountTransactionVisibility}
+          >
+            +
+          </button>
+          <button
+            className="button is-rounded is-small is-info"
+            onClick={actions.modifyAccount.bind(this, account.name)}
+          >
+            M
+          </button>
+          <button
+            className="delete"
+            onClick={actions.deleteAccount.bind(this, account.name)}
+          />
+        </div>
       </div>
-      <div className="media-right">
-        <button
-          className="button is-rounded is-small is-success"
-          onClick={actions.toggleAccountTransactionVisibility}
-        >
-          +
-        </button>
-        <button
-          className="button is-rounded is-small is-info"
-          onClick={actions.modifyAccount.bind(this, account.name)}
-        >
-          M
-        </button>
-        <button
-          className="delete"
-          onClick={actions.deleteAccount.bind(this, account.name)}
-        />
-      </div>
-    </div>
-  ));
+    ));
 
 const paybackTable = (data, actions) =>
   data.transactions.map(payback => (

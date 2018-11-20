@@ -1,0 +1,35 @@
+os:
+  - linux
+
+dist: trusty
+sudo: false
+language: node_js
+
+cache:
+  yarn: true
+
+jobs:
+  include:
+    - &test
+      stage: test
+      name: Test on Node 8
+      node_js: '8'
+      install:
+        - yarn
+      script:
+        - yarn test
+    - <<: *test
+      name: Test on Node 10
+      node_js: '10'
+
+    - &build
+      stage: build
+      name: Build on Node 8
+      node_js: '8'
+      install:
+        - yarn
+      script:
+        - yarn build
+    - <<: *build
+      name: Build on Node 10
+      node_js: '10'

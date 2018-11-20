@@ -1,5 +1,6 @@
 import { resolveBarChart } from './index.js';
 import startOfDay from 'date-fns/fp/startOfDay';
+import Big from 'big.js';
 
 const testData = {
   transactions: [
@@ -12,7 +13,8 @@ const testData = {
       start: `2018-01-22`,
       rtype: `day`,
       cycle: 3,
-      value: 150
+      value: 150,
+      dailyRate: 50
     }
   ]
 };
@@ -33,8 +35,9 @@ describe(`check resolveBarChart`, () => {
     expect(resolvedTestData[0]).toHaveProperty('category', 'resolveBarChart');
     expect(resolvedTestData[0]).toHaveProperty('start', '2018-01-22');
     expect(resolvedTestData[0]).toHaveProperty('rtype', 'day');
-    expect(resolvedTestData[0]).toHaveProperty('cycle', 3);
-    expect(resolvedTestData[0]).toHaveProperty('value', 150);
+    expect(resolvedTestData[0]).toHaveProperty('cycle', Big(3));
+    expect(resolvedTestData[0]).toHaveProperty('value', Big(150));
+    expect(resolvedTestData[0]).toHaveProperty('dailyRate', Big(50));
   });
 
   it(`has the new properties`, () => {
@@ -45,8 +48,7 @@ describe(`check resolveBarChart`, () => {
     let resolvedTestData = resolveBarChart(testData.transactions, {
       graphRange
     });
-    expect(resolvedTestData[0]).toHaveProperty('dailyRate', 50);
-    expect(resolvedTestData[0]).toHaveProperty('maxHeight', 150);
+    expect(resolvedTestData[0]).toHaveProperty('maxHeight', Big(150));
     expect(resolvedTestData[0].stack).toEqual(
       expect.arrayContaining([expect.arrayContaining([0, 0])])
     );
@@ -72,7 +74,7 @@ describe(`check resolveBarChart`, () => {
       [0, 0],
       [0, 0],
       [0, 0],
-      [0, 0],
+      [0, 150],
       [0, 0],
       [0, 0],
       [0, 150],
