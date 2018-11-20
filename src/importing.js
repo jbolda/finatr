@@ -23,7 +23,7 @@ class Importing extends React.Component {
     console.log('file upload result', result);
     model.transactions
       .set(result.transactions)
-      .accounts.set(result.transactions)
+      .accounts.set(result.accounts)
       .forms.ynabForm.devToken.set(result.devToken)
       .forms.ynabForm.budgetId.set(result.budgetId)
       .reCalc();
