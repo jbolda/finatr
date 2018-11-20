@@ -25,6 +25,7 @@ const computeTransactionModifications = (transactions, graphRange) =>
         transactionInterval.start,
         [],
         Big(0),
+        Big(0),
         Big(0)
       )
     );
@@ -53,7 +54,8 @@ const generateModification = (
   prevDate,
   modifications,
   visibleOccurrences,
-  generatedOccurrences
+  generatedOccurrences,
+  potentiallyVisibleOccurrences
 ) => {
   if (!transaction) {
     throw new Error('generateModification expects transaction');
@@ -84,14 +86,16 @@ const generateModification = (
     ) &&
     Big(generatedOccurrences).lte(365)
   ) {
-    modifications.push(modification);
+    if (checkVisibility(transaction, potentiallyVisibleOccurrences))
+      modifications.push(modification);
     generateModification(
       transaction,
       transactionInterval,
       modification.date,
       modifications,
       Big(visibleOccurrences).add(1),
-      Big(generatedOccurrences).add(1)
+      Big(generatedOccurrences).add(1),
+      Big(potentiallyVisibleOccurrences).add(1)
     );
 
     // this isn't a modification we want because it is before
@@ -109,7 +113,8 @@ const generateModification = (
       modification.date,
       modifications,
       visibleOccurrences,
-      generatedOccurrences.add(1)
+      generatedOccurrences.add(1),
+      potentiallyVisibleOccurrences
     );
   }
   return modifications;
@@ -129,7 +134,17 @@ const hasNotHitNumberOfOccurrences = (
   ((!!transaction && !transaction.generatedOccurrences) ||
     Big(generatedOccurrences)
       .add(1)
-      .lte(transaction.generatedOccurrences));
+      .lte(transaction.generatedOccurrences)) &&
+  ((!!transaction && !transaction.beginAfterGeneratedOccurrences) ||
+    Big(generatedOccurrences)
+      .add(1)
+      .gt(transaction.beginAfterGeneratedOccurrences));
+
+const checkVisibility = (transaction, potentiallyVisibleOccurrences) =>
+  (!!transaction && !transaction.beginAfterVisibleOccurrences) ||
+  Big(potentiallyVisibleOccurrences)
+    .add(1)
+    .gt(transaction.beginAfterVisibleOccurrences);
 
 const nextModification = rtype => {
   switch (rtype) {
