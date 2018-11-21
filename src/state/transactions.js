@@ -11,10 +11,7 @@ class Transaction {
   rtype = StringType;
   cycle = Big;
   value = Big;
-  visibleOccurrences = create(NumberType, 0);
-  generatedOccurrences = create(NumberType, 0);
-  begingAfterVisibleOccurrences = create(NumberType, 0);
-  begingAfterGeneratedOccurrences = create(NumberType, 0);
+  occurrences = create(NumberType, 0);
 
   get state() {
     return valueOf(this);
