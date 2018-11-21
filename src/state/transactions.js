@@ -12,6 +12,7 @@ class Transaction {
   cycle = Big;
   value = Big;
   occurrences = create(NumberType, 0);
+  beginAferOccurrences = create(NumberType, 0);
 
   get state() {
     return valueOf(this);

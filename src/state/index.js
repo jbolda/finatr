@@ -34,9 +34,7 @@ class AppModel {
         start: `2018-11-01`,
         rtype: `day`,
         cycle: 3,
-        value: 150,
-        occurrences: 3,
-        beginAfterOccurrences: 1
+        value: 150
       };
       return this.transactions
         .set([defaultTransaction])
