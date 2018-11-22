@@ -23,12 +23,12 @@ describe(`check transactionDailyReoccur`, () => {
     end: startOfDay('2018-02-01')
   };
   let seedDate = graphRange.start;
-  let generatedOccurrences = Big(1);
+  let occurrences = Big(1);
   it(`has all the correct properties`, () => {
     let resolvedTestData = transactionDailyReoccur({
       transaction,
       seedDate,
-      generatedOccurrences
+      occurrences
     });
     expect(resolvedTestData).toHaveProperty('date');
     expect(resolvedTestData).toHaveProperty('y');
@@ -38,7 +38,7 @@ describe(`check transactionDailyReoccur`, () => {
     let resolvedTestData = transactionDailyReoccur({
       transaction,
       seedDate,
-      generatedOccurrences
+      occurrences
     });
     expect(getMonth(resolvedTestData.date)).toBe(0);
     expect(getDate(resolvedTestData.date)).toBe(2);
@@ -49,7 +49,7 @@ describe(`check transactionDailyReoccur`, () => {
     let resolvedTestData = transactionDailyReoccur({
       transaction: testData,
       seedDate,
-      generatedOccurrences
+      occurrences
     });
     expect(
       differenceInCalendarDays(graphRange.start)(resolvedTestData.date)
@@ -61,7 +61,7 @@ describe(`check transactionDailyReoccur`, () => {
     let resolvedTestData = transactionDailyReoccur({
       transaction: testData,
       seedDate,
-      generatedOccurrences
+      occurrences
     });
     expect(
       differenceInCalendarDays(graphRange.start)(resolvedTestData.date)
@@ -73,7 +73,7 @@ describe(`check transactionDailyReoccur`, () => {
     let resolvedTestData = transactionDailyReoccur({
       transaction: testData,
       seedDate,
-      generatedOccurrences
+      occurrences
     });
     expect(
       differenceInCalendarDays(graphRange.start)(resolvedTestData.date)
@@ -85,7 +85,7 @@ describe(`check transactionDailyReoccur`, () => {
     let resolvedTestData = transactionDailyReoccur({
       transaction: testData,
       seedDate,
-      generatedOccurrences
+      occurrences
     });
     expect(
       differenceInCalendarDays(graphRange.start)(resolvedTestData.date)

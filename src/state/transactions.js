@@ -1,4 +1,4 @@
-import { valueOf, StringType } from 'microstates';
+import { valueOf, create, StringType, NumberType } from 'microstates';
 import { Big } from './customTypes.js';
 
 class Transaction {
@@ -11,6 +11,8 @@ class Transaction {
   rtype = StringType;
   cycle = Big;
   value = Big;
+  occurrences = create(NumberType, 0);
+  beginAferOccurrences = create(NumberType, 0);
 
   get state() {
     return valueOf(this);

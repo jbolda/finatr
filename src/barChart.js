@@ -416,7 +416,7 @@ barBuild.drawBar = function(
 
   rects
     .transition()
-    .delay((d, i) => 800 + i * 150)
+    .delay((d, i) => 800 + i * 150 - (i * i) / 4)
     .duration(3000)
     .ease(d3.easeBounceOut)
     .attr('class', append_class)
@@ -437,7 +437,7 @@ barBuild.drawBar = function(
     .attr('width', widths.bar)
     .attr('y', d => barBuild.yScale(max_domain)(d[0]))
     .transition()
-    .delay((d, i) => 800 + i * 150)
+    .delay((d, i) => 800 + i * 150 - (i * i) / 4)
     .duration(3000)
     .ease(d3.easeBounceOut)
     .attr('y', d => barBuild.yScale(max_domain)(d[1]))

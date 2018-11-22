@@ -52,8 +52,8 @@ const generateModification = (
   transactionInterval,
   prevDate,
   modifications,
-  visibleOccurrences,
-  generatedOccurrences
+  actualOccurrences,
+  potentialOccurrences
 ) => {
   if (!transaction) {
     throw new Error('generateModification expects transaction');
@@ -64,10 +64,9 @@ const generateModification = (
   }
 
   let modification = nextModification(transaction.rtype)({
-    transaction: transaction,
+    transaction,
     seedDate: prevDate,
-    visibleOccurrences: visibleOccurrences,
-    generatedOccurrences: generatedOccurrences
+    occurrences: potentialOccurrences
   });
   modification.mutateKey = transaction.id;
 
@@ -77,59 +76,40 @@ const generateModification = (
     isWithinInterval(transactionInterval)(modification.date) &&
     (isAfter(prevDate)(modification.date) ||
       isSameDay(prevDate)(modification.date)) &&
-    hasNotHitNumberOfOccurrences(
-      transaction,
-      visibleOccurrences,
-      generatedOccurrences
-    ) &&
-    Big(generatedOccurrences).lte(365)
+    hasNotHitNumberOfOccurrences(transaction, actualOccurrences) &&
+    actualOccurrences.lte(365)
   ) {
-    modifications.push(modification);
+    let visibleOccurrences = 0;
+    if (checkVisibility(transaction, potentialOccurrences)) {
+      modifications.push(modification);
+      visibleOccurrences = 1;
+    }
     generateModification(
       transaction,
       transactionInterval,
       modification.date,
       modifications,
-      Big(visibleOccurrences).add(1),
-      Big(generatedOccurrences).add(1)
-    );
-
-    // this isn't a modification we want because it is before
-    //  our graph starts, but we need to keep generating to confirm
-    // that none of the future ones fall within our graphRange
-  } else if (
-    isBefore(transactionInterval.end)(modification.date) &&
-    (isAfter(prevDate)(modification.date) ||
-      (generatedOccurrences.eq(0) && isSameDay(prevDate)(modification.date))) &&
-    Big(generatedOccurrences).lte(365)
-  ) {
-    generateModification(
-      transaction,
-      transactionInterval,
-      modification.date,
-      modifications,
-      visibleOccurrences,
-      generatedOccurrences.add(1)
+      actualOccurrences.add(visibleOccurrences),
+      potentialOccurrences.add(1)
     );
   }
+
   return modifications;
 };
 
 export { generateModification };
 
-const hasNotHitNumberOfOccurrences = (
-  transaction,
-  visibleOccurrences,
-  generatedOccurrences
-) =>
-  ((!!transaction && !transaction.visibleOccurrences) ||
-    Big(visibleOccurrences)
-      .add(1)
-      .lte(transaction.visibleOccurrences)) &&
-  ((!!transaction && !transaction.generatedOccurrences) ||
-    Big(generatedOccurrences)
-      .add(1)
-      .lte(transaction.generatedOccurrences));
+const hasNotHitNumberOfOccurrences = (transaction, actualOccurrences) =>
+  (!!transaction && !transaction.occurrences) ||
+  Big(actualOccurrences)
+    .add(1)
+    .lte(transaction.occurrences);
+
+const checkVisibility = (transaction, potentialOccurrences) =>
+  (!!transaction && !transaction.beginAfterOccurrences) ||
+  Big(potentialOccurrences)
+    .add(1)
+    .gt(transaction.beginAfterOccurrences);
 
 const nextModification = rtype => {
   switch (rtype) {
@@ -196,11 +176,7 @@ const transactionNoReoccurCompute = ({ transaction }) =>
   transaction.dailyRate.set(0);
 
 // when transaction.rtype === 'day'
-const transactionDailyReoccur = ({
-  transaction,
-  seedDate,
-  generatedOccurrences
-}) => {
+const transactionDailyReoccur = ({ transaction, seedDate, occurrences }) => {
   if (!transaction.value) {
     throw new Error('transactionDailyReoccur expects transaction.value');
   }
@@ -209,12 +185,11 @@ const transactionDailyReoccur = ({
     throw new Error('transactionDailyReoccur expects transaction.cycle');
   }
 
-  if (!generatedOccurrences) {
-    console.log(generatedOccurrences);
-    throw new Error('transactionDailyReoccur expects generatedOccurrences');
+  if (!occurrences) {
+    throw new Error('transactionDailyReoccur expects occurrences');
   }
 
-  let cycle = generatedOccurrences.eq(0) ? 0 : transaction.cycle;
+  let cycle = occurrences.eq(0) ? 0 : transaction.cycle;
   return {
     date: addDays(cycle)(seedDate),
     y: transaction.value
@@ -247,7 +222,7 @@ const transactionDayOfWeekReoccurCompute = ({ transaction }) =>
 const transactionDayOfMonthReoccur = ({
   transaction,
   seedDate,
-  generatedOccurrences
+  occurrences
 }) => {
   if (!transaction.value) {
     throw new Error('transactionDayOfMonthReoccur expects transaction.value');
@@ -257,10 +232,8 @@ const transactionDayOfMonthReoccur = ({
     throw new Error('transactionDayOfMonthReoccur expects transaction.cycle');
   }
 
-  if (!generatedOccurrences) {
-    throw new Error(
-      'transactionDayOfMonthReoccur expects generatedOccurrences'
-    );
+  if (!occurrences) {
+    throw new Error('transactionDayOfMonthReoccur expects occurrences');
   }
 
   let monthlyDate;
@@ -268,7 +241,7 @@ const transactionDayOfMonthReoccur = ({
   let cycleDate = setDate(transaction.cycle);
   if (
     isBeforeSeedDate(cycleDate(seedDate)) ||
-    (!!generatedOccurrences && !generatedOccurrences.eq(0))
+    (!!occurrences && !occurrences.eq(0))
   ) {
     monthlyDate = cycleDate(addMonths(1)(seedDate));
   } else {
