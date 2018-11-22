@@ -69,7 +69,7 @@ class YNABInput extends React.Component {
                               });
                             }
                           );
-                          this.props.addYNAB(
+                          model.addYNAB(
                             {
                               devToken: values.devToken,
                               budgetId: values.budgetId
@@ -79,7 +79,7 @@ class YNABInput extends React.Component {
                           );
                         });
                     } else {
-                      this.props.addYNAB(
+                      model.addYNAB(
                         {
                           devToken: values.devToken,
                           budgetId: values.budgetId
@@ -242,4 +242,4 @@ const consumeYNABRepeat = (transaction, scheduledArray) => {
   return ynabSanitizedFrequency;
 };
 
-const parseDate = stringDate => parse(stringDate, 'YYYY-MM-DD', new Date());
+const parseDate = stringDate => parse(stringDate, 'yyyy-MM-dd', new Date());
