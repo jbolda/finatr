@@ -16,7 +16,7 @@ const App = () => (
     >
       <div className="navbar-brand">
         <a className="navbar-item" href="/">
-          Reaccount
+          finatr
         </a>
       </div>
     </nav>
