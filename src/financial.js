@@ -13,7 +13,8 @@ class Financial extends React.Component {
     super();
     this.state = {
       activeTabTransactions: 0,
-      activeTabAccounts: 0
+      activeTabAccounts: 0,
+      TransactionType: { income: true, expense: true, transfer: true }
     };
   }
 
@@ -23,6 +24,16 @@ class Financial extends React.Component {
 
   tabClickAccounts(index) {
     this.setState({ activeTabAccounts: index });
+  }
+
+  clickTransactionType(type, model, event) {
+    this.setState((prevState, props) => {
+      console.log(prevState.TransactionType);
+      let newState = { ...prevState };
+      newState.TransactionType[type] = !prevState.TransactionType[type];
+      console.log('new', newState.TransactionType);
+      return newState;
+    });
   }
 
   render() {
@@ -74,10 +85,31 @@ class Financial extends React.Component {
                 tabClick={this.tabClickTransactions.bind(this)}
                 tabTitles={['All Transactions', 'Add Transaction']}
                 tabContents={[
-                  transactionTable(model.state.transactionsComputed, {
-                    modifyTransaction: model.modifyTransaction,
-                    deleteTransaction: model.deleteTransaction
-                  }),
+                  <React.Fragment>
+                    <div className="buttons">
+                      {['income', 'expense', 'transfer'].map(type => (
+                        <button
+                          key={type}
+                          className={
+                            this.state.TransactionType[type]
+                              ? 'button is-primary'
+                              : 'button is-secondary'
+                          }
+                          onClick={this.clickTransactionType.bind(
+                            this,
+                            type,
+                            model
+                          )}
+                        >
+                          {type}
+                        </button>
+                      ))}
+                    </div>
+                    {transactionTable(model.state.transactionsComputed, {
+                      modifyTransaction: model.modifyTransaction,
+                      deleteTransaction: model.deleteTransaction
+                    })}
+                  </React.Fragment>,
                   <TransactionInput />
                 ]}
               />
