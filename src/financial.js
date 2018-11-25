@@ -28,10 +28,8 @@ class Financial extends React.Component {
 
   clickTransactionType(type, model, event) {
     this.setState((prevState, props) => {
-      console.log(prevState.TransactionType);
       let newState = { ...prevState };
       newState.TransactionType[type] = !prevState.TransactionType[type];
-      console.log('new', newState.TransactionType);
       return newState;
     });
   }
@@ -83,34 +81,48 @@ class Financial extends React.Component {
               <TabView
                 activeTab={this.state.activeTabTransactions}
                 tabClick={this.tabClickTransactions.bind(this)}
-                tabTitles={['All Transactions', 'Add Transaction']}
+                tabTitles={[
+                  'All Transactions',
+                  'Add Transaction',
+                  'Income',
+                  'Expenses',
+                  'Transfers'
+                ]}
                 tabContents={[
                   <React.Fragment>
-                    <div className="buttons">
-                      {['income', 'expense', 'transfer'].map(type => (
-                        <button
-                          key={type}
-                          className={
-                            this.state.TransactionType[type]
-                              ? 'button is-primary'
-                              : 'button is-secondary'
-                          }
-                          onClick={this.clickTransactionType.bind(
-                            this,
-                            type,
-                            model
-                          )}
-                        >
-                          {type}
-                        </button>
-                      ))}
-                    </div>
                     {transactionTable(model.state.transactionsComputed, {
                       modifyTransaction: model.modifyTransaction,
                       deleteTransaction: model.deleteTransaction
                     })}
                   </React.Fragment>,
-                  <TransactionInput />
+                  <TransactionInput />,
+                  transactionTable(
+                    model.state.transactionsComputed.filter(
+                      transaction => transaction.type === 'income'
+                    ),
+                    {
+                      modifyTransaction: model.modifyTransaction,
+                      deleteTransaction: model.deleteTransaction
+                    }
+                  ),
+                  transactionTable(
+                    model.state.transactionsComputed.filter(
+                      transaction => transaction.type === 'expense'
+                    ),
+                    {
+                      modifyTransaction: model.modifyTransaction,
+                      deleteTransaction: model.deleteTransaction
+                    }
+                  ),
+                  transactionTable(
+                    model.state.transactionsComputed.filter(
+                      transaction => transaction.type === 'transfer'
+                    ),
+                    {
+                      modifyTransaction: model.modifyTransaction,
+                      deleteTransaction: model.deleteTransaction
+                    }
+                  )
                 ]}
               />
             </section>
@@ -154,25 +166,27 @@ export default Financial;
 const transactionTable = (data, actions) => (
   <table className="table is-striped is-hoverable">
     <thead>
-      <tr>
-        <th>
-          <abbr title="real account">raccount</abbr>
-        </th>
-        <th>description</th>
-        <th>category</th>
-        <th>type</th>
-        <th>
-          <abbr title="start date">start</abbr>
-        </th>
-        <th>
-          <abbr title="repeat type">rtype</abbr>
-        </th>
-        <th>cycle</th>
-        <th>value</th>
-        <th>Daily Rate</th>
-        <th>Modify</th>
-        <th>Delete</th>
-      </tr>
+      {data.length === 0 || !data ? null : (
+        <tr>
+          <th>
+            <abbr title="real account">raccount</abbr>
+          </th>
+          <th>description</th>
+          <th>category</th>
+          <th>type</th>
+          <th>
+            <abbr title="start date">start</abbr>
+          </th>
+          <th>
+            <abbr title="repeat type">rtype</abbr>
+          </th>
+          <th>cycle</th>
+          <th>value</th>
+          <th>Daily Rate</th>
+          <th>Modify</th>
+          <th>Delete</th>
+        </tr>
+      )}
     </thead>
     <tbody>
       {!data

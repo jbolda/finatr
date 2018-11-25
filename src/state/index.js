@@ -80,6 +80,14 @@ class AppModel {
       .log('recalc');
   }
 
+  multiFilter(key, filters) {
+    return filters.reduce(
+      (transactionsComputed, filter) =>
+        transactionsComputed.filter(transaction => transaction[key] === filter),
+      this.state.transactionsComputed
+    );
+  }
+
   transactionUpsert(value) {
     let nextState = this.state.transactions;
     if (value.id && value.id !== '') {
