@@ -45,7 +45,8 @@ const coercePaybacks = ({ accounts }) => {
             description: account.payback.description,
             type: account.payback.type,
             category: account.payback.category,
-            value: amount
+            value: amount,
+            fromAccount: true
           });
           // this one is for the account making the payment
           // (raccount is defined on accountTransaction)
@@ -55,7 +56,8 @@ const coercePaybacks = ({ accounts }) => {
             description: account.payback.description,
             type: 'transfer',
             category: account.payback.category,
-            value: -amount
+            value: -amount,
+            fromAccount: true
           });
         });
       }
