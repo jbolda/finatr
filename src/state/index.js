@@ -13,6 +13,7 @@ class AppModel {
   transactions = [Transaction];
   transactionsComputed = [TransactionComputed];
   transactionsSplit = ObjectType;
+  transactionCategories = ObjectType;
   accounts = [Account];
   charts = Charts;
   stats = Stats;
@@ -61,9 +62,15 @@ class AppModel {
       ...this.state.transactions,
       ...transactionPaybacks
     ]);
-    let computedTransactions = init.transactionsComputed.map(transaction =>
-      transactionCompute({ transaction })
-    );
+    let computedTransactions = init.transactionsComputed
+      .map(transaction => transactionCompute({ transaction }))
+      .transactionCategories.set(
+        init.state.transactionsComputed.reduce((categories, transaction) => {
+          let next = { ...categories };
+          next[transaction.category] = true;
+          return next;
+        }, {})
+      );
 
     let { transactionsComputed } = computedTransactions.state;
     let splitTransactions = transactionSplitter({
@@ -80,12 +87,23 @@ class AppModel {
       .log('recalc');
   }
 
-  multiFilter(key, filters) {
-    return filters.reduce(
-      (transactionsComputed, filter) =>
-        transactionsComputed.filter(transaction => transaction[key] === filter),
-      this.state.transactionsComputed
+  filterTransactionsComputed(category) {
+    let categories = this.state.transactionCategories;
+    categories[category] = !categories[category];
+    let filterBy = Object.keys(categories).reduce(
+      (filters, category) =>
+        categories[category] ? filters : filters.concat([category]),
+      []
     );
+    return this.transactionsComputed
+      .filter(transaction =>
+        filterBy.reduce(
+          (toFilter, filter) =>
+            transaction.category === filter ? true : toFilter,
+          false
+        )
+      )
+      .transactionCategories.set(categories);
   }
 
   transactionUpsert(value) {

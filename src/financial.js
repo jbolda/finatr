@@ -26,14 +26,6 @@ class Financial extends React.Component {
     this.setState({ activeTabAccounts: index });
   }
 
-  clickTransactionType(type, model, event) {
-    this.setState((prevState, props) => {
-      let newState = { ...prevState };
-      newState.TransactionType[type] = !prevState.TransactionType[type];
-      return newState;
-    });
-  }
-
   render() {
     return (
       <Consumer>
@@ -90,6 +82,26 @@ class Financial extends React.Component {
                 ]}
                 tabContents={[
                   <React.Fragment>
+                    <div className="buttons">
+                      {Object.keys(model.state.transactionCategories).map(
+                        category => (
+                          <button
+                            key={category}
+                            className={
+                              model.state.transactionCategories[category]
+                                ? 'button is-primary'
+                                : 'button is-secondary'
+                            }
+                            onClick={model.filterTransactionsComputed.bind(
+                              this,
+                              category
+                            )}
+                          >
+                            {category}
+                          </button>
+                        )
+                      )}
+                    </div>
                     {transactionTable(model.state.transactionsComputed, {
                       modifyTransaction: model.modifyTransaction,
                       deleteTransaction: model.deleteTransaction
