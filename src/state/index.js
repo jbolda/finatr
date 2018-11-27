@@ -56,29 +56,15 @@ class AppModel {
   }
 
   reCalc() {
-    let { accounts } = this.state;
-    let transactionPaybacks = coercePaybacks({ accounts });
-    let init = this.transactionsComputed.set([
-      ...this.state.transactions,
-      ...transactionPaybacks
-    ]);
-    let computedTransactions = init.transactionsComputed
-      .map(transaction => transactionCompute({ transaction }))
-      .transactionCategories.set(
-        init.state.transactionsComputed.reduce((categories, transaction) => {
-          let next = { ...categories };
-          next[transaction.category] = true;
-          return next;
-        }, {})
-      );
-
-    let { transactionsComputed } = computedTransactions.state;
-    let splitTransactions = transactionSplitter({
+    const { accounts } = this.state;
+    const computedTransactions = this.transactionComputer();
+    const { transactionsComputed } = computedTransactions.state;
+    const splitTransactions = transactionSplitter({
       transactions: transactionsComputed,
       accounts: accounts
     });
 
-    let chartsCalced = computedTransactions.transactionsSplit
+    const chartsCalced = computedTransactions.transactionsSplit
       .set(splitTransactions)
       .charts.calcCharts(splitTransactions, accounts);
 
@@ -87,23 +73,58 @@ class AppModel {
       .log('recalc');
   }
 
+  transactionComputer(filteredTransactions = [], categoriesSet = false) {
+    const { accounts, transactions } = this.state;
+    const transactionPaybacks = coercePaybacks({ accounts });
+    const useTransactions =
+      filteredTransactions.length === 0 ? transactions : filteredTransactions;
+    const init = this.transactionsComputed.set([
+      ...useTransactions,
+      ...transactionPaybacks
+    ]);
+
+    // returns a microstate with the transactionsComputed set
+    return categoriesSet
+      ? init.transactionsComputed.map(transaction =>
+          transactionCompute({ transaction })
+        )
+      : init.transactionsComputed
+          .map(transaction => transactionCompute({ transaction }))
+          .transactionCategories.set(
+            init.state.transactionsComputed.reduce(
+              (categories, transaction) => {
+                let next = { ...categories };
+                next[transaction.category] = true;
+                return next;
+              },
+              {}
+            )
+          );
+  }
+
   filterTransactionsComputed(category) {
-    let categories = this.state.transactionCategories;
+    const { transactionCategories, transactions } = this.state;
+    const categories = transactionCategories;
     categories[category] = !categories[category];
-    let filterBy = Object.keys(categories).reduce(
+    const filterBy = Object.keys(categories).reduce(
       (filters, category) =>
         categories[category] ? filters : filters.concat([category]),
       []
     );
-    return this.transactionsComputed
-      .filter(transaction =>
-        filterBy.reduce(
+    const next = transactions.filter(
+      transaction =>
+        !filterBy.reduce(
           (toFilter, filter) =>
-            transaction.category === filter ? true : toFilter,
+            toFilter || transaction.category === filter ? true : toFilter,
           false
         )
-      )
-      .transactionCategories.set(categories);
+    );
+
+    // return as a microstate where next is just an array
+    // this does not recompute graphs or stats
+    return this.transactionComputer(next, true).transactionCategories.set(
+      categories
+    );
   }
 
   transactionUpsert(value) {
