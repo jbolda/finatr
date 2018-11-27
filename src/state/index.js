@@ -1,6 +1,6 @@
 import { valueOf, ObjectType } from 'microstates';
 import { Transaction, TransactionComputed } from './transactions.js';
-import { Account } from './accounts.js';
+import { Account, AccountComputed } from './accounts.js';
 import { Charts } from './charts.js';
 import { Stats } from './stats.js';
 import { Forms } from './forms.js';
@@ -15,6 +15,7 @@ class AppModel {
   transactionsSplit = ObjectType;
   transactionCategories = ObjectType;
   accounts = [Account];
+  accountsComputed = [AccountComputed];
   charts = Charts;
   stats = Stats;
 
@@ -56,17 +57,16 @@ class AppModel {
   }
 
   reCalc() {
-    const { accounts } = this.state;
-    const computedTransactions = this.transactionComputer();
-    const { transactionsComputed } = computedTransactions.state;
+    const init = this.transactionComputer().accountComputer();
+    const { transactionsComputed, accountsComputed } = init.state;
     const splitTransactions = transactionSplitter({
       transactions: transactionsComputed,
-      accounts: accounts
+      accounts: accountsComputed
     });
 
-    const chartsCalced = computedTransactions.transactionsSplit
+    const chartsCalced = init.transactionsSplit
       .set(splitTransactions)
-      .charts.calcCharts(splitTransactions, accounts);
+      .charts.calcCharts(splitTransactions, accountsComputed);
 
     return chartsCalced.stats
       .reCalc(chartsCalced.state, chartsCalced.charts.state)
@@ -125,6 +125,11 @@ class AppModel {
     return this.transactionComputer(next, true).transactionCategories.set(
       categories
     );
+  }
+
+  accountComputer() {
+    const { accounts } = this.state;
+    return this.accountsComputed.set(accounts);
   }
 
   transactionUpsert(value) {

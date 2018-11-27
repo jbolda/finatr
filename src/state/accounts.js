@@ -1,4 +1,4 @@
-import { valueOf, StringType } from 'microstates';
+import { valueOf, StringType, BooleanType } from 'microstates';
 import { Big } from './customTypes.js';
 
 class Account {
@@ -12,4 +12,8 @@ class Account {
   }
 }
 
-export { Account };
+class AccountComputed extends Account {
+  visible = BooleanType;
+}
+
+export { Account, AccountComputed };
