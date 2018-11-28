@@ -148,7 +148,8 @@ class Financial extends React.Component {
                 tabContents={[
                   accountTable(model.accountsComputed, {
                     modifyAccount: model.modifyAccount,
-                    deleteAccount: model.deleteAccount
+                    deleteAccount: model.deleteAccount,
+                    toggleAccountVisibility: model.toggleAccountVisibility
                   }),
                   <AccountInput />,
                   <React.Fragment>
@@ -251,7 +252,12 @@ const accountTable = (data, actions) => (
     <tbody>
       {map(data, account => (
         <tr key={account.name.state}>
-          <td onClick={account.visible.toggle}>
+          <td
+            onClick={actions.toggleAccountVisibility.bind(
+              this,
+              account.name.state
+            )}
+          >
             {account.visible.state ? `👀` : `🤫`}
           </td>
           <th>{account.name.state}</th>
@@ -261,7 +267,7 @@ const accountTable = (data, actions) => (
           <td>
             <button
               className="button is-rounded is-small is-info"
-              onClick={actions.modifyAccount.bind(this, account.name)}
+              onClick={actions.modifyAccount.bind(this, account.name.state)}
             >
               M
             </button>
@@ -269,7 +275,7 @@ const accountTable = (data, actions) => (
           <td>
             <button
               className="delete"
-              onClick={actions.deleteAccount.bind(this, account.name)}
+              onClick={actions.deleteAccount.bind(this, account.name.state)}
             />
           </td>
         </tr>

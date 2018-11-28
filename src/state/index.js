@@ -56,8 +56,8 @@ class AppModel {
     return this;
   }
 
-  reCalc() {
-    const init = this.transactionComputer().accountComputer();
+  reCalc(presetAccounts = []) {
+    const init = this.transactionComputer().accountComputer(presetAccounts);
     const { transactionsComputed, accountsComputed } = init.state;
     const splitTransactions = transactionSplitter({
       transactions: transactionsComputed,
@@ -127,14 +127,26 @@ class AppModel {
     );
   }
 
-  accountComputer() {
-    const { accounts } = this.state;
-    let computeAccounts = accounts.map(account => {
-      let computed = account;
-      computed.visible = true;
-      return computed;
-    });
+  accountComputer(presetAccounts = []) {
+    let computeAccounts;
+    if (presetAccounts.length === 0) {
+      const { accounts } = this.state;
+      computeAccounts = accounts.map(account => {
+        let computed = account;
+        computed.visible = true;
+        return computed;
+      });
+    } else {
+      computeAccounts = presetAccounts;
+    }
     return this.accountsComputed.set(computeAccounts);
+  }
+
+  toggleAccountVisibility(accountName) {
+    let next = this.accountsComputed.map(account =>
+      accountName === account.name.state ? account.visible.toggle() : account
+    );
+    return this.reCalc(next.state.accountsComputed);
   }
 
   transactionUpsert(value) {
