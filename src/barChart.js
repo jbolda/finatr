@@ -215,7 +215,7 @@ let barBuild = {
     return 365;
   },
   margin: function() {
-    return { top: 10, right: 0, bottom: 20, left: 40 };
+    return { top: 10, right: 0, bottom: 20, left: 60 };
   },
   band: function() {
     return this.daysinfuture() * 30;
