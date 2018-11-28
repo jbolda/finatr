@@ -66,7 +66,10 @@ class AppModel {
 
     const chartsCalced = init.transactionsSplit
       .set(splitTransactions)
-      .charts.calcCharts(splitTransactions, accountsComputed);
+      .charts.calcCharts(
+        splitTransactions,
+        accountsComputed.filter(account => account.visible)
+      );
 
     return chartsCalced.stats
       .reCalc(chartsCalced.state, chartsCalced.charts.state)
