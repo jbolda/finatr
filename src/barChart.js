@@ -475,7 +475,14 @@ barBuild.drawLine = function(
   max_domain,
   tooltip
 ) {
-  if (!data || data.length === 0) return;
+  if (!data || data.length === 0) {
+    lineGroup
+      .selectAll('path')
+      .data(data)
+      .exit()
+      .remove();
+    return;
+  }
   let linecolors = d3.scaleOrdinal(d3.schemeCategory10);
   let marginLeft = this.margin().left;
 
