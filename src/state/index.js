@@ -129,7 +129,12 @@ class AppModel {
 
   accountComputer() {
     const { accounts } = this.state;
-    return this.accountsComputed.set(accounts);
+    let computeAccounts = accounts.map(account => {
+      let computed = account;
+      computed.visible = true;
+      return computed;
+    });
+    return this.accountsComputed.set(computeAccounts);
   }
 
   transactionUpsert(value) {

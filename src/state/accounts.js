@@ -2,7 +2,7 @@ import { valueOf, StringType, BooleanType } from 'microstates';
 import { Big } from './customTypes.js';
 
 class Account {
-  account = StringType;
+  name = StringType;
   starting = Big;
   interest = Big;
   vehicle = StringType;

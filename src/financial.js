@@ -1,4 +1,5 @@
 import React from 'react';
+import { map } from 'microstates';
 import { Consumer } from '@microstates/react';
 import BarChart from './barChart';
 
@@ -145,13 +146,13 @@ class Financial extends React.Component {
                 tabClick={this.tabClickAccounts.bind(this)}
                 tabTitles={['All Accounts', 'Add Account', 'Debt']}
                 tabContents={[
-                  accountTable(model.state.accounts, {
+                  accountTable(model.accountsComputed, {
                     modifyAccount: model.modifyAccount,
                     deleteAccount: model.deleteAccount
                   }),
                   <AccountInput />,
                   <React.Fragment>
-                    {debtTable(model.state.accounts, {
+                    {debtTable(model.state.accountsComputed, {
                       modifyAccount: model.modifyAccount,
                       deleteAccount: model.deleteAccount
                     })}
@@ -250,6 +251,7 @@ const accountTable = (data, actions) => (
   <table className="table is-striped is-hoverable">
     <thead>
       <tr>
+        <th />
         <th>name</th>
         <th>
           <abbr title="starting balance">starting</abbr>
@@ -261,12 +263,15 @@ const accountTable = (data, actions) => (
       </tr>
     </thead>
     <tbody>
-      {data.map(account => (
-        <tr key={account.name}>
-          <th>{account.name}</th>
-          <td>{account.starting}</td>
-          <td>{account.interest}%</td>
-          <td>{account.vehicle}</td>
+      {map(data, account => (
+        <tr key={account.name.state}>
+          <td onClick={account.visible.toggle}>
+            {account.visible.state ? `👀` : `🤫`}
+          </td>
+          <th>{account.name.state}</th>
+          <td>{account.starting.toFixed}</td>
+          <td>{account.interest.toFixed}%</td>
+          <td>{account.vehicle.state}</td>
           <td>
             <button
               className="button is-rounded is-small is-info"
