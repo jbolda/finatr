@@ -202,47 +202,33 @@ const transactionTable = (data, actions) => (
       )}
     </thead>
     <tbody>
-      {!data
-        ? null
-        : data
-            .filter(state => !state.fromAccount)
-            .map(transaction => (
-              <tr key={transaction.id}>
-                <td>{transaction.raccount}</td>
-                <td>{transaction.description}</td>
-                <td>{transaction.category}</td>
-                <td>{transaction.type}</td>
-                <td>{transaction.start}</td>
-                <td>{transaction.rtype}</td>
-                <td>
-                  {!transaction.cycle ? '' : transaction.cycle.toFixed(0)}
-                </td>
-                <td>
-                  {!transaction.value ? '' : transaction.value.toFixed(2)}
-                </td>
-                <td>{transaction.dailyRate.toFixed(2)}</td>
-                <td>
-                  <button
-                    className="button is-rounded is-small is-info"
-                    onClick={actions.modifyTransaction.bind(
-                      this,
-                      transaction.id
-                    )}
-                  >
-                    M
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="delete"
-                    onClick={actions.deleteTransaction.bind(
-                      this,
-                      transaction.id
-                    )}
-                  />
-                </td>
-              </tr>
-            ))}
+      {map(data.filter(state => !state.fromAccount), transaction => (
+        <tr key={transaction.id}>
+          <td>{transaction.raccount}</td>
+          <td>{transaction.description}</td>
+          <td>{transaction.category}</td>
+          <td>{transaction.type}</td>
+          <td>{transaction.start}</td>
+          <td>{transaction.rtype}</td>
+          <td>{!transaction.cycle ? '' : transaction.cycle.toFixed(0)}</td>
+          <td>{!transaction.value ? '' : transaction.value.toFixed(2)}</td>
+          <td>{transaction.dailyRate.toFixed(2)}</td>
+          <td>
+            <button
+              className="button is-rounded is-small is-info"
+              onClick={actions.modifyTransaction.bind(this, transaction.id)}
+            >
+              M
+            </button>
+          </td>
+          <td>
+            <button
+              className="delete"
+              onClick={actions.deleteTransaction.bind(this, transaction.id)}
+            />
+          </td>
+        </tr>
+      ))}
     </tbody>
   </table>
 );
