@@ -215,7 +215,7 @@ let barBuild = {
     return 365;
   },
   margin: function() {
-    return { top: 10, right: 0, bottom: 20, left: 40 };
+    return { top: 10, right: 0, bottom: 20, left: 60 };
   },
   band: function() {
     return this.daysinfuture() * 30;
@@ -475,7 +475,14 @@ barBuild.drawLine = function(
   max_domain,
   tooltip
 ) {
-  if (!data || data.length === 0) return;
+  if (!data || data.length === 0) {
+    lineGroup
+      .selectAll('path')
+      .data(data)
+      .exit()
+      .remove();
+    return;
+  }
   let linecolors = d3.scaleOrdinal(d3.schemeCategory10);
   let marginLeft = this.margin().left;
 

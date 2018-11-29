@@ -1,6 +1,6 @@
 import { valueOf, ObjectType } from 'microstates';
 import { Transaction, TransactionComputed } from './transactions.js';
-import { Account } from './accounts.js';
+import { Account, AccountComputed } from './accounts.js';
 import { Charts } from './charts.js';
 import { Stats } from './stats.js';
 import { Forms } from './forms.js';
@@ -13,7 +13,9 @@ class AppModel {
   transactions = [Transaction];
   transactionsComputed = [TransactionComputed];
   transactionsSplit = ObjectType;
+  transactionCategories = ObjectType;
   accounts = [Account];
+  accountsComputed = [AccountComputed];
   charts = Charts;
   stats = Stats;
 
@@ -54,30 +56,100 @@ class AppModel {
     return this;
   }
 
-  reCalc() {
-    let { accounts } = this.state;
-    let transactionPaybacks = coercePaybacks({ accounts });
-    let init = this.transactionsComputed.set([
-      ...this.state.transactions,
-      ...transactionPaybacks
-    ]);
-    let computedTransactions = init.transactionsComputed.map(transaction =>
-      transactionCompute({ transaction })
-    );
-
-    let { transactionsComputed } = computedTransactions.state;
-    let splitTransactions = transactionSplitter({
+  reCalc(presetAccounts = []) {
+    const init = this.transactionComputer().accountComputer(presetAccounts);
+    const { transactionsComputed, accountsComputed } = init.state;
+    const splitTransactions = transactionSplitter({
       transactions: transactionsComputed,
-      accounts: accounts
+      accounts: accountsComputed
     });
 
-    let chartsCalced = computedTransactions.transactionsSplit
+    const chartsCalced = init.transactionsSplit
       .set(splitTransactions)
-      .charts.calcCharts(splitTransactions, accounts);
+      .charts.calcCharts(
+        splitTransactions,
+        accountsComputed.filter(account => account.visible)
+      );
 
     return chartsCalced.stats
       .reCalc(chartsCalced.state, chartsCalced.charts.state)
       .log('recalc');
+  }
+
+  transactionComputer(filteredTransactions = [], categoriesSet = false) {
+    const { accounts, transactions } = this.state;
+    const transactionPaybacks = coercePaybacks({ accounts });
+    const useTransactions =
+      filteredTransactions.length === 0 ? transactions : filteredTransactions;
+    const init = this.transactionsComputed.set([
+      ...useTransactions,
+      ...transactionPaybacks
+    ]);
+
+    // returns a microstate with the transactionsComputed set
+    return categoriesSet
+      ? init.transactionsComputed.map(transaction =>
+          transactionCompute({ transaction })
+        )
+      : init.transactionsComputed
+          .map(transaction => transactionCompute({ transaction }))
+          .transactionCategories.set(
+            init.state.transactionsComputed.reduce(
+              (categories, transaction) => {
+                let next = { ...categories };
+                next[transaction.category] = true;
+                return next;
+              },
+              {}
+            )
+          );
+  }
+
+  filterTransactionsComputed(category) {
+    const { transactionCategories, transactions } = this.state;
+    const categories = transactionCategories;
+    categories[category] = !categories[category];
+    const filterBy = Object.keys(categories).reduce(
+      (filters, category) =>
+        categories[category] ? filters : filters.concat([category]),
+      []
+    );
+    const next = transactions.filter(
+      transaction =>
+        !filterBy.reduce(
+          (toFilter, filter) =>
+            toFilter || transaction.category === filter ? true : toFilter,
+          false
+        )
+    );
+
+    // return as a microstate where next is just an array
+    // this does not recompute graphs or stats
+    return this.transactionComputer(next, true).transactionCategories.set(
+      categories
+    );
+  }
+
+  accountComputer(presetAccounts = []) {
+    let computeAccounts;
+    if (presetAccounts.length === 0) {
+      const { accounts } = this.state;
+      computeAccounts = accounts.map(account => {
+        let computed = account;
+        computed.visible = true;
+        return computed;
+      });
+    } else {
+      computeAccounts = presetAccounts;
+    }
+    return this.accountsComputed.set(computeAccounts);
+  }
+
+  toggleAccountVisibility(accountName) {
+    let next = this.accountsComputed.map(account =>
+      accountName === account.name.state ? account.visible.toggle() : account
+    );
+    return this.reCalc(next.state.accountsComputed);
   }
 
   transactionUpsert(value) {

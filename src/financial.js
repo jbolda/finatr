@@ -1,4 +1,5 @@
 import React from 'react';
+import { map } from 'microstates';
 import { Consumer } from '@microstates/react';
 import BarChart from './barChart';
 
@@ -13,7 +14,8 @@ class Financial extends React.Component {
     super();
     this.state = {
       activeTabTransactions: 0,
-      activeTabAccounts: 0
+      activeTabAccounts: 0,
+      TransactionType: { income: true, expense: true, transfer: true }
     };
   }
 
@@ -72,13 +74,68 @@ class Financial extends React.Component {
               <TabView
                 activeTab={this.state.activeTabTransactions}
                 tabClick={this.tabClickTransactions.bind(this)}
-                tabTitles={['All Transactions', 'Add Transaction']}
+                tabTitles={[
+                  'All Transactions',
+                  'Add Transaction',
+                  'Income',
+                  'Expenses',
+                  'Transfers'
+                ]}
                 tabContents={[
-                  transactionTable(model.state.transactionsComputed, {
-                    modifyTransaction: model.modifyTransaction,
-                    deleteTransaction: model.deleteTransaction
-                  }),
-                  <TransactionInput />
+                  <React.Fragment>
+                    <div className="buttons">
+                      {Object.keys(model.state.transactionCategories).map(
+                        category => (
+                          <button
+                            key={category}
+                            className={
+                              model.state.transactionCategories[category]
+                                ? 'button is-primary'
+                                : 'button is-secondary'
+                            }
+                            onClick={model.filterTransactionsComputed.bind(
+                              this,
+                              category
+                            )}
+                          >
+                            {category}
+                          </button>
+                        )
+                      )}
+                    </div>
+                    {transactionTable(model.state.transactionsComputed, {
+                      modifyTransaction: model.modifyTransaction,
+                      deleteTransaction: model.deleteTransaction
+                    })}
+                  </React.Fragment>,
+                  <TransactionInput />,
+                  transactionTable(
+                    model.state.transactionsComputed.filter(
+                      transaction => transaction.type === 'income'
+                    ),
+                    {
+                      modifyTransaction: model.modifyTransaction,
+                      deleteTransaction: model.deleteTransaction
+                    }
+                  ),
+                  transactionTable(
+                    model.state.transactionsComputed.filter(
+                      transaction => transaction.type === 'expense'
+                    ),
+                    {
+                      modifyTransaction: model.modifyTransaction,
+                      deleteTransaction: model.deleteTransaction
+                    }
+                  ),
+                  transactionTable(
+                    model.state.transactionsComputed.filter(
+                      transaction => transaction.type === 'transfer'
+                    ),
+                    {
+                      modifyTransaction: model.modifyTransaction,
+                      deleteTransaction: model.deleteTransaction
+                    }
+                  )
                 ]}
               />
             </section>
@@ -89,13 +146,14 @@ class Financial extends React.Component {
                 tabClick={this.tabClickAccounts.bind(this)}
                 tabTitles={['All Accounts', 'Add Account', 'Debt']}
                 tabContents={[
-                  accountTable(model.state.accounts, {
+                  accountTable(model.accountsComputed, {
                     modifyAccount: model.modifyAccount,
-                    deleteAccount: model.deleteAccount
+                    deleteAccount: model.deleteAccount,
+                    toggleAccountVisibility: model.toggleAccountVisibility
                   }),
                   <AccountInput />,
                   <React.Fragment>
-                    {debtTable(model.state.accounts, {
+                    {debtTable(model.state.accountsComputed, {
                       modifyAccount: model.modifyAccount,
                       deleteAccount: model.deleteAccount
                     })}
@@ -122,56 +180,56 @@ export default Financial;
 const transactionTable = (data, actions) => (
   <table className="table is-striped is-hoverable">
     <thead>
-      <tr>
-        <th>
-          <abbr title="real account">raccount</abbr>
-        </th>
-        <th>description</th>
-        <th>category</th>
-        <th>type</th>
-        <th>
-          <abbr title="start date">start</abbr>
-        </th>
-        <th>
-          <abbr title="repeat type">rtype</abbr>
-        </th>
-        <th>cycle</th>
-        <th>value</th>
-        <th>Daily Rate</th>
-        <th>Modify</th>
-        <th>Delete</th>
-      </tr>
+      {data.length === 0 || !data ? null : (
+        <tr>
+          <th>
+            <abbr title="real account">raccount</abbr>
+          </th>
+          <th>description</th>
+          <th>category</th>
+          <th>type</th>
+          <th>
+            <abbr title="start date">start</abbr>
+          </th>
+          <th>
+            <abbr title="repeat type">rtype</abbr>
+          </th>
+          <th>cycle</th>
+          <th>value</th>
+          <th>Daily Rate</th>
+          <th>Modify</th>
+          <th>Delete</th>
+        </tr>
+      )}
     </thead>
     <tbody>
-      {!data
-        ? null
-        : data.map(transaction => (
-            <tr key={transaction.id}>
-              <td>{transaction.raccount}</td>
-              <td>{transaction.description}</td>
-              <td>{transaction.category}</td>
-              <td>{transaction.type}</td>
-              <td>{transaction.start}</td>
-              <td>{transaction.rtype}</td>
-              <td>{!transaction.cycle ? '' : transaction.cycle.toFixed(0)}</td>
-              <td>{!transaction.value ? '' : transaction.value.toFixed(2)}</td>
-              <td>{transaction.dailyRate.toFixed(2)}</td>
-              <td>
-                <button
-                  className="button is-rounded is-small is-info"
-                  onClick={actions.modifyTransaction.bind(this, transaction.id)}
-                >
-                  M
-                </button>
-              </td>
-              <td>
-                <button
-                  className="delete"
-                  onClick={actions.deleteTransaction.bind(this, transaction.id)}
-                />
-              </td>
-            </tr>
-          ))}
+      {map(data.filter(state => !state.fromAccount), transaction => (
+        <tr key={transaction.id}>
+          <td>{transaction.raccount}</td>
+          <td>{transaction.description}</td>
+          <td>{transaction.category}</td>
+          <td>{transaction.type}</td>
+          <td>{transaction.start}</td>
+          <td>{transaction.rtype}</td>
+          <td>{!transaction.cycle ? '' : transaction.cycle.toFixed(0)}</td>
+          <td>{!transaction.value ? '' : transaction.value.toFixed(2)}</td>
+          <td>{transaction.dailyRate.toFixed(2)}</td>
+          <td>
+            <button
+              className="button is-rounded is-small is-info"
+              onClick={actions.modifyTransaction.bind(this, transaction.id)}
+            >
+              M
+            </button>
+          </td>
+          <td>
+            <button
+              className="delete"
+              onClick={actions.deleteTransaction.bind(this, transaction.id)}
+            />
+          </td>
+        </tr>
+      ))}
     </tbody>
   </table>
 );
@@ -180,6 +238,7 @@ const accountTable = (data, actions) => (
   <table className="table is-striped is-hoverable">
     <thead>
       <tr>
+        <th />
         <th>name</th>
         <th>
           <abbr title="starting balance">starting</abbr>
@@ -191,16 +250,24 @@ const accountTable = (data, actions) => (
       </tr>
     </thead>
     <tbody>
-      {data.map(account => (
-        <tr key={account.name}>
-          <th>{account.name}</th>
-          <td>{account.starting}</td>
-          <td>{account.interest}%</td>
-          <td>{account.vehicle}</td>
+      {map(data, account => (
+        <tr key={account.name.state}>
+          <td
+            onClick={actions.toggleAccountVisibility.bind(
+              this,
+              account.name.state
+            )}
+          >
+            {account.visible.state ? `👀` : `🤫`}
+          </td>
+          <th>{account.name.state}</th>
+          <td>{account.starting.toFixed}</td>
+          <td>{account.interest.toFixed}%</td>
+          <td>{account.vehicle.state}</td>
           <td>
             <button
               className="button is-rounded is-small is-info"
-              onClick={actions.modifyAccount.bind(this, account.name)}
+              onClick={actions.modifyAccount.bind(this, account.name.state)}
             >
               M
             </button>
@@ -208,7 +275,7 @@ const accountTable = (data, actions) => (
           <td>
             <button
               className="delete"
-              onClick={actions.deleteAccount.bind(this, account.name)}
+              onClick={actions.deleteAccount.bind(this, account.name.state)}
             />
           </td>
         </tr>

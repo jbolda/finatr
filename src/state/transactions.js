@@ -1,4 +1,10 @@
-import { valueOf, create, StringType, NumberType } from 'microstates';
+import {
+  valueOf,
+  create,
+  StringType,
+  NumberType,
+  BooleanType
+} from 'microstates';
 import { Big } from './customTypes.js';
 
 class Transaction {
@@ -20,6 +26,7 @@ class Transaction {
 }
 
 class TransactionComputed extends Transaction {
+  fromAccounts = BooleanType;
   dailyRate = Big;
   y = Big;
 }
