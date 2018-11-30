@@ -184,63 +184,80 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
   }));
 };
 
+// zipTogethor takes a specific account
+// and then loops through each transaction
+// and takes the value of each that applies
+// and reduces it down into one value
+const zipTogethor = account => arr =>
+  arr.reduce((accumlator, d) => {
+    if (d.raccount === account.name) {
+      let flatten = d.stack.map(e => e[1] - e[0]);
+      return accumlator.length === 0
+        ? flatten
+        : accumlator.map((d, i, thisArray) => d + flatten[i]);
+    } else {
+      return accumlator;
+    }
+  }, []);
+
+const twoSteppedBalance = (starting, accountStack, barChartStack) => {
+  // we use this function as the iterator can hit
+  // undefined values if income or expense array is empty
+  const extractValue = value => {
+    if (value === undefined) {
+      return 0;
+    } else {
+      return value;
+    }
+  };
+
+  let arrayLength = Math.max(
+    accountStack.income.length,
+    accountStack.expense.length
+  );
+
+  let values = [];
+  let prevVal = extractValue(starting);
+  for (let iterator = 0; iterator < arrayLength; iterator++) {
+    let firstStep = prevVal - extractValue(accountStack.expense[iterator]);
+    let secondStep = firstStep + extractValue(accountStack.income[iterator]);
+
+    values.push({
+      date: barChartStack[iterator].data.date,
+      value: firstStep
+    });
+
+    values.push({
+      date: barChartStack[iterator].data.date,
+      value: secondStep
+    });
+    prevVal = secondStep;
+  }
+
+  return values;
+};
+
 const resolveAccountChart = ({ accounts, income, expense }) => {
   return !accounts
     ? []
     : accounts.reduce((graphAccounts, account) => {
         let accountStack = {};
 
-        const zipTogethor = arr =>
-          arr.reduce((accumlator, d) => {
-            if (d.raccount === account.name) {
-              let flatten = d.stack.map(e => e[1] - e[0]);
-              return accumlator.length === 0
-                ? flatten
-                : accumlator.map((d, i, thisArray) => d + flatten[i]);
-            } else {
-              return accumlator;
-            }
-          }, []);
+        let accountZipper = zipTogethor(account);
+        accountStack.income = accountZipper(income);
+        accountStack.expense = accountZipper(expense);
 
-        const extractValue = value => {
-          if (value === undefined) {
-            return 0;
-          } else {
-            return value;
-          }
-        };
-
-        accountStack.income = zipTogethor(income);
-        accountStack.expense = zipTogethor(expense);
-
-        let arrayLength = Math.max(
-          accountStack.income.length,
-          accountStack.expense.length
-        );
-
+        let barChartStack = [].concat(income, expense)[0].stack;
         let finalZippedLine = {
           account: account,
-          values: [],
+          values: twoSteppedBalance(
+            account.starting,
+            accountStack,
+            barChartStack
+          ),
           interest: account.interest,
           vehicle: account.vehicle
         };
-
-        let prevVal = extractValue(account.starting);
-        for (let iterator = 0; iterator < arrayLength; iterator++) {
-          let firstStep =
-            prevVal - extractValue(accountStack.expense[iterator]);
-          let secondStep =
-            firstStep + extractValue(accountStack.income[iterator]);
-          finalZippedLine.values.push({
-            date: [].concat(income, expense)[0].stack[iterator].data.date,
-            value: firstStep
-          });
-          finalZippedLine.values.push({
-            date: [].concat(income, expense)[0].stack[iterator].data.date,
-            value: secondStep
-          });
-          prevVal = secondStep;
-        }
 
         return finalZippedLine.values.length === 0
           ? graphAccounts

@@ -184,7 +184,9 @@ describe('checks modifications', () => {
 describe('check AccountChart', () => {
   it('outputs an empty array if values is empty', () => {
     let accounts = [{ name: 'test1' }, { name: 'test2' }];
-    let incomeRaw = [{ raccount: 'test1', start: graphRange.start, value: 10 }];
+    let incomeRaw = [
+      { raccount: 'test1', start: graphRange.start, value: Big(10) }
+    ];
     let income = resolveBarChart(incomeRaw, { graphRange });
     let expense = [];
     let resolvedTestData = resolveAccountChart({ accounts, income, expense });
