@@ -185,8 +185,9 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
 };
 
 const resolveAccountChart = ({ accounts, income, expense }) => {
-  return accounts
-    ? accounts.map(account => {
+  return !accounts
+    ? []
+    : accounts.reduce((graphAccounts, account) => {
         let accountStack = {};
 
         const zipTogethor = arr =>
@@ -240,9 +241,11 @@ const resolveAccountChart = ({ accounts, income, expense }) => {
           });
           prevVal = secondStep;
         }
-        return finalZippedLine;
-      })
-    : [];
+
+        return finalZippedLine.values.length === 0
+          ? graphAccounts
+          : graphAccounts.concat([finalZippedLine]);
+      }, []);
 };
 
 export {

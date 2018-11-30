@@ -1,6 +1,11 @@
 import { create } from 'microstates';
 import AppModel from './../../state';
-import { applyModifications, buildStack } from './index.js';
+import {
+  applyModifications,
+  buildStack,
+  resolveBarChart,
+  resolveAccountChart
+} from './index.js';
 import computeTransactionModifications from './resolveTransactions';
 import Big from 'big.js';
 import startOfDay from 'date-fns/fp/startOfDay';
@@ -173,5 +178,16 @@ describe('checks modifications', () => {
     expect(stackComputed[24]['test-data-2'].id).toBe('test-data-2');
     expect(stackComputed[24]['test-data-2'].value.toFixed(0)).toBe('150');
     expect(stackComputed[24]['test-data-2'].y.toFixed(0)).toBe('150');
+  });
+});
+
+describe('check AccountChart', () => {
+  it('outputs an empty array if values is empty', () => {
+    let accounts = [{ name: 'test1' }, { name: 'test2' }];
+    let incomeRaw = [{ raccount: 'test1', start: graphRange.start, value: 10 }];
+    let income = resolveBarChart(incomeRaw, { graphRange });
+    let expense = [];
+    let resolvedTestData = resolveAccountChart({ accounts, income, expense });
+    expect(resolvedTestData).toHaveLength(1);
   });
 });
