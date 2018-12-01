@@ -291,7 +291,10 @@ barBuild.drawAxis = function(svg, max_domain, phase) {
     .ticks(d3.timeDay.every(1))
     .tickFormat(d3.timeFormat('%b %d'));
 
-  let yAxis = d3.axisLeft(this.yScale(max_domain)).ticks(10);
+  let yAxis = d3
+    .axisRight(this.yScale(max_domain))
+    .ticks(10)
+    .tickSize(this.width());
 
   if (phase === 'initial') {
     let drawnX = svg
@@ -323,6 +326,17 @@ barBuild.drawAxis = function(svg, max_domain, phase) {
       .attr('dy', '.71em')
       .style('text-anchor', 'end')
       .text('Value ($)');
+
+    drawnY
+      .selectAll('.tick:not(:first-of-type) line')
+      .attr('stroke', '#777')
+      .attr('stroke-dasharray', '2,2')
+      .attr('transform', `translate(-${this.margin().left},0)`);
+
+    drawnY
+      .selectAll('.tick text')
+      .attr('x', -this.margin().left)
+      .attr('dy', -4);
   } else {
     svg
       .select('.yaxis')
