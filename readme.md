@@ -2,7 +2,7 @@
 _helping you analyze your future cash flows_
 
 
-Visit the production site at [finatr.netlify.com](http://finatr.netlify.com).
+Visit the production site at [www.finatr.com](https://www.finatr.com).
 
 Contribute without setup by writing code in [codesandbox.io](https://codesandbox.io/s/github/jbolda/finatr/tree/master).
 
