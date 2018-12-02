@@ -231,31 +231,6 @@ let barBuild = {
   shift: function() {
     return this.width() / this.daysinfuture();
   },
-  today: function() {
-    return new Date();
-  },
-  future: function() {
-    let future = new Date();
-    future.setDate(future.getDate() + this.daysinfuture());
-    return future;
-  },
-  past: function() {
-    let past = new Date();
-    past.setDate(past.getDate());
-    return past;
-  },
-  one_day: function() {
-    return 1000 * 60 * 60 * 24;
-  },
-  graphrange: function() {
-    return [convertdate(this.past()), convertdate(this.future())];
-  },
-  min_x: function() {
-    return parseDate(this.graphrange()[0]);
-  },
-  max_x: function() {
-    return parseDate(this.graphrange()[1]);
-  },
   xScale: function() {
     return d3
       .scaleTime()
