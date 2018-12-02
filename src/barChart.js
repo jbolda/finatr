@@ -323,7 +323,7 @@ barBuild.drawAxis = function(svg, max_domain, phase) {
       .append('text')
       .attr('transform', `rotate(-90)`)
       .attr('y', 6)
-      .attr('dy', '.71em')
+      .attr('dy', '5.71em')
       .style('text-anchor', 'end')
       .text('Value ($)');
 
@@ -337,6 +337,8 @@ barBuild.drawAxis = function(svg, max_domain, phase) {
       .selectAll('.tick text')
       .attr('x', -this.margin().left)
       .attr('dy', -4);
+
+    drawnY.select('path').remove();
   } else {
     svg
       .select('.yaxis')
