@@ -42,7 +42,6 @@ export class BarChart extends Component {
 
     // Expenses
     barBuild.drawBar(
-      this.props.data,
       blobs,
       'neg',
       data.BarChartExpense,
@@ -52,7 +51,6 @@ export class BarChart extends Component {
 
     // Income
     barBuild.drawBar(
-      this.props.data,
       blobs,
       'pos',
       data.BarChartIncome,
@@ -61,7 +59,7 @@ export class BarChart extends Component {
     );
 
     // axis bar
-    barBuild.drawAxis(svgBar, data, data.BarChartMax, phase);
+    barBuild.drawAxis(svgBar, data.BarChartMax, phase);
 
     let tooltipLine = {
       target: this.tooltipTarget,
@@ -69,7 +67,6 @@ export class BarChart extends Component {
       unmount: this.unmountTooltip
     };
     barBuild.drawLine(
-      this.props.data,
       d3.select('.line-section'),
       initLine.lineGroup,
       initLine.tooltipLine,
@@ -79,7 +76,7 @@ export class BarChart extends Component {
     );
 
     // axis line
-    barBuild.drawAxis(svgLine, data, data.LineChartMax, phase);
+    barBuild.drawAxis(svgLine, data.LineChartMax, phase);
   }
 
   renderTooltipBar(coordinates, tooltipData, tooltipTarget) {
@@ -234,10 +231,35 @@ let barBuild = {
   shift: function() {
     return this.width() / this.daysinfuture();
   },
-  xScale: function(props) {
+  today: function() {
+    return new Date();
+  },
+  future: function() {
+    let future = new Date();
+    future.setDate(future.getDate() + this.daysinfuture());
+    return future;
+  },
+  past: function() {
+    let past = new Date();
+    past.setDate(past.getDate());
+    return past;
+  },
+  one_day: function() {
+    return 1000 * 60 * 60 * 24;
+  },
+  graphrange: function() {
+    return [convertdate(this.past()), convertdate(this.future())];
+  },
+  min_x: function() {
+    return parseDate(this.graphrange()[0]);
+  },
+  max_x: function() {
+    return parseDate(this.graphrange()[1]);
+  },
+  xScale: function() {
     return d3
       .scaleTime()
-      .domain([props.GraphRange.start, props.GraphRange.end])
+      .domain([this.past(), this.future()])
       .rangeRound([0, this.width() - this.margin().left]);
   },
   yScale: function(max_domain) {
@@ -262,10 +284,10 @@ barBuild.init = function(height, selector) {
     .attr('transform', `translate(${this.margin().left},${this.margin().top})`);
 };
 
-barBuild.drawAxis = function(svg, props, max_domain, phase) {
+barBuild.drawAxis = function(svg, max_domain, phase) {
   // create axis
   let xAxis = d3
-    .axisBottom(this.xScale(props))
+    .axisBottom(this.xScale())
     .ticks(d3.timeDay.every(1))
     .tickFormat(d3.timeFormat('%b %d'));
 
@@ -337,7 +359,6 @@ barBuild.initBar = function(svg) {
 };
 
 barBuild.drawBar = function(
-  props,
   blobs,
   append_class,
   massagedData,
@@ -408,8 +429,6 @@ barBuild.drawBar = function(
     });
 
   let rects = groups.selectAll(`rect.${append_class}`).data((d, i) => d.stack);
-  let xScale = barBuild.xScale(props);
-  let yScale = barBuild.yScale(max_domain);
 
   rects
     .transition()
@@ -417,23 +436,33 @@ barBuild.drawBar = function(
     .duration(3000)
     .ease(d3.easeBounceOut)
     .attr('class', append_class)
-    .attr('y', d => yScale(d[1]))
-    .attr('height', d => d3.max([0, yScale(d[0]) - yScale(d[1])]));
+    .attr('y', d => barBuild.yScale(max_domain)(d[1]))
+    .attr('height', d =>
+      d3.max([
+        0,
+        barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
+      ])
+    );
 
   rects
     .enter()
     .append('rect')
     .attr('class', append_class)
-    .attr('x', d => xScale(d.data.date))
+    .attr('x', d => barBuild.xScale()(d.data.date))
     .attr('transform', `translate(${widths.translate},${0})`)
     .attr('width', widths.bar)
-    .attr('y', d => yScale(d[0]))
+    .attr('y', d => barBuild.yScale(max_domain)(d[0]))
     .transition()
     .delay((d, i) => 800 + i * 150 - (i * i) / 4)
     .duration(3000)
     .ease(d3.easeBounceOut)
-    .attr('y', d => yScale(d[1]))
-    .attr('height', d => d3.max([0, yScale(d[0]) - yScale(d[1])]));
+    .attr('y', d => barBuild.yScale(max_domain)(d[1]))
+    .attr('height', d =>
+      d3.max([
+        0,
+        barBuild.yScale(max_domain)(d[0]) - barBuild.yScale(max_domain)(d[1])
+      ])
+    );
 
   rects.exit().remove();
 };
@@ -455,7 +484,6 @@ barBuild.initLine = function(svg) {
 };
 
 barBuild.drawLine = function(
-  props,
   svg,
   lineGroup,
   tooltipLine,
@@ -474,13 +502,10 @@ barBuild.drawLine = function(
   let linecolors = d3.scaleOrdinal(d3.schemeCategory10);
   let marginLeft = this.margin().left;
 
-  const xScale = barBuild.xScale(props);
-  const yScale = barBuild.yScale(max_domain);
-
   const line = d3
     .line()
-    .x(d => xScale(d.date))
-    .y(d => yScale(d.value));
+    .x(d => barBuild.xScale()(d.date))
+    .y(d => barBuild.yScale(max_domain)(d.value));
 
   let lines = lineGroup.selectAll('path').data(data);
 
@@ -557,24 +582,4 @@ barBuild.drawLine = function(
     .on('mouseout', function() {
       tooltip.unmount(tooltip.target);
     });
-};
-
-// function to convert javascript dates into a pretty format (i.e. '2014-12-03')
-const convertdate = date => {
-  let dd = date.getDate();
-  let mm = date.getMonth() + 1; //January is 0!
-  let yyyy = date.getFullYear();
-
-  if (dd < 10) {
-    dd = '0' + dd;
-  }
-  if (mm < 10) {
-    mm = '0' + mm;
-  }
-
-  return yyyy + '-' + mm + '-' + dd;
-};
-
-const parseDate = date => {
-  return d3.timeParse('%Y-%m-%d')(date);
 };
