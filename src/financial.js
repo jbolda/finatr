@@ -12,6 +12,8 @@ import Importing from './importing.js';
 class Financial extends React.Component {
   constructor(props) {
     super();
+    this.setAccountForm = this.setAccountForm.bind(this);
+    this.setTransactionForm = this.setTransactionForm.bind(this);
     this.state = {
       activeTabTransactions: 0,
       activeTabAccounts: 0,
@@ -23,8 +25,18 @@ class Financial extends React.Component {
     this.setState({ activeTabTransactions: index });
   }
 
+  setTransactionForm(model, index, id) {
+    this.setState({ activeTabTransactions: index });
+    model.modifyTransaction(id);
+  }
+
   tabClickAccounts(index) {
     this.setState({ activeTabAccounts: index });
+  }
+
+  setAccountForm(model, index, name) {
+    this.setState({ activeTabAccounts: index });
+    model.modifyAccount(name);
   }
 
   render() {
@@ -104,7 +116,8 @@ class Financial extends React.Component {
                       )}
                     </div>
                     {transactionTable(model.state.transactionsComputed, {
-                      modifyTransaction: model.modifyTransaction,
+                      model: model,
+                      setTransactionForm: this.setTransactionForm,
                       deleteTransaction: model.deleteTransaction
                     })}
                   </React.Fragment>,
@@ -114,7 +127,8 @@ class Financial extends React.Component {
                       transaction => transaction.type === 'income'
                     ),
                     {
-                      modifyTransaction: model.modifyTransaction,
+                      model: model,
+                      setTransactionForm: this.setTransactionForm,
                       deleteTransaction: model.deleteTransaction
                     }
                   ),
@@ -123,7 +137,8 @@ class Financial extends React.Component {
                       transaction => transaction.type === 'expense'
                     ),
                     {
-                      modifyTransaction: model.modifyTransaction,
+                      model: model,
+                      setTransactionForm: this.setTransactionForm,
                       deleteTransaction: model.deleteTransaction
                     }
                   ),
@@ -132,7 +147,8 @@ class Financial extends React.Component {
                       transaction => transaction.type === 'transfer'
                     ),
                     {
-                      modifyTransaction: model.modifyTransaction,
+                      model: model,
+                      setTransactionForm: this.setTransactionForm,
                       deleteTransaction: model.deleteTransaction
                     }
                   )
@@ -147,14 +163,16 @@ class Financial extends React.Component {
                 tabTitles={['All Accounts', 'Add Account', 'Debt']}
                 tabContents={[
                   accountTable(model.accountsComputed, {
-                    modifyAccount: model.modifyAccount,
+                    model: model,
+                    setAccountForm: this.setAccountForm,
                     deleteAccount: model.deleteAccount,
                     toggleAccountVisibility: model.toggleAccountVisibility
                   }),
                   <AccountInput />,
                   <React.Fragment>
                     {debtTable(model.state.accountsComputed, {
-                      modifyAccount: model.modifyAccount,
+                      model: model,
+                      setAccountForm: this.setAccountForm,
                       deleteAccount: model.deleteAccount
                     })}
                     <AccountTransactionInput
@@ -217,7 +235,9 @@ const transactionTable = (data, actions) => (
           <td>
             <button
               className="button is-rounded is-small is-info"
-              onClick={actions.modifyTransaction.bind(this, transaction.id)}
+              onClick={() =>
+                actions.setTransactionForm(actions.model, 1, transaction.id)
+              }
             >
               M
             </button>
@@ -267,7 +287,9 @@ const accountTable = (data, actions) => (
           <td>
             <button
               className="button is-rounded is-small is-info"
-              onClick={actions.modifyAccount.bind(this, account.name.state)}
+              onClick={() =>
+                actions.setAccountForm(actions.model, 1, account.name.state)
+              }
             >
               M
             </button>
@@ -307,7 +329,9 @@ const debtTable = (data, actions) =>
           </button>
           <button
             className="button is-rounded is-small is-info"
-            onClick={actions.modifyAccount.bind(this, account.name)}
+            onClick={() =>
+              actions.setAccountForm(actions.model, 1, account.name)
+            }
           >
             M
           </button>
