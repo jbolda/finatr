@@ -1,4 +1,4 @@
-import { valueOf, StringType } from 'microstates';
+import { create, valueOf, StringType } from 'microstates';
 import { Big } from './customTypes.js';
 
 class TransactionForm {
@@ -18,10 +18,10 @@ class TransactionForm {
 }
 
 class AccountForm {
-  name = StringType;
-  starting = Big;
-  interest = Big;
-  vehicle = StringType;
+  name = create(StringType, '');
+  starting = create(Big, 0);
+  interest = create(Big, 0);
+  vehicle = create(StringType, 'operating');
 
   get state() {
     return valueOf(this);
