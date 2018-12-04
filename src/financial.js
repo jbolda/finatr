@@ -170,14 +170,22 @@ class Financial extends React.Component {
                   }),
                   <AccountInput />,
                   <React.Fragment>
-                    {debtTable(model.state.accountsComputed, {
-                      model: model,
-                      setAccountForm: this.setAccountForm,
-                      deleteAccount: model.deleteAccount
-                    })}
-                    <AccountTransactionInput
-                      ref={ref => (this.AccountTransactionForm = ref)}
-                    />
+                    <div>
+                      {debtTable(model.state.accountsComputed, {
+                        model: model,
+                        setAccountForm: this.setAccountForm,
+                        deleteAccount: model.deleteAccount
+                      })}
+                    </div>
+                    <div>
+                      {model.state.accountsComputed.filter(
+                        account => account.vehicle === 'debt'
+                      ).length === 0 ? null : (
+                        <AccountTransactionInput
+                          ref={ref => (this.AccountTransactionForm = ref)}
+                        />
+                      )}
+                    </div>
                   </React.Fragment>
                 ]}
               />
@@ -195,10 +203,12 @@ class Financial extends React.Component {
 
 export default Financial;
 
-const transactionTable = (data, actions) => (
-  <table className="table is-striped is-hoverable">
-    <thead>
-      {data.length === 0 || !data ? null : (
+const transactionTable = (data, actions) =>
+  data.length === 0 || !data ? (
+    <div>There are no transactions to show.</div>
+  ) : (
+    <table className="table is-striped is-hoverable">
+      <thead>
         <tr>
           <th>
             <abbr title="real account">raccount</abbr>
@@ -218,130 +228,136 @@ const transactionTable = (data, actions) => (
           <th>Modify</th>
           <th>Delete</th>
         </tr>
-      )}
-    </thead>
-    <tbody>
-      {map(data.filter(state => !state.fromAccount), transaction => (
-        <tr key={transaction.id}>
-          <td>{transaction.raccount}</td>
-          <td>{transaction.description}</td>
-          <td>{transaction.category}</td>
-          <td>{transaction.type}</td>
-          <td>{transaction.start}</td>
-          <td>{transaction.rtype}</td>
-          <td>{!transaction.cycle ? '' : transaction.cycle.toFixed(0)}</td>
-          <td>{!transaction.value ? '' : transaction.value.toFixed(2)}</td>
-          <td>{transaction.dailyRate.toFixed(2)}</td>
-          <td>
-            <button
-              className="button is-rounded is-small is-info"
-              onClick={() =>
-                actions.setTransactionForm(actions.model, 1, transaction.id)
-              }
-            >
-              M
-            </button>
-          </td>
-          <td>
-            <button
-              className="delete"
-              onClick={actions.deleteTransaction.bind(this, transaction.id)}
-            />
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-);
+      </thead>
+      <tbody>
+        {map(data.filter(state => !state.fromAccount), transaction => (
+          <tr key={transaction.id}>
+            <td>{transaction.raccount}</td>
+            <td>{transaction.description}</td>
+            <td>{transaction.category}</td>
+            <td>{transaction.type}</td>
+            <td>{transaction.start}</td>
+            <td>{transaction.rtype}</td>
+            <td>{!transaction.cycle ? '' : transaction.cycle.toFixed(0)}</td>
+            <td>{!transaction.value ? '' : transaction.value.toFixed(2)}</td>
+            <td>{transaction.dailyRate.toFixed(2)}</td>
+            <td>
+              <button
+                className="button is-rounded is-small is-info"
+                onClick={() =>
+                  actions.setTransactionForm(actions.model, 1, transaction.id)
+                }
+              >
+                M
+              </button>
+            </td>
+            <td>
+              <button
+                className="delete"
+                onClick={actions.deleteTransaction.bind(this, transaction.id)}
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
 
-const accountTable = (data, actions) => (
-  <table className="table is-striped is-hoverable">
-    <thead>
-      <tr>
-        <th />
-        <th>name</th>
-        <th>
-          <abbr title="starting balance">starting</abbr>
-        </th>
-        <th>interest</th>
-        <th>vehicle</th>
-        <th>Modify</th>
-        <th>Delete</th>
-      </tr>
-    </thead>
-    <tbody>
-      {map(data, account => (
-        <tr key={account.name.state}>
-          <td
-            onClick={actions.toggleAccountVisibility.bind(
-              this,
-              account.name.state
-            )}
-          >
-            {account.visible.state ? `👀` : `🤫`}
-          </td>
-          <th>{account.name.state}</th>
-          <td>{account.starting.toFixed}</td>
-          <td>{account.interest.toFixed}%</td>
-          <td>{account.vehicle.state}</td>
-          <td>
-            <button
-              className="button is-rounded is-small is-info"
-              onClick={() =>
-                actions.setAccountForm(actions.model, 1, account.name.state)
-              }
-            >
-              M
-            </button>
-          </td>
-          <td>
-            <button
-              className="delete"
-              onClick={actions.deleteAccount.bind(this, account.name.state)}
-            />
-          </td>
+const accountTable = (data, actions) =>
+  data.length === 0 || !data ? (
+    <div>There are no accounts to show.</div>
+  ) : (
+    <table className="table is-striped is-hoverable">
+      <thead>
+        <tr>
+          <th />
+          <th>name</th>
+          <th>
+            <abbr title="starting balance">starting</abbr>
+          </th>
+          <th>interest</th>
+          <th>vehicle</th>
+          <th>Modify</th>
+          <th>Delete</th>
         </tr>
-      ))}
-    </tbody>
-  </table>
-);
+      </thead>
+      <tbody>
+        {map(data, account => (
+          <tr key={account.name.state}>
+            <td
+              onClick={actions.toggleAccountVisibility.bind(
+                this,
+                account.name.state
+              )}
+            >
+              {account.visible.state ? `👀` : `🤫`}
+            </td>
+            <th>{account.name.state}</th>
+            <td>{account.starting.toFixed}</td>
+            <td>{account.interest.toFixed}%</td>
+            <td>{account.vehicle.state}</td>
+            <td>
+              <button
+                className="button is-rounded is-small is-info"
+                onClick={() =>
+                  actions.setAccountForm(actions.model, 1, account.name.state)
+                }
+              >
+                M
+              </button>
+            </td>
+            <td>
+              <button
+                className="delete"
+                onClick={actions.deleteAccount.bind(this, account.name.state)}
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
 
 const debtTable = (data, actions) =>
-  data
-    .filter(account => account.vehicle === 'debt')
-    .map(account => (
-      <div className="media box" key={account.name}>
-        <div className="media-content">
-          <div className="content">
-            <p>
-              <strong>{account.name}</strong>{' '}
-              <small>{`$${account.starting} @ ${account.interest}%`}</small>
-            </p>
+  data.filter(account => account.vehicle === 'debt').length === 0 || !data ? (
+    <div>There are no debts to show.</div>
+  ) : (
+    data
+      .filter(account => account.vehicle === 'debt')
+      .map(account => (
+        <div className="media box" key={account.name}>
+          <div className="media-content">
+            <div className="content">
+              <p>
+                <strong>{account.name}</strong>{' '}
+                <small>{`$${account.starting} @ ${account.interest}%`}</small>
+              </p>
+            </div>
+            {account.payback ? paybackTable(account.payback, actions) : null}
           </div>
-          {account.payback ? paybackTable(account.payback, actions) : null}
+          <div className="media-right">
+            <button
+              className="button is-rounded is-small is-success"
+              onClick={actions.toggleAccountTransactionVisibility}
+            >
+              +
+            </button>
+            <button
+              className="button is-rounded is-small is-info"
+              onClick={() =>
+                actions.setAccountForm(actions.model, 1, account.name)
+              }
+            >
+              M
+            </button>
+            <button
+              className="delete"
+              onClick={actions.deleteAccount.bind(this, account.name)}
+            />
+          </div>
         </div>
-        <div className="media-right">
-          <button
-            className="button is-rounded is-small is-success"
-            onClick={actions.toggleAccountTransactionVisibility}
-          >
-            +
-          </button>
-          <button
-            className="button is-rounded is-small is-info"
-            onClick={() =>
-              actions.setAccountForm(actions.model, 1, account.name)
-            }
-          >
-            M
-          </button>
-          <button
-            className="delete"
-            onClick={actions.deleteAccount.bind(this, account.name)}
-          />
-        </div>
-      </div>
-    ));
+      ))
+  );
 
 const paybackTable = (data, actions) =>
   data.transactions.map(payback => (
