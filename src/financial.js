@@ -14,6 +14,7 @@ class Financial extends React.Component {
     super();
     this.setAccountForm = this.setAccountForm.bind(this);
     this.setTransactionForm = this.setTransactionForm.bind(this);
+    this.tabClickAccounts = this.tabClickAccounts.bind(this);
     this.state = {
       activeTabTransactions: 0,
       activeTabAccounts: 0,
@@ -159,7 +160,7 @@ class Financial extends React.Component {
             <section className="section">
               <TabView
                 activeTab={this.state.activeTabAccounts}
-                tabClick={this.tabClickAccounts.bind(this)}
+                tabClick={this.tabClickAccounts}
                 tabTitles={['All Accounts', 'Add Account', 'Debt']}
                 tabContents={[
                   accountTable(model.accountsComputed, {
@@ -168,7 +169,7 @@ class Financial extends React.Component {
                     deleteAccount: model.deleteAccount,
                     toggleAccountVisibility: model.toggleAccountVisibility
                   }),
-                  <AccountInput />,
+                  <AccountInput tabClick={this.tabClickAccounts} />,
                   <React.Fragment>
                     <div>
                       {debtTable(model.state.accountsComputed, {
@@ -182,7 +183,7 @@ class Financial extends React.Component {
                         account => account.vehicle === 'debt'
                       ).length === 0 ? null : (
                         <AccountTransactionInput
-                          ref={ref => (this.AccountTransactionForm = ref)}
+                          tabClick={this.tabClickAccounts}
                         />
                       )}
                     </div>

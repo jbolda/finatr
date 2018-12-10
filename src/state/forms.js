@@ -18,10 +18,18 @@ class TransactionForm {
 }
 
 class AccountForm {
+  /*defaults dont seem to actually take,
+  so also setting these defaults in the form themselves.
+  Come back and fix when bugs or whatever are resolved.*/
   name = create(StringType, '');
   starting = create(Big, 0);
   interest = create(Big, 0);
   vehicle = create(StringType, 'operating');
+
+  intialize() {
+    console.log('init', this.state);
+    return this;
+  }
 
   get state() {
     return valueOf(this);
