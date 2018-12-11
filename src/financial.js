@@ -15,6 +15,7 @@ class Financial extends React.Component {
     this.setAccountForm = this.setAccountForm.bind(this);
     this.setTransactionForm = this.setTransactionForm.bind(this);
     this.tabClickAccounts = this.tabClickAccounts.bind(this);
+    this.tabClickTransactions = this.tabClickTransactions.bind(this);
     this.state = {
       activeTabTransactions: 0,
       activeTabAccounts: 0,
@@ -86,7 +87,7 @@ class Financial extends React.Component {
             <section className="section">
               <TabView
                 activeTab={this.state.activeTabTransactions}
-                tabClick={this.tabClickTransactions.bind(this)}
+                tabClick={this.tabClickTransactions}
                 tabTitles={[
                   'All Transactions',
                   'Add Transaction',
@@ -122,7 +123,7 @@ class Financial extends React.Component {
                       deleteTransaction: model.deleteTransaction
                     })}
                   </React.Fragment>,
-                  <TransactionInput />,
+                  <TransactionInput tabClick={this.tabClickTransactions} />,
                   transactionTable(
                     model.state.transactionsComputed.filter(
                       transaction => transaction.type === 'income'

@@ -2,15 +2,18 @@ import { create, valueOf, StringType } from 'microstates';
 import { Big } from './customTypes.js';
 
 class TransactionForm {
-  id = StringType;
-  raccount = StringType;
-  description = StringType;
-  category = StringType;
-  type = StringType;
-  start = StringType;
-  rtype = StringType;
-  cycle = Big;
-  value = Big;
+  /*defaults dont seem to actually take,
+  so also setting these defaults in the form themselves.
+  Come back and fix when bugs or whatever are resolved.*/
+  id = create(StringType, '');
+  raccount = create(StringType, '');
+  description = create(StringType, '');
+  category = create(StringType, '');
+  type = create(StringType, '');
+  start = create(StringType, '');
+  rtype = create(StringType, '');
+  cycle = create(Big, 0);
+  value = create(Big, 0);
 
   get state() {
     return valueOf(this);

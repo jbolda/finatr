@@ -24,8 +24,9 @@ function FieldInput({
           />
         </Form.FieldControl>
       </Form.Field>
-      {touched[fieldName] &&
-        errors[fieldName] && <div>{errors[fieldName]}</div>}
+      {touched[fieldName] && errors[fieldName] && (
+        <div>{errors[fieldName]}</div>
+      )}
     </React.Fragment>
   );
 }
@@ -38,12 +39,23 @@ class TransactionInput extends React.Component {
         <Consumer>
           {model => (
             <Formik
-              initialValues={model.forms.transactionForm.state}
+              initialValues={{
+                id: '',
+                raccount: 'select',
+                description: '',
+                category: '',
+                type: 'income',
+                start: '2018-01-01',
+                rtype: 'none',
+                cycle: 0,
+                value: 0,
+                ...model.forms.transactionForm.state
+              }}
               onSubmit={(values, actions) => {
                 model.transactionUpsert(values);
-                // .log('transaction form submitted');
                 actions.setSubmitting(false);
                 actions.resetForm();
+                this.props.tabClick(0);
               }}
               render={({
                 values,
@@ -66,6 +78,9 @@ class TransactionInput extends React.Component {
                     <Form.FieldControl>
                       <div className="select">
                         <Field component="select" name="raccount">
+                          <option key={'default'} value={'select'} disabled>
+                            Select an Option
+                          </option>
                           {model.state.accounts.map(account => (
                             <option key={account.name} value={account.name}>
                               {account.name}
@@ -75,8 +90,9 @@ class TransactionInput extends React.Component {
                       </div>
                     </Form.FieldControl>
                   </Form.Field>
-                  {touched.raccount &&
-                    errors.raccount && <div>{errors.raccount}</div>}
+                  {touched.raccount && errors.raccount && (
+                    <div>{errors.raccount}</div>
+                  )}
 
                   <FieldInput
                     errors={errors}
