@@ -46,10 +46,12 @@ class AccountTransactionForm {
   start = StringType;
   rtype = StringType;
   cycle = Big;
-  generatedOccurences = Big;
+  occurences = Big;
   value = Big;
 
   get state() {
+    console.log(this);
+    console.log(valueOf(this));
     return valueOf(this);
   }
 }

@@ -175,8 +175,7 @@ class Financial extends React.Component {
                     <div>
                       {debtTable(model.state.accountsComputed, {
                         model: model,
-                        setAccountForm: this.setAccountForm,
-                        deleteAccount: model.deleteAccount
+                        setAccountForm: this.setAccountForm
                       })}
                     </div>
                     <div>
@@ -335,7 +334,7 @@ const debtTable = (data, actions) =>
                 <small>{`$${account.starting} @ ${account.interest}%`}</small>
               </p>
             </div>
-            {account.payback ? paybackTable(account.payback, actions) : null}
+            {account.payback ? paybackTable(account, actions) : null}
           </div>
           <div className="media-right">
             <button
@@ -354,7 +353,7 @@ const debtTable = (data, actions) =>
             </button>
             <button
               className="delete"
-              onClick={actions.deleteAccount.bind(this, account.name)}
+              onClick={() => actions.model.deleteAccount(account.name)}
             />
           </div>
         </div>
@@ -362,27 +361,31 @@ const debtTable = (data, actions) =>
   );
 
 const paybackTable = (data, actions) =>
-  data.transactions.map(payback => (
-    <div className="media" key={payback.id}>
+  data.payback.transactions.map((paybackTransaction, index) => (
+    <div className="media" key={index}>
       <div className="media-content">
         <p>
-          <strong>{payback.start}</strong>{' '}
-          <small>{`${payback.rtype} @ ${payback.cycle} for ${
-            payback.value
-          }`}</small>
+          <strong>{paybackTransaction.start}</strong>{' '}
+          <small>{`${paybackTransaction.rtype} @ ${
+            paybackTransaction.cycle
+          } for ${paybackTransaction.value}`}</small>
         </p>
-        <p>{payback.description}</p>
+        <p>{paybackTransaction.description}</p>
       </div>
       <div className="media-right">
         <button
           className="button is-rounded is-small is-info"
-          onClick={actions.modifyAccount.bind(this, payback.id)}
+          onClick={() =>
+            actions.model.modifyAccountTransaction(data.name, index)
+          }
         >
           M
         </button>
         <button
           className="delete"
-          onClick={actions.deleteAccount.bind(this, payback.id)}
+          onClick={() =>
+            actions.model.modifyAccountTransaction(data.name, index)
+          }
         />
       </div>
     </div>
