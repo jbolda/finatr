@@ -200,7 +200,7 @@ class AppModel {
 
   modifyAccount(name) {
     return this.forms.accountForm.set(
-      this.accounts.state.find(element => element.name === name)
+      this.state.accountsComputed.find(element => element.name === name)
     );
   }
 

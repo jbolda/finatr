@@ -1,12 +1,12 @@
-import { valueOf } from 'microstates';
+import { create, valueOf } from 'microstates';
 import { Big } from './customTypes.js';
 import { default as _Big } from 'big.js';
 
 class Stats {
-  dailyIncome = Big;
-  dailyExpense = Big;
-  savingsRate = Big;
-  fiNumber = Big;
+  dailyIncome = create(Big, 0);
+  dailyExpense = create(Big, 0);
+  savingsRate = create(Big, 0);
+  fiNumber = create(Big, 0);
 
   get state() {
     return valueOf(this);

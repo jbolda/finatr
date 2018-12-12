@@ -10,11 +10,19 @@ class AccountInput extends React.Component {
         <Consumer>
           {model => (
             <Formik
-              initialValues={model.forms.accountForm.state}
+              initialValues={{
+                name: '',
+                starting: 0,
+                interest: 0,
+                vehicle: 'operating',
+                ...model.forms.accountForm.state
+              }}
               onSubmit={(values, actions) => {
+                console.log(this);
                 model.upsertAccount(values);
                 actions.setSubmitting(false);
                 actions.resetForm();
+                this.props.tabClick(0);
               }}
               render={({
                 values,
@@ -54,8 +62,9 @@ class AccountInput extends React.Component {
                         </p>
                       </div>
                     </div>
-                    {touched.starting &&
-                      errors.starting && <div>{errors.starting}</div>}
+                    {touched.starting && errors.starting && (
+                      <div>{errors.starting}</div>
+                    )}
                   </div>
                   <div className="field is-horizontal">
                     <div className="field-label is-normal">
@@ -72,8 +81,9 @@ class AccountInput extends React.Component {
                         </p>
                       </div>
                     </div>
-                    {touched.interest &&
-                      errors.interest && <div>{errors.interest}</div>}
+                    {touched.interest && errors.interest && (
+                      <div>{errors.interest}</div>
+                    )}
                   </div>
                   <div className="field is-horizontal">
                     <div className="field-label is-normal">
@@ -92,8 +102,9 @@ class AccountInput extends React.Component {
                         </div>
                       </div>
                     </div>
-                    {touched.vehicle &&
-                      errors.vehicle && <div>{errors.vehicle}</div>}
+                    {touched.vehicle && errors.vehicle && (
+                      <div>{errors.vehicle}</div>
+                    )}
                   </div>
                   <div className="field is-grouped is-grouped-centered">
                     <div className="control">
