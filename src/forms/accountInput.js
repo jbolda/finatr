@@ -18,7 +18,6 @@ class AccountInput extends React.Component {
                 ...model.forms.accountForm.state
               }}
               onSubmit={(values, actions) => {
-                console.log(this);
                 model.upsertAccount(values);
                 actions.setSubmitting(false);
                 actions.resetForm();

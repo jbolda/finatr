@@ -210,7 +210,7 @@ class AppModel {
     return nextSetState.reCalc();
   }
 
-  addAccountTransaction(result) {
+  upsertAccountTransaction(result) {
     let nextState = this.state.accounts;
     let accountIndex = nextState.map(a => a.name).indexOf(result.debtAccount);
     let payback = { ...nextState[accountIndex].payback };
@@ -229,6 +229,17 @@ class AppModel {
 
     let nextSetState = this.accounts.set(nextState);
     return nextSetState.reCalc().forms.accountTransactionForm.id.set('');
+  }
+
+  modifyAccountTransaction(name, index) {
+    let payback = this.state.accounts.find(element => element.name === name)
+      .payback;
+    return this.forms.accountTransactionForm
+      .set({
+        ...payback,
+        ...payback.transactions[index]
+      })
+      .log('modAT');
   }
 
   addYNAB(tokens, resultantAccounts, resultantTransactions) {
