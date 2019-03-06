@@ -7,7 +7,6 @@ import TabView from './components/view/tabView';
 import TransactionInput from './forms/transactionInput';
 import AccountInput from './forms/accountInput';
 import AccountTransactionInput from './forms/accountTransactionInput';
-import Importing from './importing.js';
 
 class Financial extends React.Component {
   constructor(props) {
@@ -190,10 +189,6 @@ class Financial extends React.Component {
                   </React.Fragment>
                 ]}
               />
-            </section>
-
-            <section className="section">
-              <Importing />
             </section>
           </React.Fragment>
         )}
