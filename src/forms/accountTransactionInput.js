@@ -60,8 +60,9 @@ class AccountTransactionInput extends React.Component {
                         </div>
                       </div>
                     </div>
-                    {touched.debtAccount &&
-                      errors.debtAccount && <div>{errors.debtAccount}</div>}
+                    {touched.debtAccount && errors.debtAccount && (
+                      <div>{errors.debtAccount}</div>
+                    )}
                   </div>
                   <div className="field is-horizontal">
                     <div className="field-label is-normal">
@@ -82,8 +83,9 @@ class AccountTransactionInput extends React.Component {
                         </div>
                       </div>
                     </div>
-                    {touched.raccount &&
-                      errors.raccount && <div>{errors.raccount}</div>}
+                    {touched.raccount && errors.raccount && (
+                      <div>{errors.raccount}</div>
+                    )}
                   </div>
                   <div className="field is-horizontal">
                     <div className="field-label is-normal">
@@ -118,8 +120,9 @@ class AccountTransactionInput extends React.Component {
                         </p>
                       </div>
                     </div>
-                    {touched.occurences &&
-                      errors.occurences && <div>{errors.occurences}</div>}
+                    {touched.occurences && errors.occurences && (
+                      <div>{errors.occurences}</div>
+                    )}
                   </div>
                   <div className="field is-horizontal">
                     <div className="field-label is-normal">
