@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Link } from "@reach/router"
+import { Router, Link } from '@reach/router';
 
 import State from '@microstates/react';
 import AppModel from './state';
@@ -41,11 +41,11 @@ class App extends React.Component {
               role="button"
               className={
                 this.state.hamburgerActive
-                  ? "navbar-burger is-active"
-                  : "navbar-burger"
+                  ? 'navbar-burger is-active'
+                  : 'navbar-burger'
               }
               aria-label="menu"
-              aria-expanded={this.state.hamburgerActive ? "true" : "false"}
+              aria-expanded={this.state.hamburgerActive ? 'true' : 'false'}
               onClick={this.toggleHamburgerMenu}
             >
               <span aria-hidden="true" />
@@ -56,36 +56,27 @@ class App extends React.Component {
           <div
             className={
               this.state.hamburgerActive
-                ? "navbar-menu is-active"
-                : "navbar-menu"
+                ? 'navbar-menu is-active'
+                : 'navbar-menu'
             }
           >
             <div className="navbar-end">
-                <Link
-                  to='/'
-                  className="navbar-item"
-                >
-                  Home
-                </Link>
-                <Link
-                  to='import'
-                  className="navbar-item"
-                >
-                  Import
-                </Link>
-                <Link
-                  to='taxes'
-                  className="navbar-item"
-                >
-                  Taxes
-                </Link>
+              <Link to="/" className="navbar-item">
+                Home
+              </Link>
+              <Link to="import" className="navbar-item">
+                Import
+              </Link>
+              <Link to="taxes" className="navbar-item">
+                Taxes
+              </Link>
             </div>
           </div>
         </nav>
         <section className="section">
           <Router>
-            <Financial path='/'/>
-            <Importing path='import' />
+            <Financial path="/" />
+            <Importing path="import" />
           </Router>
         </section>
       </State>
