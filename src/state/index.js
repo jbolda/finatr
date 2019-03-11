@@ -280,4 +280,4 @@ class AppModel {
 
 export default AppModel;
 
-export const State = React.createContext(null);
+export const State = React.createContext();

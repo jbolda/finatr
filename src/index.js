@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Link } from '@reach/router';
 
-import { from } from 'microstates';
+import { create } from 'microstates';
 import AppModel, { State } from './state';
 
 import 'bulma/css/bulma.css';
@@ -16,7 +16,7 @@ class App extends React.Component {
     this.toggleHamburgerMenu = this.toggleHamburgerMenu.bind(this);
     this.state = {
       hamburgerActive: false,
-      model: from(AppModel)
+      model: create(AppModel, AppModel)
     };
   }
 

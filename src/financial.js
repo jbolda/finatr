@@ -1,6 +1,6 @@
 import React from 'react';
 import { map } from 'microstates';
-import { Consumer } from '@microstates/react';
+import { State } from './state';
 import BarChart from './barChart';
 
 import TabView from './components/view/tabView';
@@ -42,7 +42,7 @@ class Financial extends React.Component {
 
   render() {
     return (
-      <Consumer>
+      <State.Consumer>
         {model => (
           <React.Fragment>
             <section className="section">
@@ -192,7 +192,7 @@ class Financial extends React.Component {
             </section>
           </React.Fragment>
         )}
-      </Consumer>
+      </State.Consumer>
     );
   }
 }
