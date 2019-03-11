@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Link } from '@reach/router';
 
-import State from '@microstates/react';
-import AppModel from './state';
+import { from } from 'microstates';
+import AppModel, { State } from './state';
 
 import 'bulma/css/bulma.css';
 import Financial from './financial';
@@ -15,7 +15,8 @@ class App extends React.Component {
     super(props);
     this.toggleHamburgerMenu = this.toggleHamburgerMenu.bind(this);
     this.state = {
-      hamburgerActive: false
+      hamburgerActive: false,
+      model: from(AppModel)
     };
   }
 
@@ -27,7 +28,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <State type={AppModel}>
+      <State.Provider value={this.state.model}>
         <nav
           className="navbar is-fixed-top is-primary"
           role="navigation"
@@ -81,10 +82,10 @@ class App extends React.Component {
             <Taxes path="taxes" />
           </Router>
         </section>
-      </State>
+      </State.Provider>
     );
   }
 }
 
-const root = ReactDOM.unstable_createRoot(document.getElementById('root'));
-root.render(<App />);
+const rootElement = document.getElementById('root');
+ReactDOM.render(<App />, rootElement);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Consumer } from '@microstates/react';
+import { State } from '../state';
 import { Formik, Field } from 'formik';
 
 class AccountTransactionInput extends React.Component {
@@ -16,7 +16,7 @@ class AccountTransactionInput extends React.Component {
     return this.state.visible ? (
       <div className="box">
         <h1 className="title has-text-centered">Add Debt Payback</h1>
-        <Consumer>
+        <State.Consumer>
           {model => (
             <Formik
               initialValues={model.forms.accountTransactionForm.state}
@@ -201,7 +201,7 @@ class AccountTransactionInput extends React.Component {
               )}
             />
           )}
-        </Consumer>
+        </State.Consumer>
       </div>
     ) : null;
   }

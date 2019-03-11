@@ -1,3 +1,4 @@
+import React from 'react';
 import { valueOf, ObjectType } from 'microstates';
 import { Transaction, TransactionComputed } from './transactions.js';
 import { Account, AccountComputed } from './accounts.js';
@@ -278,3 +279,5 @@ class AppModel {
 }
 
 export default AppModel;
+
+export const State = React.createContext(null);

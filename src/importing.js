@@ -1,5 +1,5 @@
 import React from 'react';
-import { Consumer } from '@microstates/react';
+import { State } from './state';
 import TabView from './components/view/tabView';
 
 import fileDownload from 'js-file-download';
@@ -44,7 +44,7 @@ class Importing extends React.Component {
 
   render() {
     return (
-      <Consumer>
+      <State.Consumer>
         {model => (
           <TabView
             activeTab={this.state.activeTab}
@@ -92,7 +92,7 @@ class Importing extends React.Component {
             ]}
           />
         )}
-      </Consumer>
+      </State.Consumer>
     );
   }
 }
