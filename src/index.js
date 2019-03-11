@@ -8,6 +8,7 @@ import AppModel from './state';
 import 'bulma/css/bulma.css';
 import Financial from './financial';
 import Importing from './importing';
+import Taxes from './taxes';
 
 class App extends React.Component {
   constructor(props) {
@@ -77,6 +78,7 @@ class App extends React.Component {
           <Router>
             <Financial path="/" />
             <Importing path="import" />
+            <Taxes path="taxes" />
           </Router>
         </section>
       </State>

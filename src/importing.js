@@ -24,6 +24,7 @@ class Importing extends React.Component {
     model.transactions
       .set(result.transactions)
       .accounts.set(result.accounts)
+      .taxStrategy.set(result.taxStrategy)
       .forms.ynabForm.devToken.set(result.devToken)
       .forms.ynabForm.budgetId.set(result.budgetId)
       .reCalc();
@@ -33,6 +34,7 @@ class Importing extends React.Component {
     let outputData = {
       transactions: [...model.state.transactions],
       accounts: [...model.state.accounts],
+      taxStrategy: [...model.state.taxStrategy],
       devToken: model.forms.ynabForm.devToken.state,
       budgetId: model.forms.ynabForm.budgetId.state
     };
