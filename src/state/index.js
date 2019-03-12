@@ -60,6 +60,16 @@ class AppModel {
     return this;
   }
 
+  setUpload(result) {
+    return this.transactions
+      .set(result.transactions)
+      .accounts.set(result.accounts)
+      .taxStrategy.set(result.taxStrategy)
+      .forms.ynabForm.devToken.set(result.devToken)
+      .forms.ynabForm.budgetId.set(result.budgetId)
+      .reCalc();
+  }
+
   reCalc(presetAccounts = []) {
     const init = this.transactionComputer().accountComputer(presetAccounts);
     const { transactionsComputed, accountsComputed } = init.state;
