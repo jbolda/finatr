@@ -21,13 +21,12 @@ class Importing extends React.Component {
   handleUpload = (model, event, results) => {
     let result = JSON.parse(results[0][0].target.result);
     console.log('file upload result', result);
-    model.transactions
-      .set(result.transactions)
-      .accounts.set(result.accounts)
-      .taxStrategy.set(result.taxStrategy)
-      .forms.ynabForm.devToken.set(result.devToken)
-      .forms.ynabForm.budgetId.set(result.budgetId)
-      .reCalc();
+    model.taxStrategy.set(result.taxStrategy);
+    // .forms.ynabForm.devToken.set(result.devToken)
+    // .forms.ynabForm.budgetId.set(result.budgetId)
+    // .reCalc();
+    // .transactions.set(result.transactions)
+    // .accounts.set(result.accounts);
   };
 
   handleDownload = model => {

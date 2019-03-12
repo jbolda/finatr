@@ -18,16 +18,16 @@ class Big {
     return this.state.eq(value);
   }
 
+  get state() {
+    return valueOf(this);
+  }
+
   get toFixed() {
     return this.state.toFixed(2);
   }
 
   get toNumber() {
     return Number(this.state);
-  }
-
-  get state() {
-    return valueOf(this);
   }
 }
 
