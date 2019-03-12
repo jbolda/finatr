@@ -22,14 +22,14 @@ const Taxes = props => (
           </thead>
           <tbody>
             {map(model.taxStrategy.incomeReceived, income => (
-              <tr key={income.id}>
-                <td>{income.group}</td>
-                <td>{income.gross.toFixed(2)}</td>
-                <td>{income.federal.toFixed(2)}</td>
-                <td>{income.state.toFixed(2)}</td>
-                <td>{income.socialSecurity.toFixed(2)}</td>
-                <td>{income.hsa.toFixed(2)}</td>
-                <td>{income.pretaxInvestments.toFixed(2)}</td>
+              <tr key={income.id.state}>
+                <td>{income.group.state}</td>
+                <td>{income.gross.toFixed}</td>
+                <td>{income.federal.toFixed}</td>
+                <td>{income.state.toFixed}</td>
+                <td>{income.socialSecurity.toFixed}</td>
+                <td>{income.hsa.toFixed}</td>
+                <td>{income.pretaxInvestments.toFixed}</td>
               </tr>
             ))}
           </tbody>
