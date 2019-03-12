@@ -31,10 +31,11 @@ class Importing extends React.Component {
   };
 
   handleDownload = model => {
+    const modelState = model.state;
     let outputData = {
-      transactions: [...model.state.transactions],
-      accounts: [...model.state.accounts],
-      taxStrategy: [...model.state.taxStrategy],
+      transactions: [...modelState.transactions],
+      accounts: [...modelState.accounts],
+      taxStrategy: modelState.taxStrategy,
       devToken: model.forms.ynabForm.devToken.state,
       budgetId: model.forms.ynabForm.budgetId.state
     };
