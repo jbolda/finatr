@@ -41,51 +41,55 @@ class Importing extends React.Component {
     return (
       <State.Consumer>
         {model => (
-          <TabView
-            activeTab={this.state.activeTab}
-            tabClick={this.tabClick.bind(this)}
-            tabTitles={['Manual Upload/Download', 'Import From YNAB']}
-            tabContents={[
-              <nav className="level">
-                <div className="level-left">
-                  <div className="level-item has-text-centered">
-                    <div>
-                      <p className="heading">Get your current</p>
-                      <p className="heading">data out:</p>
-                      <button
-                        className="button is-success"
-                        onClick={this.handleDownload.bind(this, model)}
-                      >
-                        Download
-                      </button>
-                    </div>
-                  </div>
-                  <div className="level-item has-text-centered">
-                    <div>
-                      <p className="heading">Import data from</p>
-                      <p className="heading">your computer:</p>
-                      <FileReaderInput
-                        as="text"
-                        id="my-file-input"
-                        onChange={this.handleUpload.bind(this, model)}
-                      >
-                        <button className="button is-link">
-                          Select a file!
+          <section className="section">
+            <h1 className="title">Importing and Exporting</h1>
+            <h2 className="subtitle">The data is yours to own.</h2>
+            <TabView
+              activeTab={this.state.activeTab}
+              tabClick={this.tabClick.bind(this)}
+              tabTitles={['Manual Upload/Download', 'Import From YNAB']}
+              tabContents={[
+                <nav className="level">
+                  <div className="level-left">
+                    <div className="level-item has-text-centered">
+                      <div>
+                        <p className="heading">Get your current</p>
+                        <p className="heading">data out:</p>
+                        <button
+                          className="button is-success"
+                          onClick={this.handleDownload.bind(this, model)}
+                        >
+                          Download
                         </button>
-                      </FileReaderInput>
+                      </div>
+                    </div>
+                    <div className="level-item has-text-centered">
+                      <div>
+                        <p className="heading">Import data from</p>
+                        <p className="heading">your computer:</p>
+                        <FileReaderInput
+                          as="text"
+                          id="my-file-input"
+                          onChange={this.handleUpload.bind(this, model)}
+                        >
+                          <button className="button is-link">
+                            Select a file!
+                          </button>
+                        </FileReaderInput>
+                      </div>
                     </div>
                   </div>
+                </nav>,
+                <div className="container is-fluid">
+                  <YNABInput
+                    initialDevToken={model.state.devToken}
+                    initialBudgetId={model.state.budgetId}
+                    addYNAB={this.addYNAB}
+                  />
                 </div>
-              </nav>,
-              <div className="container is-fluid">
-                <YNABInput
-                  initialDevToken={model.state.devToken}
-                  initialBudgetId={model.state.budgetId}
-                  addYNAB={this.addYNAB}
-                />
-              </div>
-            ]}
-          />
+              ]}
+            />
+          </section>
         )}
       </State.Consumer>
     );
