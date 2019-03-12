@@ -57,8 +57,8 @@ class AccountTransactionForm {
 }
 
 class YNABForm {
-  devToken = StringType;
-  budgetId = StringType;
+  devToken = create(StringType, '');
+  budgetId = create(StringType, '');
 }
 
 class Forms {
