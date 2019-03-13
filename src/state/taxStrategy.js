@@ -41,6 +41,7 @@ class TaxStrategy {
   }
 
   reCalc() {
+    if (this.incomeReceived.length === 0) return this;
     const { incomeReceived } = this.state;
 
     const groups = incomeReceived.reduce((g, income) => {
