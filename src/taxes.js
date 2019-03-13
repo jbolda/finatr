@@ -69,8 +69,8 @@ const Table = ({ model }) => (
         <tr key={income.id.state}>
           <td>{income.group.state}</td>
           <td>{income.gross.toFixed}</td>
-          <td>{income.federal.toFixed}</td>
-          <td>{income.state.toFixed}</td>
+          <td>{income.federalTax.toFixed}</td>
+          <td>{income.stateTax.toFixed}</td>
           <td>{income.socialSecurity.toFixed}</td>
           <td>{income.hsa.toFixed}</td>
           <td>{income.pretaxInvestments.toFixed}</td>
