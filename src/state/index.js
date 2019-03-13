@@ -87,6 +87,7 @@ class AppModel {
 
     return chartsCalced.stats
       .reCalc(chartsCalced.state, chartsCalced.charts.state)
+      .taxStrategy.reCalc()
       .log('recalc');
   }
 
