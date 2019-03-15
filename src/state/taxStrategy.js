@@ -9,6 +9,10 @@ class Allocations {
   socialSecurity = Big;
   hsa = Big;
   pretaxInvestments = Big;
+
+  get state() {
+    return valueOf(this);
+  }
 }
 
 class Income extends Allocations {
@@ -39,6 +43,10 @@ class Quarters {
 class IncomeGroup {
   name = StringType;
   income = Quarters;
+
+  get state() {
+    return valueOf(this);
+  }
 }
 
 class TaxStrategy {
@@ -118,22 +126,26 @@ class TaxStrategy {
       const { qOne, qTwo, qThree, qFour } = iG.income.state;
 
       const computedQOneAllocations = qOne.reduce(
-        (fin, income) => addUpAllAllocations(allocations, fin, income),
+        (fin, income) =>
+          addUpAllAllocations(allocations, 'qOneAllocations', fin, income),
         iG.income.qOneAllocations
       );
 
       const computedQTwoAllocations = qTwo.reduce(
-        (fin, income) => addUpAllAllocations(allocations, fin, income),
+        (fin, income) =>
+          addUpAllAllocations(allocations, 'qTwoAllocations', fin, income),
         iG.income.qTwoAllocations
       );
 
       const computedQThreeAllocations = qThree.reduce(
-        (fin, income) => addUpAllAllocations(allocations, fin, income),
+        (fin, income) =>
+          addUpAllAllocations(allocations, 'qThreeAllocations', fin, income),
         iG.income.qThreeAllocations
       );
 
       const computedQFourAllocations = qFour.reduce(
-        (fin, income) => addUpAllAllocations(allocations, fin, income),
+        (fin, income) =>
+          addUpAllAllocations(allocations, 'qFourAllocations', fin, income),
         iG.income.qFourAllocations
       );
 
@@ -165,9 +177,10 @@ const quarterAsText = q => {
   }
 };
 
-const addUpAllAllocations = (allocations, fin, income) => {
+const addUpAllAllocations = (allocations, qKey, fin, income) => {
+  let next = {};
   allocations.forEach(key => {
-    fin[key].add(income[key]);
+    next[key] = fin[key].add(income[key]).income[qKey][key];
   });
-  return fin;
+  return fin.set(next).income[qKey];
 };
