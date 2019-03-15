@@ -2,16 +2,19 @@ import { valueOf, StringType, DateType } from 'microstates';
 import { Big } from './customTypes.js';
 import getQuarter from 'date-fns/fp/getQuarter';
 
-class Income {
-  id = StringType;
-  group = StringType;
-  date = DateType;
+class Allocations {
   gross = Big;
   federalTax = Big;
   stateTax = Big;
   socialSecurity = Big;
   hsa = Big;
   pretaxInvestments = Big;
+}
+
+class Income extends Allocations {
+  id = StringType;
+  group = StringType;
+  date = DateType;
 
   get state() {
     return valueOf(this);
@@ -20,15 +23,22 @@ class Income {
 
 class Quarters {
   qOne = [Income];
+  qOneAllocations = Allocations;
   qTwo = [Income];
+  qTwoAllocations = Allocations;
   qThree = [Income];
+  qThreeAllocations = Allocations;
   qFour = [Income];
+  qFourAllocations = Allocations;
+
+  get state() {
+    return valueOf(this);
+  }
 }
 
 class IncomeGroup {
   name = StringType;
   income = Quarters;
-  values = Big;
 }
 
 class TaxStrategy {
@@ -48,25 +58,93 @@ class TaxStrategy {
       return g.includes(income.group) ? g : [...g, income.group];
     }, []);
 
+    const allocations = [
+      'gross',
+      'federalTax',
+      'stateTax',
+      'socialSecurity',
+      'hsa',
+      'pretaxInvestments'
+    ];
+    const allocationTemplate = allocations.reduce((acc, val) => {
+      acc[val] = 0;
+      return acc;
+    }, {});
+
     const initGroup = groups.map(g => ({
       name: g,
-      income: { qOne: [], qTwo: [], qThree: [], qFour: [] }
+      income: {
+        qOne: [],
+        qOneAllocations: { ...allocationTemplate },
+        qTwo: [],
+        qTwoAllocations: { ...allocationTemplate },
+        qThree: [],
+        qThreeAllocations: { ...allocationTemplate },
+        qFour: [],
+        qFourAllocations: { ...allocationTemplate }
+      }
     }));
 
     const incomeGroup = incomeReceived.reduce((iG, income) => {
       return iG.map(g => {
         if (g.name === income.group) {
           const quarter = getQuarter(income.date);
-          g.income[quarterAsText(quarter)] = [].concat(
-            g.income[quarterAsText(quarter)],
-            income
-          );
+          const quarterText = quarterAsText(quarter);
+
+          g.income[quarterText] = [].concat(g.income[quarterText], income);
         }
         return g;
       });
     }, initGroup);
 
-    return this.groups.set(groups).incomeGroup.set(incomeGroup);
+    return this.groups
+      .set(groups)
+      .incomeGroup.set(incomeGroup)
+      .addUpIncome();
+  }
+
+  addUpIncome() {
+    if (this.incomeGroup.length === 0) return this;
+    const allocations = [
+      'gross',
+      'federalTax',
+      'stateTax',
+      'socialSecurity',
+      'hsa',
+      'pretaxInvestments'
+    ];
+
+    const computedIncomeGroup = this.incomeGroup.map(iG => {
+      const { qOne, qTwo, qThree, qFour } = iG.income.state;
+
+      const computedQOneAllocations = qOne.reduce(
+        (fin, income) => addUpAllAllocations(allocations, fin, income),
+        iG.income.qOneAllocations
+      );
+
+      const computedQTwoAllocations = qTwo.reduce(
+        (fin, income) => addUpAllAllocations(allocations, fin, income),
+        iG.income.qTwoAllocations
+      );
+
+      const computedQThreeAllocations = qThree.reduce(
+        (fin, income) => addUpAllAllocations(allocations, fin, income),
+        iG.income.qThreeAllocations
+      );
+
+      const computedQFourAllocations = qFour.reduce(
+        (fin, income) => addUpAllAllocations(allocations, fin, income),
+        iG.income.qFourAllocations
+      );
+
+      return iG.income.qOneAllocations
+        .set(computedQOneAllocations)
+        .income.qTwoAllocations.set(computedQTwoAllocations)
+        .income.qThreeAllocations.set(computedQThreeAllocations)
+        .income.qFourAllocations.set(computedQFourAllocations);
+    });
+
+    return this.incomeGroup.set(computedIncomeGroup);
   }
 }
 
@@ -85,4 +163,11 @@ const quarterAsText = q => {
     default:
       return 'qOne';
   }
+};
+
+const addUpAllAllocations = (allocations, fin, income) => {
+  allocations.forEach(key => {
+    fin[key].add(income[key]);
+  });
+  return fin;
 };
