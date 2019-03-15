@@ -36,16 +36,32 @@ const Group = ({ model }) =>
             </div>
           </div>
           <div className="columns is-multiline">
-            <Chunk quarter="one" quarterIncome={group.income.qOne} />
-            <Chunk quarter="two" quarterIncome={group.income.qTwo} />
-            <Chunk quarter="three" quarterIncome={group.income.qThree} />
-            <Chunk quarter="four" quarterIncome={group.income.qFour} />
+            <Chunk
+              quarter="quarter one"
+              quarterIncome={group.income.qOne}
+              quarterAllocations={group.income.qOneAllocations}
+            />
+            <Chunk
+              quarter="quarter two"
+              quarterIncome={group.income.qTwo}
+              quarterAllocations={group.income.qTwoAllocations}
+            />
+            <Chunk
+              quarter="quarter three"
+              quarterIncome={group.income.qThree}
+              quarterAllocations={group.income.qTwoAllocations}
+            />
+            <Chunk
+              quarter="quarter four"
+              quarterIncome={group.income.qFour}
+              quarterAllocations={group.income.qTwoAllocations}
+            />
           </div>
         </div>
       ))
     : null;
 
-const Chunk = ({ quarter, quarterIncome }) => {
+const Chunk = ({ quarter, quarterIncome, quarterAllocations }) => {
   const [expanded, toggle] = useState(false);
 
   return expanded ? (
@@ -92,6 +108,12 @@ const Chunk = ({ quarter, quarterIncome }) => {
       <div className="card">
         <div className="card-content">
           <p className="title">{quarter}</p>
+          <p>Gross: {quarterAllocations.gross.toFixed}</p>
+          <p>Federal: {quarterAllocations.federalTax.toFixed}</p>
+          <p>State: {quarterAllocations.stateTax.toFixed}</p>
+          <p>Social Security: {quarterAllocations.socialSecurity.toFixed}</p>
+          <p>HSA: {quarterAllocations.hsa.toFixed}</p>
+          <p>Pretax: {quarterAllocations.pretaxInvestments.toFixed}</p>
         </div>
         <footer className="card-footer">
           <p className="card-footer-item">
