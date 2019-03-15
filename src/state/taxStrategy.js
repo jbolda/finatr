@@ -51,7 +51,7 @@ class TaxStrategy {
   }
 
   reCalc() {
-    if (this.incomeReceived.length === 0) return this;
+    if (this.incomeReceived.length === 0) return this.incomeGroup.set([]);
     const { incomeReceived } = this.state;
 
     const groups = incomeReceived.reduce((g, income) => {
@@ -142,7 +142,7 @@ class TaxStrategy {
         .income.qTwoAllocations.set(computedQTwoAllocations)
         .income.qThreeAllocations.set(computedQThreeAllocations)
         .income.qFourAllocations.set(computedQFourAllocations);
-    });
+    }).incomeGroup;
 
     return this.incomeGroup.set(computedIncomeGroup);
   }

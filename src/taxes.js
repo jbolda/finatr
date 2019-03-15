@@ -27,21 +27,23 @@ const Taxes = props => {
 export default Taxes;
 
 const Group = ({ model }) =>
-  map(model.taxStrategy.incomeGroup, group => (
-    <div key={group.name.state}>
-      <div className="columns">
-        <div className="column">
-          <p className="title">{group.name.state}</p>
+  model.taxStrategy.incomeGroup.length !== 0
+    ? map(model.taxStrategy.incomeGroup, group => (
+        <div key={group.name.state}>
+          <div className="columns">
+            <div className="column">
+              <p className="title">{group.name.state}</p>
+            </div>
+          </div>
+          <div className="columns is-multiline">
+            <Chunk quarter="one" quarterIncome={group.income.qOne} />
+            <Chunk quarter="two" quarterIncome={group.income.qTwo} />
+            <Chunk quarter="three" quarterIncome={group.income.qThree} />
+            <Chunk quarter="four" quarterIncome={group.income.qFour} />
+          </div>
         </div>
-      </div>
-      <div className="columns is-multiline">
-        <Chunk quarter="one" quarterIncome={group.income.qOne} />
-        <Chunk quarter="two" quarterIncome={group.income.qTwo} />
-        <Chunk quarter="three" quarterIncome={group.income.qThree} />
-        <Chunk quarter="four" quarterIncome={group.income.qFour} />
-      </div>
-    </div>
-  ));
+      ))
+    : null;
 
 const Chunk = ({ quarter, quarterIncome }) => {
   const [expanded, toggle] = useState(false);
