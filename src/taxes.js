@@ -92,12 +92,30 @@ const Chunk = ({ quarter, quarterIncome }) => {
       <div className="card">
         <div className="card-content">
           <p className="title">{quarter}</p>
-          <p>Gross: {quarterIncome.total.gross.toFixed}</p>
-          <p>Federal: {quarterIncome.total.federalTax.toFixed}</p>
-          <p>State: {quarterIncome.total.stateTax.toFixed}</p>
-          <p>Social Security: {quarterIncome.total.socialSecurity.toFixed}</p>
-          <p>HSA: {quarterIncome.total.hsa.toFixed}</p>
-          <p>Pretax: {quarterIncome.total.pretaxInvestments.toFixed}</p>
+          <p>
+            Gross: {quarterIncome.total.gross.toFixed} |{' '}
+            {quarterIncome.average.gross.toFixed}
+          </p>
+          <p>
+            Federal: {quarterIncome.total.federalTax.toFixed} |{' '}
+            {quarterIncome.average.federalTax.toFixed}
+          </p>
+          <p>
+            State: {quarterIncome.total.stateTax.toFixed} |{' '}
+            {quarterIncome.average.stateTax.toFixed}
+          </p>
+          <p>
+            Social Security: {quarterIncome.total.socialSecurity.toFixed} |{' '}
+            {quarterIncome.average.socialSecurity.toFixed}
+          </p>
+          <p>
+            HSA: {quarterIncome.total.hsa.toFixed} |{' '}
+            {quarterIncome.average.hsa.toFixed}
+          </p>
+          <p>
+            Pretax: {quarterIncome.total.pretaxInvestments.toFixed} |{' '}
+            {quarterIncome.average.pretaxInvestments.toFixed}
+          </p>
         </div>
         <footer className="card-footer">
           <p className="card-footer-item">

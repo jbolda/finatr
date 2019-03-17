@@ -19,6 +19,10 @@ class Big extends Primitive {
     return this.state.eq(value);
   }
 
+  average(value) {
+    return this.state.add(value).div(2);
+  }
+
   get state() {
     return valueOf(this);
   }

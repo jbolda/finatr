@@ -79,10 +79,26 @@ class TaxStrategy {
 
     const initGroup = groups.map(g => ({
       name: g,
-      qOne: { income: [], total: { ...allocationTemplate } },
-      qTwo: { income: [], total: { ...allocationTemplate } },
-      qThree: { income: [], total: { ...allocationTemplate } },
-      qFour: { income: [], total: { ...allocationTemplate } }
+      qOne: {
+        income: [],
+        total: { ...allocationTemplate },
+        average: { ...allocationTemplate }
+      },
+      qTwo: {
+        income: [],
+        total: { ...allocationTemplate },
+        average: { ...allocationTemplate }
+      },
+      qThree: {
+        income: [],
+        total: { ...allocationTemplate },
+        average: { ...allocationTemplate }
+      },
+      qFour: {
+        income: [],
+        total: { ...allocationTemplate },
+        average: { ...allocationTemplate }
+      }
     }));
 
     const incomeGroup = incomeReceived.reduce((iG, income) => {
@@ -116,33 +132,33 @@ class TaxStrategy {
 
     const computedIncomeGroup = this.incomeGroup.map(iG => {
       const { qOne, qTwo, qThree, qFour } = iG.state;
+      const quarters = ['qOne', 'qTwo', 'qThree', 'qFour'];
 
-      const computedQOneAllocations = qOne.income.reduce(
-        (fin, income) => addUpAllAllocations(allocations, 'qOne', fin, income),
-        iG.qOne.total
-      );
+      const qVals = [qOne, qTwo, qThree, qFour].map((quarter, index) => {
+        const quarterName = quarters[index];
 
-      const computedQTwoAllocations = qTwo.income.reduce(
-        (fin, income) => addUpAllAllocations(allocations, 'qTwo', fin, income),
-        iG.qTwo.total
-      );
-
-      const computedQThreeAllocations = qThree.income.reduce(
-        (fin, income) =>
-          addUpAllAllocations(allocations, 'qThree', fin, income),
-        iG.qThree.total
-      );
-
-      const computedQFourAllocations = qFour.income.reduce(
-        (fin, income) => addUpAllAllocations(allocations, 'qFour', fin, income),
-        iG.qFour.total
-      );
+        const total = quarter.income.reduce(
+          (fin, income) =>
+            addUpAllAllocations(allocations, quarterName, fin, income).state,
+          iG[quarterName].total
+        );
+        const average = quarter.income.reduce(
+          (fin, income) =>
+            averageAllocations(allocations, quarterName, fin, income).state,
+          iG[quarterName].average
+        );
+        return { total, average };
+      });
 
       return iG.qOne.total
-        .set(computedQOneAllocations)
-        .qTwo.total.set(computedQTwoAllocations)
-        .qThree.total.set(computedQThreeAllocations)
-        .qFour.total.set(computedQFourAllocations);
+        .set(qVals[0].total)
+        .qTwo.total.set(qVals[1].total)
+        .qThree.total.set(qVals[2].total)
+        .qFour.total.set(qVals[3].total)
+        .qOne.average.set(qVals[0].average)
+        .qTwo.average.set(qVals[1].average)
+        .qThree.average.set(qVals[2].average)
+        .qFour.average.set(qVals[3].average);
     }).incomeGroup;
 
     return this.incomeGroup.set(computedIncomeGroup);
@@ -172,4 +188,12 @@ const addUpAllAllocations = (allocations, qKey, fin, income) => {
     next[key] = fin[key].add(income[key])[qKey].total[key];
   });
   return fin.set(next)[qKey].total;
+};
+
+const averageAllocations = (allocations, qKey, fin, income) => {
+  let next = {};
+  allocations.forEach(key => {
+    next[key] = fin[key].add(income[key])[qKey].average[key];
+  });
+  return fin.set(next)[qKey].average;
 };
