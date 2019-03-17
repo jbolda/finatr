@@ -1,7 +1,8 @@
 import { valueOf } from 'microstates';
 import { default as _Big } from 'big.js';
+import { Primitive } from 'microstates';
 
-class Big {
+class Big extends Primitive {
   initialize(value = 0) {
     return value instanceof _Big ? value : _Big(value);
   }
