@@ -1,14 +1,14 @@
-import { valueOf, StringType, DateType } from 'microstates';
+import { valueOf, create, StringType, DateType } from 'microstates';
 import { Big } from './customTypes.js';
 import getQuarter from 'date-fns/fp/getQuarter';
 
 class Allocations {
-  gross = Big;
-  federalTax = Big;
-  stateTax = Big;
-  socialSecurity = Big;
-  hsa = Big;
-  pretaxInvestments = Big;
+  gross = create(Big, 0);
+  federalTax = create(Big, 0);
+  stateTax = create(Big, 0);
+  socialSecurity = create(Big, 0);
+  hsa = create(Big, 0);
+  pretaxInvestments = create(Big, 0);
 
   get state() {
     return valueOf(this);
@@ -26,14 +26,9 @@ class Income extends Allocations {
 }
 
 class Quarters {
-  qOne = [Income];
-  qOneAllocations = Allocations;
-  qTwo = [Income];
-  qTwoAllocations = Allocations;
-  qThree = [Income];
-  qThreeAllocations = Allocations;
-  qFour = [Income];
-  qFourAllocations = Allocations;
+  income = [Income];
+  total = Allocations;
+  average = Allocations;
 
   get state() {
     return valueOf(this);
@@ -42,7 +37,10 @@ class Quarters {
 
 class IncomeGroup {
   name = StringType;
-  income = Quarters;
+  qOne = Quarters;
+  qTwo = Quarters;
+  qThree = Quarters;
+  qFour = Quarters;
 
   get state() {
     return valueOf(this);
@@ -81,16 +79,10 @@ class TaxStrategy {
 
     const initGroup = groups.map(g => ({
       name: g,
-      income: {
-        qOne: [],
-        qOneAllocations: { ...allocationTemplate },
-        qTwo: [],
-        qTwoAllocations: { ...allocationTemplate },
-        qThree: [],
-        qThreeAllocations: { ...allocationTemplate },
-        qFour: [],
-        qFourAllocations: { ...allocationTemplate }
-      }
+      qOne: { income: [], total: { ...allocationTemplate } },
+      qTwo: { income: [], total: { ...allocationTemplate } },
+      qThree: { income: [], total: { ...allocationTemplate } },
+      qFour: { income: [], total: { ...allocationTemplate } }
     }));
 
     const incomeGroup = incomeReceived.reduce((iG, income) => {
@@ -99,7 +91,7 @@ class TaxStrategy {
           const quarter = getQuarter(income.date);
           const quarterText = quarterAsText(quarter);
 
-          g.income[quarterText] = [].concat(g.income[quarterText], income);
+          g[quarterText].income = [].concat(g[quarterText].income, income);
         }
         return g;
       });
@@ -123,37 +115,34 @@ class TaxStrategy {
     ];
 
     const computedIncomeGroup = this.incomeGroup.map(iG => {
-      const { qOne, qTwo, qThree, qFour } = iG.income.state;
+      const { qOne, qTwo, qThree, qFour } = iG.state;
 
-      const computedQOneAllocations = qOne.reduce(
-        (fin, income) =>
-          addUpAllAllocations(allocations, 'qOneAllocations', fin, income),
-        iG.income.qOneAllocations
+      const computedQOneAllocations = qOne.income.reduce(
+        (fin, income) => addUpAllAllocations(allocations, 'qOne', fin, income),
+        iG.qOne.total
       );
 
-      const computedQTwoAllocations = qTwo.reduce(
-        (fin, income) =>
-          addUpAllAllocations(allocations, 'qTwoAllocations', fin, income),
-        iG.income.qTwoAllocations
+      const computedQTwoAllocations = qTwo.income.reduce(
+        (fin, income) => addUpAllAllocations(allocations, 'qTwo', fin, income),
+        iG.qTwo.total
       );
 
-      const computedQThreeAllocations = qThree.reduce(
+      const computedQThreeAllocations = qThree.income.reduce(
         (fin, income) =>
-          addUpAllAllocations(allocations, 'qThreeAllocations', fin, income),
-        iG.income.qThreeAllocations
+          addUpAllAllocations(allocations, 'qThree', fin, income),
+        iG.qThree.total
       );
 
-      const computedQFourAllocations = qFour.reduce(
-        (fin, income) =>
-          addUpAllAllocations(allocations, 'qFourAllocations', fin, income),
-        iG.income.qFourAllocations
+      const computedQFourAllocations = qFour.income.reduce(
+        (fin, income) => addUpAllAllocations(allocations, 'qFour', fin, income),
+        iG.qFour.total
       );
 
-      return iG.income.qOneAllocations
+      return iG.qOne.total
         .set(computedQOneAllocations)
-        .income.qTwoAllocations.set(computedQTwoAllocations)
-        .income.qThreeAllocations.set(computedQThreeAllocations)
-        .income.qFourAllocations.set(computedQFourAllocations);
+        .qTwo.total.set(computedQTwoAllocations)
+        .qThree.total.set(computedQThreeAllocations)
+        .qFour.total.set(computedQFourAllocations);
     }).incomeGroup;
 
     return this.incomeGroup.set(computedIncomeGroup);
@@ -180,7 +169,7 @@ const quarterAsText = q => {
 const addUpAllAllocations = (allocations, qKey, fin, income) => {
   let next = {};
   allocations.forEach(key => {
-    next[key] = fin[key].add(income[key]).income[qKey][key];
+    next[key] = fin[key].add(income[key])[qKey].total[key];
   });
-  return fin.set(next).income[qKey];
+  return fin.set(next)[qKey].total;
 };

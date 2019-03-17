@@ -36,32 +36,16 @@ const Group = ({ model }) =>
             </div>
           </div>
           <div className="columns is-multiline">
-            <Chunk
-              quarter="quarter one"
-              quarterIncome={group.income.qOne}
-              quarterAllocations={group.income.qOneAllocations}
-            />
-            <Chunk
-              quarter="quarter two"
-              quarterIncome={group.income.qTwo}
-              quarterAllocations={group.income.qTwoAllocations}
-            />
-            <Chunk
-              quarter="quarter three"
-              quarterIncome={group.income.qThree}
-              quarterAllocations={group.income.qTwoAllocations}
-            />
-            <Chunk
-              quarter="quarter four"
-              quarterIncome={group.income.qFour}
-              quarterAllocations={group.income.qTwoAllocations}
-            />
+            <Chunk quarter="quarter one" quarterIncome={group.qOne} />
+            <Chunk quarter="quarter two" quarterIncome={group.qTwo} />
+            <Chunk quarter="quarter three" quarterIncome={group.qThree} />
+            <Chunk quarter="quarter four" quarterIncome={group.qFour} />
           </div>
         </div>
       ))
     : null;
 
-const Chunk = ({ quarter, quarterIncome, quarterAllocations }) => {
+const Chunk = ({ quarter, quarterIncome }) => {
   const [expanded, toggle] = useState(false);
 
   return expanded ? (
@@ -70,7 +54,7 @@ const Chunk = ({ quarter, quarterIncome, quarterAllocations }) => {
         <div className="card-content">
           <div className="level">
             {quarterIncome.length !== 0 ? (
-              map(quarterIncome, income => (
+              map(quarterIncome.income, income => (
                 <div
                   className="level-item has-text-centered"
                   key={income.id.state}
@@ -108,12 +92,12 @@ const Chunk = ({ quarter, quarterIncome, quarterAllocations }) => {
       <div className="card">
         <div className="card-content">
           <p className="title">{quarter}</p>
-          <p>Gross: {quarterAllocations.gross.toFixed}</p>
-          <p>Federal: {quarterAllocations.federalTax.toFixed}</p>
-          <p>State: {quarterAllocations.stateTax.toFixed}</p>
-          <p>Social Security: {quarterAllocations.socialSecurity.toFixed}</p>
-          <p>HSA: {quarterAllocations.hsa.toFixed}</p>
-          <p>Pretax: {quarterAllocations.pretaxInvestments.toFixed}</p>
+          <p>Gross: {quarterIncome.total.gross.toFixed}</p>
+          <p>Federal: {quarterIncome.total.federalTax.toFixed}</p>
+          <p>State: {quarterIncome.total.stateTax.toFixed}</p>
+          <p>Social Security: {quarterIncome.total.socialSecurity.toFixed}</p>
+          <p>HSA: {quarterIncome.total.hsa.toFixed}</p>
+          <p>Pretax: {quarterIncome.total.pretaxInvestments.toFixed}</p>
         </div>
         <footer className="card-footer">
           <p className="card-footer-item">
