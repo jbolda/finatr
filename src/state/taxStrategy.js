@@ -13,6 +13,14 @@ class Allocations {
   get state() {
     return valueOf(this);
   }
+
+  setAll(obj = {}) {
+    let next = this;
+    Object.keys(obj).forEach(key => {
+      next = next[key].set(obj[key]);
+    });
+    return next;
+  }
 }
 
 class Income extends Allocations {
@@ -139,26 +147,27 @@ class TaxStrategy {
 
         const total = quarter.income.reduce(
           (fin, income) =>
-            addUpAllAllocations(allocations, quarterName, fin, income).state,
+            addUpAllAllocations(allocations, quarterName, fin, income),
           iG[quarterName].total
         );
+
         const average = quarter.income.reduce(
           (fin, income) =>
-            averageAllocations(allocations, quarterName, fin, income).state,
+            averageAllocations(allocations, quarterName, fin, income),
           iG[quarterName].average
         );
         return { total, average };
       });
 
       return iG.qOne.total
-        .set(qVals[0].total)
-        .qTwo.total.set(qVals[1].total)
-        .qThree.total.set(qVals[2].total)
-        .qFour.total.set(qVals[3].total)
-        .qOne.average.set(qVals[0].average)
-        .qTwo.average.set(qVals[1].average)
-        .qThree.average.set(qVals[2].average)
-        .qFour.average.set(qVals[3].average);
+        .setAll(qVals[0].total)
+        .qTwo.total.setAll(qVals[1].total)
+        .qThree.total.setAll(qVals[2].total)
+        .qFour.total.setAll(qVals[3].total)
+        .qOne.average.setAll(qVals[0].average)
+        .qTwo.average.setAll(qVals[1].average)
+        .qThree.average.setAll(qVals[2].average)
+        .qFour.average.setAll(qVals[3].average);
     }).incomeGroup;
 
     return this.incomeGroup.set(computedIncomeGroup);
@@ -187,13 +196,13 @@ const addUpAllAllocations = (allocations, qKey, fin, income) => {
   allocations.forEach(key => {
     next[key] = fin[key].add(income[key])[qKey].total[key];
   });
-  return fin.set(next)[qKey].total;
+  return fin.setAll(next)[qKey].total;
 };
 
 const averageAllocations = (allocations, qKey, fin, income) => {
   let next = {};
   allocations.forEach(key => {
-    next[key] = fin[key].add(income[key])[qKey].average[key];
+    next[key] = fin[key].average(income[key])[qKey].average[key];
   });
-  return fin.set(next)[qKey].average;
+  return fin.setAll(next)[qKey].average;
 };
