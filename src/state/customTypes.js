@@ -20,7 +20,12 @@ class Big extends Primitive {
   }
 
   average(value) {
-    return this.state.add(value).div(2);
+    let next = this.state;
+    if (next > 0) {
+      return next.add(value).div(2);
+    } else {
+      return next.add(value);
+    }
   }
 
   get state() {
