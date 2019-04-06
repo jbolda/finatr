@@ -25,12 +25,12 @@ class Allocations {
 
 class Income extends Allocations {
   id = StringType;
-  group = StringType;
   date = DateType;
+}
 
-  get state() {
-    return valueOf(this);
-  }
+class IncomeList {
+  group = StringType;
+  income = [Income];
 }
 
 class Quarters {
@@ -56,7 +56,7 @@ class IncomeGroup {
 }
 
 class TaxStrategy {
-  incomeReceived = [Income];
+  incomeReceived = [IncomeList];
   incomeGroup = [IncomeGroup];
   groups = [StringType];
 
@@ -68,9 +68,10 @@ class TaxStrategy {
     if (this.incomeReceived.length === 0) return this.incomeGroup.set([]);
     const { incomeReceived } = this.state;
 
-    const groups = incomeReceived.reduce((g, income) => {
-      return g.includes(income.group) ? g : [...g, income.group];
-    }, []);
+    const groups = incomeReceived.reduce(
+      (g, income) => [...g, income.group],
+      []
+    );
 
     const allocations = [
       'gross',
@@ -85,8 +86,7 @@ class TaxStrategy {
       return acc;
     }, {});
 
-    const initGroup = groups.map(g => ({
-      name: g,
+    const initGroup = {
       qOne: {
         income: [],
         total: { ...allocationTemplate },
@@ -107,19 +107,17 @@ class TaxStrategy {
         total: { ...allocationTemplate },
         average: { ...allocationTemplate }
       }
-    }));
+    };
 
-    const incomeGroup = incomeReceived.reduce((iG, income) => {
-      return iG.map(g => {
-        if (g.name === income.group) {
-          const quarter = getQuarter(income.date);
-          const quarterText = quarterAsText(quarter);
-
-          g[quarterText].income = [].concat(g[quarterText].income, income);
-        }
+    const incomeGroup = incomeReceived.map(group => {
+      const quarteredGroup = group.income.reduce((g, income) => {
+        const quarter = getQuarter(income.date);
+        const quarterText = quarterAsText(quarter);
+        g[quarterText].income = [].concat(g[quarterText].income, income);
         return g;
-      });
-    }, initGroup);
+      }, initGroup);
+      return { name: group.group, ...quarteredGroup };
+    });
 
     return this.groups
       .set(groups)
