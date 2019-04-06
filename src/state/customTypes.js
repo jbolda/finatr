@@ -11,6 +11,10 @@ class Big extends Primitive {
     return this.state.add(value);
   }
 
+  times(value) {
+    return this.state.times(value);
+  }
+
   div(value) {
     return this.state.div(value);
   }
