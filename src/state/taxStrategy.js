@@ -86,37 +86,35 @@ class TaxStrategy {
       return acc;
     }, {});
 
-    const initGroup = {
-      qOne: {
-        income: [],
-        total: { ...allocationTemplate },
-        average: { ...allocationTemplate }
-      },
-      qTwo: {
-        income: [],
-        total: { ...allocationTemplate },
-        average: { ...allocationTemplate }
-      },
-      qThree: {
-        income: [],
-        total: { ...allocationTemplate },
-        average: { ...allocationTemplate }
-      },
-      qFour: {
-        income: [],
-        total: { ...allocationTemplate },
-        average: { ...allocationTemplate }
-      }
-    };
+    const quarters = [1, 2, 3, 4];
 
-    const incomeGroup = incomeReceived.map(group => {
-      const quarteredGroup = group.income.reduce((g, income) => {
+    const incomeGroup = incomeReceived.map(singleGroup => {
+      const { group, quantity } = singleGroup;
+
+      const initGroup = quarters.reduce((g, q) => {
+        const quarterText = quarterAsText(q);
+        g[quarterText] = {};
+        g[quarterText].income = [];
+        g[quarterText].total = { ...allocationTemplate };
+        g[quarterText].average = { ...allocationTemplate };
+        g[quarterText].projected = { ...allocationTemplate };
+        return g;
+      }, {});
+
+      const quarteredGroup = singleGroup.income.reduce((g, income) => {
         const quarter = getQuarter(income.date);
         const quarterText = quarterAsText(quarter);
         g[quarterText].income = [].concat(g[quarterText].income, income);
         return g;
       }, initGroup);
-      return { name: group.group, ...quarteredGroup };
+
+      const distributed = quarters.reduce((grouped, quarter) => {
+        const quarterText = quarterAsText(quarter);
+        grouped[quarterText].quantity = quantity[quarter - 1];
+        return grouped;
+      }, quarteredGroup);
+
+      return { name: group, ...distributed };
     });
 
     return this.groups
