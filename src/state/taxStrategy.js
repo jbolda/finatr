@@ -172,8 +172,10 @@ class TaxStrategy {
           iG[quarterName].average
         );
 
+        // because prettier sets it this way....
         const projected = iG[quarterName].projected
           .setAll(average)
+          // eslint-disable-next-line
           [quarterName].projected.timesAll(quarter.quantity)[quarterName]
           .projected;
 
