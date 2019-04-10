@@ -21,6 +21,14 @@ class Allocations {
     });
     return next;
   }
+
+  timesAll(value) {
+    let next = this;
+    Object.keys(this.state).forEach(key => {
+      next = next[key].times(value);
+    });
+    return next;
+  }
 }
 
 class Income extends Allocations {
@@ -35,8 +43,10 @@ class IncomeList {
 
 class Quarters {
   income = [Income];
+  quantity = Big;
   total = Allocations;
   average = Allocations;
+  projected = Allocations;
 
   get state() {
     return valueOf(this);
@@ -152,7 +162,13 @@ class TaxStrategy {
             averageAllocations(allocations, quarterName, fin, income),
           iG[quarterName].average
         );
-        return { total, average };
+
+        const projected = iG[quarterName].projected
+          .setAll(average)
+          [quarterName].projected.timesAll(quarter.quantity)[quarterName]
+          .projected;
+
+        return { total, average, projected };
       });
 
       return iG.qOne.total
