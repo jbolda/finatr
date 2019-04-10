@@ -11,7 +11,15 @@ const Taxes = props => {
       {model => (
         <section className="section">
           <h1 className="title">Taxes</h1>
-          <h2 className="subtitle">and stuffs</h2>
+          <h2 className="subtitle">This is still in an alpha state.</h2>
+          <div className="content">
+            <p>We don't have forms to enter data yet.</p>
+            <p>You can manually fill in data in your data file though.</p>
+            <p>
+              We wanted to get this into master though as it updated important
+              deps.
+            </p>
+          </div>
           <TabView
             activeTab={activeTab}
             tabClick={tabClick}
