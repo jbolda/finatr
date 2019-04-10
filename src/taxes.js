@@ -94,27 +94,33 @@ const Chunk = ({ quarter, quarterIncome }) => {
           <p className="title">{quarter}</p>
           <p>
             Gross: {quarterIncome.total.gross.toFixed} |{' '}
-            {quarterIncome.average.gross.toFixed}
+            {quarterIncome.average.gross.toFixed} |{' '}
+            {quarterIncome.projected.gross.toFixed}
           </p>
           <p>
             Federal: {quarterIncome.total.federalTax.toFixed} |{' '}
-            {quarterIncome.average.federalTax.toFixed}
+            {quarterIncome.average.federalTax.toFixed} |{' '}
+            {quarterIncome.projected.federalTax.toFixed}
           </p>
           <p>
             State: {quarterIncome.total.stateTax.toFixed} |{' '}
-            {quarterIncome.average.stateTax.toFixed}
+            {quarterIncome.average.stateTax.toFixed} |{' '}
+            {quarterIncome.projected.stateTax.toFixed}
           </p>
           <p>
             Social Security: {quarterIncome.total.socialSecurity.toFixed} |{' '}
-            {quarterIncome.average.socialSecurity.toFixed}
+            {quarterIncome.average.socialSecurity.toFixed} |{' '}
+            {quarterIncome.projected.socialSecurity.toFixed}
           </p>
           <p>
             HSA: {quarterIncome.total.hsa.toFixed} |{' '}
-            {quarterIncome.average.hsa.toFixed}
+            {quarterIncome.average.hsa.toFixed} |{' '}
+            {quarterIncome.projected.hsa.toFixed}
           </p>
           <p>
             Pretax: {quarterIncome.total.pretaxInvestments.toFixed} |{' '}
-            {quarterIncome.average.pretaxInvestments.toFixed}
+            {quarterIncome.average.pretaxInvestments.toFixed} |{' '}
+            {quarterIncome.projected.pretaxInvestments.toFixed}
           </p>
         </div>
         <footer className="card-footer">
