@@ -32,10 +32,6 @@ class Big extends Primitive {
     }
   }
 
-  get state() {
-    return valueOf(this);
-  }
-
   get toFixed() {
     return this.state.toFixed(2);
   }
