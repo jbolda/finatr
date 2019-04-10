@@ -63,6 +63,15 @@ class IncomeGroup {
   get state() {
     return valueOf(this);
   }
+
+  setEachQuarter(quarters = [], key) {
+    if (quarters.length === 0) return this;
+    return this.qOne[key]
+      .setAll(quarters[0][key])
+      .qTwo[key].setAll(quarters[1][key])
+      .qThree[key].setAll(quarters[2][key])
+      .qFour[key].setAll(quarters[3][key]);
+  }
 }
 
 class TaxStrategy {
@@ -171,15 +180,10 @@ class TaxStrategy {
         return { total, average, projected };
       });
 
-      return iG.qOne.total
-        .setAll(qVals[0].total)
-        .qTwo.total.setAll(qVals[1].total)
-        .qThree.total.setAll(qVals[2].total)
-        .qFour.total.setAll(qVals[3].total)
-        .qOne.average.setAll(qVals[0].average)
-        .qTwo.average.setAll(qVals[1].average)
-        .qThree.average.setAll(qVals[2].average)
-        .qFour.average.setAll(qVals[3].average);
+      return iG
+        .setEachQuarter(qVals, 'total')
+        .setEachQuarter(qVals, 'average')
+        .setEachQuarter(qVals, 'projected');
     }).incomeGroup;
 
     return this.incomeGroup.set(computedIncomeGroup);
