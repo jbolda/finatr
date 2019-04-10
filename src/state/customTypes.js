@@ -1,4 +1,3 @@
-import { valueOf } from 'microstates';
 import { default as _Big } from 'big.js';
 import { Primitive } from 'microstates';
 
