@@ -58,6 +58,17 @@ const testData = {
           socialSecurity: 140,
           medicare: 45,
           stateTax: 90
+        },
+        {
+          id: 'P2-2019-01-18',
+          date: '2019-01-18',
+          federalTax: 220,
+          gross: 3000,
+          hsa: 140,
+          pretaxInvestments: 260,
+          socialSecurity: 210,
+          medicare: 65,
+          stateTax: 130
         }
       ]
     }
@@ -163,7 +174,7 @@ describe(`check taxStrategy state creation`, () => {
     expect(income[0].qThree.total.gross.toFixed).toBe('0.00');
     expect(income[0].qFour.total.gross.toFixed).toBe('0.00');
 
-    expect(income[1].qOne.total.gross.toFixed).toBe('3000.00');
+    expect(income[1].qOne.total.gross.toFixed).toBe('6000.00');
     expect(income[1].qTwo.total.gross.toFixed).toBe('0.00');
     expect(income[1].qThree.total.gross.toFixed).toBe('0.00');
     expect(income[1].qFour.total.gross.toFixed).toBe('0.00');
@@ -187,7 +198,7 @@ describe(`check taxStrategy state creation`, () => {
     expect(income[0].qThree.average.gross.toFixed).toBe('0.00');
     expect(income[0].qFour.average.gross.toFixed).toBe('0.00');
 
-    expect(income[1].qOne.average.gross.toFixed).toBe('1500.00');
+    expect(income[1].qOne.average.gross.toFixed).toBe('2000.00');
     expect(income[1].qTwo.average.gross.toFixed).toBe('0.00');
     expect(income[1].qThree.average.gross.toFixed).toBe('0.00');
     expect(income[1].qFour.average.gross.toFixed).toBe('0.00');
@@ -212,8 +223,8 @@ describe(`check taxStrategy state creation`, () => {
     expect(income[0].qThree.projected.gross.toFixed).toBe('0.00');
     expect(income[0].qFour.projected.gross.toFixed).toBe('0.00');
 
-    // 1500 * 7 = 10500
-    expect(income[1].qOne.projected.gross.toFixed).toBe('10500.00');
+    // 1500 * 7 = 15750
+    expect(income[1].qOne.projected.gross.toFixed).toBe('14000.00');
     expect(income[1].qTwo.projected.gross.toFixed).toBe('0.00');
     expect(income[1].qThree.projected.gross.toFixed).toBe('0.00');
     expect(income[1].qFour.projected.gross.toFixed).toBe('0.00');
