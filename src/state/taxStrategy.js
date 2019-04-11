@@ -29,6 +29,15 @@ class Allocations {
     });
     return next;
   }
+
+  averageAll(total, quantity) {
+    if (quantity === 0) return this;
+    let next = this;
+    Object.keys(this.state).forEach(key => {
+      next = next[key].set(total[key])[key].div(quantity);
+    });
+    return next;
+  }
 }
 
 class Income extends Allocations {
@@ -166,11 +175,10 @@ class TaxStrategy {
           iG[quarterName].total
         );
 
-        const average = quarter.income.reduce(
-          (fin, income) =>
-            averageAllocations(allocations, quarterName, fin, income),
-          iG[quarterName].average
-        );
+        const average = iG[quarterName].average.averageAll(
+          total,
+          quarter.income.length
+        )[quarterName].average;
 
         // because prettier sets it this way....
         const projected = iG[quarterName].projected
@@ -215,12 +223,4 @@ const addUpAllAllocations = (allocations, qKey, fin, income) => {
     next[key] = fin[key].add(income[key])[qKey].total[key];
   });
   return fin.setAll(next)[qKey].total;
-};
-
-const averageAllocations = (allocations, qKey, fin, income) => {
-  let next = {};
-  allocations.forEach(key => {
-    next[key] = fin[key].average(income[key])[qKey].average[key];
-  });
-  return fin.setAll(next)[qKey].average;
 };
