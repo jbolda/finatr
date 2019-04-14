@@ -1,5 +1,5 @@
 import React from 'react';
-import { Consumer } from '@microstates/react';
+import { State } from '../state';
 import { Formik, Field } from 'formik';
 
 import * as Form from './../components/bootstrap/Form';
@@ -36,7 +36,7 @@ class TransactionInput extends React.Component {
     return (
       <React.Fragment>
         <h1 className="title has-text-centered">Add a Transaction</h1>
-        <Consumer>
+        <State.Consumer>
           {model => (
             <Formik
               initialValues={{
@@ -207,7 +207,7 @@ class TransactionInput extends React.Component {
               )}
             />
           )}
-        </Consumer>
+        </State.Consumer>
       </React.Fragment>
     );
   }

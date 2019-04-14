@@ -1,9 +1,11 @@
+import React from 'react';
 import { valueOf, ObjectType } from 'microstates';
 import { Transaction, TransactionComputed } from './transactions.js';
 import { Account, AccountComputed } from './accounts.js';
 import { Charts } from './charts.js';
 import { Stats } from './stats.js';
 import { Forms } from './forms.js';
+import { TaxStrategy } from './taxStrategy.js';
 import { coercePaybacks, transactionSplitter } from './resolveFinancials';
 import { transactionCompute } from './resolveFinancials/resolveTransactions';
 import makeUUID from './resolveFinancials/makeUUID.js';
@@ -18,6 +20,7 @@ class AppModel {
   accountsComputed = [AccountComputed];
   charts = Charts;
   stats = Stats;
+  taxStrategy = TaxStrategy;
 
   initialize() {
     if (this.transactions.length === 0 && this.accounts.length === 0) {
@@ -41,6 +44,7 @@ class AppModel {
       return this.transactions
         .set([defaultTransaction])
         .accounts.set([defaultAccount])
+        .taxStrategy.incomeReceived.set([])
         .reCalc();
     } else {
       return this;
@@ -54,6 +58,16 @@ class AppModel {
   log(message = 'AppModel logged') {
     console.log(message, valueOf(this));
     return this;
+  }
+
+  setUpload(result) {
+    return this.transactions
+      .set(result.transactions)
+      .accounts.set(result.accounts)
+      .taxStrategy.set(result.taxStrategy)
+      .forms.ynabForm.devToken.set(result.devToken)
+      .forms.ynabForm.budgetId.set(result.budgetId)
+      .reCalc();
   }
 
   reCalc(presetAccounts = []) {
@@ -73,6 +87,7 @@ class AppModel {
 
     return chartsCalced.stats
       .reCalc(chartsCalced.state, chartsCalced.charts.state)
+      .taxStrategy.reCalc()
       .log('recalc');
   }
 
@@ -275,3 +290,5 @@ class AppModel {
 }
 
 export default AppModel;
+
+export const State = React.createContext();

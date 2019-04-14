@@ -2,19 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Link } from '@reach/router';
 
-import State from '@microstates/react';
-import AppModel from './state';
+import { Store, create } from 'microstates';
+import AppModel, { State } from './state';
 
 import 'bulma/css/bulma.css';
 import Financial from './financial';
 import Importing from './importing';
+import Taxes from './taxes';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.toggleHamburgerMenu = this.toggleHamburgerMenu.bind(this);
     this.state = {
-      hamburgerActive: false
+      hamburgerActive: false,
+      model: Store(create(AppModel, AppModel), nextState =>
+        this.setState({ model: nextState })
+      )
     };
   }
 
@@ -26,7 +30,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <State type={AppModel}>
+      <State.Provider value={this.state.model}>
         <nav
           className="navbar is-fixed-top is-primary"
           role="navigation"
@@ -77,12 +81,13 @@ class App extends React.Component {
           <Router>
             <Financial path="/" />
             <Importing path="import" />
+            <Taxes path="taxes" />
           </Router>
         </section>
-      </State>
+      </State.Provider>
     );
   }
 }
 
-const root = ReactDOM.unstable_createRoot(document.getElementById('root'));
-root.render(<App />);
+const rootElement = document.getElementById('root');
+ReactDOM.render(<App />, rootElement);

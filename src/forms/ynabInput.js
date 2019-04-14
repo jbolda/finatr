@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik, Field } from 'formik';
-import { Consumer } from '@microstates/react';
+import { State } from '../state';
 import * as ynab from 'ynab';
 import getDay from 'date-fns/fp/getDay';
 import getDate from 'date-fns/fp/getDate';
@@ -14,7 +14,7 @@ class YNABInput extends React.Component {
         <h2 className="subtitle has-text-centered">
           This all happens in your browser and is only exchanged with YNAB.
         </h2>
-        <Consumer>
+        <State.Consumer>
           {model => (
             <Formik
               initialValues={{
@@ -171,7 +171,7 @@ class YNABInput extends React.Component {
               )}
             />
           )}
-        </Consumer>
+        </State.Consumer>
       </React.Fragment>
     );
   }
