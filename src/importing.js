@@ -29,7 +29,9 @@ class Importing extends React.Component {
     let outputData = {
       transactions: [...modelState.transactions],
       accounts: [...modelState.accounts],
-      taxStrategy: modelState.taxStrategy,
+      taxStrategy: {
+        incomeReceived: [...modelState.taxStrategy.incomeReceived]
+      },
       devToken: model.forms.ynabForm.devToken.state,
       budgetId: model.forms.ynabForm.budgetId.state
     };
