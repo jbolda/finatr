@@ -160,17 +160,19 @@ const Table = ({ model }) => (
       </tr>
     </thead>
     <tbody>
-      {map(model.taxStrategy.incomeReceived, income => (
-        <tr key={income.id.state}>
-          <td>{income.group.state}</td>
-          <td>{income.gross.toFixed}</td>
-          <td>{income.federalTax.toFixed}</td>
-          <td>{income.stateTax.toFixed}</td>
-          <td>{income.socialSecurity.toFixed}</td>
-          <td>{income.hsa.toFixed}</td>
-          <td>{income.pretaxInvestments.toFixed}</td>
-        </tr>
-      ))}
+      {map(model.taxStrategy.incomeReceived, g =>
+        map(g.income, income => (
+          <tr key={income.id.state}>
+            <td>{g.group.state}</td>
+            <td>{income.gross.toFixed}</td>
+            <td>{income.federalTax.toFixed}</td>
+            <td>{income.stateTax.toFixed}</td>
+            <td>{income.socialSecurity.toFixed}</td>
+            <td>{income.hsa.toFixed}</td>
+            <td>{income.pretaxInvestments.toFixed}</td>
+          </tr>
+        ))
+      )}
     </tbody>
   </table>
 );
