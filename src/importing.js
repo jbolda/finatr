@@ -26,14 +26,36 @@ class Importing extends React.Component {
 
   handleDownload = model => {
     const modelState = model.state;
+    const get = (arrayOfProperties, rootObject) =>
+      arrayOfProperties.reduce(
+        (drillingDownObject, prop) =>
+          drillingDownObject && drillingDownObject[prop]
+            ? drillingDownObject[prop]
+            : undefined,
+        rootObject
+      );
+
     let outputData = {
-      transactions: [...modelState.transactions],
-      accounts: [...modelState.accounts],
-      taxStrategy: {
-        incomeReceived: [...modelState.taxStrategy.incomeReceived]
-      },
-      devToken: model.forms.ynabForm.devToken.state,
-      budgetId: model.forms.ynabForm.budgetId.state
+      ...(get(['transactions'], modelState)
+        ? { transactions: [...modelState.transactions] }
+        : {}),
+      ...(get(['accounts'], modelState)
+        ? { accounts: [...modelState.accounts] }
+        : {}),
+      ...(get(['taxStrategy', 'incomeReceived'], modelState) &&
+      modelState.taxStrategy.incomeReceived.length !== 0
+        ? {
+            taxStrategy: {
+              incomeReceived: [...modelState.taxStrategy.incomeReceived]
+            }
+          }
+        : {}),
+      ...(get(['forms', 'ynabForm', 'devToken', 'state'], model)
+        ? { devToken: model.forms.ynabForm.devToken.state }
+        : {}),
+      ...(get(['forms', 'ynabForm', 'budgetId', 'state'], model)
+        ? { budgetId: model.forms.ynabForm.budgetId.state }
+        : {})
     };
     let fileData = JSON.stringify(outputData);
     fileDownload(fileData, 'financials.json');
