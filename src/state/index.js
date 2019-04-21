@@ -96,9 +96,10 @@ class AppModel {
     const transactionPaybacks = coercePaybacks({ accounts });
     const useTransactions =
       filteredTransactions.length === 0 ? transactions : filteredTransactions;
+
     const init = this.transactionsComputed.set([
-      ...useTransactions,
-      ...transactionPaybacks
+      ...(useTransactions ? useTransactions : []),
+      ...(transactionPaybacks ? transactionPaybacks : [])
     ]);
 
     // returns a microstate with the transactionsComputed set
@@ -196,9 +197,7 @@ class AppModel {
   }
 
   deleteTransaction(id) {
-    let deleted = this.transactions.filter(t => t.id !== id);
-    let nextSetState = this.transactions.set(deleted);
-    return nextSetState.reCalc();
+    return this.transactions.filter(t => t.id !== id).reCalc();
   }
 
   upsertAccount(value) {
