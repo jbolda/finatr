@@ -157,7 +157,7 @@ class Financial extends React.Component {
               />
             </section>
 
-            <section className="section">
+            <section className="section" id="accounts">
               <TabView
                 activeTab={this.state.activeTabAccounts}
                 tabClick={this.tabClickAccounts}
