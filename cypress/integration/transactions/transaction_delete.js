@@ -30,6 +30,9 @@ describe('Transaction Delete Tests', () => {
         cy.get('.delete').click();
       });
 
-    cy.get('#transactions').contains('test transaction');
+    const deletedTransaction = cy
+      .get('#transactions')
+      .contains('test transaction');
+    expect(deletedTransaction).to.not.exist;
   });
 });
