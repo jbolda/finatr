@@ -83,7 +83,7 @@ class Financial extends React.Component {
               <BarChart data={model.charts.state} />
             </section>
 
-            <section className="section">
+            <section className="section" id="transactions">
               <TabView
                 activeTab={this.state.activeTabTransactions}
                 tabClick={this.tabClickTransactions}
@@ -157,7 +157,7 @@ class Financial extends React.Component {
               />
             </section>
 
-            <section className="section">
+            <section className="section" id="accounts">
               <TabView
                 activeTab={this.state.activeTabAccounts}
                 tabClick={this.tabClickAccounts}

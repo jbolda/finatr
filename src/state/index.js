@@ -56,7 +56,8 @@ class AppModel {
   }
 
   log(message = 'AppModel logged') {
-    console.log(message, valueOf(this));
+    const notTesting = process.env.JEST_WORKER_ID === undefined;
+    if (notTesting) console.log(message, valueOf(this));
     return this;
   }
 
@@ -96,9 +97,10 @@ class AppModel {
     const transactionPaybacks = coercePaybacks({ accounts });
     const useTransactions =
       filteredTransactions.length === 0 ? transactions : filteredTransactions;
+
     const init = this.transactionsComputed.set([
-      ...useTransactions,
-      ...transactionPaybacks
+      ...(useTransactions ? useTransactions : []),
+      ...(transactionPaybacks ? transactionPaybacks : [])
     ]);
 
     // returns a microstate with the transactionsComputed set
@@ -196,9 +198,7 @@ class AppModel {
   }
 
   deleteTransaction(id) {
-    let deleted = this.transactions.filter(t => t.id !== id);
-    let nextSetState = this.transactions.set(deleted);
-    return nextSetState.reCalc();
+    return this.transactions.filter(t => t.id.state !== id).reCalc();
   }
 
   upsertAccount(value) {
@@ -220,9 +220,7 @@ class AppModel {
   }
 
   deleteAccount(name) {
-    let deleted = this.accounts.filter(a => a.name !== name);
-    let nextSetState = this.accounts.set(deleted);
-    return nextSetState.reCalc();
+    return this.accounts.filter(a => a.name.state !== name).reCalc();
   }
 
   upsertAccountTransaction(result) {
