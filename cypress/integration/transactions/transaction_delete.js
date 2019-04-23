@@ -24,15 +24,14 @@ describe('Transaction Delete Tests', () => {
 
   it('deletes the recently added transaction', () => {
     cy.get('#transactions')
-      .contains('55.00')
+      .contains('test transaction')
       .parent()
       .within(() => {
         cy.get('.delete').click();
       });
 
-    const deletedTransaction = cy
-      .get('#transactions')
-      .contains('test transaction');
-    expect(deletedTransaction).to.not.exist;
+    cy.get('#transactions')
+      .contains('test transaction')
+      .should('not.exist');
   });
 });
