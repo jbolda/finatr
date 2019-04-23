@@ -220,9 +220,7 @@ class AppModel {
   }
 
   deleteAccount(name) {
-    let deleted = this.accounts.filter(a => a.name !== name);
-    let nextSetState = this.accounts.set(deleted);
-    return nextSetState.reCalc();
+    return this.accounts.filter(a => a.name.state !== name).reCalc();
   }
 
   upsertAccountTransaction(result) {
