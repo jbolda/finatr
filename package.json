@@ -4,6 +4,7 @@
   "description": "",
   "keywords": [],
   "main": "src/index.js",
+  "license": "AGPL-3.0-or-later",
   "engines": {
     "node": ">=8.10.0"
   },
