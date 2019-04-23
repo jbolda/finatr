@@ -56,7 +56,8 @@ class AppModel {
   }
 
   log(message = 'AppModel logged') {
-    console.log(message, valueOf(this));
+    const notTesting = process.env.JEST_WORKER_ID === undefined;
+    if (notTesting) console.log(message, valueOf(this));
     return this;
   }
 
