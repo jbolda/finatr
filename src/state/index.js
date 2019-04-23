@@ -198,7 +198,7 @@ class AppModel {
   }
 
   deleteTransaction(id) {
-    return this.transactions.filter(t => t.id !== id).reCalc();
+    return this.transactions.filter(t => t.id.state !== id).reCalc();
   }
 
   upsertAccount(value) {
