@@ -35,7 +35,7 @@ class Charts {
   LineChartMax = Big;
 
   initialize(length = 365) {
-    if (!this.GraphRange.start) {
+    if (!this.GraphRange.entries.start) {
       let graphRange = { start: past(), end: future(length) };
       return this.GraphRange.set(graphRange);
     } else {

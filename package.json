@@ -17,7 +17,7 @@
     "date-fns": "2.0.0-alpha.25",
     "formik": "1.5.2",
     "js-file-download": "0.4.5",
-    "microstates": "0.13.0",
+    "microstates": "0.14.0",
     "prop-types": "15.7.2",
     "react": "16.8.6",
     "react-dom": "16.8.6",
