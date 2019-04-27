@@ -114,7 +114,7 @@ class AccountTransactionInput extends React.Component {
                         <p className="control">
                           <Field
                             type="number"
-                            name="generatedOccurences"
+                            name="occurences"
                             className="input"
                           />
                         </p>
