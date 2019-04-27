@@ -225,21 +225,34 @@ class AppModel {
 
   upsertAccountTransaction(result) {
     let nextState = this.state.accounts;
-    let accountIndex = nextState.map(a => a.name).indexOf(result.debtAccount);
-    let payback = { ...nextState[accountIndex].payback };
-    payback.id = makeUUID();
-    if (!payback.transactions) {
-      payback.transactions = [];
+    const accountIndex = nextState.map(a => a.name).indexOf(result.debtAccount);
+    let account = nextState[accountIndex];
+
+    if (!account.payback) {
+      account.payback = {};
     }
-    payback.transactions.push({
+
+    if (!!account.payback && !account.payback.transactions) {
+      account.payback.transactions = [];
+    }
+
+    let payback = {
+      debtAccount: result.debtAccount,
       raccount: result.raccount,
       start: result.start,
       rtype: result.rtype,
       cycle: result.cycle,
       occurences: result.occurences,
       value: result.value
-    });
+    };
 
+    if (!payback.id) {
+      payback.id = makeUUID();
+    }
+
+    account.payback.transactions.push(payback);
+
+    nextState[accountIndex] = account;
     let nextSetState = this.accounts.set(nextState);
     return nextSetState.reCalc().forms.accountTransactionForm.id.set('');
   }
