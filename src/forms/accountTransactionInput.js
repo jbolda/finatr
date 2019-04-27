@@ -19,7 +19,17 @@ class AccountTransactionInput extends React.Component {
         <State.Consumer>
           {model => (
             <Formik
-              initialValues={model.forms.accountTransactionForm.state}
+              initialValues={{
+                id: '',
+                debtAccount: 'select',
+                raccount: 'select',
+                start: '',
+                rtype: 'none',
+                cycle: 0,
+                occurences: 0,
+                value: 0,
+                ...model.forms.accountTransactionForm.state
+              }}
               onSubmit={(values, actions) => {
                 model.upsertAccountTransaction(values);
                 actions.setSubmitting(false);

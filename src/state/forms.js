@@ -13,7 +13,7 @@ class TransactionForm {
   start = create(StringType, '');
   rtype = create(StringType, '');
   cycle = create(Big, 0);
-  value = create(Big, 0);
+  value = create(Big, 50);
 
   get state() {
     return valueOf(this);
@@ -30,7 +30,6 @@ class AccountForm {
   vehicle = create(StringType, 'operating');
 
   intialize() {
-    console.log('init', this.state);
     return this;
   }
 
@@ -45,13 +44,11 @@ class AccountTransactionForm {
   raccount = StringType;
   start = StringType;
   rtype = StringType;
-  cycle = Big;
-  occurences = Big;
-  value = Big;
+  cycle = create(Big, 0);
+  occurences = create(Big, 0);
+  value = create(Big, 0);
 
   get state() {
-    console.log(this);
-    console.log(valueOf(this));
     return valueOf(this);
   }
 }
@@ -62,13 +59,20 @@ class YNABForm {
 }
 
 class Forms {
-  transactionForm = TransactionForm;
+  transactionForm = create(TransactionForm, {});
   accountForm = AccountForm;
-  accountTransactionForm = AccountTransactionForm;
+  accountTransactionForm = create(AccountTransactionForm);
   ynabForm = YNABForm;
 
   get state() {
     return valueOf(this);
+  }
+
+  initialize() {
+    let init = this;
+    if (!init.transactionForm) {
+      init = init.transactionForm.set({});
+    }
   }
 }
 
