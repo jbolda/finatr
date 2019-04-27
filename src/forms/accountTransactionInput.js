@@ -66,7 +66,7 @@ class AccountTransactionInput extends React.Component {
                   </div>
                   <div className="field is-horizontal">
                     <div className="field-label is-normal">
-                      <label className="label">account</label>
+                      <label className="label">payment account</label>
                     </div>
                     <div className="field-body">
                       <div className="field">
