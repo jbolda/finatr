@@ -39,13 +39,13 @@ describe('Debt Payback Form Tests', () => {
       .parent()
       .parent()
       .find('select')
-      .select('account');
+      .select('Test Debt Submission');
     cy.get('form')
       .contains('payment account')
       .parent()
       .parent()
       .find('select')
-      .select('Test Debt Submission');
+      .select('account');
     cy.get('form')
       .contains('rtype')
       .parent()
@@ -78,6 +78,6 @@ describe('Debt Payback Form Tests', () => {
       .type('1');
     cy.get('form').submit();
 
-    cy.get('#accounts').contains('55.00');
+    cy.get('#accounts').contains('1 for 55');
   });
 });

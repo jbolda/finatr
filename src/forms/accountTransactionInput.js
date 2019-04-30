@@ -60,11 +60,16 @@ class AccountTransactionInput extends React.Component {
                         <div className="control">
                           <div className="select">
                             <Field component="select" name="debtAccount">
-                              {model.state.accounts.map(account => (
-                                <option key={account.name} value={account.name}>
-                                  {account.name}
-                                </option>
-                              ))}
+                              {model.state.accounts
+                                .filter(account => account.vehicle === 'debt')
+                                .map(account => (
+                                  <option
+                                    key={account.name}
+                                    value={account.name}
+                                  >
+                                    {account.name}
+                                  </option>
+                                ))}
                             </Field>
                           </div>
                         </div>
