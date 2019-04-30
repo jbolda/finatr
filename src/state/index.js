@@ -258,13 +258,10 @@ class AppModel {
   }
 
   modifyAccountTransaction(name, index) {
-    let payback = this.state.accounts.find(element => element.name === name)
+    const payback = this.state.accounts.find(element => element.name === name)
       .payback;
     return this.forms.accountTransactionForm
-      .set({
-        ...payback,
-        ...payback.transactions[index]
-      })
+      .set(payback.transactions[index])
       .log('modAT');
   }
 
