@@ -19,6 +19,7 @@ class AccountTransactionInput extends React.Component {
         <State.Consumer>
           {model => (
             <Formik
+              enableReinitialize={true}
               initialValues={{
                 id: '',
                 debtAccount: 'select',
