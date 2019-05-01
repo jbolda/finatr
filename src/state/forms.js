@@ -1,4 +1,4 @@
-import { create, valueOf, StringType } from 'microstates';
+import { create, valueOf, StringType, BooleanType } from 'microstates';
 import { Big } from './customTypes.js';
 
 class TransactionForm {
@@ -62,6 +62,7 @@ class Forms {
   transactionForm = create(TransactionForm, {});
   accountForm = AccountForm;
   accountTransactionForm = create(AccountTransactionForm);
+  accountTransactionFormVisible = BooleanType;
   ynabForm = YNABForm;
 
   get state() {
@@ -73,6 +74,12 @@ class Forms {
     if (!init.transactionForm) {
       init = init.transactionForm.set({});
     }
+  }
+
+  testing() {
+    let hce = this.accountTransactionFormVisible.toggle();
+    console.log(hce);
+    return hce;
   }
 }
 
