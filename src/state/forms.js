@@ -59,21 +59,14 @@ class YNABForm {
 }
 
 class Forms {
-  transactionForm = create(TransactionForm, {});
+  transactionForm = TransactionForm;
   accountForm = AccountForm;
-  accountTransactionForm = create(AccountTransactionForm);
+  accountTransactionForm = AccountTransactionForm;
   accountTransactionFormVisible = BooleanType;
   ynabForm = YNABForm;
 
   get state() {
     return valueOf(this);
-  }
-
-  initialize() {
-    let init = this;
-    if (!init.transactionForm) {
-      init = init.transactionForm.set({});
-    }
   }
 
   testing() {

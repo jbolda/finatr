@@ -108,7 +108,7 @@ class TransactionsFlow extends React.Component {
   }
 }
 
-export default Financial;
+export default TransactionsFlow;
 
 const TransactionTable = ({ data, actions }) =>
   data.length === 0 || !data ? (
