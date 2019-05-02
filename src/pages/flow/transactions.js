@@ -59,43 +59,46 @@ class Financial extends React.Component {
                       )
                     )}
                   </div>
-                  {transactionTable(model.state.transactionsComputed, {
-                    model: model,
-                    setTransactionForm: this.setTransactionForm,
-                    deleteTransaction: model.deleteTransaction
-                  })}
+                  <TransactionTable
+                    data={model.state.transactionsComputed}
+                    actions={{
+                      model: model,
+                      setTransactionForm: this.setTransactionForm,
+                      deleteTransaction: model.deleteTransaction
+                    }}
+                  />
                 </React.Fragment>,
-                <TransactionInput tabClick={this.tabClickTransactions} />,
-                transactionTable(
-                  model.state.transactionsComputed.filter(
+                <TransactionInput tabClick={this.tabClick} />,
+                <TransactionTable
+                  data={model.state.transactionsComputed.filter(
                     transaction => transaction.type === 'income'
-                  ),
-                  {
+                  )}
+                  actions={{
                     model: model,
                     setTransactionForm: this.setTransactionForm,
                     deleteTransaction: model.deleteTransaction
-                  }
-                ),
-                transactionTable(
-                  model.state.transactionsComputed.filter(
+                  }}
+                />,
+                <TransactionTable
+                  data={model.state.transactionsComputed.filter(
                     transaction => transaction.type === 'expense'
-                  ),
-                  {
+                  )}
+                  actions={{
                     model: model,
                     setTransactionForm: this.setTransactionForm,
                     deleteTransaction: model.deleteTransaction
-                  }
-                ),
-                transactionTable(
-                  model.state.transactionsComputed.filter(
+                  }}
+                />,
+                <TransactionTable
+                  data={model.state.transactionsComputed.filter(
                     transaction => transaction.type === 'transfer'
-                  ),
-                  {
+                  )}
+                  actions={{
                     model: model,
                     setTransactionForm: this.setTransactionForm,
                     deleteTransaction: model.deleteTransaction
-                  }
-                )
+                  }}
+                />
               ]}
             />
           </section>
@@ -107,7 +110,7 @@ class Financial extends React.Component {
 
 export default Financial;
 
-const transactionTable = (data, actions) =>
+const TransactionTable = ({ data, actions }) =>
   data.length === 0 || !data ? (
     <div>There are no transactions to show.</div>
   ) : (
