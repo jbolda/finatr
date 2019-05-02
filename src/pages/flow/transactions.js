@@ -5,7 +5,7 @@ import { State } from '../../state';
 import TabView from '../../components/view/tabView';
 import TransactionInput from '../../forms/transactionInput';
 
-class Financial extends React.Component {
+class TransactionsFlow extends React.Component {
   constructor(props) {
     super();
     this.setTransactionForm = this.setTransactionForm.bind(this);

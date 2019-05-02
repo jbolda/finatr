@@ -6,7 +6,7 @@ import TabView from '../../components/view/tabView';
 import AccountInput from '../../forms/accountInput';
 import AccountTransactionInput from '../../forms/accountTransactionInput';
 
-class Financial extends React.Component {
+class AccountFlow extends React.Component {
   constructor(props) {
     super();
     this.setAccountForm = this.setAccountForm.bind(this);
@@ -66,7 +66,7 @@ class Financial extends React.Component {
   }
 }
 
-export default Financial;
+export default AccountFlow;
 
 const accountTable = (data, actions) =>
   data.length === 0 || !data ? (

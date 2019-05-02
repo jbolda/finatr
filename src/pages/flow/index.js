@@ -5,7 +5,7 @@ import BarChart from './barChart';
 import Transactions from './transactions';
 import Accounts from './accounts';
 
-class Financial extends React.Component {
+class FinancialFlow extends React.Component {
   render() {
     return (
       <State.Consumer>
@@ -57,4 +57,4 @@ class Financial extends React.Component {
   }
 }
 
-export default Financial;
+export default FinancialFlow;
