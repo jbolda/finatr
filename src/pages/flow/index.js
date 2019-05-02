@@ -1,12 +1,12 @@
 import React from 'react';
 import { map } from 'microstates';
-import { State } from './state';
+import { State } from '../../state';
 import BarChart from './barChart';
 
-import TabView from './components/view/tabView';
-import TransactionInput from './forms/transactionInput';
-import AccountInput from './forms/accountInput';
-import AccountTransactionInput from './forms/accountTransactionInput';
+import TabView from '../../components/view/tabView';
+import TransactionInput from '../../forms/transactionInput';
+import AccountInput from '../../forms/accountInput';
+import AccountTransactionInput from '../../forms/accountTransactionInput';
 
 class Financial extends React.Component {
   constructor(props) {

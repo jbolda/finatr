@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { map } from 'microstates';
-import { State } from './state';
-import TabView from './components/view/tabView';
+import { State } from '../../state';
+import TabView from '../../components/view/tabView';
 
 const Taxes = props => {
   const [activeTab, tabClick] = useState(0);
