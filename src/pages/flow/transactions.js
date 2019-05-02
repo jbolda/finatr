@@ -3,7 +3,7 @@ import { map } from 'microstates';
 import { State } from '../../state';
 
 import TabView from '../../components/view/tabView';
-import TransactionInput from '../../forms/transactionInput';
+import TransactionInput from './transactionInput';
 
 class TransactionsFlow extends React.Component {
   constructor(props) {

@@ -4,7 +4,7 @@ import TabView from '../../components/view/tabView';
 
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';
-import YNABInput from '../../forms/ynabInput.js';
+import YNABInput from './ynabInput.js';
 
 class Importing extends React.Component {
   constructor(props) {

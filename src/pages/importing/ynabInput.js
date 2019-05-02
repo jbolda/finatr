@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik, Field } from 'formik';
-import { State } from '../state';
+import { State } from '../../state';
 import * as ynab from 'ynab';
 import getDay from 'date-fns/fp/getDay';
 import getDate from 'date-fns/fp/getDate';

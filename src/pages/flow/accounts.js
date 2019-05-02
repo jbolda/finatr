@@ -3,8 +3,8 @@ import { map } from 'microstates';
 import { State } from '../../state';
 
 import TabView from '../../components/view/tabView';
-import AccountInput from '../../forms/accountInput';
-import AccountTransactionInput from '../../forms/accountTransactionInput';
+import AccountInput from './accountInput';
+import AccountTransactionInput from './accountTransactionInput';
 
 class AccountFlow extends React.Component {
   constructor(props) {
