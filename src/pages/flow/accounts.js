@@ -33,27 +33,31 @@ class AccountFlow extends React.Component {
               tabClick={this.tabClick}
               tabTitles={['All Accounts', 'Add Account', 'Debt']}
               tabContents={[
-                accountTable(model.accountsComputed, {
-                  model: model,
-                  setAccountForm: this.setAccountForm,
-                  deleteAccount: model.deleteAccount,
-                  toggleAccountVisibility: model.toggleAccountVisibility
-                }),
-                <AccountInput tabClick={this.tabClickAccounts} />,
+                <AccountTable
+                  data={model.accountsComputed}
+                  actions={{
+                    model: model,
+                    setAccountForm: this.setAccountForm,
+                    deleteAccount: model.deleteAccount,
+                    toggleAccountVisibility: model.toggleAccountVisibility
+                  }}
+                />,
+                <AccountInput tabClick={this.tabClick} />,
                 <React.Fragment>
                   <div>
-                    {debtTable(model.state.accountsComputed, {
-                      model: model,
-                      setAccountForm: this.setAccountForm
-                    })}
+                    <DebtTable
+                      data={model.state.accountsComputed}
+                      actions={{
+                        model: model,
+                        setAccountForm: this.setAccountForm
+                      }}
+                    />
                   </div>
                   <div>
                     {model.state.accountsComputed.filter(
                       account => account.vehicle === 'debt'
                     ).length === 0 ? null : (
-                      <AccountTransactionInput
-                        tabClick={this.tabClickAccounts}
-                      />
+                      <AccountTransactionInput tabClick={this.tabClick} />
                     )}
                   </div>
                 </React.Fragment>
@@ -68,7 +72,7 @@ class AccountFlow extends React.Component {
 
 export default AccountFlow;
 
-const accountTable = (data, actions) =>
+const AccountTable = ({ data, actions }) =>
   data.length === 0 || !data ? (
     <div>There are no accounts to show.</div>
   ) : (
@@ -123,7 +127,7 @@ const accountTable = (data, actions) =>
     </table>
   );
 
-const debtTable = (data, actions) =>
+const DebtTable = ({ data, actions }) =>
   data.filter(account => account.vehicle === 'debt').length === 0 || !data ? (
     <div>There are no debts to show.</div>
   ) : (
@@ -138,7 +142,7 @@ const debtTable = (data, actions) =>
                 <small>{`$${account.starting} @ ${account.interest}%`}</small>
               </p>
             </div>
-            {account.payback ? paybackTable(account, actions) : null}
+            {account.payback ? <PaybackTable data={account} actions /> : null}
           </div>
           <div className="media-right">
             <button
@@ -164,7 +168,7 @@ const debtTable = (data, actions) =>
       ))
   );
 
-const paybackTable = (data, actions) =>
+const PaybackTable = ({ data, actions }) =>
   data.payback.transactions.map((paybackTransaction, index) => (
     <div className="media" key={index}>
       <div className="media-content">
