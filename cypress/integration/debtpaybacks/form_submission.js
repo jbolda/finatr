@@ -30,10 +30,17 @@ describe('Debt Payback Form Tests', () => {
   });
 
   it('tab switches to the form', () => {
+    cy.get('#accounts')
+      .contains('+')
+      .click();
     cy.contains('Add Debt Payback');
   });
 
   it('submits simple debt payback', () => {
+    cy.get('#accounts')
+      .contains('+')
+      .click();
+
     cy.get('form')
       .contains('debt account')
       .parent()
