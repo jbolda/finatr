@@ -40,10 +40,10 @@ const coercePaybacks = ({ accounts }) => {
               : accountTransaction.value;
           transactions.push({
             ...accountTransaction,
-            id: `${account.payback.id}-${index}EXP`,
+            id: `${accountTransaction.id}-${index}EXP`,
             raccount: account.name,
             description: account.payback.description,
-            type: account.payback.type,
+            type: 'expense',
             category: account.payback.category,
             value: amount,
             fromAccount: true
@@ -52,7 +52,7 @@ const coercePaybacks = ({ accounts }) => {
           // (raccount is defined on accountTransaction)
           transactions.push({
             ...accountTransaction,
-            id: `${account.payback.id}-${index}TRSF`,
+            id: `${accountTransaction.id}-${index}TRSF`,
             description: account.payback.description,
             type: 'transfer',
             category: account.payback.category,
