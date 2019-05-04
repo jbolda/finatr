@@ -142,7 +142,9 @@ const DebtTable = ({ data, actions }) =>
                 <small>{`$${account.starting} @ ${account.interest}%`}</small>
               </p>
             </div>
-            {account.payback ? <PaybackTable data={account} actions /> : null}
+            {account.payback ? (
+              <PaybackTable data={account} actions={actions} />
+            ) : null}
           </div>
           <div className="media-right">
             <button
@@ -184,7 +186,6 @@ const PaybackTable = ({ data, actions }) =>
         <button
           className="button is-rounded is-small is-info"
           onClick={() => {
-            this.toggleAccountTransactionVisibility();
             actions.model.modifyAccountTransaction(data.name, index);
           }}
         >

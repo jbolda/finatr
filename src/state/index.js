@@ -262,7 +262,7 @@ class AppModel {
       .payback;
     return this.forms.accountTransactionForm
       .set(payback.transactions[index])
-      .log('modAT');
+      .forms.accountTransactionFormVisible.toggle();
   }
 
   addYNAB(tokens, resultantAccounts, resultantTransactions) {

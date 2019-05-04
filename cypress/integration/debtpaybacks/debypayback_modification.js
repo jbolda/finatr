@@ -28,6 +28,10 @@ describe('Debt Payback Form Tests', () => {
       .contains('Debt')
       .click();
 
+    cy.get('#accounts')
+      .contains('+')
+      .click();
+
     cy.get('form')
       .contains('debt account')
       .parent()
@@ -57,7 +61,7 @@ describe('Debt Payback Form Tests', () => {
       .parent()
       .parent()
       .find('input')
-      .type('2019-04-28');
+      .type('2019-05-28');
     cy.get('form')
       .contains('occurences')
       .parent()
@@ -83,7 +87,7 @@ describe('Debt Payback Form Tests', () => {
 
   it('modify fills in form', () => {
     cy.get('#accounts')
-      .find('input')
-      .contains('04/28/2019');
+      .find(`input[type='date']`)
+      .should('have.value', '2019-05-28');
   });
 });

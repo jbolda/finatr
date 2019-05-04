@@ -32,6 +32,7 @@ class AccountTransactionInput extends React.Component {
                   model.upsertAccountTransaction(values);
                   actions.setSubmitting(false);
                   actions.resetForm();
+                  model.forms.accountTransactionFormVisible.toggle();
                 }}
                 render={({
                   values,
