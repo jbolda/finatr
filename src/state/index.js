@@ -265,6 +265,22 @@ class AppModel {
       .forms.accountTransactionFormVisible.toggle();
   }
 
+  deleteAccountTransaction(name, index) {
+    return this.accounts
+      .map(element => {
+        let next = element;
+        if (element.name.state === name) {
+          next = element.payback.transactions.set(
+            element.state.payback.transactions.filter(
+              (payback, ix) => ix !== index
+            )
+          );
+        }
+        return next;
+      })
+      .reCalc();
+  }
+
   addYNAB(tokens, resultantAccounts, resultantTransactions) {
     let nextState = this;
     let indexed = {};
