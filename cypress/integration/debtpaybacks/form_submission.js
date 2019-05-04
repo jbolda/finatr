@@ -58,13 +58,13 @@ describe('Debt Payback Form Tests', () => {
       .parent()
       .parent()
       .find('select')
-      .select('No Repeating');
+      .select('Repeat on a Day of the Week');
     cy.get('form')
       .contains('value')
       .parent()
       .parent()
       .find('input')
-      .type('55');
+      .type('{selectall}250');
     cy.get('form')
       .contains('start')
       .parent()
@@ -76,15 +76,15 @@ describe('Debt Payback Form Tests', () => {
       .parent()
       .parent()
       .find('input')
-      .type('8');
+      .type('{selectall}8');
     cy.get('form')
       .contains('cycle')
       .parent()
       .parent()
       .find('input')
-      .type('1');
+      .type('{selectall}1');
     cy.get('form').submit();
 
-    cy.get('#accounts').contains('1 for 55');
+    cy.get('#accounts').contains('1 for 250');
   });
 });
