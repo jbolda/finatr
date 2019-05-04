@@ -68,12 +68,6 @@ class Forms {
   get state() {
     return valueOf(this);
   }
-
-  testing() {
-    let hce = this.accountTransactionFormVisible.toggle();
-    console.log(hce);
-    return hce;
-  }
 }
 
 export { Forms };

@@ -149,7 +149,7 @@ const DebtTable = ({ data, actions }) =>
           <div className="media-right">
             <button
               className="button is-rounded is-small is-success"
-              onClick={actions.model.forms.testing}
+              onClick={actions.model.forms.accountTransactionFormVisible.toggle}
             >
               +
             </button>
@@ -194,7 +194,7 @@ const PaybackTable = ({ data, actions }) =>
         <button
           className="delete"
           onClick={() =>
-            actions.model.modifyAccountTransaction(data.name, index)
+            actions.model.deleteAccountTransaction(data.name, index)
           }
         />
       </div>
