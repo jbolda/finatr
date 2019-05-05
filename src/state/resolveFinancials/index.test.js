@@ -127,7 +127,7 @@ describe(`check resolveData handles paybacks`, () => {
     expect(resolvedTestData.charts.state.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: 'payback-test-0EXP'
+          id: 'payback2-test-1EXP'
         })
       ])
     );
@@ -135,7 +135,7 @@ describe(`check resolveData handles paybacks`, () => {
     expect(resolvedTestData.charts.state.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: 'payback-test-0TRSF'
+          id: 'payback2-test-1TRSF'
         })
       ])
     );

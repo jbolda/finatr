@@ -118,12 +118,12 @@ let testData = {
       interest: 6.0,
       vehicle: 'debt',
       payback: {
-        id: `payback-test`,
         description: `payback`,
         category: 'account3 payback',
         type: 'expense',
         transactions: [
           {
+            id: `payback1-test`,
             raccount: 'account',
             start: `2018-03-22`,
             rtype: `day`,
@@ -131,6 +131,7 @@ let testData = {
             value: 140
           },
           {
+            id: `payback2-test`,
             raccount: 'account',
             start: `2018-03-22`,
             rtype: `day`,
