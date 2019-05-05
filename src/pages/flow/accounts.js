@@ -33,15 +33,23 @@ class AccountFlow extends React.Component {
               tabClick={this.tabClick}
               tabTitles={['All Accounts', 'Add Account', 'Debt']}
               tabContents={[
-                <AccountTable
-                  data={model.accountsComputed}
-                  actions={{
-                    model: model,
-                    setAccountForm: this.setAccountForm,
-                    deleteAccount: model.deleteAccount,
-                    toggleAccountVisibility: model.toggleAccountVisibility
-                  }}
-                />,
+                <React.Fragment>
+                  <button
+                    className="button is-rounded is-small is-info"
+                    onClick={model.toggleAllAccount}
+                  >
+                    Toggle All Visibility
+                  </button>
+                  <AccountTable
+                    data={model.accountsComputed}
+                    actions={{
+                      model: model,
+                      setAccountForm: this.setAccountForm,
+                      deleteAccount: model.deleteAccount,
+                      toggleAccountVisibility: model.toggleAccountVisibility
+                    }}
+                  />
+                </React.Fragment>,
                 <AccountInput tabClick={this.tabClick} />,
                 <React.Fragment>
                   <div>

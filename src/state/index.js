@@ -169,6 +169,11 @@ class AppModel {
     return this.reCalc(next.state.accountsComputed);
   }
 
+  toggleAllAccount() {
+    let next = this.accountsComputed.map(account => account.visible.toggle());
+    return this.reCalc(next.state.accountsComputed);
+  }
+
   transactionUpsert(value) {
     let nextState = this.state.transactions;
     if (value.id && value.id !== '') {
