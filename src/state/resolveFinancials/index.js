@@ -33,7 +33,9 @@ const coercePaybacks = ({ accounts }) => {
       if (account.vehicle === 'debt' && account.payback) {
         account.payback.transactions.forEach((accountTransaction, index) => {
           // this one is for the expense on the account
-          // being paid down
+          // being paid down, expenses are entered as positive
+          // but mathed as negative so it will reduce the
+          // balance of a debt (which is entered as a positive number)
           let amount =
             typeof accountTransaction.value === 'string'
               ? account.payback[accountTransaction.value]
@@ -50,6 +52,11 @@ const coercePaybacks = ({ accounts }) => {
           });
           // this one is for the account making the payment
           // (raccount is defined on accountTransaction)
+          // negative transfer don't show up on the bar chart
+          // but they should affect the math of, say, the line chart
+          // we can use this to avoid visual duplication of two
+          // transactions for the same amount reducing the balance
+          // on two different accounts
           transactions.push({
             ...accountTransaction,
             id: `${accountTransaction.id}-${index}TRSF`,
@@ -207,7 +214,7 @@ const twoSteppedBalance = (starting, accountStack, barChartStack) => {
     if (value === undefined) {
       return 0;
     } else {
-      return value;
+      return Math.abs(value);
     }
   };
 
