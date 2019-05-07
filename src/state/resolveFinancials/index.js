@@ -121,8 +121,9 @@ const applyModifications = allDates => (structure, modification) => {
 };
 
 const buildStack = (data, graphRange) => {
-  let allDates = eachDayOfInterval(graphRange);
-  let stackStructure = allDates.map(day => {
+  const allDates = eachDayOfInterval(graphRange);
+
+  const stackStructure = allDates.map(day => {
     let obj = { date: day };
     data.forEach(datum => {
       obj[datum.id] = { ...datum };
@@ -132,7 +133,7 @@ const buildStack = (data, graphRange) => {
     return obj;
   });
 
-  let computedTMods = computeTransactionModifications(data, graphRange);
+  const computedTMods = computeTransactionModifications(data, graphRange);
 
   // return array of modifications to be applied to stackStructure
   return computedTMods.reduce(applyModifications(allDates), stackStructure);
@@ -152,7 +153,7 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
 
   // we coerce into Big here temporarily
   // eventually we need to except it to already be Big
-  let data = keys.map(key => {
+  const data = keys.map(key => {
     let dataAccess = dataRaw[key.index];
     let newDatum = { ...dataAccess };
     if (newDatum.value) {
@@ -161,11 +162,8 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
     if (newDatum.cycle) {
       newDatum.cycle = Big(dataAccess.cycle);
     }
-    if (newDatum.generatedOccurrences) {
-      newDatum.generatedOccurrences = Big(dataAccess.generatedOccurrences);
-    }
-    if (newDatum.visibleOccurrences) {
-      newDatum.visibleOccurrences = Big(dataAccess.visibleOccurrences);
+    if (newDatum.occurrences) {
+      newDatum.occurrences = Big(dataAccess.occurrences);
     }
 
     newDatum.dailyRate = Big(dataAccess.dailyRate || 0);
@@ -173,16 +171,16 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
     return newDatum;
   });
 
-  let stackComputed = buildStack(data, graphRange);
+  const stackComputed = buildStack(data, graphRange);
 
-  let stack = d3
+  const stack = d3
     .stack()
     .value((d, key) => d[key.value].y)
     .keys(keys);
 
-  let stacked = stack(stackComputed);
+  const stacked = stack(stackComputed);
 
-  let maxHeight = d3.max(stacked.reduce((a, b) => a.concat(b)), d => d[1]);
+  const maxHeight = d3.max(stacked.reduce((a, b) => a.concat(b)), d => d[1]);
 
   return keys.map((key, index) => ({
     ...data[index],
