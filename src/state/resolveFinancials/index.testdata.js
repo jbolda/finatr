@@ -120,7 +120,6 @@ let testData = {
       payback: {
         description: `payback`,
         category: 'account3 payback',
-        type: 'expense',
         transactions: [
           {
             id: `payback1-test`,
