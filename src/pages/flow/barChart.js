@@ -41,11 +41,16 @@ export class BarChart extends Component {
     };
 
     // Expenses
+    // only draw positive rects (ignores neg transfers)
     barBuild.drawBar(
       this.props.data,
       blobs,
       'neg',
-      data.BarChartExpense,
+      data.BarChartExpense.reduce(
+        (positiveData, datum) =>
+          datum.value.s === -1 ? positiveData : positiveData.concat([datum]),
+        []
+      ),
       data.BarChartMax,
       tooltipBar
     );
