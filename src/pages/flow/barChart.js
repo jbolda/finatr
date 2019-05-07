@@ -313,7 +313,7 @@ barBuild.drawAxis = function(svg, props, max_domain, phase) {
     drawnY
       .selectAll('.tick:not(:first-of-type) line')
       .attr('stroke', '#777')
-      .attr('stroke-dasharray', '2,2')
+      .attr('stroke-dasharray', '2,5')
       .attr('transform', `translate(-${this.margin().left},0)`);
 
     drawnY
@@ -321,14 +321,28 @@ barBuild.drawAxis = function(svg, props, max_domain, phase) {
       .attr('x', -this.margin().left)
       .attr('dy', -4);
 
-    drawnY.select('path').remove();
+    // hide the left axis line, if we would instead remove it,
+    // it would show up during and after a transition
+    drawnY.select('path').attr('stroke-width', '0');
   } else {
-    svg
+    let drawnY = svg
       .select('.yaxis')
       .transition()
       .duration(3000)
       .call(yAxis);
+
+    drawnY
+      .selectAll('.tick:not(:first-of-type) line')
+      .attr('stroke', '#777')
+      .attr('stroke-dasharray', '2,5')
+      .attr('transform', `translate(-${this.margin().left},0)`);
+
+    drawnY
+      .selectAll('.tick text')
+      .attr('x', -this.margin().left)
+      .attr('dy', -4);
   }
+
   return;
 };
 
