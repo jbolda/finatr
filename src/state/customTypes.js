@@ -10,6 +10,10 @@ class Big extends Primitive {
     return this.state.add(value);
   }
 
+  minus(value) {
+    return this.state.minus(value);
+  }
+
   times(value) {
     return this.state.times(value);
   }
