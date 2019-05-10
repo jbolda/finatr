@@ -20,3 +20,61 @@ describe(`transaction array changes`, () => {
     expect(modTestData.transactionsComputed).toHaveLength(10);
   });
 });
+
+describe(`computed transaction amounts return correctly`, () => {
+  it(`computes from a single reference`, () => {
+    let computatedTest = create(AppModel, {
+      transactions: [
+        {
+          id: `computated-test`,
+          raccount: `account`,
+          description: `description`,
+          category: `test default`,
+          type: `income`,
+          start: `2018-03-22`,
+          rtype: `day`,
+          cycle: 3,
+          value: 150,
+          statementBalance: 50,
+          currentBalance: 200,
+          amount: {
+            reference: 'statementBalance'
+          }
+        }
+      ]
+    });
+
+    for (let transaction of computatedTest.transactions) {
+      expect(transaction.amount.state).toEqual(50);
+    }
+  });
+
+  it(`computes from a nested reference`, () => {
+    let computatedTest = create(AppModel, {
+      transactions: [
+        {
+          id: `computated-test`,
+          raccount: `account`,
+          description: `description`,
+          category: `test default`,
+          type: `income`,
+          start: `2018-03-22`,
+          rtype: `day`,
+          cycle: 3,
+          value: 150,
+          statementBalance: 50,
+          currentBalance: 200,
+          amount: {
+            reference: 'value',
+            operation: 'minus',
+            on: { reference: 'statementBalance' }
+          }
+        }
+      ]
+    });
+
+    for (let transaction of computatedTest.transactions) {
+      expect(transaction.amount.state).toEqual(100);
+    }
+  });
+});
