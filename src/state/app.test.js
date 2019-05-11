@@ -63,7 +63,7 @@ describe(`computed transaction amounts return correctly`, () => {
           value: 150,
           statementBalance: 50,
           currentBalance: 200,
-          amount: {
+          computedAmount: {
             reference: 'value',
             operation: 'minus',
             on: { reference: 'statementBalance' }

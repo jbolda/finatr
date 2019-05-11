@@ -17,24 +17,27 @@ class AmountComputed extends Primitive {
   on = AmountComputed;
 
   get compute() {
-    if (this.operation.state) {
-      return this.computedAmount
-        .set(references[this.reference.state])
-        .operate();
+    if (this.operation.state && !!this.on) {
+      return this.operate;
     } else {
       return this.references.entries[this.reference.state];
     }
   }
 
-  operate(references = {}) {
-    console.log(this.on.compute(references).state);
+  get operate() {
+    // this needs to be a Big type, can it be set in the relationship?
+    console.log(this.references.entries[this.reference.state]);
     switch (this.operation.state) {
       case 'add':
-        return this.computedAmount.add(this.on.compute(references).state);
+        return this.references.entries[this.reference.state].add(
+          this.on.compute(references).state
+        );
       case 'minus':
-        return this.computedAmount.minus(this.on.compute(references).state);
+        return this.references.entries[this.reference.state].minus(
+          this.on.compute(references).state
+        );
       default:
-        return this.computedAmount;
+        return this.references.entries[this.reference.state];
     }
   }
 }
