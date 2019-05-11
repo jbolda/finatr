@@ -1,29 +1,28 @@
 import {
   valueOf,
   create,
+  relationship,
   StringType,
   NumberType,
   BooleanType,
+  ObjectType,
   Primitive
 } from 'microstates';
 import { Big } from './customTypes.js';
 
 class AmountComputed extends Primitive {
-  reference = StringType;
   operation = StringType;
+  reference = StringType;
+  references = ObjectType;
   on = AmountComputed;
 
-  get amount() {
-    return this.computedAmount;
-  }
-
-  compute(references = {}) {
+  get compute() {
     if (this.operation.state) {
       return this.computedAmount
         .set(references[this.reference.state])
         .operate();
     } else {
-      return references[this.reference.state];
+      return this.references.entries[this.reference.state];
     }
   }
 
@@ -50,12 +49,18 @@ class Transaction extends Primitive {
   rtype = StringType;
   cycle = Big;
   value = Big;
-  computedAmount = AmountComputed;
+  computedAmount = relationship(({ value, parentValue }) => ({
+    Type: AmountComputed,
+    value: {
+      ...value,
+      references: { value: parentValue.value, ...parentValue.references }
+    }
+  }));
   occurrences = create(NumberType, 0);
   beginAferOccurrences = create(NumberType, 0);
 
   get amount() {
-    return this.computedAmount.compute(this.state);
+    return this.computedAmount.compute;
   }
 }
 
