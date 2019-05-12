@@ -44,7 +44,7 @@ describe(`computed transaction amounts return correctly`, () => {
     });
 
     for (let transaction of computatedTest.transactions) {
-      expect(transaction.amount.state).toEqual(50);
+      expect(transaction.amount.toFixed).toEqual('50.00');
     }
   });
 
@@ -72,7 +72,7 @@ describe(`computed transaction amounts return correctly`, () => {
     });
 
     for (let transaction of computatedTest.transactions) {
-      expect(transaction.amount.state).toEqual(100);
+      expect(transaction.amount.toFixed).toEqual('100.00');
     }
   });
 });

@@ -13,7 +13,7 @@ import { Big } from './customTypes.js';
 class AmountComputed extends Primitive {
   operation = StringType;
   reference = StringType;
-  references = ObjectType;
+  references = { Big };
   on = relationship(({ value, parentValue }) => ({
     Type: AmountComputed,
     value: {
@@ -31,16 +31,14 @@ class AmountComputed extends Primitive {
   }
 
   get operate() {
-    // this needs to be a Big type, can it be set in the relationship?
-    console.log(this.references.entries[this.reference.state].state);
     switch (this.operation.state) {
       case 'add':
         return this.references.entries[this.reference.state].add(
-          this.on.compute.state
+          this.on.compute.toNumber
         );
       case 'minus':
         return this.references.entries[this.reference.state].minus(
-          this.on.compute.state
+          this.on.compute.toNumber
         );
       default:
         return this.references.entries[this.reference.state];
@@ -58,6 +56,7 @@ class Transaction extends Primitive {
   rtype = StringType;
   cycle = Big;
   value = Big;
+  references = { Big };
   computedAmount = relationship(({ value, parentValue }) => ({
     Type: AmountComputed,
     value: {
