@@ -61,8 +61,7 @@ describe(`computed transaction amounts return correctly`, () => {
           rtype: `day`,
           cycle: 3,
           value: 150,
-          statementBalance: 50,
-          currentBalance: 200,
+          references: { statementBalance: 50, currentBalance: 200 },
           computedAmount: {
             reference: 'value',
             operation: 'minus',
