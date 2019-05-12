@@ -14,7 +14,13 @@ class AmountComputed extends Primitive {
   operation = StringType;
   reference = StringType;
   references = ObjectType;
-  on = AmountComputed;
+  on = relationship(({ value, parentValue }) => ({
+    Type: AmountComputed,
+    value: {
+      ...value,
+      references: parentValue.references
+    }
+  }));
 
   get compute() {
     if (this.operation.state && !!this.on) {
@@ -26,15 +32,15 @@ class AmountComputed extends Primitive {
 
   get operate() {
     // this needs to be a Big type, can it be set in the relationship?
-    console.log(this.references.entries[this.reference.state]);
+    console.log(this.references.entries[this.reference.state].state);
     switch (this.operation.state) {
       case 'add':
         return this.references.entries[this.reference.state].add(
-          this.on.compute(references).state
+          this.on.compute.state
         );
       case 'minus':
         return this.references.entries[this.reference.state].minus(
-          this.on.compute(references).state
+          this.on.compute.state
         );
       default:
         return this.references.entries[this.reference.state];
