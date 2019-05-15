@@ -22,7 +22,7 @@ describe(`transaction array changes`, () => {
 });
 
 describe(`computed transaction amounts return correctly`, () => {
-  it(`computes from a single reference`, () => {
+  it(`computes from a single reference on transaction`, () => {
     let computatedTest = create(AppModel, {
       transactions: [
         {
@@ -41,14 +41,14 @@ describe(`computed transaction amounts return correctly`, () => {
           }
         }
       ]
-    });
+    }).reCalc();
 
-    for (let transaction of computatedTest.transactions) {
-      expect(transaction.amount.toFixed).toEqual('50.00');
+    for (let transaction of computatedTest.transactionsComputed) {
+      expect(transaction.value.toFixed).toEqual('50.00');
     }
   });
 
-  it(`computes from a nested reference`, () => {
+  it(`computes from a nested reference on transaction`, () => {
     let computatedTest = create(AppModel, {
       transactions: [
         {
@@ -61,18 +61,178 @@ describe(`computed transaction amounts return correctly`, () => {
           rtype: `day`,
           cycle: 3,
           value: 150,
-          references: { statementBalance: 50, currentBalance: 200 },
+          references: { statementBalance: 75, currentBalance: 200 },
           computedAmount: {
-            reference: 'value',
+            reference: 'currentBalance',
             operation: 'minus',
             on: { reference: 'statementBalance' }
           }
         }
       ]
-    });
+    }).reCalc();
 
-    for (let transaction of computatedTest.transactions) {
-      expect(transaction.amount.toFixed).toEqual('100.00');
+    for (let transaction of computatedTest.transactionsComputed) {
+      expect(transaction.value.toFixed).toEqual('125.00');
+    }
+  });
+
+  it(`computes from a deeply nested reference on transaction`, () => {
+    let computatedTest = create(AppModel, {
+      transactions: [
+        {
+          id: `computated-test`,
+          raccount: `account`,
+          description: `description`,
+          category: `test default`,
+          type: `income`,
+          start: `2018-03-22`,
+          rtype: `day`,
+          cycle: 3,
+          references: {
+            statementBalance: 50,
+            currentBalance: 800,
+            otherValueOne: 350,
+            otherValueTwo: 1000
+          },
+          computedAmount: {
+            reference: 'otherValueTwo',
+            operation: 'minus',
+            on: {
+              reference: 'statementBalance',
+              operation: 'add',
+              on: {
+                reference: 'currentBalance',
+                operation: 'minus',
+                on: { reference: 'otherValueOne' }
+              }
+            }
+          }
+        }
+      ]
+    }).reCalc();
+
+    for (let transaction of computatedTest.transactionsComputed) {
+      expect(transaction.value.toFixed).toEqual('500.00');
+    }
+  });
+
+  it(`computes from a single reference on accounts`, () => {
+    let computatedTest = create(AppModel, {
+      accounts: [
+        {
+          payback: {
+            transactions: [
+              {
+                id: `computated-test`,
+                raccount: `account`,
+                description: `description`,
+                category: `test default`,
+                type: `income`,
+                start: `2018-03-22`,
+                rtype: `day`,
+                cycle: 3,
+                value: 150,
+                references: { statementBalance: 55, currentBalance: 200 },
+                computedAmount: {
+                  reference: 'statementBalance'
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }).reCalc();
+
+    for (let transaction of computatedTest.transactionsComputed) {
+      // ignore the default transaction
+      if (transaction.id.state !== 'seed-data-id') {
+        expect(transaction.value.toFixed).toEqual('55.00');
+      }
+    }
+  });
+
+  it(`computes from a nested reference on accounts`, () => {
+    let computatedTest = create(AppModel, {
+      accounts: [
+        {
+          payback: {
+            transactions: [
+              {
+                id: `computated-test`,
+                raccount: `account`,
+                description: `description`,
+                category: `test default`,
+                type: `income`,
+                start: `2018-03-22`,
+                rtype: `day`,
+                cycle: 3,
+                value: 150,
+                references: { statementBalance: 40, currentBalance: 200 },
+                computedAmount: {
+                  reference: 'currentBalance',
+                  operation: 'minus',
+                  on: { reference: 'statementBalance' }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }).reCalc();
+
+    for (let transaction of computatedTest.transactionsComputed) {
+      // ignore the default transaction
+      if (transaction.id.state !== 'seed-data-id') {
+        expect(transaction.value.toFixed).toEqual('160.00');
+      }
+    }
+  });
+
+  it(`computes from a deeply nested reference on accounts`, () => {
+    let computatedTest = create(AppModel, {
+      accounts: [
+        {
+          payback: {
+            transactions: [
+              {
+                id: `computated-test`,
+                raccount: `account`,
+                description: `description`,
+                category: `test default`,
+                type: `income`,
+                start: `2018-03-22`,
+                rtype: `day`,
+                cycle: 3,
+                references: {
+                  statementBalance: 50,
+                  currentBalance: 800,
+                  otherValueOne: 350,
+                  otherValueTwo: 850
+                },
+                computedAmount: {
+                  reference: 'otherValueTwo',
+                  operation: 'minus',
+                  on: {
+                    reference: 'statementBalance',
+                    operation: 'add',
+                    on: {
+                      reference: 'currentBalance',
+                      operation: 'minus',
+                      on: { reference: 'otherValueOne' }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }).reCalc();
+    for (let transaction of computatedTest.transactionsComputed) {
+      // ignore the default transaction
+      if (transaction.id.state !== 'seed-data-id') {
+        expect(transaction.value.toFixed).toEqual('350.00');
+      }
     }
   });
 });

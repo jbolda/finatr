@@ -44,4 +44,4 @@ class Big extends Primitive {
   }
 }
 
-export { Big };
+export { Big, _Big };

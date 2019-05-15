@@ -26,23 +26,23 @@ class AppModel {
     if (this.transactions.length === 0 || this.accounts.length === 0) {
       let defaultAccount = [
         {
-        name: 'account',
-        starting: 0,
-        interest: 0,
-        vehicle: 'operating'
+          name: 'account',
+          starting: 0,
+          interest: 0,
+          vehicle: 'operating'
         }
       ];
       let defaultTransaction = [
         {
-        id: `seed-data-id`,
-        raccount: `account`,
-        description: `seed data`,
-        category: `default transaction`,
-        type: `income`,
-        start: `2018-11-01`,
-        rtype: `day`,
-        cycle: 3,
-        value: 150
+          id: `seed-data-id`,
+          raccount: `account`,
+          description: `seed data`,
+          category: `default transaction`,
+          type: `income`,
+          start: `2018-11-01`,
+          rtype: `day`,
+          cycle: 3,
+          value: 150
         }
       ];
 
@@ -55,10 +55,10 @@ class AppModel {
       }
 
       if (this.transactions.length === 0) {
-      return this.transactions
+        return this.transactions
           .set(defaultTransaction)
-        .taxStrategy.incomeReceived.set([])
-        .reCalc();
+          .taxStrategy.incomeReceived.set([])
+          .reCalc();
       }
 
       if (this.accounts.length === 0) {
@@ -119,10 +119,12 @@ class AppModel {
     const useTransactions =
       filteredTransactions.length === 0 ? transactions : filteredTransactions;
 
-    const init = this.transactionsComputed.set([
-      ...(useTransactions ? useTransactions : []),
-      ...(transactionPaybacks ? transactionPaybacks : [])
-    ]);
+    const init = this.transactionsComputed
+      .set([
+        ...(useTransactions ? useTransactions : []),
+        ...(transactionPaybacks ? transactionPaybacks : [])
+      ])
+      .transactionsComputed.map(transaction => transaction.computeValue());
 
     // returns a microstate with the transactionsComputed set
     return categoriesSet
