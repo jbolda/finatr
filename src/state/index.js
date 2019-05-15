@@ -23,14 +23,17 @@ class AppModel {
   taxStrategy = TaxStrategy;
 
   initialize() {
-    if (this.transactions.length === 0 && this.accounts.length === 0) {
-      let defaultAccount = {
+    if (this.transactions.length === 0 || this.accounts.length === 0) {
+      let defaultAccount = [
+        {
         name: 'account',
         starting: 0,
         interest: 0,
         vehicle: 'operating'
-      };
-      let defaultTransaction = {
+        }
+      ];
+      let defaultTransaction = [
+        {
         id: `seed-data-id`,
         raccount: `account`,
         description: `seed data`,
@@ -40,12 +43,30 @@ class AppModel {
         rtype: `day`,
         cycle: 3,
         value: 150
-      };
+        }
+      ];
+
+      if (this.transactions.length === 0 && this.accounts.length === 0) {
+        return this.transactions
+          .set(defaultTransaction)
+          .accounts.set(defaultAccount)
+          .taxStrategy.incomeReceived.set([])
+          .reCalc();
+      }
+
+      if (this.transactions.length === 0) {
       return this.transactions
-        .set([defaultTransaction])
-        .accounts.set([defaultAccount])
+          .set(defaultTransaction)
         .taxStrategy.incomeReceived.set([])
         .reCalc();
+      }
+
+      if (this.accounts.length === 0) {
+        return this.accounts
+          .set(defaultAccount)
+          .taxStrategy.incomeReceived.set([])
+          .reCalc();
+      }
     } else {
       return this;
     }
