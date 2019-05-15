@@ -30,7 +30,7 @@ class AmountComputed extends Primitive {
     // with it, so when we do this.state, we don't have a big.js object, just a number
     // so temporarily coercing it from a number into a big.js object that
     // we can use that function
-    switch (this.operation.state) {
+    switch (state.operation) {
       case 'add':
         return _Big(state.references[state.reference]).add(this.on.compute);
       case 'minus':
