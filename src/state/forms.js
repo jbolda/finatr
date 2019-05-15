@@ -18,6 +18,16 @@ class TransactionForm {
   get state() {
     return valueOf(this);
   }
+
+  get values() {
+    // this should pull defaults, however maybe relationship
+    // is the better way to deal with defaults, save for now
+    // (also this doesn't seem to work, will come back later)
+    return Object.keys(this).reduce(
+      (values, key) => Object.assign(values, { [key]: valueOf(this[key]) }),
+      {}
+    );
+  }
 }
 
 class AccountForm {
