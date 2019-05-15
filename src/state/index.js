@@ -23,29 +23,50 @@ class AppModel {
   taxStrategy = TaxStrategy;
 
   initialize() {
-    if (this.transactions.length === 0 && this.accounts.length === 0) {
-      let defaultAccount = {
-        name: 'account',
-        starting: 0,
-        interest: 0,
-        vehicle: 'operating'
-      };
-      let defaultTransaction = {
-        id: `seed-data-id`,
-        raccount: `account`,
-        description: `seed data`,
-        category: `default transaction`,
-        type: `income`,
-        start: `2018-11-01`,
-        rtype: `day`,
-        cycle: 3,
-        value: 150
-      };
-      return this.transactions
-        .set([defaultTransaction])
-        .accounts.set([defaultAccount])
-        .taxStrategy.incomeReceived.set([])
-        .reCalc();
+    if (this.transactions.length === 0 || this.accounts.length === 0) {
+      let defaultAccount = [
+        {
+          name: 'account',
+          starting: 0,
+          interest: 0,
+          vehicle: 'operating'
+        }
+      ];
+      let defaultTransaction = [
+        {
+          id: `seed-data-id`,
+          raccount: `account`,
+          description: `seed data`,
+          category: `default transaction`,
+          type: `income`,
+          start: `2018-11-01`,
+          rtype: `day`,
+          cycle: 3,
+          value: 150
+        }
+      ];
+
+      if (this.transactions.length === 0 && this.accounts.length === 0) {
+        return this.transactions
+          .set(defaultTransaction)
+          .accounts.set(defaultAccount)
+          .taxStrategy.incomeReceived.set([])
+          .reCalc();
+      }
+
+      if (this.transactions.length === 0) {
+        return this.transactions
+          .set(defaultTransaction)
+          .taxStrategy.incomeReceived.set([])
+          .reCalc();
+      }
+
+      if (this.accounts.length === 0) {
+        return this.accounts
+          .set(defaultAccount)
+          .taxStrategy.incomeReceived.set([])
+          .reCalc();
+      }
     } else {
       return this;
     }
@@ -98,10 +119,12 @@ class AppModel {
     const useTransactions =
       filteredTransactions.length === 0 ? transactions : filteredTransactions;
 
-    const init = this.transactionsComputed.set([
-      ...(useTransactions ? useTransactions : []),
-      ...(transactionPaybacks ? transactionPaybacks : [])
-    ]);
+    const init = this.transactionsComputed
+      .set([
+        ...(useTransactions ? useTransactions : []),
+        ...(transactionPaybacks ? transactionPaybacks : [])
+      ])
+      .transactionsComputed.map(transaction => transaction.computeValue());
 
     // returns a microstate with the transactionsComputed set
     return categoriesSet
@@ -169,6 +192,11 @@ class AppModel {
     return this.reCalc(next.state.accountsComputed);
   }
 
+  toggleAllAccount() {
+    let next = this.accountsComputed.map(account => account.visible.toggle());
+    return this.reCalc(next.state.accountsComputed);
+  }
+
   transactionUpsert(value) {
     let nextState = this.state.transactions;
     if (value.id && value.id !== '') {
@@ -225,34 +253,60 @@ class AppModel {
 
   upsertAccountTransaction(result) {
     let nextState = this.state.accounts;
-    let accountIndex = nextState.map(a => a.name).indexOf(result.debtAccount);
-    let payback = { ...nextState[accountIndex].payback };
-    payback.id = makeUUID();
-    if (!payback.transactions) {
-      payback.transactions = [];
+    const accountIndex = nextState.map(a => a.name).indexOf(result.debtAccount);
+    let account = nextState[accountIndex];
+
+    if (!account.payback) {
+      account.payback = {};
     }
-    payback.transactions.push({
+
+    if (!!account.payback && !account.payback.transactions) {
+      account.payback.transactions = [];
+    }
+
+    let payback = {
+      debtAccount: result.debtAccount,
       raccount: result.raccount,
       start: result.start,
       rtype: result.rtype,
       cycle: result.cycle,
       occurences: result.occurences,
       value: result.value
-    });
+    };
 
+    if (!payback.id) {
+      payback.id = makeUUID();
+    }
+
+    account.payback.transactions.push(payback);
+
+    nextState[accountIndex] = account;
     let nextSetState = this.accounts.set(nextState);
     return nextSetState.reCalc().forms.accountTransactionForm.id.set('');
   }
 
   modifyAccountTransaction(name, index) {
-    let payback = this.state.accounts.find(element => element.name === name)
+    const payback = this.state.accounts.find(element => element.name === name)
       .payback;
     return this.forms.accountTransactionForm
-      .set({
-        ...payback,
-        ...payback.transactions[index]
+      .set(payback.transactions[index])
+      .forms.accountTransactionFormVisible.toggle();
+  }
+
+  deleteAccountTransaction(name, index) {
+    return this.accounts
+      .map(element => {
+        let next = element;
+        if (element.name.state === name) {
+          next = element.payback.transactions.set(
+            element.state.payback.transactions.filter(
+              (payback, ix) => ix !== index
+            )
+          );
+        }
+        return next;
       })
-      .log('modAT');
+      .reCalc();
   }
 
   addYNAB(tokens, resultantAccounts, resultantTransactions) {

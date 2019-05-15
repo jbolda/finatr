@@ -22,7 +22,7 @@ describe('Transaction Delete Tests', () => {
     cy.get('form').submit();
   });
 
-  it('deletes the recently added transaction', () => {
+  it('deletes the recently added account', () => {
     cy.get('#accounts')
       .contains('55.00')
       .parent()

@@ -1,5 +1,5 @@
 import React from 'react';
-import { State } from '../state';
+import { State } from '../../state';
 import { Formik, Field } from 'formik';
 
 class AccountInput extends React.Component {

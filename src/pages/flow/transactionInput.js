@@ -1,8 +1,8 @@
 import React from 'react';
-import { State } from '../state';
+import { State } from '../../state';
 import { Formik, Field } from 'formik';
 
-import * as Form from './../components/bootstrap/Form';
+import * as Form from '../../components/bootstrap/Form';
 
 function FieldInput({
   fieldName,

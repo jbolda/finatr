@@ -33,26 +33,33 @@ const coercePaybacks = ({ accounts }) => {
       if (account.vehicle === 'debt' && account.payback) {
         account.payback.transactions.forEach((accountTransaction, index) => {
           // this one is for the expense on the account
-          // being paid down
+          // being paid down, expenses are entered as positive
+          // but mathed as negative so it will reduce the
+          // balance of a debt (which is entered as a positive number)
           let amount =
             typeof accountTransaction.value === 'string'
               ? account.payback[accountTransaction.value]
               : accountTransaction.value;
           transactions.push({
             ...accountTransaction,
-            id: `${account.payback.id}-${index}EXP`,
+            id: `${accountTransaction.id}-${index}EXP`,
             raccount: account.name,
             description: account.payback.description,
-            type: account.payback.type,
+            type: 'expense',
             category: account.payback.category,
             value: amount,
             fromAccount: true
           });
           // this one is for the account making the payment
           // (raccount is defined on accountTransaction)
+          // negative transfer don't show up on the bar chart
+          // but they should affect the math of, say, the line chart
+          // we can use this to avoid visual duplication of two
+          // transactions for the same amount reducing the balance
+          // on two different accounts
           transactions.push({
             ...accountTransaction,
-            id: `${account.payback.id}-${index}TRSF`,
+            id: `${accountTransaction.id}-${index}TRSF`,
             description: account.payback.description,
             type: 'transfer',
             category: account.payback.category,
@@ -114,8 +121,9 @@ const applyModifications = allDates => (structure, modification) => {
 };
 
 const buildStack = (data, graphRange) => {
-  let allDates = eachDayOfInterval(graphRange);
-  let stackStructure = allDates.map(day => {
+  const allDates = eachDayOfInterval(graphRange);
+
+  const stackStructure = allDates.map(day => {
     let obj = { date: day };
     data.forEach(datum => {
       obj[datum.id] = { ...datum };
@@ -125,7 +133,7 @@ const buildStack = (data, graphRange) => {
     return obj;
   });
 
-  let computedTMods = computeTransactionModifications(data, graphRange);
+  const computedTMods = computeTransactionModifications(data, graphRange);
 
   // return array of modifications to be applied to stackStructure
   return computedTMods.reduce(applyModifications(allDates), stackStructure);
@@ -145,7 +153,7 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
 
   // we coerce into Big here temporarily
   // eventually we need to except it to already be Big
-  let data = keys.map(key => {
+  const data = keys.map(key => {
     let dataAccess = dataRaw[key.index];
     let newDatum = { ...dataAccess };
     if (newDatum.value) {
@@ -154,11 +162,8 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
     if (newDatum.cycle) {
       newDatum.cycle = Big(dataAccess.cycle);
     }
-    if (newDatum.generatedOccurrences) {
-      newDatum.generatedOccurrences = Big(dataAccess.generatedOccurrences);
-    }
-    if (newDatum.visibleOccurrences) {
-      newDatum.visibleOccurrences = Big(dataAccess.visibleOccurrences);
+    if (newDatum.occurrences) {
+      newDatum.occurrences = Big(dataAccess.occurrences);
     }
 
     newDatum.dailyRate = Big(dataAccess.dailyRate || 0);
@@ -166,16 +171,16 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
     return newDatum;
   });
 
-  let stackComputed = buildStack(data, graphRange);
+  const stackComputed = buildStack(data, graphRange);
 
-  let stack = d3
+  const stack = d3
     .stack()
     .value((d, key) => d[key.value].y)
     .keys(keys);
 
-  let stacked = stack(stackComputed);
+  const stacked = stack(stackComputed);
 
-  let maxHeight = d3.max(stacked.reduce((a, b) => a.concat(b)), d => d[1]);
+  const maxHeight = d3.max(stacked.reduce((a, b) => a.concat(b)), d => d[1]);
 
   return keys.map((key, index) => ({
     ...data[index],
@@ -207,7 +212,7 @@ const twoSteppedBalance = (starting, accountStack, barChartStack) => {
     if (value === undefined) {
       return 0;
     } else {
-      return value;
+      return Math.abs(value);
     }
   };
 

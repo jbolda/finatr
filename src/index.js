@@ -6,9 +6,9 @@ import { Store, create } from 'microstates';
 import AppModel, { State } from './state';
 
 import 'bulma/css/bulma.css';
-import Financial from './financial';
-import Importing from './importing';
-import Taxes from './taxes';
+import Financial from './pages/flow';
+import Importing from './pages/importing';
+import Taxes from './pages/taxes';
 
 class App extends React.Component {
   constructor(props) {

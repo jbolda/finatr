@@ -41,11 +41,16 @@ export class BarChart extends Component {
     };
 
     // Expenses
+    // only draw positive rects (ignores neg transfers)
     barBuild.drawBar(
       this.props.data,
       blobs,
       'neg',
-      data.BarChartExpense,
+      data.BarChartExpense.reduce(
+        (positiveData, datum) =>
+          datum.value.s === -1 ? positiveData : positiveData.concat([datum]),
+        []
+      ),
       data.BarChartMax,
       tooltipBar
     );
@@ -308,7 +313,7 @@ barBuild.drawAxis = function(svg, props, max_domain, phase) {
     drawnY
       .selectAll('.tick:not(:first-of-type) line')
       .attr('stroke', '#777')
-      .attr('stroke-dasharray', '2,2')
+      .attr('stroke-dasharray', '2,5')
       .attr('transform', `translate(-${this.margin().left},0)`);
 
     drawnY
@@ -316,14 +321,28 @@ barBuild.drawAxis = function(svg, props, max_domain, phase) {
       .attr('x', -this.margin().left)
       .attr('dy', -4);
 
-    drawnY.select('path').remove();
+    // hide the left axis line, if we would instead remove it,
+    // it would show up during and after a transition
+    drawnY.select('path').attr('stroke-width', '0');
   } else {
-    svg
+    let drawnY = svg
       .select('.yaxis')
       .transition()
       .duration(3000)
       .call(yAxis);
+
+    drawnY
+      .selectAll('.tick:not(:first-of-type) line')
+      .attr('stroke', '#777')
+      .attr('stroke-dasharray', '2,5')
+      .attr('transform', `translate(-${this.margin().left},0)`);
+
+    drawnY
+      .selectAll('.tick text')
+      .attr('x', -this.margin().left)
+      .attr('dy', -4);
   }
+
   return;
 };
 

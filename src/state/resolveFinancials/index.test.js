@@ -127,7 +127,7 @@ describe(`check resolveData handles paybacks`, () => {
     expect(resolvedTestData.charts.state.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: 'payback-test-0EXP'
+          id: 'payback2-test-1EXP'
         })
       ])
     );
@@ -135,10 +135,32 @@ describe(`check resolveData handles paybacks`, () => {
     expect(resolvedTestData.charts.state.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: 'payback-test-0TRSF'
+          id: 'payback2-test-1TRSF'
         })
       ])
     );
+  });
+
+  it(`ends with the correct balance`, () => {
+    let revisedTestData = testData;
+    revisedTestData.transactions = [];
+    let resolvedTestData = create(AppModel, revisedTestData).reCalc();
+
+    // that is 163 days between start and end
+    // 164*$140 + 164/3*$60 + (1) extra $60 = 22960 + 3240 + 60 = 26260
+    const count =
+      resolvedTestData.charts.state.AccountChart[0].values.length - 1;
+    // this tests the transfer, which reduces the balance of the payment account
+    // $3000 starting - 26260 = -23260
+    expect(
+      resolvedTestData.charts.state.AccountChart[0].values[count].value
+    ).toEqual(-23260);
+
+    // this tests the expense, which reduces the balance of the debt account
+    // $30000 starting - 26260 = 3740
+    expect(
+      resolvedTestData.charts.state.AccountChart[1].values[count].value
+    ).toEqual(3740);
   });
 });
 

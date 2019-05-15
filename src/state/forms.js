@@ -1,4 +1,4 @@
-import { create, valueOf, StringType } from 'microstates';
+import { create, valueOf, StringType, BooleanType } from 'microstates';
 import { Big } from './customTypes.js';
 
 class TransactionForm {
@@ -13,10 +13,20 @@ class TransactionForm {
   start = create(StringType, '');
   rtype = create(StringType, '');
   cycle = create(Big, 0);
-  value = create(Big, 0);
+  value = create(Big, 50);
 
   get state() {
     return valueOf(this);
+  }
+
+  get values() {
+    // this should pull defaults, however maybe relationship
+    // is the better way to deal with defaults, save for now
+    // (also this doesn't seem to work, will come back later)
+    return Object.keys(this).reduce(
+      (values, key) => Object.assign(values, { [key]: valueOf(this[key]) }),
+      {}
+    );
   }
 }
 
@@ -30,7 +40,6 @@ class AccountForm {
   vehicle = create(StringType, 'operating');
 
   intialize() {
-    console.log('init', this.state);
     return this;
   }
 
@@ -45,13 +54,11 @@ class AccountTransactionForm {
   raccount = StringType;
   start = StringType;
   rtype = StringType;
-  cycle = Big;
-  occurences = Big;
-  value = Big;
+  cycle = create(Big, 0);
+  occurences = create(Big, 0);
+  value = create(Big, 0);
 
   get state() {
-    console.log(this);
-    console.log(valueOf(this));
     return valueOf(this);
   }
 }
@@ -65,6 +72,7 @@ class Forms {
   transactionForm = TransactionForm;
   accountForm = AccountForm;
   accountTransactionForm = AccountTransactionForm;
+  accountTransactionFormVisible = BooleanType;
   ynabForm = YNABForm;
 
   get state() {
