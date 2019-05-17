@@ -1,4 +1,10 @@
-import { valueOf, create, ObjectType, StringType } from 'microstates';
+import {
+  valueOf,
+  create,
+  ObjectType,
+  StringType,
+  Primitive
+} from 'microstates';
 import { Big } from './customTypes.js';
 import { TransactionComputed } from './transactions.js';
 import { Account } from './accounts.js';
@@ -8,6 +14,7 @@ import {
   resolveBarChart,
   resolveAccountChart
 } from './resolveFinancials';
+import format from 'date-fns/fp/format';
 import startOfDay from 'date-fns/fp/startOfDay';
 
 class BarChart extends TransactionComputed {
@@ -27,7 +34,7 @@ class LineChart extends Account {
   values = [LineChartValues];
 }
 
-class Charts {
+class Charts extends Primitive {
   GraphRange = ObjectType;
   BarChartIncome = create([BarChart], [{ id: 'default' }]);
   BarChartExpense = create([BarChart], [{ id: 'default' }]);
@@ -42,6 +49,12 @@ class Charts {
     } else {
       return this;
     }
+  }
+
+  get graphDates() {
+    const formatDate = format('yyyy-MM-dd');
+    const dates = this.state.GraphRange;
+    return { start: formatDate(dates.start), end: formatDate(dates.end) };
   }
 
   updateStartDate(value) {
