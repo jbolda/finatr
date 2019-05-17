@@ -37,9 +37,9 @@ class App extends React.Component {
           aria-label="main navigation"
         >
           <div className="navbar-brand">
-            <a className="navbar-item" href="/">
+            <Link to="/" className="navbar-item">
               finatr
-            </a>
+            </Link>
             {/* eslint-disable-next-line */}
             <a
               role="button"
