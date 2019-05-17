@@ -316,16 +316,15 @@ class AppModel {
       indexed[resultAccount.name] = resultAccount;
     });
     nextState.state.accounts.forEach(existingAccount => {
+      // if the existing account doesn't appear in newly added accounts
       if (!indexed[existingAccount.name]) {
         indexed[existingAccount.name] = existingAccount;
+        // if it does exist and it is a newly added added account, merge
+        // only update with the new value, everything else comes from existing
       } else {
         indexed[existingAccount.name] = {
-          name: existingAccount.name,
-          starting: indexed[existingAccount.name].starting,
-          interest: existingAccount.interest ? existingAccount.interest : 0,
-          vehicle: existingAccount.vehicle
-            ? existingAccount.vehicle
-            : 'operating'
+          ...existingAccount,
+          starting: indexed[existingAccount.name].starting
         };
       }
     });
@@ -334,10 +333,10 @@ class AppModel {
       .set([...this.state.transactions, ...resultantTransactions])
       .accounts.set(Object.keys(indexed).map(key => indexed[key]));
 
-    return nextSetState
-      .reCalc()
-      .forms.ynabForm.devToken.set(tokens.devToken)
-      .forms.ynabForm.budgetId.set(tokens.budgetId);
+    return nextSetState.forms.ynabForm.devToken
+      .set(tokens.devToken)
+      .forms.ynabForm.budgetId.set(tokens.budgetId)
+      .reCalc();
   }
 }
 
