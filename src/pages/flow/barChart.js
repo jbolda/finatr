@@ -325,6 +325,19 @@ barBuild.drawAxis = function(svg, props, max_domain, phase) {
     // it would show up during and after a transition
     drawnY.select('path').attr('stroke-width', '0');
   } else {
+    let drawnX = svg
+      .select('.xaxis')
+      .transition()
+      .duration(3000)
+      .call(xAxis);
+
+    drawnX
+      .selectAll('text')
+      .style('text-anchor', 'end')
+      .attr('dx', '-.8em')
+      .attr('dy', '-.55em')
+      .attr('transform', 'rotate(-90)');
+
     let drawnY = svg
       .select('.yaxis')
       .transition()
