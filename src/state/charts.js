@@ -8,6 +8,7 @@ import {
   resolveBarChart,
   resolveAccountChart
 } from './resolveFinancials';
+import startOfDay from 'date-fns/fp/startOfDay';
 
 class BarChart extends TransactionComputed {
   stack = Array;
@@ -34,17 +35,18 @@ class Charts {
   AccountChart = create([LineChart], [{ id: 'default' }]);
   LineChartMax = Big;
 
-  initialize(length = 365) {
+  initialize() {
     if (!this.GraphRange.entries.start) {
-      let graphRange = { start: past(), end: future(length) };
+      let graphRange = { start: past(), end: future(365) };
       return this.GraphRange.set(graphRange);
     } else {
       return this;
     }
   }
 
-  get state() {
-    return valueOf(this);
+  updateStartDate(value) {
+    let graphRange = { start: startOfDay(value), end: future(365) };
+    return this.GraphRange.set(graphRange);
   }
 
   calcCharts(transactionsSplit, accounts) {

@@ -92,6 +92,10 @@ class AppModel {
       .reCalc();
   }
 
+  updateStartDate(value) {
+    return this.charts.updateStartDate(value).reCalc();
+  }
+
   reCalc(presetAccounts = []) {
     const init = this.transactionComputer().accountComputer(presetAccounts);
     const { transactionsComputed, accountsComputed } = init.state;
