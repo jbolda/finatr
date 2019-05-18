@@ -449,6 +449,8 @@ barBuild.drawBar = function(
     .duration(3000)
     .ease(d3.easeBounceOut)
     .attr('class', append_class)
+    .attr('x', d => xScale(d.data.date))
+    .attr('transform', `translate(${widths.translate},${0})`)
     .attr('y', d => yScale(d[1]))
     .attr('height', d => d3.max([0, yScale(d[0]) - yScale(d[1])]));
 
