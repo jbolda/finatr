@@ -18,6 +18,11 @@ const computeTransactionModifications = (transactions, graphRange) =>
     // early return if end is before start, we will have no modifications
     if (isBefore(transactionInterval.start)(transactionInterval.end)) return [];
 
+    // negative values (eg a negative transfer)
+    // should not affect any bars, they will all be zero
+    if (!transaction.value.gte(0)) return modifications;
+
+    // and if the value is positive, generate the necessary mods
     return modifications.concat(
       generateModification(
         transaction,
