@@ -106,7 +106,7 @@ const transactionSplitter = ({ transactions, accounts }) => {
 
 const replaceWithModified = (oldValue, modification) => {
   let newValue = oldValue;
-  newValue.y = oldValue.y.add(modification.y);
+  newValue.y = oldValue.y.add(modification.y.abs());
   return newValue;
 };
 

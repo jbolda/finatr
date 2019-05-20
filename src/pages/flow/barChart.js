@@ -46,11 +46,7 @@ export class BarChart extends Component {
       this.props.data,
       blobs,
       'neg',
-      data.BarChartExpense.reduce(
-        (positiveData, datum) =>
-          datum.value.s === -1 ? positiveData : positiveData.concat([datum]),
-        []
-      ),
+      data.BarChartExpense,
       data.BarChartMax,
       tooltipBar
     );
