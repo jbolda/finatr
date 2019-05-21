@@ -112,7 +112,7 @@ class AppModel {
     return next.reCalc();
   }
 
-  updateStartDate(value) {
+  updateStartDateReCalc(value) {
     return this.charts.updateStartDate(value).reCalc();
   }
 

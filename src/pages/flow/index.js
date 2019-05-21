@@ -62,7 +62,7 @@ class FinancialFlow extends React.Component {
                       pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
                       value={model.charts.graphDates.start}
                       onChange={event =>
-                        model.updateStartDate(event.target.value)
+                        model.updateStartDateReCalc(event.target.value)
                       }
                     />
                   </Form.FieldControl>
