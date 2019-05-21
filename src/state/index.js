@@ -102,11 +102,11 @@ class AppModel {
     }
 
     if (result.devToken) {
-      next = next.ynabForm.devToken.set(result.devToken);
+      next = next.forms.ynabForm.devToken.set(result.devToken);
     }
 
     if (result.budgetId) {
-      next = next.ynabForm.budgetId.set(result.budgetId);
+      next = next.forms.ynabForm.budgetId.set(result.budgetId);
     }
 
     return next.reCalc();
