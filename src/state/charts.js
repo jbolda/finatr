@@ -57,6 +57,12 @@ class Charts extends Primitive {
     return { start: formatDate(dates.start), end: formatDate(dates.end) };
   }
 
+  get isStartingToday() {
+    const formatDate = format('yyyy-MM-dd');
+    const dates = this.state.GraphRange;
+    return formatDate(dates.start) === formatDate(past());
+  }
+
   updateStartDate(value) {
     let graphRange = { start: startOfDay(value), end: future(365) };
     return this.GraphRange.set(graphRange);

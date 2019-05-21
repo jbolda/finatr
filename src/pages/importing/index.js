@@ -42,6 +42,9 @@ class Importing extends React.Component {
       ...(get(['accounts'], modelState)
         ? { accounts: [...modelState.accounts] }
         : {}),
+      ...(!model.charts.isStartingToday
+        ? { settings: { startDate: model.charts.graphDates.start } }
+        : {}),
       ...(get(['taxStrategy', 'incomeReceived'], modelState) &&
       modelState.taxStrategy.incomeReceived.length !== 0
         ? {
