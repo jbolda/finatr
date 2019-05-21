@@ -55,7 +55,7 @@ describe(`check state creation`, () => {
     expect(resolvedTestData.charts.state.BarChartExpense).toHaveLength(5);
   });
   it(`calcs the correct BarChartMax`, () => {
-    expect(resolvedTestData.charts.BarChartMax.toNumber).toBe(250);
+    expect(resolvedTestData.charts.BarChartMax.toNumber).toBe(510);
   });
   it(`calcs the correct LineChartMax`, () => {
     expect(resolvedTestData.charts.LineChartMax.toNumber).toBe(49680);

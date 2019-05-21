@@ -46,11 +46,7 @@ export class BarChart extends Component {
       this.props.data,
       blobs,
       'neg',
-      data.BarChartExpense.reduce(
-        (positiveData, datum) =>
-          datum.value.s === -1 ? positiveData : positiveData.concat([datum]),
-        []
-      ),
+      data.BarChartExpense,
       data.BarChartMax,
       tooltipBar
     );
@@ -325,6 +321,19 @@ barBuild.drawAxis = function(svg, props, max_domain, phase) {
     // it would show up during and after a transition
     drawnY.select('path').attr('stroke-width', '0');
   } else {
+    let drawnX = svg
+      .select('.xaxis')
+      .transition()
+      .duration(3000)
+      .call(xAxis);
+
+    drawnX
+      .selectAll('text')
+      .style('text-anchor', 'end')
+      .attr('dx', '-.8em')
+      .attr('dy', '-.55em')
+      .attr('transform', 'rotate(-90)');
+
     let drawnY = svg
       .select('.yaxis')
       .transition()
@@ -436,6 +445,8 @@ barBuild.drawBar = function(
     .duration(3000)
     .ease(d3.easeBounceOut)
     .attr('class', append_class)
+    .attr('x', d => xScale(d.data.date))
+    .attr('transform', `translate(${widths.translate},${0})`)
     .attr('y', d => yScale(d[1]))
     .attr('height', d => d3.max([0, yScale(d[0]) - yScale(d[1])]));
 

@@ -83,13 +83,37 @@ class AppModel {
   }
 
   setUpload(result) {
-    return this.transactions
-      .set(result.transactions)
-      .accounts.set(result.accounts)
-      .taxStrategy.set(result.taxStrategy)
-      .forms.ynabForm.devToken.set(result.devToken)
-      .forms.ynabForm.budgetId.set(result.budgetId)
-      .reCalc();
+    let next = this;
+
+    if (result.settings && result.settings.startDate) {
+      next = next.charts.updateStartDate(result.settings.startDate);
+    }
+
+    if (result.transactions) {
+      next = next.transactions.set(result.transactions);
+    }
+
+    if (result.accounts) {
+      next = next.accounts.set(result.accounts);
+    }
+
+    if (result.taxStrategy) {
+      next = next.taxStrategy.set(result.taxStrategy);
+    }
+
+    if (result.devToken) {
+      next = next.ynabForm.devToken.set(result.devToken);
+    }
+
+    if (result.budgetId) {
+      next = next.ynabForm.budgetId.set(result.budgetId);
+    }
+
+    return next.reCalc();
+  }
+
+  updateStartDateReCalc(value) {
+    return this.charts.updateStartDate(value).reCalc();
   }
 
   reCalc(presetAccounts = []) {

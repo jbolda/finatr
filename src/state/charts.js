@@ -1,4 +1,10 @@
-import { valueOf, create, ObjectType, StringType } from 'microstates';
+import {
+  valueOf,
+  create,
+  ObjectType,
+  StringType,
+  Primitive
+} from 'microstates';
 import { Big } from './customTypes.js';
 import { TransactionComputed } from './transactions.js';
 import { Account } from './accounts.js';
@@ -8,6 +14,8 @@ import {
   resolveBarChart,
   resolveAccountChart
 } from './resolveFinancials';
+import format from 'date-fns/fp/format';
+import startOfDay from 'date-fns/fp/startOfDay';
 
 class BarChart extends TransactionComputed {
   stack = Array;
@@ -26,7 +34,7 @@ class LineChart extends Account {
   values = [LineChartValues];
 }
 
-class Charts {
+class Charts extends Primitive {
   GraphRange = ObjectType;
   BarChartIncome = create([BarChart], [{ id: 'default' }]);
   BarChartExpense = create([BarChart], [{ id: 'default' }]);
@@ -34,17 +42,30 @@ class Charts {
   AccountChart = create([LineChart], [{ id: 'default' }]);
   LineChartMax = Big;
 
-  initialize(length = 365) {
+  initialize() {
     if (!this.GraphRange.entries.start) {
-      let graphRange = { start: past(), end: future(length) };
+      let graphRange = { start: past(), end: future(365) };
       return this.GraphRange.set(graphRange);
     } else {
       return this;
     }
   }
 
-  get state() {
-    return valueOf(this);
+  get graphDates() {
+    const formatDate = format('yyyy-MM-dd');
+    const dates = this.state.GraphRange;
+    return { start: formatDate(dates.start), end: formatDate(dates.end) };
+  }
+
+  get isStartingToday() {
+    const formatDate = format('yyyy-MM-dd');
+    const dates = this.state.GraphRange;
+    return formatDate(dates.start) === formatDate(past());
+  }
+
+  updateStartDate(value) {
+    let graphRange = { start: startOfDay(value), end: future(365) };
+    return this.GraphRange.set(graphRange);
   }
 
   calcCharts(transactionsSplit, accounts) {

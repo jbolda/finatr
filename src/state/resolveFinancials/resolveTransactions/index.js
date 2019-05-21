@@ -18,6 +18,7 @@ const computeTransactionModifications = (transactions, graphRange) =>
     // early return if end is before start, we will have no modifications
     if (isBefore(transactionInterval.start)(transactionInterval.end)) return [];
 
+    // and if the value is positive, generate the necessary mods
     return modifications.concat(
       generateModification(
         transaction,
