@@ -11,6 +11,7 @@ import isSameDay from 'date-fns/fp/isSameDay';
 import isAfter from 'date-fns/fp/isAfter';
 import isBefore from 'date-fns/fp/isBefore';
 import getDay from 'date-fns/fp/getDay';
+import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
 
 const computeTransactionModifications = (transactions, graphRange) =>
   transactions.reduce((modifications, transaction) => {
@@ -190,9 +191,22 @@ const transactionDailyReoccur = ({ transaction, seedDate, occurrences }) => {
     throw new Error('transactionDailyReoccur expects occurrences');
   }
 
-  let cycle = occurrences.eq(0) ? 0 : transaction.cycle;
+  // Finds the how many days are between when this started and the date in question
+  // the next date should be a multiple of the cycle, so divide by the cycle
+  // then round up (0 decimal places, 3 round up) then multiply by cycle again
+  // to give us the number of days to add to the transaction start date to
+  // produce an occurence on/after the seedDate. If there are no occurences
+  // yet, we are looking for the first date and we want a date on/after the seedDate.
+  // If we have any occurences, then seedDate will actually be the date of the
+  // last occurences so we add the cycle to that to get the next occurence.
+  const cycle = Big(differenceInCalendarDays(transaction.start)(seedDate))
+    .div(transaction.cycle)
+    .round(0, 3)
+    .times(transaction.cycle)
+    .plus(occurrences.eq(0) ? 0 : transaction.cycle);
+
   return {
-    date: addDays(cycle)(seedDate),
+    date: addDays(cycle)(transaction.start),
     y: transaction.value
   };
 };

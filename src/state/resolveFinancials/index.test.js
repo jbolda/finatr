@@ -122,6 +122,48 @@ describe(`check state creation`, () => {
   });
 });
 
+describe(`check integrated transaction reoccurence`, () => {
+  it(`returns the correct number of daily reoccurences`, () => {
+    let singleTransaction = resolvedTestData.transactions
+      .set([
+        {
+          id: `every-other-week`,
+          raccount: `account`,
+          category: `bi-weekly paycheck`,
+          type: `income`,
+          start: `2018-02-04`,
+          rtype: `day`,
+          value: 1200,
+          cycle: 14
+        }
+      ])
+      .accounts.set([
+        {
+          name: 'account',
+          starting: 0,
+          interest: 0.01,
+          vehicle: 'operating'
+        }
+      ])
+      .reCalc();
+
+    // This should occur every two weeks (cycle = 14)
+    // beginning on Feb 4th, 2018, but the graphrange doesn't
+    // start until March 1st, 2018. This means the first time it
+    // shows up should be on March 4th. This will mean we have
+    // 13 total occurences of the transaction in our range.
+    // (The 14th lands on Sept 2nd.) If we erroneously show the
+    // first occurence at the beginning of the graphrange, which
+    // is 3 days earlier, we would see 14 occurences instead.
+
+    // the max with a single transaction should === value of that transaction
+    expect(singleTransaction.charts.state.BarChartMax).toEqual(1200);
+    // the max should be our 13 occurences * value + starting ($0 here)
+    // that is: 13 * 1200 = 15600
+    expect(singleTransaction.charts.state.LineChartMax).toEqual(15600);
+  });
+});
+
 describe(`check resolveData handles paybacks`, () => {
   it(`has the correct BarChartExpense structure`, () => {
     expect(resolvedTestData.charts.state.BarChartExpense).toEqual(
