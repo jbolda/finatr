@@ -5,6 +5,7 @@ import getDate from 'date-fns/fp/getDate';
 import getMonth from 'date-fns/fp/getMonth';
 
 import { transactionDailyReoccur } from './index.js';
+import { convertRangeToInterval } from './index.js';
 
 describe(`check transactionDailyReoccur`, () => {
   const transaction = {
@@ -19,16 +20,17 @@ describe(`check transactionDailyReoccur`, () => {
     value: Big(150)
   };
   let graphRange = {
-    start: startOfDay('2018-01-01'),
-    end: startOfDay('2018-02-01')
+    start: startOfDay('2018-03-01'),
+    end: startOfDay('2018-06-01')
   };
-  let seedDate = graphRange.start;
-  let occurrences = Big(1);
+  let interval = convertRangeToInterval(transaction, graphRange);
+  let seedDate = interval.start;
+
   it(`has all the correct properties`, () => {
     let resolvedTestData = transactionDailyReoccur({
       transaction,
       seedDate,
-      occurrences
+      occurrences: Big(0)
     });
     expect(resolvedTestData).toHaveProperty('date');
     expect(resolvedTestData).toHaveProperty('y');
@@ -38,57 +40,106 @@ describe(`check transactionDailyReoccur`, () => {
     let resolvedTestData = transactionDailyReoccur({
       transaction,
       seedDate,
-      occurrences
+      occurrences: Big(0)
     });
-    expect(getMonth(resolvedTestData.date)).toBe(0);
-    expect(getDate(resolvedTestData.date)).toBe(2);
+    // where January = 0, 20XX-03-22 will be Month = 2
+    expect(getMonth(resolvedTestData.date)).toBe(2);
+    expect(getDate(resolvedTestData.date)).toBe(22);
   });
 
   it(`returns a cycle of 1`, () => {
     let testData = { ...transaction, cycle: Big(1) };
+    // difference should be 1 + 21 days between the start of the graph range
+    // and when the first transaction is produced
+
     let resolvedTestData = transactionDailyReoccur({
       transaction: testData,
       seedDate,
-      occurrences
+      occurrences: Big(0)
     });
     expect(
       differenceInCalendarDays(graphRange.start)(resolvedTestData.date)
+    ).toBe(21);
+
+    let secondIteration = transactionDailyReoccur({
+      transaction: testData,
+      seedDate: resolvedTestData.date,
+      occurrences: Big(1)
+    });
+    expect(
+      differenceInCalendarDays(transaction.start)(secondIteration.date)
     ).toBe(1);
   });
 
   it(`returns a cycle of 3`, () => {
     let testData = { ...transaction, cycle: Big(3) };
+    // difference should be 3 + 21 days between the start of the graph range
+    // and when the first transaction is produced
+
     let resolvedTestData = transactionDailyReoccur({
       transaction: testData,
       seedDate,
-      occurrences
+      occurrences: Big(0)
     });
     expect(
       differenceInCalendarDays(graphRange.start)(resolvedTestData.date)
+    ).toBe(21);
+
+    let secondIteration = transactionDailyReoccur({
+      transaction: testData,
+      seedDate: resolvedTestData.date,
+      occurrences: Big(1)
+    });
+    expect(
+      differenceInCalendarDays(transaction.start)(secondIteration.date)
     ).toBe(3);
   });
 
   it(`returns a cycle of 5`, () => {
     let testData = { ...transaction, cycle: Big(5) };
+    // difference should be 5 + 21 days between the start of the graph range
+    // and when the first transaction is produced
+
     let resolvedTestData = transactionDailyReoccur({
       transaction: testData,
       seedDate,
-      occurrences
+      occurrences: Big(0)
     });
     expect(
       differenceInCalendarDays(graphRange.start)(resolvedTestData.date)
+    ).toBe(21);
+
+    let secondIteration = transactionDailyReoccur({
+      transaction: testData,
+      seedDate: resolvedTestData.date,
+      occurrences: Big(1)
+    });
+    expect(
+      differenceInCalendarDays(transaction.start)(secondIteration.date)
     ).toBe(5);
   });
 
   it(`returns a cycle of 14`, () => {
     let testData = { ...transaction, cycle: Big(14) };
+    // difference should be 14 + 21 days between the start of the graph range
+    // and when the first transaction is produced
+
     let resolvedTestData = transactionDailyReoccur({
       transaction: testData,
       seedDate,
-      occurrences
+      occurrences: Big(0)
     });
     expect(
       differenceInCalendarDays(graphRange.start)(resolvedTestData.date)
+    ).toBe(21);
+
+    let secondIteration = transactionDailyReoccur({
+      transaction: testData,
+      seedDate: resolvedTestData.date,
+      occurrences: Big(1)
+    });
+    expect(
+      differenceInCalendarDays(transaction.start)(secondIteration.date)
     ).toBe(14);
   });
 });
