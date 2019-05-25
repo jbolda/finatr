@@ -63,7 +63,10 @@ class AccountFlow extends React.Component {
                   </div>
                   <div>
                     {model.state.accountsComputed.filter(
-                      account => account.vehicle === 'debt'
+                      account =>
+                        account.vehicle === 'debt' ||
+                        account.vehicle === 'loan' ||
+                        account.vehicle === 'credit line'
                     ).length === 0 ? null : (
                       <AccountTransactionInput tabClick={this.tabClick} />
                     )}

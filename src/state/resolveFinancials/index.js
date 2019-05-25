@@ -30,12 +30,18 @@ const coercePaybacks = ({ accounts }) => {
   let transactions = [];
   if (accounts) {
     accounts.forEach(account => {
-      if (account.vehicle === 'debt' && account.payback) {
+      if (
+        (account.vehicle === 'debt' ||
+          account.vehicle === 'loan' ||
+          account.vehicle === 'credit line') &&
+        account.payback
+      ) {
         account.payback.transactions.forEach((accountTransaction, index) => {
-          // this one is for the expense on the account
+          // this one is for the expense/transfer on the account
           // being paid down, expenses are entered as positive
           // but mathed as negative so it will reduce the
           // balance of a debt (which is entered as a positive number)
+          // where transfers (for credit line) need to be explicitly negative
           let amount =
             typeof accountTransaction.value === 'string'
               ? account.payback[accountTransaction.value]
@@ -45,9 +51,9 @@ const coercePaybacks = ({ accounts }) => {
             id: `${accountTransaction.id}-${index}EXP`,
             raccount: account.name,
             description: account.payback.description,
-            type: 'expense',
+            type: account.vehicle === 'credit line' ? 'transfer' : 'expense',
             category: account.payback.category,
-            value: amount,
+            value: account.vehicle === 'credit line' ? -amount : amount,
             fromAccount: true
           });
           // this one is for the account making the payment
@@ -253,7 +259,7 @@ const resolveAccountChart = ({ accounts, income, expense }) => {
         let accountZipper = zipTogethor(account);
         accountStack.income = accountZipper(income);
         accountStack.expense = accountZipper(expense);
-        if (account.name === 'cc') console.log(account);
+
         let barChartStack = [].concat(income, expense)[0].stack;
         let finalZippedLine = {
           account: account,
@@ -261,7 +267,7 @@ const resolveAccountChart = ({ accounts, income, expense }) => {
             account.starting,
             accountStack,
             barChartStack,
-            account.vehicle === `debt` ? 'pos' : 'neg'
+            account.vehicle === `credit line` ? 'pos' : 'neg'
           ),
           interest: account.interest,
           vehicle: account.vehicle
