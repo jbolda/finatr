@@ -198,7 +198,7 @@ describe(`check resolveData handles paybacks`, () => {
       resolvedTestData.charts.state.AccountChart[0].values[count].value
     ).toEqual(-23260);
 
-    // this tests the expense, which reduces the balance of the debt account
+    // this tests the expense, which increases the balance of the debt account
     // $30000 starting - 26260 = 3740
     expect(
       resolvedTestData.charts.state.AccountChart[1].values[count].value
