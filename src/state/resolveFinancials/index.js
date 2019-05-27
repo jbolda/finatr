@@ -199,6 +199,10 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
 // and then loops through each transaction
 // and takes the value of each that applies
 // and reduces it down into one value
+// modifying this on the fly for credit lines
+// seems real fragile, TODO make the line chart
+// not dependent on the bar chart as decoupling
+// should likely make it less fragile
 const zipTogethor = account => arr =>
   arr.reduce((accumlator, transaction) => {
     if (transaction.raccount === account.name) {
