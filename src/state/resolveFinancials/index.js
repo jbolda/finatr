@@ -211,7 +211,7 @@ const zipTogethor = account => arr =>
     }
   }, []);
 
-const twoSteppedBalance = (starting, accountStack, barChartStack, slope) => {
+const twoSteppedBalance = (starting, accountStack, barChartStack) => {
   // we use this function as the iterator can hit
   // undefined values if income or expense array is empty
   const extractValue = value => {
@@ -230,9 +230,7 @@ const twoSteppedBalance = (starting, accountStack, barChartStack, slope) => {
   let values = [];
   let prevVal = extractValue(starting);
   for (let iterator = 0; iterator < arrayLength; iterator++) {
-    let firstStep =
-      prevVal +
-      (slope === 'pos' ? 1 : -1) * extractValue(accountStack.expense[iterator]);
+    let firstStep = prevVal - extractValue(accountStack.expense[iterator]);
     let secondStep = firstStep + extractValue(accountStack.income[iterator]);
 
     values.push({
@@ -266,8 +264,7 @@ const resolveAccountChart = ({ accounts, income, expense }) => {
           values: twoSteppedBalance(
             account.starting,
             accountStack,
-            barChartStack,
-            account.vehicle === `credit line` ? 'pos' : 'neg'
+            barChartStack
           ),
           interest: account.interest,
           vehicle: account.vehicle
