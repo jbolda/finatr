@@ -200,12 +200,19 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
 // and takes the value of each that applies
 // and reduces it down into one value
 const zipTogethor = account => arr =>
-  arr.reduce((accumlator, d) => {
-    if (d.raccount === account.name) {
-      let flatten = d.stack.map(e => e[1] - e[0]);
+  arr.reduce((accumlator, transaction) => {
+    if (transaction.raccount === account.name) {
+      let flatten = transaction.stack
+        .map(e => e[1] - e[0])
+        .map(
+          d =>
+            (account.vehicle === 'credit line' && transaction.type === 'expense'
+              ? -1
+              : 1) * d
+        );
       return accumlator.length === 0
         ? flatten
-        : accumlator.map((d, i, thisArray) => d + flatten[i]);
+        : accumlator.map((d, i) => d + flatten[i]);
     } else {
       return accumlator;
     }
@@ -218,7 +225,7 @@ const twoSteppedBalance = (starting, accountStack, barChartStack) => {
     if (value === undefined) {
       return 0;
     } else {
-      return Math.abs(value);
+      return value;
     }
   };
 
