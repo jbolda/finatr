@@ -153,7 +153,7 @@ let seedTwo = {
       name: 'account3',
       starting: 30000,
       interest: 6.0,
-      vehicle: 'debt',
+      vehicle: 'loan',
       payback: {
         id: `sasdqljg`,
         description: `payback`,

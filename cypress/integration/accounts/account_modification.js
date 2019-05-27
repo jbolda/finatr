@@ -56,7 +56,7 @@ describe('Account Modifications Tests', () => {
       .parent()
       .parent()
       .find('select')
-      .select('Debt');
+      .select('Loan');
 
     cy.get('form').submit();
     cy.get('#accounts')
