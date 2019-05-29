@@ -94,7 +94,8 @@ class AccountInput extends React.Component {
                           <div className="select">
                             <Field component="select" name="vehicle">
                               <option value="operating">Operating</option>
-                              <option value="debt">Debt</option>
+                              <option value="loan">Loan</option>
+                              <option value="credit line">Credit Line</option>
                               <option value="investment">Investment</option>
                             </Field>
                           </div>

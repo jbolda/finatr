@@ -30,12 +30,18 @@ const coercePaybacks = ({ accounts }) => {
   let transactions = [];
   if (accounts) {
     accounts.forEach(account => {
-      if (account.vehicle === 'debt' && account.payback) {
+      if (
+        (account.vehicle === 'debt' ||
+          account.vehicle === 'loan' ||
+          account.vehicle === 'credit line') &&
+        account.payback
+      ) {
         account.payback.transactions.forEach((accountTransaction, index) => {
-          // this one is for the expense on the account
+          // this one is for the expense/transfer on the account
           // being paid down, expenses are entered as positive
           // but mathed as negative so it will reduce the
           // balance of a debt (which is entered as a positive number)
+          // where transfers (for credit line) need to be explicitly negative
           let amount =
             typeof accountTransaction.value === 'string'
               ? account.payback[accountTransaction.value]
@@ -45,9 +51,9 @@ const coercePaybacks = ({ accounts }) => {
             id: `${accountTransaction.id}-${index}EXP`,
             raccount: account.name,
             description: account.payback.description,
-            type: 'expense',
+            type: account.vehicle === 'credit line' ? 'transfer' : 'expense',
             category: account.payback.category,
-            value: amount,
+            value: account.vehicle === 'credit line' ? -amount : amount,
             fromAccount: true
           });
           // this one is for the account making the payment
@@ -193,13 +199,24 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
 // and then loops through each transaction
 // and takes the value of each that applies
 // and reduces it down into one value
+// modifying this on the fly for credit lines
+// seems real fragile, TODO make the line chart
+// not dependent on the bar chart as decoupling
+// should likely make it less fragile
 const zipTogethor = account => arr =>
-  arr.reduce((accumlator, d) => {
-    if (d.raccount === account.name) {
-      let flatten = d.stack.map(e => e[1] - e[0]);
+  arr.reduce((accumlator, transaction) => {
+    if (transaction.raccount === account.name) {
+      let flatten = transaction.stack
+        .map(e => e[1] - e[0])
+        .map(
+          d =>
+            (account.vehicle === 'credit line' && transaction.type === 'expense'
+              ? -1
+              : 1) * d
+        );
       return accumlator.length === 0
         ? flatten
-        : accumlator.map((d, i, thisArray) => d + flatten[i]);
+        : accumlator.map((d, i) => d + flatten[i]);
     } else {
       return accumlator;
     }
@@ -212,7 +229,7 @@ const twoSteppedBalance = (starting, accountStack, barChartStack) => {
     if (value === undefined) {
       return 0;
     } else {
-      return Math.abs(value);
+      return value;
     }
   };
 

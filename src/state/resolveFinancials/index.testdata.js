@@ -116,7 +116,7 @@ let testData = {
       name: 'account3',
       starting: 30000,
       interest: 6.0,
-      vehicle: 'debt',
+      vehicle: 'loan',
       payback: {
         description: `payback`,
         category: 'account3 payback',

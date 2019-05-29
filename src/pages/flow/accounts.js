@@ -63,7 +63,10 @@ class AccountFlow extends React.Component {
                   </div>
                   <div>
                     {model.state.accountsComputed.filter(
-                      account => account.vehicle === 'debt'
+                      account =>
+                        account.vehicle === 'debt' ||
+                        account.vehicle === 'loan' ||
+                        account.vehicle === 'credit line'
                     ).length === 0 ? null : (
                       <AccountTransactionInput tabClick={this.tabClick} />
                     )}
@@ -136,11 +139,21 @@ const AccountTable = ({ data, actions }) =>
   );
 
 const DebtTable = ({ data, actions }) =>
-  data.filter(account => account.vehicle === 'debt').length === 0 || !data ? (
+  data.filter(
+    account =>
+      account.vehicle === 'debt' ||
+      account.vehicle === 'loan' ||
+      account.vehicle === 'credit line'
+  ).length === 0 || !data ? (
     <div>There are no debts to show.</div>
   ) : (
     data
-      .filter(account => account.vehicle === 'debt')
+      .filter(
+        account =>
+          account.vehicle === 'debt' ||
+          account.vehicle === 'loan' ||
+          account.vehicle === 'credit line'
+      )
       .map(account => (
         <div className="media box" key={account.name}>
           <div className="media-content">

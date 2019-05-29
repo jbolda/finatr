@@ -198,11 +198,82 @@ describe(`check resolveData handles paybacks`, () => {
       resolvedTestData.charts.state.AccountChart[0].values[count].value
     ).toEqual(-23260);
 
-    // this tests the expense, which reduces the balance of the debt account
+    // this tests the expense, which increases the balance of the debt account
     // $30000 starting - 26260 = 3740
     expect(
       resolvedTestData.charts.state.AccountChart[1].values[count].value
     ).toEqual(3740);
+  });
+});
+
+describe(`check resolveData handles credit lines`, () => {
+  let singleTestData = {
+    transactions: [
+      {
+        id: `expense-on-credit-ilne`,
+        raccount: `account2`,
+        description: `description`,
+        category: `test exp`,
+        type: `expense`,
+        start: `2018-03-22`,
+        rtype: `day`,
+        cycle: 14,
+        value: 1000
+      }
+    ],
+    accounts: [
+      {
+        name: 'account1',
+        starting: 15000,
+        interest: 0.01,
+        vehicle: 'operating'
+      },
+      {
+        name: 'account2',
+        starting: 30000,
+        interest: 18.0,
+        vehicle: 'credit line',
+        payback: {
+          description: `payback`,
+          category: 'account2 payback',
+          transactions: [
+            {
+              id: `payback1-test`,
+              raccount: 'account1',
+              start: `2018-03-22`,
+              rtype: `day`,
+              cycle: 1,
+              value: 40
+            },
+            {
+              id: `payback2-test`,
+              raccount: 'account1',
+              start: `2018-03-22`,
+              rtype: `day`,
+              cycle: 3,
+              value: 180
+            }
+          ]
+        }
+      }
+    ],
+    charts: { GraphRange: graphRange }
+  };
+  let resolvedTestData = create(AppModel, singleTestData).reCalc();
+
+  it(`ends with the correct balance`, () => {
+    // that is 163 days between start and end (plus 1 for the end day)
+    // payback is ~$100 a day, where the expense is $1000 every 14
+    // on the balance of $30000, we should be paying down ~$400 every 14 days
+    // daily payback: 40 * 164 = 6560
+    // every 3 day payback: 163 / 3 = 54.3 => 55 * 180 = 9900
+    // 14 day expense: 163 / 14 = 11.6 => 12 * 1000 = 12000
+    // 30000 + 12000 - 6560 - 9900 = 25540
+    const count =
+      resolvedTestData.charts.state.AccountChart[1].values.length - 1;
+    expect(
+      resolvedTestData.charts.state.AccountChart[1].values[count].value
+    ).toEqual(25540);
   });
 });
 
