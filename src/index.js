@@ -7,6 +7,7 @@ import AppModel, { State } from './state';
 
 import 'bulma/css/bulma.css';
 import Financial from './pages/flow';
+import Accounts from './pages/accounts';
 import Importing from './pages/importing';
 import Taxes from './pages/taxes';
 
@@ -68,6 +69,9 @@ class App extends React.Component {
               <Link to="/" className="navbar-item">
                 Home
               </Link>
+              <Link to="accounts" className="navbar-item">
+                Accounts
+              </Link>
               <Link to="import" className="navbar-item">
                 Import
               </Link>
@@ -80,6 +84,7 @@ class App extends React.Component {
         <section className="section">
           <Router>
             <Financial path="/" />
+            <Accounts path="accounts" />
             <Importing path="import" />
             <Taxes path="taxes" />
           </Router>
