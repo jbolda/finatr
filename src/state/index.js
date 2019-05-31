@@ -143,12 +143,19 @@ class AppModel {
     const useTransactions =
       filteredTransactions.length === 0 ? transactions : filteredTransactions;
 
+    const sortList = ['income', 'expense', 'transfer'];
     const init = this.transactionsComputed
       .set([
         ...(useTransactions ? useTransactions : []),
         ...(transactionPaybacks ? transactionPaybacks : [])
       ])
-      .transactionsComputed.map(transaction => transaction.computeValue());
+      .transactionsComputed.map(transaction => transaction.computeValue())
+      .transactionsComputed.sort(
+        (a, b) =>
+          sortList.indexOf(a.type) - sortList.indexOf(b.type) ||
+          Math.abs(a.value) - Math.abs(b.value) ||
+          b.value - a.value
+      );
 
     // returns a microstate with the transactionsComputed set
     return categoriesSet
