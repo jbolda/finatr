@@ -213,7 +213,15 @@ class AppModel {
     } else {
       computeAccounts = presetAccounts;
     }
-    return this.accountsComputed.set(computeAccounts);
+
+    const sortList = ['operating', 'credit line', 'loan', 'investment'];
+    return this.accountsComputed
+      .set(computeAccounts)
+      .accountsComputed.sort(
+        (a, b) =>
+          sortList.indexOf(a.vehicle) - sortList.indexOf(b.vehicle) ||
+          (a.name < b.name ? -1 : 1)
+      );
   }
 
   toggleAccountVisibility(accountName) {
