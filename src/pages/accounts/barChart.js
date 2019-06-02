@@ -29,8 +29,18 @@ export class BarChartSpecific extends PureComponent {
   }
 
   componentDidUpdate() {
-    let svgBar = d3.select('.bar-section').select('g');
-    let svgLine = d3.select('.line-section').select('g');
+    let svgBar = d3
+      .select(
+        `.draw-section#${this.props.account.account.name.replace(/ /g, '-')}`
+      )
+      .select('.bar-section')
+      .select('g');
+    let svgLine = d3
+      .select(
+        `.draw-section#${this.props.account.account.name.replace(/ /g, '-')}`
+      )
+      .select('.line-section')
+      .select('g');
     this.drawCharts(
       'update',
       this.props.data.BarChartIncome.filter(
@@ -111,7 +121,11 @@ export class BarChartSpecific extends PureComponent {
     };
     barBuild.drawLine(
       this.props.data,
-      d3.select('.line-section'),
+      d3
+        .select(
+          `.draw-section#${this.props.account.account.name.replace(/ /g, '-')}`
+        )
+        .select('.line-section'),
       initLine.lineGroup,
       initLine.tooltipLine,
       AccountChart,
@@ -557,7 +571,11 @@ barBuild.drawLine = function(
             .yScale(max_domain)
             .invert(line.positionY)
             .toFixed(2);
-          return { data: line.node.__data__, date: new Date(), value: scaledY };
+          return {
+            data: line.node.__data__,
+            date: new Date(),
+            value: scaledY
+          };
         })
         .sort((a, b) => b.value - a.value);
 
