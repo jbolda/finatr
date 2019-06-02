@@ -66,7 +66,7 @@ class AccountTransactionInput extends React.Component {
                                 >
                                   Select an Option
                                 </option>
-                                {model.state.accounts
+                                {model.state.accountsComputed
                                   .filter(
                                     account =>
                                       account.vehicle === 'debt' ||
@@ -106,7 +106,7 @@ class AccountTransactionInput extends React.Component {
                                 >
                                   Select an Option
                                 </option>
-                                {model.state.accounts.map(account => (
+                                {model.state.accountsComputed.map(account => (
                                   <option
                                     key={account.name}
                                     value={account.name}

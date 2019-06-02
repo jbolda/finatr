@@ -81,7 +81,7 @@ class TransactionInput extends React.Component {
                           <option key={'default'} value={'select'} disabled>
                             Select an Option
                           </option>
-                          {model.state.accounts.map(account => (
+                          {model.state.accountsComputed.map(account => (
                             <option key={account.name} value={account.name}>
                               {account.name}
                             </option>
