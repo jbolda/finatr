@@ -162,6 +162,57 @@ describe(`check integrated transaction reoccurence`, () => {
     // that is: 13 * 1200 = 15600
     expect(singleTransaction.charts.state.LineChartMax).toEqual(15600);
   });
+
+  it(`returns the correct number of semiannual reoccurences`, () => {
+    let singleTransaction = resolvedTestData.transactions
+      .set([
+        {
+          id: `every-other-week`,
+          raccount: `account`,
+          category: `bi-yearly paycheck`,
+          type: `expense`,
+          start: `2019-02-04`,
+          rtype: `semiannually`,
+          value: 1200,
+          cycle: null
+        }
+      ])
+      .accounts.set([
+        {
+          name: 'account',
+          starting: 2400,
+          interest: 0.01,
+          vehicle: 'operating'
+        }
+      ])
+      .updateStartDateReCalc('2019-03-01');
+
+    // This should occur every twice a year beginning on Feb 4th, 201,
+    // but the graphrange doesn't start until March 1st, 2019.
+    // This means the first time it shows up should be on July 4th.
+    // This will mean we have 2 total occurences of the transaction in
+    // our range every time if we look at 365 year.
+
+    // the max with a single transaction should === value of that transaction
+    expect(singleTransaction.charts.state.BarChartMax).toEqual(1200);
+    expect(singleTransaction.charts.state.LineChartMax).toEqual(2400);
+
+    expect(singleTransaction.charts.state.AccountChart[0].values[250]).toBe({
+      date: new Date('2019-07-04T05:00:00.000Z'),
+      value: 1200
+    });
+
+    // why is this 924/2 dates in the future?
+    console.log(
+      singleTransaction.charts.state.AccountChart[0].values[count - 1].date
+    );
+
+    const count = singleTransaction.charts.state.AccountChart[0].values.length;
+    // the max should be our starting - 2 occurences * value = 0
+    expect(
+      singleTransaction.charts.state.AccountChart[0].values[count - 1].value
+    ).toEqual(0);
+  });
 });
 
 describe(`check resolveData handles paybacks`, () => {
