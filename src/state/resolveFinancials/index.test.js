@@ -187,25 +187,20 @@ describe(`check integrated transaction reoccurence`, () => {
       ])
       .updateStartDateReCalc('2019-03-01');
 
-    // This should occur every twice a year beginning on Feb 4th, 201,
+    // This should occur twice a year beginning on Feb 4th, 2019,
     // but the graphrange doesn't start until March 1st, 2019.
     // This means the first time it shows up should be on July 4th.
     // This will mean we have 2 total occurences of the transaction in
-    // our range every time if we look at 365 year.
+    // our range every time if we look at a 365 day year.
 
     // the max with a single transaction should === value of that transaction
     expect(singleTransaction.charts.state.BarChartMax).toEqual(1200);
     expect(singleTransaction.charts.state.LineChartMax).toEqual(2400);
 
-    expect(singleTransaction.charts.state.AccountChart[0].values[250]).toBe({
-      date: new Date('2019-07-04T05:00:00.000Z'),
+    expect(singleTransaction.charts.state.AccountChart[0].values[312]).toEqual({
+      date: startOfDay('2019-08-04'),
       value: 1200
     });
-
-    // why is this 924/2 dates in the future?
-    console.log(
-      singleTransaction.charts.state.AccountChart[0].values[count - 1].date
-    );
 
     const count = singleTransaction.charts.state.AccountChart[0].values.length;
     // the max should be our starting - 2 occurences * value = 0
