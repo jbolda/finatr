@@ -5,21 +5,23 @@ import { transactionSemiannuallyReoccur } from './index.js';
 
 describe('transactionSemiannuallyReoccur', () => {
   it('has the next date', () => {
-    const transaction = { value: Big(10) };
-    const seedDate = startOfDay('2018-01-01');
+    const transaction = { start: startOfDay('2018-01-01'), value: Big(10) };
+    const seedDate = startOfDay('2018-03-01');
     const next = transactionSemiannuallyReoccur({
       transaction,
-      seedDate
+      seedDate,
+      occurrences: Big(0)
     });
     expect(next.date).toEqual(startOfDay('2018-07-01'));
   });
 
   it('has a value', () => {
-    const transaction = { value: Big(10) };
-    const seedDate = startOfDay('2018-01-01');
+    const transaction = { start: startOfDay('2018-01-01'), value: Big(10) };
+    const seedDate = startOfDay('2018-03-01');
     const next = transactionSemiannuallyReoccur({
       transaction,
-      seedDate
+      seedDate,
+      occurrences: Big(0)
     });
     expect(Number(next.y)).toEqual(10);
   });
@@ -28,7 +30,29 @@ describe('transactionSemiannuallyReoccur', () => {
     const seedDate = startOfDay('2018-01-01');
     expect(() => {
       transactionSemiannuallyReoccur({
-        transaction: {},
+        transaction: { start: startOfDay('2018-01-01') },
+        seedDate,
+        occurrences: Big(0)
+      });
+    }).toThrow();
+  });
+
+  it('throws on missing start', () => {
+    const seedDate = startOfDay('2018-01-01');
+    expect(() => {
+      transactionSemiannuallyReoccur({
+        transaction: { value: Big(15) },
+        seedDate,
+        occurrences: Big(0)
+      });
+    }).toThrow();
+  });
+
+  it('throws on missing occurrences', () => {
+    const seedDate = startOfDay('2018-01-01');
+    expect(() => {
+      transactionSemiannuallyReoccur({
+        transaction: { start: startOfDay('2018-01-01'), value: Big(10) },
         seedDate
       });
     }).toThrow();
