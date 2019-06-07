@@ -10,12 +10,13 @@ import { TransactionComputed } from './transactions.js';
 import { Account } from './accounts.js';
 import {
   past,
-  future,
   resolveBarChart,
   resolveAccountChart
 } from './resolveFinancials';
 import format from 'date-fns/fp/format';
 import startOfDay from 'date-fns/fp/startOfDay';
+import addDays from 'date-fns/fp/addDays';
+const addYear = addDays(365);
 
 class BarChart extends TransactionComputed {
   stack = Array;
@@ -44,7 +45,7 @@ class Charts extends Primitive {
 
   initialize() {
     if (!this.GraphRange.entries.start) {
-      let graphRange = { start: past(), end: future(365) };
+      let graphRange = { start: past(), end: addYear(past()) };
       return this.GraphRange.set(graphRange);
     } else {
       return this;
@@ -64,7 +65,8 @@ class Charts extends Primitive {
   }
 
   updateStartDate(value) {
-    let graphRange = { start: startOfDay(value), end: future(365) };
+    const startDate = startOfDay(value);
+    const graphRange = { start: startDate, end: addYear(startDate) };
     return this.GraphRange.set(graphRange);
   }
 
