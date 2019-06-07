@@ -208,6 +208,63 @@ describe(`check integrated transaction reoccurence`, () => {
       singleTransaction.charts.state.AccountChart[0].values[count - 1].value
     ).toEqual(0);
   });
+
+  it(`returns the correct number of annual reoccurrences`, () => {
+    const singleTransaction = resolvedTestData.transactions
+      .set([
+        {
+          id: `every-other-week`,
+          raccount: `account`,
+          category: `annual expense`,
+          type: `expense`,
+          start: `2019-05-04`,
+          rtype: `annually`,
+          value: 5000,
+          cycle: null
+        }
+      ])
+      .accounts.set([
+        {
+          name: 'account',
+          starting: 12000,
+          interest: 0.01,
+          vehicle: 'operating'
+        }
+      ])
+      .charts.GraphRange.set({
+        start: startOfDay('2019-03-01'),
+        end: startOfDay('2021-04-01')
+      });
+
+    // this microstate type should be App, not Charts?
+    console.log(singleTransaction);
+
+    // This should occur once a year beginning on May 4th, 2019,
+    // but the graphrange doesn't start until March 1st, 2019.
+    // This means the first time it shows up should be on July 4th.
+    // This will mean we have 2 total occurrences of the transaction in
+    // our range as our range is set to longer then a year. If it erroneously,
+    // starts at the beginning of the graphrange, then we would see 3 occurrences.
+
+    // the max with a single transaction should === value of that transaction
+    expect(singleTransaction.charts.state.BarChartMax).toEqual(5000);
+    expect(singleTransaction.charts.state.LineChartMax).toEqual(12000);
+
+    expect(singleTransaction.charts.state.AccountChart[0].values[312]).toEqual({
+      date: startOfDay('2019-05-04'),
+      value: 8000
+    });
+    expect(singleTransaction.charts.state.AccountChart[0].values[312]).toEqual({
+      date: startOfDay('2020-05-04'),
+      value: 2000
+    });
+
+    const count = singleTransaction.charts.state.AccountChart[0].values.length;
+    // the max should be our starting - 2 occurences * value = 0
+    expect(
+      singleTransaction.charts.state.AccountChart[0].values[count - 1].value
+    ).toEqual(2000);
+  });
 });
 
 describe(`check resolveData handles paybacks`, () => {
