@@ -64,9 +64,12 @@ class Charts extends Primitive {
     return formatDate(dates.start) === formatDate(past());
   }
 
-  updateStartDate(value) {
-    const startDate = startOfDay(value);
-    const graphRange = { start: startDate, end: addYear(startDate) };
+  updateStartDate(start, end) {
+    const startDate = startOfDay(start);
+    const graphRange = {
+      start: startDate,
+      end: !!end ? startOfDay(end) : addYear(start)
+    };
     return this.GraphRange.set(graphRange);
   }
 
