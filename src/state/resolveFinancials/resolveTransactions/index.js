@@ -13,6 +13,7 @@ import isBefore from 'date-fns/fp/isBefore';
 import getDay from 'date-fns/fp/getDay';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
 import differenceInCalendarMonths from 'date-fns/fp/differenceInCalendarMonths';
+import differenceInCalendarYears from 'date-fns/fp/differenceInCalendarYears';
 
 const computeTransactionModifications = (transactions, graphRange) =>
   transactions.reduce((modifications, transaction) => {
@@ -353,13 +354,34 @@ const transactionSemiannuallyReoccurCompute = ({ transaction }) =>
   transaction.dailyRate.set(transaction.value.state.div(182.5));
 
 // when transaction.rtype === 'annually'
-const transactionAnnuallyReoccur = ({ transaction, seedDate }) => {
+const transactionAnnuallyReoccur = ({ transaction, seedDate, occurrences }) => {
   if (!transaction.value) {
     throw new Error('transactionAnnuallyReoccur expects transaction.value');
   }
 
+  if (!transaction.start) {
+    throw new Error('transactionAnnuallyReoccur expects transaction.start');
+  }
+
+  if (!occurrences) {
+    throw new Error('transactionAnnuallyReoccur expects occurrences');
+  }
+
+  // Finds how many months are between when this started and the date in question
+  // then round up (0 decimal places, 3 round up) to give us the number of years
+  // to add to the transaction start date to produce an occurence on/after
+  // the seedDate. If there are no occurences yet, we are looking for
+  // the first date and we want a date on/after the seedDate. If we have
+  // any occurences, then seedDate will actually be the date of the
+  // last occurences so we add 1 to that to get the next occurence.
+  const yearDifference = Big(
+    differenceInCalendarYears(transaction.start)(seedDate)
+  )
+    .round(0, 3)
+    .plus(occurrences.eq(0) ? 0 : 1);
+
   return {
-    date: addYears(1)(seedDate),
+    date: addYears(yearDifference)(transaction.start),
     y: transaction.value
   };
 };
