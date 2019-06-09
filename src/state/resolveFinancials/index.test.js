@@ -231,13 +231,8 @@ describe(`check integrated transaction reoccurence`, () => {
           vehicle: 'operating'
         }
       ])
-      .charts.GraphRange.set({
-        start: startOfDay('2019-03-01'),
-        end: startOfDay('2021-04-01')
-      });
-
-    // this microstate type should be App, not Charts?
-    console.log(singleTransaction);
+      .charts.updateStartDate('2019-03-01', '2021-04-01')
+      .reCalc();
 
     // This should occur once a year beginning on May 4th, 2019,
     // but the graphrange doesn't start until March 1st, 2019.
@@ -250,17 +245,17 @@ describe(`check integrated transaction reoccurence`, () => {
     expect(singleTransaction.charts.state.BarChartMax).toEqual(5000);
     expect(singleTransaction.charts.state.LineChartMax).toEqual(12000);
 
-    expect(singleTransaction.charts.state.AccountChart[0].values[312]).toEqual({
+    expect(singleTransaction.charts.state.AccountChart[0].values[128]).toEqual({
       date: startOfDay('2019-05-04'),
-      value: 8000
+      value: 7000
     });
-    expect(singleTransaction.charts.state.AccountChart[0].values[312]).toEqual({
+    expect(singleTransaction.charts.state.AccountChart[0].values[860]).toEqual({
       date: startOfDay('2020-05-04'),
       value: 2000
     });
 
     const count = singleTransaction.charts.state.AccountChart[0].values.length;
-    // the max should be our starting - 2 occurences * value = 0
+    // the max should be our starting - 2 occurences * value = 2000
     expect(
       singleTransaction.charts.state.AccountChart[0].values[count - 1].value
     ).toEqual(2000);
