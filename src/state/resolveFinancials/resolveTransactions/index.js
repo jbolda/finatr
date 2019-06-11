@@ -218,7 +218,11 @@ const transactionDailyReoccurCompute = ({ transaction }) =>
   );
 
 // when transaction.rtype === 'day of week'
-const transactionDayOfWeekReoccur = ({ transaction, seedDate }) => {
+const transactionDayOfWeekReoccur = ({
+  transaction,
+  seedDate,
+  occurrences
+}) => {
   if (!transaction.value) {
     throw new Error('transactionDayOfWeekReoccur expects transaction.value');
   }
@@ -227,8 +231,40 @@ const transactionDayOfWeekReoccur = ({ transaction, seedDate }) => {
     throw new Error('transactionDayOfWeekReoccur expects transaction.cycle');
   }
 
+  if (!transaction.start) {
+    throw new Error('transactionDayOfWeekReoccur expects transaction.start');
+  }
+
+  if (!occurrences) {
+    throw new Error('transactionDayOfWeekReoccur expects occurrences');
+  }
+
+  // This adjusts the seedDate to the proper day of the week and
+  // uses it as a "target". Then we figure out how many days to add
+  // to the start date (so we reoccur based on the transaction start day)
+  // by dividing by 7 days a week, rounding up and multiplying by 7.
+  // This gives us an increment of weeks (in the form of days) to add
+  // to the transaction start date that will return a day after the
+  // seedDate and that lands on our required day of the week.
+
+  const seedDay = getDay(seedDate);
+  const startDay = getDay(transaction.start);
+  const dayAdjust = transaction.cycle.gte(seedDay)
+    ? transaction.cycle.minus(seedDay)
+    : transaction.cycle.minus(seedDay).plus(7);
+
+  const dayCycles = isBefore(seedDate)(transaction.start)
+    ? Big(differenceInCalendarDays(transaction.start)(seedDate))
+        .plus(dayAdjust)
+        .div(7)
+        .round(0, 3)
+        .times(7)
+    : transaction.cycle.gte(startDay)
+    ? transaction.cycle.minus(startDay)
+    : transaction.cycle.minus(startDay).plus(7);
+
   return {
-    date: addDays(7 + getDay(seedDate) - transaction.cycle)(seedDate),
+    date: addDays(dayCycles)(transaction.start),
     y: transaction.value
   };
 };
