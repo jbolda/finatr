@@ -163,6 +163,56 @@ describe(`check integrated transaction reoccurence`, () => {
     expect(singleTransaction.charts.state.LineChartMax).toEqual(15600);
   });
 
+  it(`returns the correct number of day of week reoccurrences`, () => {
+    const singleTransaction = resolvedTestData.transactions
+      .set([
+        {
+          id: `every-other-week`,
+          raccount: `account`,
+          category: `annual expense`,
+          type: `expense`,
+          start: `2019-05-04`,
+          rtype: `day of week`,
+          value: 50,
+          cycle: 1
+        }
+      ])
+      .accounts.set([
+        {
+          name: 'account',
+          starting: 3000,
+          interest: 0.01,
+          vehicle: 'operating'
+        }
+      ])
+      .charts.updateStartDate('2019-03-01')
+      .reCalc();
+
+    // This should every week starting on May 6th which
+    // comes out to 44 occurrences throughout the year
+
+    // the max with a single transaction should === value of that transaction
+    expect(singleTransaction.charts.state.BarChartMax).toEqual(50);
+    expect(singleTransaction.charts.state.LineChartMax).toEqual(3000);
+
+    const values = singleTransaction.charts.state.AccountChart[0].values;
+    expect(values[132]).toEqual({
+      date: startOfDay('2019-05-06'),
+      value: 2950
+    });
+    expect(values[188]).toEqual({
+      date: startOfDay('2019-06-03'),
+      value: 2750
+    });
+
+    const count = singleTransaction.charts.state.AccountChart[0].values.length;
+    // if 52 occurrences in a year, and we missed 8 at the beginning of the range
+    // the max should be our starting - 44 occurences * value = 800
+    expect(
+      singleTransaction.charts.state.AccountChart[0].values[count - 1].value
+    ).toEqual(800);
+  });
+
   it(`returns the correct number of semiannual reoccurences`, () => {
     let singleTransaction = resolvedTestData.transactions
       .set([
