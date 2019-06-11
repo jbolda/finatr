@@ -137,8 +137,13 @@ const TransactionTable = ({ data, actions }) =>
         </tr>
       </thead>
       <tbody>
-        {map(data.filter(state => !state.fromAccount), transaction => (
-          <tr key={transaction.id}>
+        {map(data, transaction => (
+          <tr
+            key={transaction.id}
+            style={
+              transaction.fromAccount ? { backgroundColor: 'seashell' } : null
+            }
+          >
             <td>{transaction.raccount}</td>
             <td>{transaction.description}</td>
             <td>{transaction.category}</td>
@@ -154,15 +159,19 @@ const TransactionTable = ({ data, actions }) =>
                 onClick={() =>
                   actions.setTransactionForm(actions.model, 1, transaction.id)
                 }
+                disabled={transaction.fromAccount}
               >
                 M
               </button>
             </td>
             <td>
               <button
-                className="delete"
+                className="button is-rounded is-small is-danger"
                 onClick={actions.deleteTransaction.bind(this, transaction.id)}
-              />
+                disabled={transaction.fromAccount}
+              >
+                <strong>X</strong>
+              </button>
             </td>
           </tr>
         ))}

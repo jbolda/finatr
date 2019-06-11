@@ -12,6 +12,8 @@ import isAfter from 'date-fns/fp/isAfter';
 import isBefore from 'date-fns/fp/isBefore';
 import getDay from 'date-fns/fp/getDay';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
+import differenceInCalendarMonths from 'date-fns/fp/differenceInCalendarMonths';
+import differenceInCalendarYears from 'date-fns/fp/differenceInCalendarYears';
 
 const computeTransactionModifications = (transactions, graphRange) =>
   transactions.reduce((modifications, transaction) => {
@@ -216,7 +218,11 @@ const transactionDailyReoccurCompute = ({ transaction }) =>
   );
 
 // when transaction.rtype === 'day of week'
-const transactionDayOfWeekReoccur = ({ transaction, seedDate }) => {
+const transactionDayOfWeekReoccur = ({
+  transaction,
+  seedDate,
+  occurrences
+}) => {
   if (!transaction.value) {
     throw new Error('transactionDayOfWeekReoccur expects transaction.value');
   }
@@ -225,8 +231,40 @@ const transactionDayOfWeekReoccur = ({ transaction, seedDate }) => {
     throw new Error('transactionDayOfWeekReoccur expects transaction.cycle');
   }
 
+  if (!transaction.start) {
+    throw new Error('transactionDayOfWeekReoccur expects transaction.start');
+  }
+
+  if (!occurrences) {
+    throw new Error('transactionDayOfWeekReoccur expects occurrences');
+  }
+
+  // This adjusts the seedDate to the proper day of the week and
+  // uses it as a "target". Then we figure out how many days to add
+  // to the start date (so we reoccur based on the transaction start day)
+  // by dividing by 7 days a week, rounding up and multiplying by 7.
+  // This gives us an increment of weeks (in the form of days) to add
+  // to the transaction start date that will return a day after the
+  // seedDate and that lands on our required day of the week.
+
+  const seedDay = getDay(seedDate);
+  const startDay = getDay(transaction.start);
+  const dayAdjust = transaction.cycle.gte(seedDay)
+    ? transaction.cycle.minus(seedDay)
+    : transaction.cycle.minus(seedDay).plus(7);
+
+  const dayCycles = isBefore(seedDate)(transaction.start)
+    ? Big(differenceInCalendarDays(transaction.start)(seedDate))
+        .plus(dayAdjust)
+        .div(7)
+        .round(0, 3)
+        .times(7)
+    : transaction.cycle.gte(startDay)
+    ? transaction.cycle.minus(startDay)
+    : transaction.cycle.minus(startDay).plus(7);
+
   return {
-    date: addDays(7 + getDay(seedDate) - transaction.cycle)(seedDate),
+    date: addDays(dayCycles)(transaction.start),
     y: transaction.value
   };
 };
@@ -307,13 +345,44 @@ const transactionQuarterlyReoccurCompute = ({ transaction }) =>
   transaction.dailyRate.set(transaction.value.state.div(30).div(3));
 
 // when transaction.rtype === 'semiannually'
-const transactionSemiannuallyReoccur = ({ transaction, seedDate }) => {
+const transactionSemiannuallyReoccur = ({
+  transaction,
+  seedDate,
+  occurrences
+}) => {
   if (!transaction.value) {
     throw new Error('transactionSemiannuallyReoccur expects transaction.value');
   }
 
+  if (!transaction.start) {
+    throw new Error('transactionSemiannuallyReoccur expects transaction.start');
+  }
+
+  if (!occurrences) {
+    throw new Error('transactionSemiannuallyReoccur expects occurrences');
+  }
+  // Finds how many months are between when this started and the date in question
+  // the next date should be a multiple of the 6 months, so divide by the 6
+  // then round up (0 decimal places, 3 round up) then multiply by 6 again
+  // to give us the number of months to add to the transaction start date to
+  // produce an occurence on/after the seedDate. If there are no occurences
+  // yet, we are looking for the first date and we want a date on/after the seedDate.
+  // If we have any occurences, then seedDate will actually be the date of the
+  // last occurences so we add 6 to that to get the next occurence.
+  const monthDifference = Big(
+    differenceInCalendarMonths(transaction.start)(seedDate)
+  )
+    .div(6)
+    .round(0, 3)
+    .times(6)
+    .plus(occurrences.eq(0) ? 0 : 6);
+  const afterSeed = isAfter(seedDate);
+  const increment = afterSeed(addMonths(monthDifference)(transaction.start))
+    ? 0
+    : 6;
+
   return {
-    date: addMonths(6)(seedDate),
+    date: addMonths(monthDifference.plus(increment))(transaction.start),
     y: transaction.value
   };
 };
@@ -321,13 +390,34 @@ const transactionSemiannuallyReoccurCompute = ({ transaction }) =>
   transaction.dailyRate.set(transaction.value.state.div(182.5));
 
 // when transaction.rtype === 'annually'
-const transactionAnnuallyReoccur = ({ transaction, seedDate }) => {
+const transactionAnnuallyReoccur = ({ transaction, seedDate, occurrences }) => {
   if (!transaction.value) {
     throw new Error('transactionAnnuallyReoccur expects transaction.value');
   }
 
+  if (!transaction.start) {
+    throw new Error('transactionAnnuallyReoccur expects transaction.start');
+  }
+
+  if (!occurrences) {
+    throw new Error('transactionAnnuallyReoccur expects occurrences');
+  }
+
+  // Finds how many months are between when this started and the date in question
+  // then round up (0 decimal places, 3 round up) to give us the number of years
+  // to add to the transaction start date to produce an occurence on/after
+  // the seedDate. If there are no occurences yet, we are looking for
+  // the first date and we want a date on/after the seedDate. If we have
+  // any occurences, then seedDate will actually be the date of the
+  // last occurences so we add 1 to that to get the next occurence.
+  const yearDifference = Big(
+    differenceInCalendarYears(transaction.start)(seedDate)
+  )
+    .round(0, 3)
+    .plus(occurrences.eq(0) ? 0 : 1);
+
   return {
-    date: addYears(1)(seedDate),
+    date: addYears(yearDifference)(transaction.start),
     y: transaction.value
   };
 };

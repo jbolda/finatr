@@ -143,12 +143,19 @@ class AppModel {
     const useTransactions =
       filteredTransactions.length === 0 ? transactions : filteredTransactions;
 
+    const sortList = ['income', 'expense', 'transfer'];
     const init = this.transactionsComputed
       .set([
         ...(useTransactions ? useTransactions : []),
         ...(transactionPaybacks ? transactionPaybacks : [])
       ])
-      .transactionsComputed.map(transaction => transaction.computeValue());
+      .transactionsComputed.map(transaction => transaction.computeValue())
+      .transactionsComputed.sort(
+        (a, b) =>
+          sortList.indexOf(a.type) - sortList.indexOf(b.type) ||
+          Math.abs(a.value) - Math.abs(b.value) ||
+          b.value - a.value
+      );
 
     // returns a microstate with the transactionsComputed set
     return categoriesSet
@@ -206,7 +213,15 @@ class AppModel {
     } else {
       computeAccounts = presetAccounts;
     }
-    return this.accountsComputed.set(computeAccounts);
+
+    const sortList = ['operating', 'credit line', 'loan', 'investment'];
+    return this.accountsComputed
+      .set(computeAccounts)
+      .accountsComputed.sort(
+        (a, b) =>
+          sortList.indexOf(a.vehicle) - sortList.indexOf(b.vehicle) ||
+          (a.name < b.name ? -1 : 1)
+      );
   }
 
   toggleAccountVisibility(accountName) {

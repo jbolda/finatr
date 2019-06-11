@@ -162,6 +162,154 @@ describe(`check integrated transaction reoccurence`, () => {
     // that is: 13 * 1200 = 15600
     expect(singleTransaction.charts.state.LineChartMax).toEqual(15600);
   });
+
+  it(`returns the correct number of day of week reoccurrences`, () => {
+    const singleTransaction = resolvedTestData.transactions
+      .set([
+        {
+          id: `every-other-week`,
+          raccount: `account`,
+          category: `annual expense`,
+          type: `expense`,
+          start: `2019-05-04`,
+          rtype: `day of week`,
+          value: 50,
+          cycle: 1
+        }
+      ])
+      .accounts.set([
+        {
+          name: 'account',
+          starting: 3000,
+          interest: 0.01,
+          vehicle: 'operating'
+        }
+      ])
+      .charts.updateStartDate('2019-03-01')
+      .reCalc();
+
+    // This should every week starting on May 6th which
+    // comes out to 44 occurrences throughout the year
+
+    // the max with a single transaction should === value of that transaction
+    expect(singleTransaction.charts.state.BarChartMax).toEqual(50);
+    expect(singleTransaction.charts.state.LineChartMax).toEqual(3000);
+
+    const values = singleTransaction.charts.state.AccountChart[0].values;
+    expect(values[132]).toEqual({
+      date: startOfDay('2019-05-06'),
+      value: 2950
+    });
+    expect(values[188]).toEqual({
+      date: startOfDay('2019-06-03'),
+      value: 2750
+    });
+
+    const count = singleTransaction.charts.state.AccountChart[0].values.length;
+    // if 52 occurrences in a year, and we missed 8 at the beginning of the range
+    // the max should be our starting - 44 occurences * value = 800
+    expect(
+      singleTransaction.charts.state.AccountChart[0].values[count - 1].value
+    ).toEqual(800);
+  });
+
+  it(`returns the correct number of semiannual reoccurences`, () => {
+    let singleTransaction = resolvedTestData.transactions
+      .set([
+        {
+          id: `every-other-week`,
+          raccount: `account`,
+          category: `bi-yearly paycheck`,
+          type: `expense`,
+          start: `2019-02-04`,
+          rtype: `semiannually`,
+          value: 1200,
+          cycle: null
+        }
+      ])
+      .accounts.set([
+        {
+          name: 'account',
+          starting: 2400,
+          interest: 0.01,
+          vehicle: 'operating'
+        }
+      ])
+      .updateStartDateReCalc('2019-03-01');
+
+    // This should occur twice a year beginning on Feb 4th, 2019,
+    // but the graphrange doesn't start until March 1st, 2019.
+    // This means the first time it shows up should be on July 4th.
+    // This will mean we have 2 total occurences of the transaction in
+    // our range every time if we look at a 365 day year.
+
+    // the max with a single transaction should === value of that transaction
+    expect(singleTransaction.charts.state.BarChartMax).toEqual(1200);
+    expect(singleTransaction.charts.state.LineChartMax).toEqual(2400);
+
+    expect(singleTransaction.charts.state.AccountChart[0].values[312]).toEqual({
+      date: startOfDay('2019-08-04'),
+      value: 1200
+    });
+
+    const count = singleTransaction.charts.state.AccountChart[0].values.length;
+    // the max should be our starting - 2 occurences * value = 0
+    expect(
+      singleTransaction.charts.state.AccountChart[0].values[count - 1].value
+    ).toEqual(0);
+  });
+
+  it(`returns the correct number of annual reoccurrences`, () => {
+    const singleTransaction = resolvedTestData.transactions
+      .set([
+        {
+          id: `every-other-week`,
+          raccount: `account`,
+          category: `annual expense`,
+          type: `expense`,
+          start: `2019-05-04`,
+          rtype: `annually`,
+          value: 5000,
+          cycle: null
+        }
+      ])
+      .accounts.set([
+        {
+          name: 'account',
+          starting: 12000,
+          interest: 0.01,
+          vehicle: 'operating'
+        }
+      ])
+      .charts.updateStartDate('2019-03-01', '2021-04-01')
+      .reCalc();
+
+    // This should occur once a year beginning on May 4th, 2019,
+    // but the graphrange doesn't start until March 1st, 2019.
+    // This means the first time it shows up should be on July 4th.
+    // This will mean we have 2 total occurrences of the transaction in
+    // our range as our range is set to longer then a year. If it erroneously,
+    // starts at the beginning of the graphrange, then we would see 3 occurrences.
+
+    // the max with a single transaction should === value of that transaction
+    expect(singleTransaction.charts.state.BarChartMax).toEqual(5000);
+    expect(singleTransaction.charts.state.LineChartMax).toEqual(12000);
+
+    expect(singleTransaction.charts.state.AccountChart[0].values[128]).toEqual({
+      date: startOfDay('2019-05-04'),
+      value: 7000
+    });
+    expect(singleTransaction.charts.state.AccountChart[0].values[860]).toEqual({
+      date: startOfDay('2020-05-04'),
+      value: 2000
+    });
+
+    const count = singleTransaction.charts.state.AccountChart[0].values.length;
+    // the max should be our starting - 2 occurences * value = 2000
+    expect(
+      singleTransaction.charts.state.AccountChart[0].values[count - 1].value
+    ).toEqual(2000);
+  });
 });
 
 describe(`check resolveData handles paybacks`, () => {

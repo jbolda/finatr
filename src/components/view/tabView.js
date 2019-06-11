@@ -56,7 +56,9 @@ class TabView extends React.Component {
             ))}
           </ul>
         </div>
-        <div className="container is-fluid">{tabContents}</div>
+        <div className="container is-fluid" style={{ overflowX: 'auto' }}>
+          {tabContents}
+        </div>
       </React.Fragment>
     );
   }

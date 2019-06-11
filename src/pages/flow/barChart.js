@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
-export class BarChart extends Component {
+export class BarChart extends PureComponent {
   componentDidMount() {
     let svgBar = barBuild.init(350, 'bar-section');
     let svgLine = barBuild.init(350, 'line-section');
