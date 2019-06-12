@@ -47,7 +47,7 @@ jobs:
         # after all tests finish running we need
         # to kill all background jobs (like "npm start &")
         - kill $(jobs -p) || true
-    - <<: *testyarn
+    - <<: *cypressyarn
       name: Test on Node 10 with yarn
       node_js: '10'
 
@@ -63,7 +63,7 @@ jobs:
         # after all tests finish running we need
         # to kill all background jobs (like "npm start &")
         - kill $(jobs -p) || true
-    - <<: *testnpm
+    - <<: *cypressnpm
       name: Test on Node 10 with npm
       node_js: '10'
 
