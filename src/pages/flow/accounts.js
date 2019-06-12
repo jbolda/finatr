@@ -197,9 +197,7 @@ const PaybackTable = ({ data, actions }) =>
       <div className="media-content">
         <p>
           <strong>{paybackTransaction.start}</strong>{' '}
-          <small>{`${paybackTransaction.rtype} @ ${
-            paybackTransaction.cycle
-          } for ${paybackTransaction.value}`}</small>
+          <small>{`${paybackTransaction.rtype} @ ${paybackTransaction.cycle} for ${paybackTransaction.value}`}</small>
         </p>
         <p>{paybackTransaction.description}</p>
       </div>
