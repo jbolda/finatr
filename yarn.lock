@@ -2651,10 +2651,10 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
 
-bulma@0.7.4:
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/bulma/-/bulma-0.7.4.tgz#7e74512e9118d9799021339e67e365ee0ac4f3f9"
-  integrity sha512-krG2rP6eAX1WE0sf6O0SC/FUVSOBX4m1PBC2+GKLpb2pX0qanaDqcv9U2nu75egFrsHkI0zdWYuk/oGwoszVWg==
+bulma@0.7.5:
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/bulma/-/bulma-0.7.5.tgz#35066c37f82c088b68f94450be758fc00a967208"
+  integrity sha512-cX98TIn0I6sKba/DhW0FBjtaDpxTelU166pf7ICXpCCuplHWyu6C9LYZmL5PEsnePIeJaiorsTEzzNk3Tsm1hw==
 
 bytes@3.0.0:
   version "3.0.0"
@@ -6464,10 +6464,10 @@ joi@^14.3.1:
     isemail "3.x.x"
     topo "3.x.x"
 
-js-file-download@0.4.5:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/js-file-download/-/js-file-download-0.4.5.tgz#3cf7bf4bc2231fe2e45663b1a5f8ad3a1949fe0a"
-  integrity sha512-altzTt8noT8MCJmQCQ/y3LfGRz/i7k6Z6H59bDsNd6Mq4KGK2KCxaFVdenqVTCJb6fCH/Ra1f1YDmemieAKDAg==
+js-file-download@0.4.7:
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/js-file-download/-/js-file-download-0.4.7.tgz#cafea2f7230b63fa1747e80efe1257649b59143e"
+  integrity sha512-9AQYwIpgTz3BqKQQ9kZldCXd0BekFmxvUguEVJwVlTe9cON1slRaT+hqctEbjoXbz9Aj+8Qgl3841zYWeCstuA==
 
 js-levenshtein@^1.1.3:
   version "1.1.4"
@@ -8596,10 +8596,10 @@ prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
 
-prettier@^1.17.1:
-  version "1.17.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.17.1.tgz#ed64b4e93e370cb8a25b9ef7fef3e4fd1c0995db"
-  integrity sha512-TzGRNvuUSmPgwivDqkZ9tM/qTGW9hqDKWOE9YHiyQdixlKbv7kvEqsmDPrcHJTKwthU774TQwZXVtaQ/mMsvjg==
+prettier@^1.18.2:
+  version "1.18.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.18.2.tgz#6823e7c5900017b4bd3acf46fe9ac4b4d7bda9ea"
+  integrity sha512-OeHeMc0JhFE9idD4ZdtNibzY0+TPHSpSSb9h8FqtP+YnoZZ1sl8Vc9b1sasjfymH3SonAF4QcA2+mzHPhMvIiw==
 
 pretty-bytes@^5.1.0:
   version "5.2.0"
