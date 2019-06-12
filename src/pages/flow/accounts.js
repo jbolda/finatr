@@ -128,9 +128,11 @@ const AccountTable = ({ data, actions }) =>
             </td>
             <td>
               <button
-                className="delete"
+                className="button is-rounded is-small is-danger"
                 onClick={actions.deleteAccount.bind(this, account.name.state)}
-              />
+              >
+                <strong>X</strong>
+              </button>
             </td>
           </tr>
         ))}
@@ -183,9 +185,11 @@ const DebtTable = ({ data, actions }) =>
               M
             </button>
             <button
-              className="delete"
+              className="button is-rounded is-small is-danger"
               onClick={() => actions.model.deleteAccount(account.name)}
-            />
+            >
+              <strong>X</strong>
+            </button>
           </div>
         </div>
       ))
@@ -211,11 +215,13 @@ const PaybackTable = ({ data, actions }) =>
           M
         </button>
         <button
-          className="delete"
+          className="button is-rounded is-small is-danger"
           onClick={() =>
             actions.model.deleteAccountTransaction(data.name, index)
           }
-        />
+        >
+          <strong>X</strong>
+        </button>
       </div>
     </div>
   ));
