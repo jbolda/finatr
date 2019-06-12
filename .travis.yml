@@ -7,10 +7,11 @@ language: node_js
 
 cache:
   yarn: true
+  npm: true
 
 jobs:
   include:
-    - &test
+    - &testyarn
       stage: test
       name: Test on Node 8
       node_js: '8'
@@ -18,11 +19,23 @@ jobs:
         - yarn
       script:
         - yarn test
-    - <<: *test
+    - <<: *testyarn
       name: Test on Node 10
       node_js: '10'
 
-    - &build
+    - &testnpm
+      stage: test
+      name: Test on Node 8
+      node_js: '8'
+      install:
+        - npm ci
+      script:
+        - npm test
+    - <<: *testnpm
+      name: Test on Node 10
+      node_js: '10'
+
+    - &buildyarn
       stage: build
       name: Build on Node 8
       node_js: '8'
@@ -30,6 +43,18 @@ jobs:
         - yarn
       script:
         - yarn build
-    - <<: *build
+    - <<: *buildyarn
+      name: Build on Node 10
+      node_js: '10'
+
+    - &buildnpm
+      stage: build
+      name: Build on Node 8
+      node_js: '8'
+      install:
+        - npm ci
+      script:
+        - npm build
+    - <<: *buildnpm
       name: Build on Node 10
       node_js: '10'
