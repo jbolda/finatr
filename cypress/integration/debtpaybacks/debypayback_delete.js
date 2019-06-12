@@ -84,7 +84,7 @@ describe('Debt Payback Form Tests', () => {
       .parent()
       .parent()
       .within(() => {
-        cy.get('.delete').click();
+        cy.contains('X').click();
       });
 
     cy.get('#accounts')
