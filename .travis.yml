@@ -43,7 +43,8 @@ jobs:
         - yarn
       script:
         - yarn cy:verify
-        - yarn start && yarn cy:run
+        - yarn start &
+        - yarn cy:run
         # after all tests finish running we need
         # to kill all background jobs (like "npm start &")
         - kill $(jobs -p) || true
@@ -59,7 +60,8 @@ jobs:
         - npm ci
       script:
         - npm run cy:verify
-        - npm run start && npm run cy:run
+        - npm run start &
+        - npm run cy:run
         # after all tests finish running we need
         # to kill all background jobs (like "npm start &")
         - kill $(jobs -p) || true
