@@ -35,6 +35,38 @@ jobs:
       name: Test on Node 10
       node_js: '10'
 
+    - &cypressyarn
+      stage: cypress
+      name: Test on Node 8
+      node_js: '8'
+      install:
+        - yarn
+      script:
+        - yarn cy:verify
+        - yarn start && yarn cy:run
+        # after all tests finish running we need
+        # to kill all background jobs (like "npm start &")
+        - kill $(jobs -p) || true
+    - <<: *testyarn
+      name: Test on Node 10
+      node_js: '10'
+
+    - &cypressnpm
+      stage: cypress
+      name: Test on Node 8
+      node_js: '8'
+      install:
+        - npm ci
+      script:
+        - npm run cy:verify
+        - npm run start && npm run cy:run
+        # after all tests finish running we need
+        # to kill all background jobs (like "npm start &")
+        - kill $(jobs -p) || true
+    - <<: *testnpm
+      name: Test on Node 10
+      node_js: '10'
+
     - &buildyarn
       stage: build
       name: Build on Node 8

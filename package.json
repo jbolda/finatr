@@ -36,7 +36,12 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "pretty": "prettier --write \"{src,__{tests,mocks}__}/**/*.js\"",
-    "cypress": "cypress open"
+    "cy": "cypress open",
+    "cypress": "cypress",
+    "cy:verify": "cypress verify",
+    "cy:version": "cypress version",
+    "cy:run": "cypress run --parallel",
+    "cy:run:record": "cypress run --record --parallel"
   },
   "browserslist": [
     ">0.2%",
