@@ -7,29 +7,88 @@ language: node_js
 
 cache:
   yarn: true
+  npm: true
 
 jobs:
   include:
-    - &test
+    - &testyarn
       stage: test
-      name: Test on Node 8
+      name: Test on Node 8 with yarn
       node_js: '8'
       install:
         - yarn
       script:
         - yarn test
-    - <<: *test
-      name: Test on Node 10
+    - <<: *testyarn
+      name: Test on Node 10 with yarn
       node_js: '10'
 
-    - &build
+    - &testnpm
+      stage: test
+      name: Test on Node 8 with npm
+      node_js: '8'
+      install:
+        - npm ci
+      script:
+        - npm test
+    - <<: *testnpm
+      name: Test on Node 10 with npm
+      node_js: '10'
+
+    - &cypressyarn
+      stage: cypress
+      name: Test on Node 8 with yarn
+      node_js: '8'
+      install:
+        - yarn
+      script:
+        - yarn cy:verify
+        - yarn start &
+        - yarn cy:run
+        # after all tests finish running we need
+        # to kill all background jobs (like "npm start &")
+        - kill $(jobs -p) || true
+    - <<: *cypressyarn
+      name: Test on Node 10 with yarn
+      node_js: '10'
+
+    - &cypressnpm
+      stage: cypress
+      name: Test on Node 8 with npm
+      node_js: '8'
+      install:
+        - npm ci
+      script:
+        - npm run cy:verify
+        - npm run start &
+        - npm run cy:run
+        # after all tests finish running we need
+        # to kill all background jobs (like "npm start &")
+        - kill $(jobs -p) || true
+    - <<: *cypressnpm
+      name: Test on Node 10 with npm
+      node_js: '10'
+
+    - &buildyarn
       stage: build
-      name: Build on Node 8
+      name: Build on Node 8 with yarn
       node_js: '8'
       install:
         - yarn
       script:
         - yarn build
-    - <<: *build
-      name: Build on Node 10
+    - <<: *buildyarn
+      name: Build on Node 10 with yarn
+      node_js: '10'
+
+    - &buildnpm
+      stage: build
+      name: Build on Node 8 with npm
+      node_js: '8'
+      install:
+        - npm ci
+      script:
+        - npm build
+    - <<: *buildnpm
+      name: Build on Node 10 with npm
       node_js: '10'
