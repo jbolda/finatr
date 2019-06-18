@@ -217,6 +217,7 @@ describe(`computed transaction amounts return correctly`, () => {
                 start: `2018-03-22`,
                 rtype: `day`,
                 cycle: 3,
+                value: 0,
                 references: {
                   statementBalance: 50,
                   currentBalance: 800,
