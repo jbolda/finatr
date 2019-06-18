@@ -123,6 +123,9 @@ describe(`computed transaction amounts return correctly`, () => {
     let computatedTest = create(AppModel, {
       accounts: [
         {
+          name: 'credit card',
+          starting: 1200,
+          vehicle: 'credit line',
           payback: {
             transactions: [
               {
@@ -159,6 +162,9 @@ describe(`computed transaction amounts return correctly`, () => {
     let computatedTest = create(AppModel, {
       accounts: [
         {
+          name: 'credit card',
+          starting: 1200,
+          vehicle: 'credit line',
           payback: {
             transactions: [
               {
@@ -197,6 +203,9 @@ describe(`computed transaction amounts return correctly`, () => {
     let computatedTest = create(AppModel, {
       accounts: [
         {
+          name: 'credit card',
+          starting: 1200,
+          vehicle: 'credit line',
           payback: {
             transactions: [
               {
@@ -233,6 +242,7 @@ describe(`computed transaction amounts return correctly`, () => {
         }
       ]
     }).reCalc();
+
     expect.hasAssertions();
     for (let transaction of computatedTest.transactionsComputed) {
       // ignore the default transaction
