@@ -252,4 +252,53 @@ describe(`computed transaction amounts return correctly`, () => {
       }
     }
   });
+
+  it(`computes the starting reference on accounts`, () => {
+    let computatedTest = create(AppModel, {
+      accounts: [
+        {
+          name: 'debt payback starting copy down',
+          starting: 3000,
+          vehicle: 'credit line',
+          payback: {
+            transactions: [
+              {
+                id: `computated-test`,
+                raccount: `account`,
+                description: `description`,
+                category: `test default`,
+                type: `income`,
+                start: `2018-03-22`,
+                rtype: `day`,
+                cycle: 3,
+                value: 0,
+                references: { statementBalance: 1700 },
+                computedAmount: {
+                  reference: 'starting'
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }).reCalc();
+
+    // ,
+    // operation: 'minus',
+    // on: { reference: 'statementBalance' }
+
+    for (let account of computatedTest.accountsComputed) {
+      console.log(account.state.payback);
+      console.log(account.payback.starting.toFixed);
+    }
+
+    expect.hasAssertions();
+    for (let transaction of computatedTest.transactionsComputed) {
+      console.log(transaction.state);
+      // ignore the default transaction
+      if (transaction.id.state !== 'seed-data-id') {
+        expect(transaction.value.toFixed).toEqual('1300.00');
+      }
+    }
+  });
 });
