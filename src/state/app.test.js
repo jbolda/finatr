@@ -43,6 +43,7 @@ describe(`computed transaction amounts return correctly`, () => {
       ]
     }).reCalc();
 
+    expect.hasAssertions();
     for (let transaction of computatedTest.transactionsComputed) {
       expect(transaction.value.toFixed).toEqual('50.00');
     }
@@ -71,6 +72,7 @@ describe(`computed transaction amounts return correctly`, () => {
       ]
     }).reCalc();
 
+    expect.hasAssertions();
     for (let transaction of computatedTest.transactionsComputed) {
       expect(transaction.value.toFixed).toEqual('125.00');
     }
@@ -111,6 +113,7 @@ describe(`computed transaction amounts return correctly`, () => {
       ]
     }).reCalc();
 
+    expect.hasAssertions();
     for (let transaction of computatedTest.transactionsComputed) {
       expect(transaction.value.toFixed).toEqual('500.00');
     }
@@ -143,6 +146,7 @@ describe(`computed transaction amounts return correctly`, () => {
       ]
     }).reCalc();
 
+    expect.hasAssertions();
     for (let transaction of computatedTest.transactionsComputed) {
       // ignore the default transaction
       if (transaction.id.state !== 'seed-data-id') {
@@ -180,6 +184,7 @@ describe(`computed transaction amounts return correctly`, () => {
       ]
     }).reCalc();
 
+    expect.hasAssertions();
     for (let transaction of computatedTest.transactionsComputed) {
       // ignore the default transaction
       if (transaction.id.state !== 'seed-data-id') {
@@ -228,6 +233,7 @@ describe(`computed transaction amounts return correctly`, () => {
         }
       ]
     }).reCalc();
+    expect.hasAssertions();
     for (let transaction of computatedTest.transactionsComputed) {
       // ignore the default transaction
       if (transaction.id.state !== 'seed-data-id') {
