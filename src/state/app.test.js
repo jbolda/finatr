@@ -271,7 +271,7 @@ describe(`computed transaction amounts return correctly`, () => {
                 start: `2018-03-22`,
                 rtype: `day`,
                 cycle: 3,
-                value: 0,
+                value: 10,
                 references: { statementBalance: 1700 },
                 computedAmount: {
                   reference: 'starting'
@@ -284,13 +284,25 @@ describe(`computed transaction amounts return correctly`, () => {
     }).reCalc();
 
     // ,
+    // references: { statementBalance: 1700 },
+    // computedAmount: {
+    //   reference: 'starting'
+    // }
+
+    // ,
     // operation: 'minus',
     // on: { reference: 'statementBalance' }
 
-    for (let account of computatedTest.accountsComputed) {
-      console.log(account.state.payback);
-      console.log(account.payback.starting.toFixed);
-    }
+    // for (let account of computatedTest.accountsComputed) {
+    //   console.log(account.state.payback);
+    //   console.log(account.payback.starting.toFixed);
+    //   if (account.payback) {
+    //     console.log(account.payback.transactions);
+    //     for (let payback of account.payback.transactions) {
+    //       console.log(payback.starting.toFixed);
+    //     }
+    //   }
+    // }
 
     expect.hasAssertions();
     for (let transaction of computatedTest.transactionsComputed) {
