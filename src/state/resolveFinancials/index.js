@@ -50,9 +50,10 @@ const coercePaybacks = ({ accounts }) => {
             ...accountTransaction,
             id: `${accountTransaction.id}-${index}EXP`,
             raccount: account.name,
-            description: account.payback.description,
+            description:
+              account.payback.description || accountTransaction.description,
             type: account.vehicle === 'credit line' ? 'transfer' : 'expense',
-            category: account.payback.category,
+            category: account.payback.category || accountTransaction.category,
             value: account.vehicle === 'credit line' ? -amount : amount,
             fromAccount: true
           });
@@ -66,9 +67,10 @@ const coercePaybacks = ({ accounts }) => {
           transactions.push({
             ...accountTransaction,
             id: `${accountTransaction.id}-${index}TRSF`,
-            description: account.payback.description,
+            description:
+              account.payback.description || accountTransaction.description,
             type: 'transfer',
-            category: account.payback.category,
+            category: account.payback.category || accountTransaction.category,
             value: -amount,
             fromAccount: true
           });
