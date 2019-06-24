@@ -42,10 +42,6 @@ const coercePaybacks = ({ accounts }) => {
           // but mathed as negative so it will reduce the
           // balance of a debt (which is entered as a positive number)
           // where transfers (for credit line) need to be explicitly negative
-          let amount =
-            typeof accountTransaction.value === 'string'
-              ? account.payback[accountTransaction.value]
-              : accountTransaction.value;
           transactions.push({
             ...accountTransaction,
             id: `${accountTransaction.id}-${index}EXP`,
@@ -54,16 +50,15 @@ const coercePaybacks = ({ accounts }) => {
               account.payback.description || accountTransaction.description,
             type: account.vehicle === 'credit line' ? 'transfer' : 'expense',
             category: account.payback.category || accountTransaction.category,
-            value: account.vehicle === 'credit line' ? -amount : amount,
+            value:
+              account.vehicle === 'credit line'
+                ? -accountTransaction.value
+                : accountTransaction.value,
             fromAccount: true
           });
+
           // this one is for the account making the payment
           // (raccount is defined on accountTransaction)
-          // negative transfer don't show up on the bar chart
-          // but they should affect the math of, say, the line chart
-          // we can use this to avoid visual duplication of two
-          // transactions for the same amount reducing the balance
-          // on two different accounts
           transactions.push({
             ...accountTransaction,
             id: `${accountTransaction.id}-${index}TRSF`,
@@ -71,7 +66,7 @@ const coercePaybacks = ({ accounts }) => {
               account.payback.description || accountTransaction.description,
             type: 'transfer',
             category: account.payback.category || accountTransaction.category,
-            value: -amount,
+            value: -accountTransaction.value,
             fromAccount: true
           });
         });
