@@ -136,7 +136,7 @@ class TransactionInput extends React.Component {
 
                   <FieldInput
                     errors={errors}
-                    fieldName="occurences"
+                    fieldName="occurrences"
                     touched={touched}
                     fieldType="number"
                   />

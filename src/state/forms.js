@@ -55,7 +55,7 @@ class AccountTransactionForm {
   start = StringType;
   rtype = StringType;
   cycle = create(Big, 0);
-  occurences = create(Big, 0);
+  occurrences = create(Big, 0);
   value = create(Big, 0);
 
   get state() {

@@ -72,7 +72,7 @@ describe('Debt Payback Form Tests', () => {
       .find('input')
       .type('2019-04-28');
     cy.get('form')
-      .contains('occurences')
+      .contains('occurrences')
       .parent()
       .parent()
       .find('input')

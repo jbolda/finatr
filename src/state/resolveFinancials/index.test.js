@@ -123,7 +123,7 @@ describe(`check state creation`, () => {
 });
 
 describe(`check integrated transaction reoccurence`, () => {
-  it(`returns the correct number of daily reoccurences`, () => {
+  it(`returns the correct number of daily reoccurrences`, () => {
     let singleTransaction = resolvedTestData.transactions
       .set([
         {
@@ -151,14 +151,14 @@ describe(`check integrated transaction reoccurence`, () => {
     // beginning on Feb 4th, 2018, but the graphrange doesn't
     // start until March 1st, 2018. This means the first time it
     // shows up should be on March 4th. This will mean we have
-    // 13 total occurences of the transaction in our range.
+    // 13 total occurrences of the transaction in our range.
     // (The 14th lands on Sept 2nd.) If we erroneously show the
     // first occurence at the beginning of the graphrange, which
-    // is 3 days earlier, we would see 14 occurences instead.
+    // is 3 days earlier, we would see 14 occurrences instead.
 
     // the max with a single transaction should === value of that transaction
     expect(singleTransaction.charts.state.BarChartMax).toEqual(1200);
-    // the max should be our 13 occurences * value + starting ($0 here)
+    // the max should be our 13 occurrences * value + starting ($0 here)
     // that is: 13 * 1200 = 15600
     expect(singleTransaction.charts.state.LineChartMax).toEqual(15600);
   });
@@ -207,13 +207,13 @@ describe(`check integrated transaction reoccurence`, () => {
 
     const count = singleTransaction.charts.state.AccountChart[0].values.length;
     // if 52 occurrences in a year, and we missed 8 at the beginning of the range
-    // the max should be our starting - 44 occurences * value = 800
+    // the max should be our starting - 44 occurrences * value = 800
     expect(
       singleTransaction.charts.state.AccountChart[0].values[count - 1].value
     ).toEqual(800);
   });
 
-  it(`returns the correct number of semiannual reoccurences`, () => {
+  it(`returns the correct number of semiannual reoccurrences`, () => {
     let singleTransaction = resolvedTestData.transactions
       .set([
         {
@@ -240,7 +240,7 @@ describe(`check integrated transaction reoccurence`, () => {
     // This should occur twice a year beginning on Feb 4th, 2019,
     // but the graphrange doesn't start until March 1st, 2019.
     // This means the first time it shows up should be on July 4th.
-    // This will mean we have 2 total occurences of the transaction in
+    // This will mean we have 2 total occurrences of the transaction in
     // our range every time if we look at a 365 day year.
 
     // the max with a single transaction should === value of that transaction
@@ -253,7 +253,7 @@ describe(`check integrated transaction reoccurence`, () => {
     });
 
     const count = singleTransaction.charts.state.AccountChart[0].values.length;
-    // the max should be our starting - 2 occurences * value = 0
+    // the max should be our starting - 2 occurrences * value = 0
     expect(
       singleTransaction.charts.state.AccountChart[0].values[count - 1].value
     ).toEqual(0);
@@ -305,7 +305,7 @@ describe(`check integrated transaction reoccurence`, () => {
     });
 
     const count = singleTransaction.charts.state.AccountChart[0].values.length;
-    // the max should be our starting - 2 occurences * value = 2000
+    // the max should be our starting - 2 occurrences * value = 2000
     expect(
       singleTransaction.charts.state.AccountChart[0].values[count - 1].value
     ).toEqual(2000);

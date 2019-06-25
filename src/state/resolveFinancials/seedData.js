@@ -47,7 +47,7 @@ let seedOne = {
       start: `2018-03-22`,
       rtype: `day`,
       cycle: 3,
-      generatedOccurences: 0,
+      generatedOccurrences: 0,
       value: 150
     }
   }
@@ -73,10 +73,10 @@ let seedTwo = {
       id: `oasis2`,
       raccount: `account`,
       description: `description`,
-      category: `test default occurences`,
+      category: `test default occurrences`,
       type: `income`,
       start: `2018-09-22`,
-      occurences: 7,
+      occurrences: 7,
       rtype: `day`,
       cycle: 1,
       value: 100

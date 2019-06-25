@@ -24,7 +24,7 @@ class AccountTransactionInput extends React.Component {
                   start: '',
                   rtype: 'none',
                   cycle: 0,
-                  occurences: 0,
+                  occurrences: 0,
                   value: 0,
                   ...model.forms.accountTransactionForm.state
                 }}
@@ -145,21 +145,21 @@ class AccountTransactionInput extends React.Component {
                     </div>
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
-                        <label className="label">occurences</label>
+                        <label className="label">occurrences</label>
                       </div>
                       <div className="field-body">
                         <div className="field">
                           <p className="control">
                             <Field
                               type="number"
-                              name="occurences"
+                              name="occurrences"
                               className="input"
                             />
                           </p>
                         </div>
                       </div>
-                      {touched.occurences && errors.occurences && (
-                        <div>{errors.occurences}</div>
+                      {touched.occurrences && errors.occurrences && (
+                        <div>{errors.occurrences}</div>
                       )}
                     </div>
                     <div className="field is-horizontal">

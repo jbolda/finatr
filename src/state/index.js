@@ -309,7 +309,7 @@ class AppModel {
       start: result.start,
       rtype: result.rtype,
       cycle: result.cycle,
-      occurences: result.occurences,
+      occurrences: result.occurrences,
       value: result.value
     };
 
