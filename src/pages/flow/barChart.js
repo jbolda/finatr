@@ -399,7 +399,7 @@ barBuild.drawBar = function(
   let color = d =>
     d3
       .scaleLinear()
-      .domain([0, 1])
+      .domain([0, massagedData.length])
       .range(colors(d));
 
   // Add a group for each entry
