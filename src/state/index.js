@@ -207,7 +207,7 @@ class AppModel {
       const { accounts } = this.state;
       computeAccounts = accounts.map(account => {
         let computed = account;
-        computed.visible = true;
+        if (computed && computed.visible === undefined) computed.visible = true;
         return computed;
       });
     } else {
