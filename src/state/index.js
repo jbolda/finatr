@@ -207,7 +207,7 @@ class AppModel {
       const { accounts } = this.state;
       computeAccounts = accounts.map(account => {
         let computed = account;
-        computed.visible = true;
+        if (computed && computed.visible === undefined) computed.visible = true;
         return computed;
       });
     } else {
@@ -309,7 +309,7 @@ class AppModel {
       start: result.start,
       rtype: result.rtype,
       cycle: result.cycle,
-      occurences: result.occurences,
+      occurrences: result.occurrences,
       value: result.value
     };
 

@@ -167,7 +167,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     expect(resolvedTestData2).toHaveLength(7);
   });
 
-  it(`returns correct number of modifications based on generated occurences`, () => {
+  it(`returns correct number of modifications based on generated occurrences`, () => {
     let testData1 = {
       ...transaction,
       id: `${transaction.id} genOc`,
@@ -199,7 +199,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     expect(resolvedTestData2).toHaveLength(2);
   });
 
-  it(`returns correct number of modifications based on visible occurences`, () => {
+  it(`returns correct number of modifications based on visible occurrences`, () => {
     let testData1 = {
       ...transaction,
       start: graphRange.start,

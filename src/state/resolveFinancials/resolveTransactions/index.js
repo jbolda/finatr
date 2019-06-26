@@ -197,10 +197,10 @@ const transactionDailyReoccur = ({ transaction, seedDate, occurrences }) => {
   // the next date should be a multiple of the cycle, so divide by the cycle
   // then round up (0 decimal places, 3 round up) then multiply by cycle again
   // to give us the number of days to add to the transaction start date to
-  // produce an occurence on/after the seedDate. If there are no occurences
+  // produce an occurence on/after the seedDate. If there are no occurrences
   // yet, we are looking for the first date and we want a date on/after the seedDate.
-  // If we have any occurences, then seedDate will actually be the date of the
-  // last occurences so we add the cycle to that to get the next occurence.
+  // If we have any occurrences, then seedDate will actually be the date of the
+  // last occurrences so we add the cycle to that to get the next occurence.
   const cycle = Big(differenceInCalendarDays(transaction.start)(seedDate))
     .div(transaction.cycle)
     .round(0, 3)
@@ -365,10 +365,10 @@ const transactionSemiannuallyReoccur = ({
   // the next date should be a multiple of the 6 months, so divide by the 6
   // then round up (0 decimal places, 3 round up) then multiply by 6 again
   // to give us the number of months to add to the transaction start date to
-  // produce an occurence on/after the seedDate. If there are no occurences
+  // produce an occurence on/after the seedDate. If there are no occurrences
   // yet, we are looking for the first date and we want a date on/after the seedDate.
-  // If we have any occurences, then seedDate will actually be the date of the
-  // last occurences so we add 6 to that to get the next occurence.
+  // If we have any occurrences, then seedDate will actually be the date of the
+  // last occurrences so we add 6 to that to get the next occurence.
   const monthDifference = Big(
     differenceInCalendarMonths(transaction.start)(seedDate)
   )
@@ -406,10 +406,10 @@ const transactionAnnuallyReoccur = ({ transaction, seedDate, occurrences }) => {
   // Finds how many months are between when this started and the date in question
   // then round up (0 decimal places, 3 round up) to give us the number of years
   // to add to the transaction start date to produce an occurence on/after
-  // the seedDate. If there are no occurences yet, we are looking for
+  // the seedDate. If there are no occurrences yet, we are looking for
   // the first date and we want a date on/after the seedDate. If we have
-  // any occurences, then seedDate will actually be the date of the
-  // last occurences so we add 1 to that to get the next occurence.
+  // any occurrences, then seedDate will actually be the date of the
+  // last occurrences so we add 1 to that to get the next occurence.
   const yearDifference = Big(
     differenceInCalendarYears(transaction.start)(seedDate)
   )
