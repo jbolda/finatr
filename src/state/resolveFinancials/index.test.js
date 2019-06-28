@@ -66,8 +66,9 @@ describe(`check state creation`, () => {
   it(`calcs the correct dailyExpense`, () => {
     expect(resolvedTestData.stats.dailyExpense.toNumber).toBe(270);
   });
+  // savings daily of 120 / income daily of 163 = 0.7362
   it(`calcs the correct savingsRate`, () => {
-    expect(resolvedTestData.stats.savingsRate.toNumber).toBeCloseTo(44.44);
+    expect(resolvedTestData.stats.savingsRate.toNumber).toBeCloseTo(73.62);
   });
   it(`calcs the correct fiNumber`, () => {
     expect(resolvedTestData.stats.fiNumber.toNumber).toBeCloseTo(1.218);
