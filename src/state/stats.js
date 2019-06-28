@@ -47,7 +47,7 @@ class Stats {
       .set(dailyIncome)
       .dailyExpense.set(dailyExpense)
       .savingsRate.set(
-        dailyExpense.eq(0) ? 100 : dailyInvest.times(100).div(dailyExpense)
+        dailyExpense.eq(0) ? 100 : dailyInvest.times(100).div(dailyIncome)
       )
       .fiNumber.set(
         dailyExpense.eq(0)
