@@ -41,35 +41,78 @@ class FinancialFlow extends React.Component {
                 </div>
                 <div className="level-item has-text-centered">
                   <div>
-                    <p className="heading">% to half FI</p>
+                    <p className="heading">Expense Multiple</p>
+                    <p className="heading">
+                      {model.stats.expenseMultiple.toFixed}x
+                    </p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">% to FI (25x)</p>
+                    <p className="heading">{model.stats.FINumber.toFixed}%</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="level">
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">% to +net worth</p>
+                    <p className="heading">
+                      {model.stats.positiveNetWorth.toFixed}%
+                    </p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">% to FU Money (2x)</p>
+                    <p className="heading">
+                      {model.stats.fuMoneyConsidering.toFixed}%
+                    </p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">% to FU Money (3x)</p>
+                    <p className="heading">
+                      {model.stats.fuMoneyConfident.toFixed}%
+                    </p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">% to first FI milestone</p>
+                    <p className="heading">($100,000 Net Worth)</p>
+                    <p className="heading">{model.stats.firstFI.toFixed}%</p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">% to half FI (12.5x)</p>
                     <p className="heading">{model.stats.halfFI.toFixed}%</p>
                   </div>
                 </div>
                 <div className="level-item has-text-centered">
                   <div>
-                    <p className="heading">% to lean FI</p>
+                    <p className="heading">% to lean FI (17.5x)</p>
                     <p className="heading">{model.stats.leanFI.toFixed}%</p>
                   </div>
                 </div>
                 <div className="level-item has-text-centered">
                   <div>
-                    <p className="heading">% to flex FI</p>
+                    <p className="heading">% to flex FI (20x)</p>
                     <p className="heading">{model.stats.flexFI.toFixed}%</p>
                   </div>
                 </div>
                 <div className="level-item has-text-centered">
                   <div>
-                    <p className="heading">% to FI</p>
-                    <p className="heading">{model.stats.fiNumber.toFixed}%</p>
-                  </div>
-                </div>
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">% to fat FI</p>
+                    <p className="heading">% to fat FI (30x)</p>
                     <p className="heading">{model.stats.fatFI.toFixed}%</p>
                   </div>
                 </div>
               </div>
+
               <BarChart data={model.charts.state} />
             </section>
             <section className="section">
