@@ -7,6 +7,10 @@ class Stats {
   dailyExpense = create(Big, 0);
   savingsRate = create(Big, 0);
   fiNumber = create(Big, 0);
+  halfFI = Big;
+  leanFI = Big;
+  flexFI = Big;
+  fatFI = Big;
 
   get state() {
     return valueOf(this);
@@ -26,9 +30,9 @@ class Stats {
     );
 
     let dailyInvest = BarChartIncome.reduce((accumulator, d) => {
-      let accountRaw = accounts.find(acc => acc.name === d.raccount);
+      let account = accounts.find(acc => acc.name === d.raccount);
 
-      if (accountRaw && accountRaw.vehicle === 'investment') {
+      if (account && account.vehicle === 'investment') {
         return d.dailyRate.add(accumulator);
       } else {
         return accumulator;
@@ -43,20 +47,21 @@ class Stats {
       }
     }, _Big(0));
 
+    const FIconst = dailyExpense.eq(0)
+      ? 100
+      : totalInvest.times(100).div(dailyExpense.times(365));
+
     return this.dailyIncome
       .set(dailyIncome)
       .dailyExpense.set(dailyExpense)
       .savingsRate.set(
         dailyExpense.eq(0) ? 100 : dailyInvest.times(100).div(dailyIncome)
       )
-      .fiNumber.set(
-        dailyExpense.eq(0)
-          ? 100
-          : totalInvest
-              .times(100)
-              .div(dailyExpense.times(365))
-              .div(25) || null
-      );
+      .fiNumber.set(dailyExpense.eq(0) ? 100 : FIconst.div(25))
+      .halfFI.set(dailyExpense.eq(0) ? 100 : FIconst.div(0.5 * 25))
+      .leanFI.set(dailyExpense.eq(0) ? 100 : FIconst.div(0.7 * 25))
+      .flexFI.set(dailyExpense.eq(0) ? 100 : FIconst.div(20))
+      .fatFI.set(dailyExpense.eq(0) ? 100 : FIconst.div(30));
   }
 }
 

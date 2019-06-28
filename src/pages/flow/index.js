@@ -19,7 +19,7 @@ class FinancialFlow extends React.Component {
                   <div>
                     <p className="heading">Daily Income</p>
                     <p className="heading">
-                      ${model.stats.dailyIncome.state.toFixed(2)}
+                      ${model.stats.dailyIncome.toFixed}
                     </p>
                   </div>
                 </div>
@@ -27,7 +27,7 @@ class FinancialFlow extends React.Component {
                   <div>
                     <p className="heading">Daily Expenses</p>
                     <p className="heading">
-                      ${model.stats.dailyExpense.state.toFixed(2)}
+                      ${model.stats.dailyExpense.toFixed}
                     </p>
                   </div>
                 </div>
@@ -35,16 +35,38 @@ class FinancialFlow extends React.Component {
                   <div>
                     <p className="heading">Savings Rate</p>
                     <p className="heading">
-                      {model.stats.savingsRate.state.toFixed(2)}%
+                      {model.stats.savingsRate.toFixed}%
                     </p>
                   </div>
                 </div>
                 <div className="level-item has-text-centered">
                   <div>
+                    <p className="heading">% to half FI</p>
+                    <p className="heading">{model.stats.halfFI.toFixed}%</p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">% to lean FI</p>
+                    <p className="heading">{model.stats.leanFI.toFixed}%</p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">% to flex FI</p>
+                    <p className="heading">{model.stats.flexFI.toFixed}%</p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
                     <p className="heading">% to FI</p>
-                    <p className="heading">
-                      {model.stats.fiNumber.state.toFixed(2)}%
-                    </p>
+                    <p className="heading">{model.stats.fiNumber.toFixed}%</p>
+                  </div>
+                </div>
+                <div className="level-item has-text-centered">
+                  <div>
+                    <p className="heading">% to fat FI</p>
+                    <p className="heading">{model.stats.fatFI.toFixed}%</p>
                   </div>
                 </div>
               </div>
