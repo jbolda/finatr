@@ -72,7 +72,9 @@ class Stats {
       .set(dailyIncome)
       .dailyExpense.set(dailyExpense)
       .savingsRate.set(
-        dailyExpense.eq(0) ? 100 : dailyInvest.times(100).div(dailyIncome)
+        dailyExpense.eq(0)
+          ? 100
+          : dailyInvest.times(100).div(dailyIncome.eq(0) ? 1 : dailyIncome)
       )
       .positiveNetWorth.set(
         totalDebt.eq(0) ? 100 : totalInvest.times(100).div(totalDebt)
