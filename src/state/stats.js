@@ -7,15 +7,22 @@ class Stats {
   dailyExpense = create(Big, 0);
   savingsRate = create(Big, 0);
   expenseMultiple = Big;
-  positiveNetWorth = Big;
-  firstFI = Big;
-  fuMoneyConsidering = Big;
-  fuMoneyConfident = Big;
-  halfFI = Big;
-  leanFI = Big;
-  flexFI = Big;
-  FINumber = create(Big, 0);
-  fatFI = Big;
+  percentToPositiveNetWorth = Big;
+  percentToFirstFI = Big;
+  percentToFUMoneyConsidering = Big;
+  percentToFUMoneyConfident = Big;
+  percentToHalfFI = Big;
+  percentToLeanFI = Big;
+  percentToFlexFI = Big;
+  percentToFINumber = Big;
+  percentToFatFI = Big;
+  yearsToFUMoneyConsidering = Big;
+  yearsToFUMoneyConfident = Big;
+  yearsToHalfFI = Big;
+  yearsToLeanFI = Big;
+  yearsToFlexFI = Big;
+  yearsToFINumber = Big;
+  yearsToFatFI = Big;
 
   get state() {
     return valueOf(this);
@@ -66,7 +73,13 @@ class Stats {
 
     const FIconst = dailyExpense.eq(0)
       ? _Big(100)
-      : totalInvest.times(100).div(dailyExpense.times(365));
+      : totalInvest.div(dailyExpense.times(365));
+
+    const FIconstpercent = FIconst.times(100);
+
+    const yearlyMultipleIncrease = dailyInvest.eq(0)
+      ? _Big(0)
+      : dailyInvest.div(dailyExpense.eq(0) ? 1 : dailyExpense).times(365);
 
     return this.dailyIncome
       .set(dailyIncome)
@@ -76,18 +89,75 @@ class Stats {
           ? 100
           : dailyInvest.times(100).div(dailyIncome.eq(0) ? 1 : dailyIncome)
       )
-      .positiveNetWorth.set(
+      .percentToPositiveNetWorth.set(
         totalDebt.eq(0) ? 100 : totalInvest.times(100).div(totalDebt)
       )
-      .expenseMultiple.set(FIconst.div(100))
-      .firstFI.set(totalInvest.times(100).div(totalDebt.plus(100000)))
-      .fuMoneyConsidering.set(dailyExpense.eq(0) ? 100 : FIconst.div(2))
-      .fuMoneyConfident.set(dailyExpense.eq(0) ? 100 : FIconst.div(3))
-      .halfFI.set(dailyExpense.eq(0) ? 100 : FIconst.div(0.5 * 25))
-      .leanFI.set(dailyExpense.eq(0) ? 100 : FIconst.div(0.7 * 25))
-      .flexFI.set(dailyExpense.eq(0) ? 100 : FIconst.div(20))
-      .FINumber.set(dailyExpense.eq(0) ? 100 : FIconst.div(25))
-      .fatFI.set(dailyExpense.eq(0) ? 100 : FIconst.div(30));
+      .expenseMultiple.set(FIconst)
+      .percentToFirstFI.set(totalInvest.times(100).div(totalDebt.plus(100000)))
+      .percentToFUMoneyConsidering.set(
+        dailyExpense.eq(0) ? 100 : FIconstpercent.div(2)
+      )
+      .yearsToFUMoneyConsidering.set(
+        yearlyMultipleIncrease.eq(0)
+          ? 999
+          : _Big(2)
+              .minus(FIconst)
+              .div(yearlyMultipleIncrease)
+      )
+      .percentToFUMoneyConfident.set(
+        dailyExpense.eq(0) ? 100 : FIconstpercent.div(3)
+      )
+      .yearsToFUMoneyConfident.set(
+        yearlyMultipleIncrease.eq(0)
+          ? 999
+          : _Big(3)
+              .minus(FIconst)
+              .div(yearlyMultipleIncrease)
+      )
+      .percentToHalfFI.set(
+        dailyExpense.eq(0) ? 100 : FIconstpercent.div(0.5 * 25)
+      )
+      .yearsToHalfFI.set(
+        yearlyMultipleIncrease.eq(0)
+          ? 999
+          : _Big(0.5 * 25)
+              .minus(FIconst)
+              .div(yearlyMultipleIncrease)
+      )
+      .percentToLeanFI.set(
+        dailyExpense.eq(0) ? 100 : FIconstpercent.div(0.7 * 25)
+      )
+      .yearsToLeanFI.set(
+        yearlyMultipleIncrease.eq(0)
+          ? 999
+          : _Big(0.7 * 25)
+              .minus(FIconst)
+              .div(yearlyMultipleIncrease)
+      )
+      .percentToFlexFI.set(dailyExpense.eq(0) ? 100 : FIconstpercent.div(20))
+      .yearsToFlexFI.set(
+        yearlyMultipleIncrease.eq(0)
+          ? 999
+          : _Big(20)
+              .minus(FIconst)
+              .div(yearlyMultipleIncrease)
+      )
+      .percentToFINumber.set(dailyExpense.eq(0) ? 100 : FIconstpercent.div(25))
+      .yearsToFINumber.set(
+        yearlyMultipleIncrease.eq(0)
+          ? 999
+          : _Big(25)
+              .minus(FIconst)
+              .div(yearlyMultipleIncrease)
+      )
+      .percentToFatFI.set(dailyExpense.eq(0) ? 100 : FIconstpercent.div(30))
+      .yearsToFatFI.set(
+        yearlyMultipleIncrease.eq(0)
+          ? 999
+          : _Big(2)
+              .minus(FIconst)
+              .div(yearlyMultipleIncrease)
+      );
   }
 }
 
