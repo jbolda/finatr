@@ -70,8 +70,8 @@ describe(`check state creation`, () => {
   it(`calcs the correct savingsRate`, () => {
     expect(resolvedTestData.stats.savingsRate.toNumber).toBeCloseTo(73.62);
   });
-  it(`calcs the correct fiNumber`, () => {
-    expect(resolvedTestData.stats.fiNumber.toNumber).toBeCloseTo(1.218);
+  it(`calcs the correct FINumber`, () => {
+    expect(resolvedTestData.stats.FINumber.toNumber).toBeCloseTo(1.218);
   });
   it(`handles invalid interval on single transaction`, () => {
     let testData1 = {
