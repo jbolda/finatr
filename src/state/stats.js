@@ -98,7 +98,7 @@ class Stats {
         dailyExpense.eq(0) ? 100 : FIconstpercent.div(2)
       )
       .yearsToFUMoneyConsidering.set(
-        yearlyMultipleIncrease.eq(0)
+        yearlyMultipleIncrease.eq(0) || FIconst.gte(2)
           ? 999
           : _Big(2)
               .minus(FIconst)
@@ -108,35 +108,31 @@ class Stats {
         dailyExpense.eq(0) ? 100 : FIconstpercent.div(3)
       )
       .yearsToFUMoneyConfident.set(
-        yearlyMultipleIncrease.eq(0)
+        yearlyMultipleIncrease.eq(0) || FIconst.gte(3)
           ? 999
           : _Big(3)
               .minus(FIconst)
               .div(yearlyMultipleIncrease)
       )
-      .percentToHalfFI.set(
-        dailyExpense.eq(0) ? 100 : FIconstpercent.div(0.5 * 25)
-      )
+      .percentToHalfFI.set(dailyExpense.eq(0) ? 100 : FIconstpercent.div(12.5))
       .yearsToHalfFI.set(
-        yearlyMultipleIncrease.eq(0)
+        yearlyMultipleIncrease.eq(0) || FIconst.gte(12.5)
           ? 999
-          : _Big(0.5 * 25)
+          : _Big(12.5)
               .minus(FIconst)
               .div(yearlyMultipleIncrease)
       )
-      .percentToLeanFI.set(
-        dailyExpense.eq(0) ? 100 : FIconstpercent.div(0.7 * 25)
-      )
+      .percentToLeanFI.set(dailyExpense.eq(0) ? 100 : FIconstpercent.div(17.5))
       .yearsToLeanFI.set(
-        yearlyMultipleIncrease.eq(0)
+        yearlyMultipleIncrease.eq(0) || FIconst.gte(17.5)
           ? 999
-          : _Big(0.7 * 25)
+          : _Big(17.5)
               .minus(FIconst)
               .div(yearlyMultipleIncrease)
       )
       .percentToFlexFI.set(dailyExpense.eq(0) ? 100 : FIconstpercent.div(20))
       .yearsToFlexFI.set(
-        yearlyMultipleIncrease.eq(0)
+        yearlyMultipleIncrease.eq(0) || FIconst.gte(20)
           ? 999
           : _Big(20)
               .minus(FIconst)
@@ -144,7 +140,7 @@ class Stats {
       )
       .percentToFINumber.set(dailyExpense.eq(0) ? 100 : FIconstpercent.div(25))
       .yearsToFINumber.set(
-        yearlyMultipleIncrease.eq(0)
+        yearlyMultipleIncrease.eq(0) || FIconst.gte(25)
           ? 999
           : _Big(25)
               .minus(FIconst)
@@ -152,7 +148,7 @@ class Stats {
       )
       .percentToFatFI.set(dailyExpense.eq(0) ? 100 : FIconstpercent.div(30))
       .yearsToFatFI.set(
-        yearlyMultipleIncrease.eq(0)
+        yearlyMultipleIncrease.eq(0) || FIconst.gte(30)
           ? 999
           : _Big(2)
               .minus(FIconst)
