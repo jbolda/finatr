@@ -45,6 +45,10 @@ class FinancialFlow extends React.Component {
                     <p className="heading">
                       {model.stats.expenseMultiple.toFixed}x
                     </p>
+                    <p className="heading">
+                      +{model.stats.expenseMultipleIncreasePerYear.toFixed}
+                      x/year
+                    </p>
                   </div>
                 </div>
                 <div className="level-item has-text-centered">
