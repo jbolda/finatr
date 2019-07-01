@@ -53,9 +53,11 @@ class FinancialFlow extends React.Component {
                     <p className="heading">
                       {model.stats.percentToFINumber.toFixed}%
                     </p>
-                    <p className="heading">
-                      {model.stats.yearsToFINumber.toFixed}y
-                    </p>
+                    {model.stats.yearsToFINumber.toFixed === '999.00' ? null : (
+                      <p className="heading">
+                        {model.stats.yearsToFINumber.toFixed}y
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -75,9 +77,12 @@ class FinancialFlow extends React.Component {
                     <p className="heading">
                       {model.stats.percentToFUMoneyConsidering.toFixed}%
                     </p>
-                    <p className="heading">
-                      {model.stats.yearsToFUMoneyConsidering.toFixed}y
-                    </p>
+                    {model.stats.yearsToFUMoneyConsidering.toFixed ===
+                    '999.00' ? null : (
+                      <p className="heading">
+                        {model.stats.yearsToFUMoneyConsidering.toFixed}y
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="level-item has-text-centered">
@@ -86,9 +91,12 @@ class FinancialFlow extends React.Component {
                     <p className="heading">
                       {model.stats.percentToFUMoneyConfident.toFixed}%
                     </p>
-                    <p className="heading">
-                      {model.stats.yearsToFUMoneyConfident.toFixed}y
-                    </p>
+                    {model.stats.yearsToFUMoneyConfident.toFixed ===
+                    '999.00' ? null : (
+                      <p className="heading">
+                        {model.stats.yearsToFUMoneyConfident.toFixed}y
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="level-item has-text-centered">
@@ -106,9 +114,11 @@ class FinancialFlow extends React.Component {
                     <p className="heading">
                       {model.stats.percentToHalfFI.toFixed}%
                     </p>
-                    <p className="heading">
-                      {model.stats.yearsToHalfFI.toFixed}y
-                    </p>
+                    {model.stats.yearsToHalfFI.toFixed === '999.00' ? null : (
+                      <p className="heading">
+                        {model.stats.yearsToHalfFI.toFixed}y
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="level-item has-text-centered">
@@ -117,9 +127,11 @@ class FinancialFlow extends React.Component {
                     <p className="heading">
                       {model.stats.percentToLeanFI.toFixed}%
                     </p>
-                    <p className="heading">
-                      {model.stats.yearsToLeanFI.toFixed}y
-                    </p>
+                    {model.stats.yearsToLeanFI.toFixed === '999.00' ? null : (
+                      <p className="heading">
+                        {model.stats.yearsToLeanFI.toFixed}y
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="level-item has-text-centered">
@@ -128,9 +140,11 @@ class FinancialFlow extends React.Component {
                     <p className="heading">
                       {model.stats.percentToFlexFI.toFixed}%
                     </p>
-                    <p className="heading">
-                      {model.stats.yearsToFlexFI.toFixed}y
-                    </p>
+                    {model.stats.yearsToFlexFI.toFixed === '999.00' ? null : (
+                      <p className="heading">
+                        {model.stats.yearsToFlexFI.toFixed}y
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="level-item has-text-centered">
@@ -139,9 +153,11 @@ class FinancialFlow extends React.Component {
                     <p className="heading">
                       {model.stats.percentToFatFI.toFixed}%
                     </p>
-                    <p className="heading">
-                      {model.stats.yearsToFatFI.toFixed}y
-                    </p>
+                    {model.stats.yearsToFatFI.toFixed === '999.00' ? null : (
+                      <p className="heading">
+                        {model.stats.yearsToFatFI.toFixed}y
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
