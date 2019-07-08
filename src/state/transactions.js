@@ -40,7 +40,7 @@ class AmountComputed extends Primitive {
         console.log(this.references.entries);
         console.log(this.references.entries[this.reference.state]);
         // we have a microstate here and are returning just the number
-        return this.references.entries[this.reference.state].toNumber;
+        return this.references.entries[state.reference].toNumber;
     }
   }
 }
