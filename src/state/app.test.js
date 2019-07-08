@@ -133,7 +133,6 @@ describe(`computed transaction amounts return correctly`, () => {
                 raccount: `account`,
                 description: `description`,
                 category: `test default`,
-                type: `income`,
                 start: `2018-03-22`,
                 rtype: `day`,
                 cycle: 3,
@@ -153,7 +152,8 @@ describe(`computed transaction amounts return correctly`, () => {
     for (let transaction of computatedTest.transactionsComputed) {
       // ignore the default transaction
       if (transaction.id.state !== 'seed-data-id') {
-        expect(transaction.value.toFixed).toEqual('55.00');
+        // in credit cards, both transactions are negatives transfers
+        expect(transaction.value.toFixed).toEqual('-55.00');
       }
     }
   });
@@ -172,7 +172,6 @@ describe(`computed transaction amounts return correctly`, () => {
                 raccount: `account`,
                 description: `description`,
                 category: `test default`,
-                type: `income`,
                 start: `2018-03-22`,
                 rtype: `day`,
                 cycle: 3,
@@ -194,7 +193,8 @@ describe(`computed transaction amounts return correctly`, () => {
     for (let transaction of computatedTest.transactionsComputed) {
       // ignore the default transaction
       if (transaction.id.state !== 'seed-data-id') {
-        expect(transaction.value.toFixed).toEqual('160.00');
+        // in credit cards, both transactions are negatives transfers
+        expect(transaction.value.toFixed).toEqual('-160.00');
       }
     }
   });
@@ -213,7 +213,6 @@ describe(`computed transaction amounts return correctly`, () => {
                 raccount: `account`,
                 description: `description`,
                 category: `test default`,
-                type: `income`,
                 start: `2018-03-22`,
                 rtype: `day`,
                 cycle: 3,
@@ -248,7 +247,8 @@ describe(`computed transaction amounts return correctly`, () => {
     for (let transaction of computatedTest.transactionsComputed) {
       // ignore the default transaction
       if (transaction.id.state !== 'seed-data-id') {
-        expect(transaction.value.toFixed).toEqual('350.00');
+        // in credit cards, both transactions are negatives transfers
+        expect(transaction.value.toFixed).toEqual('-350.00');
       }
     }
   });
@@ -267,7 +267,6 @@ describe(`computed transaction amounts return correctly`, () => {
                 raccount: `account`,
                 description: `description`,
                 category: `test default`,
-                type: `income`,
                 start: `2018-03-22`,
                 rtype: `day`,
                 cycle: 3,
