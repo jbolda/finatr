@@ -13,11 +13,18 @@ class TransactionPayback extends Transaction {
 }
 
 class AccountPayback extends Primitive {
-  transactions = relationship(({ parentValue }) => {
-    console.log(parentValue);
+  transactions = relationship(({ value, parentValue }) => {
+    const transactions = value.transactions || [];
     return {
       Type: ArrayType.of(TransactionPayback),
-      value: { references: { starting: parentValue.references.starting } }
+      value:
+        transactions.map(t => ({
+          ...t,
+          references: {
+            ...t.references,
+            starting: parentValue.references.starting
+          }
+        })) || []
     };
   });
   references = { Big };
@@ -29,13 +36,10 @@ class Account extends Primitive {
   interest = Big;
   vehicle = StringType;
 
-  payback = relationship(({ parentValue }) => {
-    console.log(parentValue);
-    return {
-      Type: AccountPayback,
-      value: { references: { starting: parentValue.starting } }
-    };
-  });
+  payback = relationship(({ value, parentValue }) => ({
+    Type: AccountPayback,
+    value: { ...value, references: { starting: parentValue.starting } }
+  }));
 }
 
 class AccountComputed extends Account {
