@@ -13,19 +13,16 @@ class TransactionPayback extends Transaction {
 }
 
 class AccountPayback extends Primitive {
-  transactions = relationship(({ value, parentValue }) => {
-    const transactions = value.transactions || [];
-    return {
-      Type: ArrayType.of(TransactionPayback),
-      value: transactions.map(t => ({
-        ...t,
-        references: {
-          ...t.references,
-          starting: parentValue.references.starting
-        }
-      }))
-    };
-  });
+  transactions = relationship(({ value, parentValue }) => ({
+    Type: ArrayType.of(TransactionPayback),
+    value: value.map(t => ({
+      ...t,
+      references: {
+        ...t.references,
+        starting: parentValue.references.starting
+      }
+    }))
+  }));
   references = { Big };
 }
 
