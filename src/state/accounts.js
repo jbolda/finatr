@@ -17,14 +17,13 @@ class AccountPayback extends Primitive {
     const transactions = value.transactions || [];
     return {
       Type: ArrayType.of(TransactionPayback),
-      value:
-        transactions.map(t => ({
-          ...t,
-          references: {
-            ...t.references,
-            starting: parentValue.references.starting
-          }
-        })) || []
+      value: transactions.map(t => ({
+        ...t,
+        references: {
+          ...t.references,
+          starting: parentValue.references.starting
+        }
+      }))
     };
   });
   references = { Big };
