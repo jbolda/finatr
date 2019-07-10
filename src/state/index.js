@@ -72,10 +72,6 @@ class AppModel extends Primitive {
     }
   }
 
-  get state() {
-    return valueOf(this);
-  }
-
   log(message = 'AppModel logged') {
     const notTesting = process.env.JEST_WORKER_ID === undefined;
     if (notTesting) console.log(message, valueOf(this));
