@@ -6,10 +6,23 @@ import {
   Primitive
 } from 'microstates';
 import { Big } from './customTypes.js';
-import { Transaction } from './transactions.js';
+import { Transaction, AmountComputed } from './transactions.js';
 
 class TransactionPayback extends Transaction {
   debtAccount = StringType;
+  references = { Big };
+  computedAmount = relationship(({ value, parentValue }) => {
+    console.log(value, parentValue);
+    return {
+      Type: AmountComputed,
+      value: {
+        ...value,
+        ...(!!parentValue.references
+          ? { references: parentValue.references }
+          : {})
+      }
+    };
+  });
 }
 
 class AccountPayback extends Primitive {
