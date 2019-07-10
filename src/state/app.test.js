@@ -11,10 +11,9 @@ let graphRange = {
 testData.charts = {};
 testData.charts.GraphRange = graphRange;
 
-let resolvedTestData = create(AppModel, testData).reCalc();
-
 describe(`transaction array changes`, () => {
   it(`has the correct length when an item is deleted`, () => {
+    let resolvedTestData = create(AppModel, testData).reCalc();
     expect(resolvedTestData.transactionsComputed).toHaveLength(11);
     const modTestData = resolvedTestData.deleteTransaction(`oasidjas1`);
     expect(modTestData.transactionsComputed).toHaveLength(10);
