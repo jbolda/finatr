@@ -67,12 +67,6 @@ class Transaction extends Primitive {
   }));
   occurrences = create(NumberType, 0);
   beginAferOccurrences = create(NumberType, 0);
-}
-
-class TransactionComputed extends Transaction {
-  fromAccounts = BooleanType;
-  dailyRate = Big;
-  y = Big;
 
   computeValue() {
     if (!!this.computedAmount.state && this.computedAmount.state.references) {
@@ -87,6 +81,12 @@ class TransactionComputed extends Transaction {
       return this;
     }
   }
+}
+
+class TransactionComputed extends Transaction {
+  fromAccounts = BooleanType;
+  dailyRate = Big;
+  y = Big;
 }
 
 export { Transaction, TransactionComputed };
