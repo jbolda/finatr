@@ -84,6 +84,8 @@ const coercePaybacks = ({ accounts }) => {
           value: -accountTransaction.value.state,
           fromAccount: true
         });
+
+        index += 1;
       }
     }
   }
