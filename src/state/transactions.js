@@ -36,9 +36,6 @@ class AmountComputed extends Primitive {
       case 'minus':
         return _Big(state.references[state.reference]).minus(this.on.compute);
       default:
-        console.log(this.reference.state);
-        console.log(this.references.entries);
-        console.log(this.references.entries[this.reference.state]);
         // we have a microstate here and are returning just the number
         return this.references.entries[state.reference].toNumber;
     }

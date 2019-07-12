@@ -272,7 +272,9 @@ describe(`computed transaction amounts return correctly`, () => {
                 value: 10,
                 references: { statementBalance: 1700 },
                 computedAmount: {
-                  reference: 'starting'
+                  reference: 'starting',
+                  operation: 'minus',
+                  on: { reference: 'statementBalance' }
                 }
               }
             ]
@@ -281,33 +283,13 @@ describe(`computed transaction amounts return correctly`, () => {
       ]
     }).reCalc();
 
-    // ,
-    // references: { statementBalance: 1700 },
-    // computedAmount: {
-    //   reference: 'starting'
-    // }
-
-    // ,
-    // operation: 'minus',
-    // on: { reference: 'statementBalance' }
-
-    // for (let account of computatedTest.accountsComputed) {
-    //   console.log(account.state.payback);
-    //   console.log(account.payback.starting.toFixed);
-    //   if (account.payback) {
-    //     console.log(account.payback.transactions);
-    //     for (let payback of account.payback.transactions) {
-    //       console.log(payback.starting.toFixed);
-    //     }
-    //   }
-    // }
-
     expect.hasAssertions();
     for (let transaction of computatedTest.transactionsComputed) {
-      console.log(transaction.state);
       // ignore the default transaction
       if (transaction.id.state !== 'seed-data-id') {
-        expect(transaction.value.toFixed).toEqual('1300.00');
+        // since it is a credit line, both should be negative (transfers)
+        expect(transaction.value.toFixed).toEqual('-1300.00');
+        expect(transaction.type.state).toEqual('transfer');
       }
     }
   });
