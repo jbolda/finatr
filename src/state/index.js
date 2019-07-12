@@ -134,8 +134,8 @@ class AppModel extends Primitive {
   }
 
   transactionComputer(filteredTransactions = [], categoriesSet = false) {
-    const { accounts, transactions } = this.state;
-    const transactionPaybacks = coercePaybacks({ accounts });
+    const { transactions } = this.state;
+    const transactionPaybacks = coercePaybacks({ accounts: this.accounts });
     const useTransactions =
       filteredTransactions.length === 0 ? transactions : filteredTransactions;
 
