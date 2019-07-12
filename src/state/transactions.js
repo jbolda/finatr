@@ -66,7 +66,7 @@ class Transaction extends Primitive {
   beginAferOccurrences = create(NumberType, 0);
 
   computeValue() {
-    if (!!this.computedAmount.state && this.computedAmount.state.references) {
+    if (this.state.computedAmount && this.computedAmount.state.references) {
       // it is kind of janky to use the value's positive/negative sign on
       // the computed value, but that is how coercePaybacks communicates
       // that it is a transfer or not. Might be worth thinking about this more
