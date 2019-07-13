@@ -15,7 +15,7 @@ class TransactionPayback extends Transaction {
 class AccountPayback extends Primitive {
   transactions = relationship(({ value, parentValue }) => ({
     Type: ArrayType.of(TransactionPayback),
-    value: value.map(t => ({
+    value: !value ? value : value.map(t => ({
       ...t,
       references: {
         ...t.references,
