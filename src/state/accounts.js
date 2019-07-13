@@ -6,7 +6,7 @@ import {
   Primitive
 } from 'microstates';
 import { Big } from './customTypes.js';
-import { Transaction, AmountComputed } from './transactions.js';
+import { Transaction } from './transactions.js';
 
 class TransactionPayback extends Transaction {
   debtAccount = StringType;
@@ -15,13 +15,15 @@ class TransactionPayback extends Transaction {
 class AccountPayback extends Primitive {
   transactions = relationship(({ value, parentValue }) => ({
     Type: ArrayType.of(TransactionPayback),
-    value: !value ? value : value.map(t => ({
-      ...t,
-      references: {
-        ...t.references,
-        starting: parentValue.references.starting
-      }
-    }))
+    value: !value
+      ? value
+      : value.map(t => ({
+          ...t,
+          references: {
+            ...t.references,
+            starting: parentValue.references.starting
+          }
+        }))
   }));
   references = { Big };
 }
