@@ -36,7 +36,17 @@ class Account extends Primitive {
 
   payback = relationship(({ value, parentValue }) => ({
     Type: AccountPayback,
-    value: { ...value, references: { starting: parentValue.starting } }
+    value: {
+      ...value,
+      ...(!value
+        ? {}
+        : {
+            references: {
+              ...value.references,
+              starting: parentValue.starting
+            }
+          })
+    }
   }));
 }
 
