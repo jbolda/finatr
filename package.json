@@ -13,7 +13,7 @@
     "@reach/router": "1.2.1",
     "big.js": "5.2.2",
     "bulma": "0.7.5",
-    "d3": "5.9.2",
+    "d3": "5.9.7",
     "date-fns": "2.0.0-alpha.25",
     "formik": "1.5.4",
     "js-file-download": "0.4.7",
