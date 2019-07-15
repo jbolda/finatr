@@ -21,6 +21,7 @@ class AccountPayback extends Primitive {
           ...t,
           references: {
             ...t.references,
+            ...parentValue.references,
             starting: parentValue.references.starting
           }
         }))
