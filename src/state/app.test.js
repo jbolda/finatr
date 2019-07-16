@@ -293,4 +293,46 @@ describe(`computed transaction amounts return correctly`, () => {
       }
     }
   });
+
+  it(`copies down the references from payback`, () => {
+    let computatedTest = create(AppModel, {
+      accounts: [
+        {
+          name: 'debt payback ref copy down',
+          starting: 3000,
+          vehicle: 'credit line',
+          payback: {
+            references: { statementBalance: 1700 },
+            transactions: [
+              {
+                id: `computated-test`,
+                raccount: `account`,
+                description: `description`,
+                category: `test default`,
+                start: `2018-03-22`,
+                rtype: `day`,
+                cycle: 3,
+                value: 10,
+                computedAmount: {
+                  reference: 'starting',
+                  operation: 'minus',
+                  on: { reference: 'statementBalance' }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }).reCalc();
+
+    expect.hasAssertions();
+    for (let transaction of computatedTest.transactionsComputed) {
+      // ignore the default transaction
+      if (transaction.id.state !== 'seed-data-id') {
+        // since it is a credit line, both should be negative (transfers)
+        expect(transaction.value.toFixed).toEqual('-1300.00');
+        expect(transaction.type.state).toEqual('transfer');
+      }
+    }
+  });
 });
