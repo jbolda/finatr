@@ -41,6 +41,7 @@ const coercePaybacks = ({ accounts }) => {
     ) {
       let index = 0;
       for (let accountTransaction of account.payback.transactions) {
+        const accountState = account.payback.state;
         // this one is for the expense/transfer on the account
         // being paid down, expenses are entered as positive
         // but mathed as negative so it will reduce the
@@ -51,15 +52,15 @@ const coercePaybacks = ({ accounts }) => {
           id: `${accountTransaction.id.state}-${index}EXP`,
           raccount: account.name.state,
           description:
-            (account.payback.description &&
-              account.payback.description.state) ||
             (accountTransaction.description &&
-              accountTransaction.description.state),
+              accountTransaction.description.state) ||
+            accountState.description,
           type:
             account.vehicle.state === 'credit line' ? 'transfer' : 'expense',
           category:
-            (account.payback.category && account.payback.category.state) ||
-            (accountTransaction.category && accountTransaction.category.state),
+            (accountTransaction.category &&
+              accountTransaction.category.state) ||
+            accountState.category,
           value:
             account.vehicle.state === 'credit line'
               ? -accountTransaction.value.state
@@ -73,14 +74,14 @@ const coercePaybacks = ({ accounts }) => {
           ...accountTransaction.state,
           id: `${accountTransaction.id.state}-${index}TRSF`,
           description:
-            (account.payback.description &&
-              account.payback.description.state) ||
             (accountTransaction.description &&
-              accountTransaction.description.state),
+              accountTransaction.description.state) ||
+            accountState.description,
           type: 'transfer',
           category:
-            (account.payback.category && account.payback.category.state) ||
-            (accountTransaction.category && accountTransaction.category.state),
+            (accountTransaction.category &&
+              accountTransaction.category.state) ||
+            accountState.category,
           value: -accountTransaction.value.state,
           fromAccount: true
         });
