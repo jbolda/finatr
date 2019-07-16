@@ -1,26 +1,54 @@
-import { valueOf, StringType, BooleanType } from 'microstates';
+import {
+  relationship,
+  StringType,
+  BooleanType,
+  ArrayType,
+  Primitive
+} from 'microstates';
 import { Big } from './customTypes.js';
 import { Transaction } from './transactions.js';
-import { create } from 'domain';
 
 class TransactionPayback extends Transaction {
   debtAccount = StringType;
 }
 
-class AccountPayback {
-  transactions = create([TransactionPayback], [{}]);
+class AccountPayback extends Primitive {
+  transactions = relationship(({ value, parentValue }) => ({
+    Type: ArrayType.of(TransactionPayback),
+    value: !value
+      ? value
+      : value.map(t => ({
+          ...t,
+          references: {
+            ...t.references,
+            ...parentValue.references,
+            starting: parentValue.references.starting
+          }
+        }))
+  }));
+  references = { Big };
 }
 
-class Account {
+class Account extends Primitive {
   name = StringType;
   starting = Big;
   interest = Big;
   vehicle = StringType;
-  payback = AccountPayback;
 
-  get state() {
-    return valueOf(this);
-  }
+  payback = relationship(({ value, parentValue }) => ({
+    Type: AccountPayback,
+    value: {
+      ...value,
+      ...(!value
+        ? {}
+        : {
+            references: {
+              ...value.references,
+              starting: parentValue.starting
+            }
+          })
+    }
+  }));
 }
 
 class AccountComputed extends Account {

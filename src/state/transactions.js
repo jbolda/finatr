@@ -37,7 +37,7 @@ class AmountComputed extends Primitive {
         return _Big(state.references[state.reference]).minus(this.on.compute);
       default:
         // we have a microstate here and are returning just the number
-        return this.references.entries[this.reference.state].toNumber;
+        return this.references.entries[state.reference].toNumber;
     }
   }
 }
@@ -64,15 +64,9 @@ class Transaction extends Primitive {
   }));
   occurrences = create(NumberType, 0);
   beginAferOccurrences = create(NumberType, 0);
-}
-
-class TransactionComputed extends Transaction {
-  fromAccounts = BooleanType;
-  dailyRate = Big;
-  y = Big;
 
   computeValue() {
-    if (!!this.computedAmount.state && this.computedAmount.state.references) {
+    if (this.state.computedAmount && this.computedAmount.state.references) {
       // it is kind of janky to use the value's positive/negative sign on
       // the computed value, but that is how coercePaybacks communicates
       // that it is a transfer or not. Might be worth thinking about this more
@@ -84,6 +78,12 @@ class TransactionComputed extends Transaction {
       return this;
     }
   }
+}
+
+class TransactionComputed extends Transaction {
+  fromAccounts = BooleanType;
+  dailyRate = Big;
+  y = Big;
 }
 
 export { Transaction, TransactionComputed };

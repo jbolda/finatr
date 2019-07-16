@@ -27,51 +27,68 @@ const sortTransactionOrder = (a, b) => {
 };
 
 const coercePaybacks = ({ accounts }) => {
-  let transactions = [];
-  if (accounts) {
-    accounts.forEach(account => {
-      if (
-        (account.vehicle === 'debt' ||
-          account.vehicle === 'loan' ||
-          account.vehicle === 'credit line') &&
-        account.payback
-      ) {
-        account.payback.transactions.forEach((accountTransaction, index) => {
-          // this one is for the expense/transfer on the account
-          // being paid down, expenses are entered as positive
-          // but mathed as negative so it will reduce the
-          // balance of a debt (which is entered as a positive number)
-          // where transfers (for credit line) need to be explicitly negative
-          transactions.push({
-            ...accountTransaction,
-            id: `${accountTransaction.id}-${index}EXP`,
-            raccount: account.name,
-            description:
-              account.payback.description || accountTransaction.description,
-            type: account.vehicle === 'credit line' ? 'transfer' : 'expense',
-            category: account.payback.category || accountTransaction.category,
-            value:
-              account.vehicle === 'credit line'
-                ? -accountTransaction.value
-                : accountTransaction.value,
-            fromAccount: true
-          });
+  if (!accounts.constructor.Type)
+    throw new Error('coercePaybacks expects a Microstate');
 
-          // this one is for the account making the payment
-          // (raccount is defined on accountTransaction)
-          transactions.push({
-            ...accountTransaction,
-            id: `${accountTransaction.id}-${index}TRSF`,
-            description:
-              account.payback.description || accountTransaction.description,
-            type: 'transfer',
-            category: account.payback.category || accountTransaction.category,
-            value: -accountTransaction.value,
-            fromAccount: true
-          });
+  let transactions = [];
+
+  for (let account of accounts) {
+    if (
+      (account.vehicle.state === 'debt' ||
+        account.vehicle.state === 'loan' ||
+        account.vehicle.state === 'credit line') &&
+      account.payback.state
+    ) {
+      let index = 0;
+      for (let accountTransaction of account.payback.transactions) {
+        const accountState = account.payback.state;
+        // this one is for the expense/transfer on the account
+        // being paid down, expenses are entered as positive
+        // but mathed as negative so it will reduce the
+        // balance of a debt (which is entered as a positive number)
+        // where transfers (for credit line) need to be explicitly negative
+        transactions.push({
+          ...accountTransaction.state,
+          id: `${accountTransaction.id.state}-${index}EXP`,
+          raccount: account.name.state,
+          description:
+            (accountTransaction.description &&
+              accountTransaction.description.state) ||
+            accountState.description,
+          type:
+            account.vehicle.state === 'credit line' ? 'transfer' : 'expense',
+          category:
+            (accountTransaction.category &&
+              accountTransaction.category.state) ||
+            accountState.category,
+          value:
+            account.vehicle.state === 'credit line'
+              ? -accountTransaction.value.state
+              : accountTransaction.value.state,
+          fromAccount: true
         });
+
+        // this one is for the account making the payment
+        // (raccount is defined on accountTransaction)
+        transactions.push({
+          ...accountTransaction.state,
+          id: `${accountTransaction.id.state}-${index}TRSF`,
+          description:
+            (accountTransaction.description &&
+              accountTransaction.description.state) ||
+            accountState.description,
+          type: 'transfer',
+          category:
+            (accountTransaction.category &&
+              accountTransaction.category.state) ||
+            accountState.category,
+          value: -accountTransaction.value.state,
+          fromAccount: true
+        });
+
+        index += 1;
       }
-    });
+    }
   }
   return transactions;
 };

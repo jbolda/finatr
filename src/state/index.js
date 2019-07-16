@@ -1,5 +1,5 @@
 import React from 'react';
-import { valueOf, ObjectType } from 'microstates';
+import { Primitive, valueOf, ObjectType, ArrayType } from 'microstates';
 import { Transaction, TransactionComputed } from './transactions.js';
 import { Account, AccountComputed } from './accounts.js';
 import { Charts } from './charts.js';
@@ -10,14 +10,14 @@ import { coercePaybacks, transactionSplitter } from './resolveFinancials';
 import { transactionCompute } from './resolveFinancials/resolveTransactions';
 import makeUUID from './resolveFinancials/makeUUID.js';
 
-class AppModel {
+class AppModel extends Primitive {
   forms = Forms;
-  transactions = [Transaction];
-  transactionsComputed = [TransactionComputed];
+  transactions = ArrayType.of(Transaction);
+  transactionsComputed = ArrayType.of(TransactionComputed);
   transactionsSplit = ObjectType;
   transactionCategories = ObjectType;
-  accounts = [Account];
-  accountsComputed = [AccountComputed];
+  accounts = ArrayType.of(Account);
+  accountsComputed = ArrayType.of(AccountComputed);
   charts = Charts;
   stats = Stats;
   taxStrategy = TaxStrategy;
@@ -70,10 +70,6 @@ class AppModel {
     } else {
       return this;
     }
-  }
-
-  get state() {
-    return valueOf(this);
   }
 
   log(message = 'AppModel logged') {
@@ -138,8 +134,8 @@ class AppModel {
   }
 
   transactionComputer(filteredTransactions = [], categoriesSet = false) {
-    const { accounts, transactions } = this.state;
-    const transactionPaybacks = coercePaybacks({ accounts });
+    const { transactions } = this.state;
+    const transactionPaybacks = coercePaybacks({ accounts: this.accounts });
     const useTransactions =
       filteredTransactions.length === 0 ? transactions : filteredTransactions;
 
