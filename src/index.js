@@ -6,6 +6,7 @@ import { Store, create } from 'microstates';
 import AppModel, { State } from './state';
 
 import 'bulma/css/bulma.css';
+import Homepage from './pages/homepage';
 import Financial from './pages/flow';
 import Accounts from './pages/accounts';
 import Importing from './pages/importing';
@@ -69,6 +70,9 @@ class App extends React.Component {
               <Link to="/" className="navbar-item">
                 Home
               </Link>
+              <Link to="flow" className="navbar-item">
+                Cash Flow
+              </Link>
               <Link to="accounts" className="navbar-item">
                 Accounts
               </Link>
@@ -81,14 +85,13 @@ class App extends React.Component {
             </div>
           </div>
         </nav>
-        <section className="section">
-          <Router>
-            <Financial path="/" />
-            <Accounts path="accounts" />
-            <Importing path="import" />
-            <Taxes path="taxes" />
-          </Router>
-        </section>
+        <Router>
+          <Homepage path="/" />
+          <Financial path="flow" />
+          <Accounts path="accounts" />
+          <Importing path="import" />
+          <Taxes path="taxes" />
+        </Router>
       </State.Provider>
     );
   }
