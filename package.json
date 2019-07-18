@@ -23,7 +23,7 @@
     "react-dom": "16.8.6",
     "react-file-reader-input": "2.0.0",
     "react-scripts": "3.0.1",
-    "ynab": "1.13.4"
+    "ynab": "1.14.0"
   },
   "devDependencies": {
     "cypress": "3.4.0",
