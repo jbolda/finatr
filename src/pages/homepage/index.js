@@ -19,9 +19,12 @@ const Homepage = () => (
         <section className="section">
           <div className="columns is-centered">
             <div className="column is-one-quarter">
-              <aside class="menu">
-                <p class="menu-label">Pages</p>
-                <ul class="menu-list">
+              <aside className="menu">
+                <p className="menu-label">Pages</p>
+                <ul className="menu-list">
+                  <li>
+                    <Link to="examples">Examples</Link>
+                  </li>
                   <li>
                     <Link to="flow">Cash Flow</Link>
                   </li>
