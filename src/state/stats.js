@@ -200,7 +200,7 @@ class Stats {
       .yearsToFatFI.set(
         simpleInterested.eq(0) || FIconst.gte(30)
           ? 999
-          : _Big(2)
+          : _Big(30)
               .minus(FIconst)
               .div(simpleInterested)
       );
