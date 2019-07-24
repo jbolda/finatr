@@ -1,0 +1,187 @@
+{
+  "transactions": [
+    {
+      "id": "b59b562a-321a-45a6-964c-c1cb0232311a",
+      "raccount": "checking",
+      "description": "beginning of month",
+      "category": "paycheck",
+      "type": "income",
+      "start": "2019-01-01",
+      "rtype": "day of month",
+      "cycle": 1,
+      "value": 2800
+    },
+    {
+      "id": "23df0d4b-7cd4-4840-8be4-c58deb85f8ce",
+      "raccount": "checking",
+      "description": "middle of month",
+      "category": "paycheck",
+      "type": "income",
+      "start": "2019-01-01",
+      "rtype": "day of month",
+      "cycle": 15,
+      "value": 2800
+    },
+    {
+      "id": "15206ac6-7bca-4511-84ed-f35529f9b40d",
+      "raccount": "checking",
+      "description": "rent, electric and water",
+      "category": "rent",
+      "type": "expense",
+      "start": "2019-01-05",
+      "rtype": "day of month",
+      "cycle": 5,
+      "value": 3200
+    },
+    {
+      "id": "5c58e080-709e-4d86-9c14-55aa06749359",
+      "raccount": "IRA",
+      "description": "beginning of month",
+      "category": "retirement",
+      "type": "income",
+      "start": "2019-01-01",
+      "rtype": "day of month",
+      "cycle": 1,
+      "value": 200
+    },
+    {
+      "id": "34353fff-1565-47ff-a860-92d330ac4919",
+      "raccount": "IRA",
+      "description": "middle of month",
+      "category": "retirement",
+      "type": "income",
+      "start": "2019-01-01",
+      "rtype": "day of month",
+      "cycle": 15,
+      "value": 200
+    },
+    {
+      "id": "e5ef2fa9-e89b-43d5-8029-5849ab9d7952",
+      "raccount": "credit card",
+      "description": "internet",
+      "category": "internet",
+      "type": "expense",
+      "start": "2019-01-05",
+      "rtype": "day of month",
+      "cycle": 5,
+      "value": 80
+    },
+    {
+      "id": "1590c1cf-0bae-44ea-84b3-165b5ca63cee",
+      "raccount": "checking",
+      "description": "student loans",
+      "category": "student loans",
+      "type": "expense",
+      "start": "2019-01-20",
+      "rtype": "day of month",
+      "cycle": 20,
+      "value": 400
+    },
+    {
+      "id": "29993d5c-c7b8-4ea9-be6c-31419e5a7b12",
+      "raccount": "credit card",
+      "description": "groceries",
+      "category": "groceries",
+      "type": "expense",
+      "start": "2019-01-01",
+      "rtype": "day of week",
+      "cycle": 1,
+      "value": 150
+    },
+    {
+      "id": "ce42454e-09c0-47d4-b24a-9f528e27e0b3",
+      "raccount": "credit card",
+      "description": "going out",
+      "category": "going out",
+      "type": "expense",
+      "start": "2019-01-01",
+      "rtype": "day of week",
+      "cycle": 5,
+      "value": 80
+    },
+    {
+      "id": "cb5a5564-0cf5-4da7-a11c-681302e43760",
+      "raccount": "credit card",
+      "description": "metro card",
+      "category": "transportation",
+      "type": "expense",
+      "start": "2019-01-01",
+      "rtype": "day of month",
+      "cycle": 5,
+      "value": 200
+    },
+    {
+      "id": "c7ea3f5c-95f0-4fc5-915a-9e4ade4ebfa2",
+      "raccount": "credit card",
+      "description": "cell phone",
+      "category": "cell phone",
+      "type": "expense",
+      "start": "2019-01-01",
+      "rtype": "day of month",
+      "cycle": 2,
+      "value": 100
+    },
+    {
+      "id": "c6add7c9-26ef-4f40-94b4-49bbaa5fa3c7",
+      "raccount": "credit card",
+      "description": "fun",
+      "category": "fun",
+      "type": "expense",
+      "start": "2019-01-01",
+      "rtype": "day of week",
+      "cycle": 4,
+      "value": 50
+    }
+  ],
+  "accounts": [
+    {
+      "name": "IRA",
+      "starting": 50000,
+      "interest": 8,
+      "vehicle": "investment",
+      "visible": false
+    },
+    {
+      "name": "checking",
+      "starting": 4000,
+      "interest": 0,
+      "vehicle": "operating",
+      "visible": true
+    },
+    {
+      "name": "credit card",
+      "starting": 1200,
+      "interest": 0,
+      "vehicle": "credit line",
+      "visible": true,
+      "payback": {
+        "category": "credit card payment",
+        "transactions": [
+          {
+            "description": "pay off current balance",
+            "debtAccount": "credit card",
+            "raccount": "checking",
+            "start": "2019-02-15",
+            "rtype": "day of month",
+            "cycle": 15,
+            "occurrences": 1,
+            "value": 0,
+            "computedAmount": { "reference": "starting" },
+            "id": "d26ae14c-2f33-46e7-8122-b2b849e43a5b"
+          },
+          {
+            "description": "pay off future expenses",
+            "debtAccount": "credit card",
+            "raccount": "checking",
+            "start": "2019-02-15",
+            "rtype": "day of month",
+            "cycle": 15,
+            "beginAfterOccurrences": 1,
+            "value": 1500,
+            "id": "e526deda-0cce-4c40-9a32-49766932c14c"
+          }
+        ]
+      }
+    }
+  ]
+}
