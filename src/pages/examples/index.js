@@ -3,10 +3,23 @@ import { navigate } from '@reach/router';
 import { State } from '../../state';
 
 const listOfExamples = [
-  { name: 'Simple Example', content: 'Lorem ipsum', file: 'simple.json' },
   {
-    name: 'DC and SF Expensive',
-    content: 'Lorem ipsum',
+    name: 'Simple Example',
+    content: `
+    This is a real simple example where you get paid every two weeks.
+    Your only expense is paying rent once a month. Wouldn't that be nice!
+    `,
+    file: 'simple.json'
+  },
+  {
+    name: 'Incredibly Expensive Rents',
+    content: `
+    This example shows what living in San Francisco, Silicon Valley,
+    or Washington DC may look like. You get paid well relative to the
+    rest of the country, but most of that goes to living expenses.
+    You only have one source of income, but a decent salary nonetheless.
+    You carry a credit card, and pay your other expenses with that.
+    `,
     file: 'crazy rents.json'
   }
 ];
