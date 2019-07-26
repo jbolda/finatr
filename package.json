@@ -15,7 +15,7 @@
     "bulma": "0.7.5",
     "d3": "5.9.7",
     "date-fns": "2.0.0-alpha.25",
-    "formik": "1.5.8",
+    "formik": "^2.0.1-rc.12",
     "js-file-download": "0.4.7",
     "microstates": "0.15.0-alpha.0",
     "prop-types": "15.7.2",
@@ -23,7 +23,8 @@
     "react-dom": "16.8.6",
     "react-file-reader-input": "2.0.0",
     "react-scripts": "3.0.1",
-    "ynab": "1.14.0"
+    "ynab": "1.14.0",
+    "yup": "^0.27.0"
   },
   "devDependencies": {
     "cypress": "3.4.0",
