@@ -1,35 +1,9 @@
 import React from 'react';
 import { State } from '../../state';
 import { Formik, Field } from 'formik';
+import { FieldGroup } from '../../components/bootstrap/Form';
 
 import * as Form from '../../components/bootstrap/Form';
-
-function FieldInput({
-  fieldName,
-  touched,
-  errors,
-  fieldType = 'text',
-  pattern
-}) {
-  return (
-    <React.Fragment>
-      <Form.Field>
-        <Form.FieldLabel>{fieldName}</Form.FieldLabel>
-        <Form.FieldControl>
-          <Field
-            type={fieldType}
-            name={fieldName}
-            pattern={pattern}
-            className="input"
-          />
-        </Form.FieldControl>
-      </Form.Field>
-      {touched[fieldName] && errors[fieldName] && (
-        <div>{errors[fieldName]}</div>
-      )}
-    </React.Fragment>
-  );
-}
 
 class TransactionInput extends React.Component {
   render() {
@@ -73,11 +47,10 @@ class TransactionInput extends React.Component {
                     className="input"
                     style={{ display: 'none' }}
                   />
-                  <Form.Field>
-                    <Form.FieldLabel>account</Form.FieldLabel>
-                    <Form.FieldControl>
+
+                  <FieldGroup errors={errors} name="raccount" touched={touched}>
                       <div className="select">
-                        <Field component="select" name="raccount">
+                      <Field as="select" name="raccount">
                           <option key={'default'} value={'select'} disabled>
                             Select an Option
                           </option>
@@ -88,67 +61,56 @@ class TransactionInput extends React.Component {
                           ))}
                         </Field>
                       </div>
-                    </Form.FieldControl>
-                  </Form.Field>
-                  {touched.raccount && errors.raccount && (
-                    <div>{errors.raccount}</div>
-                  )}
+                  </FieldGroup>
 
-                  <FieldInput
+                  <FieldGroup
                     errors={errors}
-                    fieldName="description"
+                    name="description"
                     touched={touched}
-                  />
+                  >
+                    <Field name="description" as="input" className="input" />
+                  </FieldGroup>
 
-                  <FieldInput
-                    errors={errors}
-                    fieldName="category"
-                    touched={touched}
-                  />
+                  <FieldGroup errors={errors} name="category" touched={touched}>
+                    <Field name="category" as="input" className="input" />
+                  </FieldGroup>
 
-                  <div className="field is-horizontal">
-                    <div className="field-label is-normal">
-                      <label className="label">type</label>
-                    </div>
-                    <div className="field-body">
-                      <div className="field">
-                        <div className="control">
+                  <FieldGroup errors={errors} name="type" touched={touched}>
                           <div className="select">
-                            <Field component="select" name="type">
+                      <Field as="select" name="type">
                               <option value="income">Income</option>
                               <option value="expense">Expense</option>
                               <option value="transfer">Transfer</option>
                             </Field>
                           </div>
-                        </div>
-                      </div>
-                    </div>
-                    {touched.type && errors.type && <div>{errors.type}</div>}
-                  </div>
+                  </FieldGroup>
 
-                  <FieldInput
-                    errors={errors}
-                    fieldName="start"
-                    touched={touched}
+                  <FieldGroup errors={errors} name="start" touched={touched}>
+                    <Field
+                      name="start"
+                      as="input"
+                      className="input"
                     fieldType="date"
                     pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
                   />
+                  </FieldGroup>
 
-                  <FieldInput
+                  <FieldGroup
                     errors={errors}
-                    fieldName="occurrences"
+                    name="occurrences"
                     touched={touched}
+                  >
+                    <Field
+                      name="occurrences"
+                      as="input"
                     fieldType="number"
+                      className="input"
                   />
+                  </FieldGroup>
 
-                  <div className="field is-horizontal">
-                    <div className="field-label is-normal">
-                      <label className="label">rtype</label>
-                    </div>
-                    <div className="field-body">
-                      <div className="field">
+                  <FieldGroup errors={errors} name="rtype" touched={touched}>
                         <div className="select">
-                          <Field component="select" name="rtype">
+                      <Field as="select" name="rtype">
                             <option value="none">No Repeating</option>
                             <option value="day">
                               Repeat Daily (or Every X Day)
@@ -173,24 +135,25 @@ class TransactionInput extends React.Component {
                             </option>
                           </Field>
                         </div>
-                      </div>
-                    </div>
-                    {touched.rtype && errors.rtype && <div>{errors.rtype}</div>}
-                  </div>
+                  </FieldGroup>
 
-                  <FieldInput
-                    errors={errors}
-                    fieldName="cycle"
-                    touched={touched}
+                  <FieldGroup errors={errors} name="cycle" touched={touched}>
+                    <Field
+                      name="cycle"
+                      as="input"
                     fieldType="number"
+                      className="input"
                   />
+                  </FieldGroup>
 
-                  <FieldInput
-                    errors={errors}
-                    fieldName="value"
-                    touched={touched}
+                  <FieldGroup errors={errors} name="value" touched={touched}>
+                    <Field
+                      name="value"
+                      as="input"
                     fieldType="number"
+                      className="input"
                   />
+                  </FieldGroup>
 
                   <div className="field is-grouped is-grouped-centered">
                     <div className="control">
