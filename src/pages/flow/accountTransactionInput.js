@@ -126,6 +126,22 @@ class AccountTransactionInput extends React.Component {
                       </div>
                     </FieldGroup>
 
+                    <FieldGroup
+                      errors={errors}
+                      name="description"
+                      touched={touched}
+                    >
+                      <Field name="description" className="input" />
+                    </FieldGroup>
+
+                    <FieldGroup
+                      errors={errors}
+                      name="category"
+                      touched={touched}
+                    >
+                      <Field name="category" className="input" />
+                    </FieldGroup>
+
                     <FieldGroup errors={errors} name="start" touched={touched}>
                       <Field
                         name="start"
