@@ -125,6 +125,19 @@ class TransactionInput extends React.Component {
                     />
                   </FieldGroup>
 
+                  <FieldGroup
+                    errors={errors}
+                    name="beginAfterOccurrences"
+                    prettyName="begin after X occurrences"
+                    touched={touched}
+                  >
+                    <Field
+                      name="beginAfterOccurrences"
+                      type="number"
+                      className="input"
+                    />
+                  </FieldGroup>
+
                   <FieldGroup errors={errors} name="ending" touched={touched}>
                     <label className="radio">
                       <Field
