@@ -1,9 +1,33 @@
 import React from 'react';
 import { State } from '../../state';
 import { Formik, Field } from 'formik';
+import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';
 
-import * as Form from '../../components/bootstrap/Form';
+const TransactionSchema = Yup.object().shape({
+  id: Yup.string(),
+  raccount: Yup.string().required('Required'),
+  description: Yup.string().min(1),
+  category: Yup.string(),
+  type: Yup.mixed()
+    .oneOf(['income', 'expense', 'transfer'])
+    .required('Required'),
+  start: Yup.string().required('Required'),
+  rtype: Yup.mixed()
+    .oneOf([
+      'none',
+      'day',
+      'day of week',
+      'day of month',
+      'bimonthly',
+      'quarterly',
+      'semiannually',
+      'annually'
+    ])
+    .required('Required'),
+  cycle: Yup.number().required('Required'),
+  value: Yup.number().required('Required')
+});
 
 class TransactionInput extends React.Component {
   render() {
@@ -25,6 +49,7 @@ class TransactionInput extends React.Component {
                 value: 0,
                 ...model.forms.transactionForm.state
               }}
+              validationSchema={TransactionSchema}
               onSubmit={(values, actions) => {
                 model.transactionUpsert(values);
                 actions.setSubmitting(false);
@@ -49,18 +74,18 @@ class TransactionInput extends React.Component {
                   />
 
                   <FieldGroup errors={errors} name="raccount" touched={touched}>
-                      <div className="select">
+                    <div className="select">
                       <Field as="select" name="raccount">
-                          <option key={'default'} value={'select'} disabled>
-                            Select an Option
+                        <option key={'default'} value={'select'} disabled>
+                          Select an Option
+                        </option>
+                        {model.state.accountsComputed.map(account => (
+                          <option key={account.name} value={account.name}>
+                            {account.name}
                           </option>
-                          {model.state.accountsComputed.map(account => (
-                            <option key={account.name} value={account.name}>
-                              {account.name}
-                            </option>
-                          ))}
-                        </Field>
-                      </div>
+                        ))}
+                      </Field>
+                    </div>
                   </FieldGroup>
 
                   <FieldGroup
@@ -76,13 +101,13 @@ class TransactionInput extends React.Component {
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="type" touched={touched}>
-                          <div className="select">
+                    <div className="select">
                       <Field as="select" name="type">
-                              <option value="income">Income</option>
-                              <option value="expense">Expense</option>
-                              <option value="transfer">Transfer</option>
-                            </Field>
-                          </div>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                        <option value="transfer">Transfer</option>
+                      </Field>
+                    </div>
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="start" touched={touched}>
@@ -90,9 +115,9 @@ class TransactionInput extends React.Component {
                       name="start"
                       as="input"
                       className="input"
-                    fieldType="date"
-                    pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-                  />
+                      fieldType="date"
+                      pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                    />
                   </FieldGroup>
 
                   <FieldGroup
@@ -103,56 +128,56 @@ class TransactionInput extends React.Component {
                     <Field
                       name="occurrences"
                       as="input"
-                    fieldType="number"
+                      fieldType="number"
                       className="input"
-                  />
+                    />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="rtype" touched={touched}>
-                        <div className="select">
+                    <div className="select">
                       <Field as="select" name="rtype">
-                            <option value="none">No Repeating</option>
-                            <option value="day">
-                              Repeat Daily (or Every X Day)
-                            </option>
-                            <option value="day of week">
-                              Repeat on a Day of the Week
-                            </option>
-                            <option value="day of month">
-                              Repeat on a Day of the Month
-                            </option>
-                            <option value="bimonthly">
-                              Repeat Every Other Month on Day
-                            </option>
-                            <option value="quarterly">
-                              Repeat Every Quarter on Day
-                            </option>
-                            <option value="semiannually">
-                              Repeat Twice a Year on Day
-                            </option>
-                            <option value="annually">
-                              Repeat Every Year on Day
-                            </option>
-                          </Field>
-                        </div>
+                        <option value="none">No Repeating</option>
+                        <option value="day">
+                          Repeat Daily (or Every X Day)
+                        </option>
+                        <option value="day of week">
+                          Repeat on a Day of the Week
+                        </option>
+                        <option value="day of month">
+                          Repeat on a Day of the Month
+                        </option>
+                        <option value="bimonthly">
+                          Repeat Every Other Month on Day
+                        </option>
+                        <option value="quarterly">
+                          Repeat Every Quarter on Day
+                        </option>
+                        <option value="semiannually">
+                          Repeat Twice a Year on Day
+                        </option>
+                        <option value="annually">
+                          Repeat Every Year on Day
+                        </option>
+                      </Field>
+                    </div>
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="cycle" touched={touched}>
                     <Field
                       name="cycle"
                       as="input"
-                    fieldType="number"
+                      fieldType="number"
                       className="input"
-                  />
+                    />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="value" touched={touched}>
                     <Field
                       name="value"
                       as="input"
-                    fieldType="number"
+                      fieldType="number"
                       className="input"
-                  />
+                    />
                   </FieldGroup>
 
                   <div className="field is-grouped is-grouped-centered">
