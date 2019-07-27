@@ -51,6 +51,7 @@ class TransactionInput extends React.Component {
               }}
               validationSchema={TransactionSchema}
               onSubmit={(values, actions) => {
+                console.log(values);
                 model.transactionUpsert(values);
                 actions.setSubmitting(false);
                 actions.resetForm();
@@ -93,11 +94,11 @@ class TransactionInput extends React.Component {
                     name="description"
                     touched={touched}
                   >
-                    <Field name="description" as="input" className="input" />
+                    <Field name="description" className="input" />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="category" touched={touched}>
-                    <Field name="category" as="input" className="input" />
+                    <Field name="category" className="input" />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="type" touched={touched}>
@@ -113,9 +114,8 @@ class TransactionInput extends React.Component {
                   <FieldGroup errors={errors} name="start" touched={touched}>
                     <Field
                       name="start"
-                      as="input"
+                      type="date"
                       className="input"
-                      fieldType="date"
                       pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
                     />
                   </FieldGroup>
@@ -125,12 +125,7 @@ class TransactionInput extends React.Component {
                     name="occurrences"
                     touched={touched}
                   >
-                    <Field
-                      name="occurrences"
-                      as="input"
-                      fieldType="number"
-                      className="input"
-                    />
+                    <Field name="occurrences" type="number" className="input" />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="rtype" touched={touched}>
@@ -163,21 +158,11 @@ class TransactionInput extends React.Component {
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="cycle" touched={touched}>
-                    <Field
-                      name="cycle"
-                      as="input"
-                      fieldType="number"
-                      className="input"
-                    />
+                    <Field name="cycle" type="number" className="input" />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="value" touched={touched}>
-                    <Field
-                      name="value"
-                      as="input"
-                      fieldType="number"
-                      className="input"
-                    />
+                    <Field name="value" type="number" className="input" />
                   </FieldGroup>
 
                   <div className="field is-grouped is-grouped-centered">
