@@ -48,7 +48,7 @@ class AccountInput extends React.Component {
 
                   <FieldGroup errors={errors} name="vehicle" touched={touched}>
                     <div className="select">
-                      <Field component="select" name="vehicle">
+                      <Field as="select" name="vehicle">
                         <option value="operating">Operating</option>
                         <option value="loan">Loan</option>
                         <option value="credit line">Credit Line</option>
