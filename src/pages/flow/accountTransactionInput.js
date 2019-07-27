@@ -3,7 +3,6 @@ import { State } from '../../state';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';
-import { tupleTypeAnnotation } from '@babel/types';
 
 const AccountTransactionSchema = Yup.object().shape({
   id: Yup.string(),
