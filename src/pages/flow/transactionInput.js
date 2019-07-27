@@ -48,10 +48,13 @@ class TransactionInput extends React.Component {
                 category: '',
                 type: 'income',
                 start: '2018-01-01',
+                beginAfterOccurrences: 0,
+                end: '',
+                occurrences: 0,
                 rtype: 'none',
+                ending: 'never',
                 cycle: 0,
                 value: 0,
-                ending: 'never',
                 ...model.forms.transactionForm.state
               }}
               validationSchema={TransactionSchema}
