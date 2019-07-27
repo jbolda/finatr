@@ -170,9 +170,9 @@ class FinancialFlow extends React.Component {
             </section>
             <section className="section">
               <div className="container">
-                <Form.Field>
+                <Form.FieldHorizontal>
                   <Form.FieldLabel>Beginning Flow On</Form.FieldLabel>
-                  <Form.FieldControl>
+                  <Form.FieldBody>
                     <input
                       className="input"
                       name="begin-graph"
@@ -183,8 +183,8 @@ class FinancialFlow extends React.Component {
                         model.updateStartDateReCalc(event.target.value)
                       }
                     />
-                  </Form.FieldControl>
-                </Form.Field>
+                  </Form.FieldBody>
+                </Form.FieldHorizontal>
               </div>
             </section>
             <Transactions />
