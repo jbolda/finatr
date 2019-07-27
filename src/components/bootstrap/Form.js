@@ -24,10 +24,16 @@ export function FieldControl({ children }) {
   return <div className="control">{children}</div>;
 }
 
-export function FieldGroup({ name, touched, errors, children }) {
+export function FieldGroup({
+  name,
+  prettyName = name,
+  touched,
+  errors,
+  children
+}) {
   return (
     <FieldHorizontal>
-      <FieldLabel>{name}</FieldLabel>
+      <FieldLabel>{prettyName}</FieldLabel>
       <FieldBody>
         <FieldControl>{children}</FieldControl>
         {touched[name] && errors[name] ? (

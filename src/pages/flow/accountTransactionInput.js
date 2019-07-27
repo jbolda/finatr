@@ -55,6 +55,7 @@ class AccountTransactionInput extends React.Component {
                     <FieldGroup
                       errors={errors}
                       name="debtAccount"
+                      prettyName="debt account"
                       touched={touched}
                     >
                       <div className="select">
@@ -81,6 +82,7 @@ class AccountTransactionInput extends React.Component {
                     <FieldGroup
                       errors={errors}
                       name="raccount"
+                      prettyName="payment account"
                       touched={touched}
                     >
                       <div className="select">
