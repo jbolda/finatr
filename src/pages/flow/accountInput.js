@@ -1,7 +1,19 @@
 import React from 'react';
 import { State } from '../../state';
 import { Formik, Field } from 'formik';
+import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';
+
+const AccountSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(1)
+    .required('Required'),
+  starting: Yup.number().required('Required'),
+  interest: Yup.number(),
+  vehicle: Yup.mixed()
+    .oneOf(['operating', 'loan', 'credit line', 'investment'])
+    .required('Required')
+});
 
 class AccountInput extends React.Component {
   render() {
@@ -18,6 +30,7 @@ class AccountInput extends React.Component {
                 vehicle: 'operating',
                 ...model.forms.accountForm.state
               }}
+              validationSchema={AccountSchema}
               onSubmit={(values, actions) => {
                 model.upsertAccount(values);
                 actions.setSubmitting(false);
