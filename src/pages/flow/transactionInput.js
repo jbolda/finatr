@@ -7,12 +7,12 @@ import { FieldGroup } from '../../components/bootstrap/Form';
 const TransactionSchema = Yup.object().shape({
   id: Yup.string(),
   raccount: Yup.string().required('Required'),
-  description: Yup.string().min(1),
+  description: Yup.string(),
   category: Yup.string(),
   type: Yup.mixed()
     .oneOf(['income', 'expense', 'transfer'])
     .required('Required'),
-  start: Yup.string().required('Required'),
+  start: Yup.date().required('Required'),
   rtype: Yup.mixed()
     .oneOf([
       'none',
@@ -26,7 +26,9 @@ const TransactionSchema = Yup.object().shape({
     ])
     .required('Required'),
   cycle: Yup.number().required('Required'),
-  value: Yup.number().required('Required')
+  value: Yup.number()
+    .moreThan(0)
+    .required('Required')
 });
 
 class TransactionInput extends React.Component {

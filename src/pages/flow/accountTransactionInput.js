@@ -9,9 +9,9 @@ const AccountTransactionSchema = Yup.object().shape({
   id: Yup.string(),
   debtAccount: Yup.string().required('Required'),
   raccount: Yup.string().required('Required'),
-  description: Yup.string().min(1),
+  description: Yup.string(),
   category: Yup.string(),
-  start: Yup.string().required('Required'),
+  start: Yup.date().required('Required'),
   rtype: Yup.mixed()
     .oneOf([
       'none',
