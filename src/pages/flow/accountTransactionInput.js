@@ -1,7 +1,33 @@
 import React from 'react';
 import { State } from '../../state';
 import { Formik, Field } from 'formik';
+import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';
+import { tupleTypeAnnotation } from '@babel/types';
+
+const AccountTransactionSchema = Yup.object().shape({
+  id: Yup.string(),
+  debtAccount: Yup.string().required('Required'),
+  raccount: Yup.string().required('Required'),
+  description: Yup.string().min(1),
+  category: Yup.string(),
+  start: Yup.string().required('Required'),
+  rtype: Yup.mixed()
+    .oneOf([
+      'none',
+      'day',
+      'day of week',
+      'day of month',
+      'bimonthly',
+      'quarterly',
+      'semiannually',
+      'annually'
+    ])
+    .required('Required'),
+  occurrences: Yup.number(),
+  cycle: Yup.number().required('Required'),
+  value: Yup.number().required('Required')
+});
 
 class AccountTransactionInput extends React.Component {
   constructor() {
@@ -29,6 +55,7 @@ class AccountTransactionInput extends React.Component {
                   value: 0,
                   ...model.forms.accountTransactionForm.state
                 }}
+                validationSchema={AccountTransactionSchema}
                 onSubmit={(values, actions) => {
                   model.upsertAccountTransaction(values);
                   actions.setSubmitting(false);
