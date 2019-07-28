@@ -13,6 +13,8 @@ const TransactionSchema = Yup.object().shape({
     .oneOf(['income', 'expense', 'transfer'])
     .required('Required'),
   start: Yup.date().required('Required'),
+  end: Yup.date(),
+  occurrences: Yup.number(),
   rtype: Yup.mixed()
     .oneOf([
       'none',
@@ -46,14 +48,17 @@ class TransactionInput extends React.Component {
                 category: '',
                 type: 'income',
                 start: '2018-01-01',
+                beginAfterOccurrences: 0,
+                end: '',
+                occurrences: 0,
                 rtype: 'none',
+                ending: 'never',
                 cycle: 0,
                 value: 0,
                 ...model.forms.transactionForm.state
               }}
               validationSchema={TransactionSchema}
               onSubmit={(values, actions) => {
-                console.log(values);
                 model.transactionUpsert(values);
                 actions.setSubmitting(false);
                 actions.resetForm();
@@ -66,7 +71,8 @@ class TransactionInput extends React.Component {
                 handleChange,
                 handleBlur,
                 handleSubmit,
-                isSubmitting
+                isSubmitting,
+                setFieldValue
               }) => (
                 <form onSubmit={handleSubmit} autoComplete="off">
                   <Field
@@ -124,10 +130,71 @@ class TransactionInput extends React.Component {
 
                   <FieldGroup
                     errors={errors}
-                    name="occurrences"
+                    name="beginAfterOccurrences"
+                    prettyName="begin after X occurrences"
                     touched={touched}
                   >
-                    <Field name="occurrences" type="number" className="input" />
+                    <Field
+                      name="beginAfterOccurrences"
+                      type="number"
+                      className="input"
+                    />
+                  </FieldGroup>
+
+                  <FieldGroup errors={errors} name="ending" touched={touched}>
+                    <label className="radio">
+                      <Field
+                        type="radio"
+                        name="ending"
+                        checked={values.ending === 'never'}
+                        onChange={() => setFieldValue('ending', 'never')}
+                      />
+                      never
+                    </label>
+                    <label className="radio">
+                      <Field
+                        type="radio"
+                        name="ending"
+                        checked={values.ending === 'at Date'}
+                        onChange={() => setFieldValue('ending', 'at Date')}
+                      />
+                      at Date
+                    </label>
+                    <label className="radio">
+                      <Field
+                        type="radio"
+                        name="ending"
+                        checked={
+                          values.ending === 'after Number of Occurrences'
+                        }
+                        onChange={() =>
+                          setFieldValue('ending', 'after Number of Occurrences')
+                        }
+                      />
+                      after Number of Occurrences
+                    </label>
+                    {values.ending === 'after Number of Occurrences' ? (
+                      <FieldGroup
+                        errors={errors}
+                        name="occurrences"
+                        touched={touched}
+                      >
+                        <Field
+                          name="occurrences"
+                          type="number"
+                          className="input"
+                        />
+                      </FieldGroup>
+                    ) : values.ending === 'at Date' ? (
+                      <FieldGroup
+                        errors={errors}
+                        name="end"
+                        prettyName="At This Day"
+                        touched={touched}
+                      >
+                        <Field name="end" type="date" className="input" />
+                      </FieldGroup>
+                    ) : null}
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="rtype" touched={touched}>

@@ -49,6 +49,7 @@ class Transaction extends Primitive {
   category = StringType;
   type = StringType;
   start = StringType;
+  end = StringType;
   rtype = StringType;
   cycle = Big;
   value = Big;
