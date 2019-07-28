@@ -1,7 +1,6 @@
 describe('Transaction Delete Tests', () => {
   beforeEach(() => {
     cy.visit('/flow');
-    cy.wait(300);
     cy.get('#accounts')
       .contains('Add Account')
       .click();
