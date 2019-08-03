@@ -216,8 +216,39 @@ class TransactionInput extends React.Component {
                     <Field name="cycle" type="number" className="input" />
                   </FieldGroup>
 
-                  <FieldGroup errors={errors} name="value" touched={touched}>
-                    <Field name="value" type="number" className="input" />
+                  <FieldGroup
+                    errors={errors}
+                    name="valueType"
+                    prettyName="value"
+                    touched={touched}
+                  >
+                    <label className="radio">
+                      <Field
+                        type="radio"
+                        name="valueType"
+                        checked={values.valueType === 'static'}
+                        onChange={() => setFieldValue('valueType', 'static')}
+                      />
+                      Static
+                    </label>
+                    <label className="radio">
+                      <Field
+                        type="radio"
+                        name="valueType"
+                        checked={values.valueType === 'dynamic'}
+                        onChange={() => setFieldValue('valueType', 'dynamic')}
+                      />
+                      Dynamic
+                    </label>
+                    {values.valueType === 'static' ? (
+                      <FieldGroup
+                        errors={errors}
+                        name="value"
+                        touched={touched}
+                      >
+                        <Field name="value" type="number" className="input" />
+                      </FieldGroup>
+                    ) : null}
                   </FieldGroup>
 
                   <div className="field is-grouped is-grouped-centered">
