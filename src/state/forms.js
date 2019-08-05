@@ -21,6 +21,21 @@ class KeyValue extends Primitive {
   value = Big;
 }
 
+class AmountComputedForm extends Primitive {
+  operation = StringType;
+  reference = StringType;
+  references = { Big };
+  on = AmountComputedForm;
+
+  setAmountComputed() {
+    if (!this.on.state) {
+      return this.operation.set('none');
+    } else {
+      return this.setAmountComputed();
+    }
+  }
+}
+
 class TransactionForm extends Primitive {
   id = defaults(StringType, '');
   raccount = defaults(StringType, 'select');
