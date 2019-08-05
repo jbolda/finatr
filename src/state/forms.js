@@ -14,6 +14,7 @@ class TransactionForm extends Primitive {
   occurrences = defaults(Big, 0);
   rtype = defaults(StringType, '');
   cycle = defaults(Big, 0);
+  valueType = defaults(StringType, 'static');
   value = defaults(Big, 0);
 
   get values() {
@@ -46,6 +47,7 @@ class AccountTransactionForm extends Primitive {
   rtype = defaults(StringType, 'none');
   cycle = defaults(Big, 0);
   occurrences = defaults(Big, 0);
+  valueType = defaults(StringType, 'static');
   value = defaults(Big, 0);
 
   get values() {
