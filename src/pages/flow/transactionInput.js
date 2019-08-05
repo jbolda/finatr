@@ -3,6 +3,7 @@ import { State } from '../../state';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';
+import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
 const TransactionSchema = Yup.object().shape({
   id: Yup.string(),
@@ -251,7 +252,11 @@ class TransactionInput extends React.Component {
                         type="radio"
                         name="valueType"
                         checked={values.valueType === 'dynamic'}
-                        onChange={() => setFieldValue('valueType', 'dynamic')}
+                        onChange={() => {
+                          setFieldValue('computedAmount.reference', '');
+                          setFieldValue('computedAmount.operation', 'none');
+                          setFieldValue('valueType', 'dynamic');
+                        }}
                       />
                       Dynamic
                     </label>
@@ -263,7 +268,15 @@ class TransactionInput extends React.Component {
                       >
                         <Field name="value" type="number" className="input" />
                       </FieldGroup>
-                    ) : null}
+                    ) : (
+                      <TransactionInputAmountComputed
+                        errors={errors}
+                        touched={touched}
+                        values={values}
+                        setFieldValue={setFieldValue}
+                        level={0}
+                      />
+                    )}
                   </FieldGroup>
 
                   <div className="field is-grouped is-grouped-centered">
