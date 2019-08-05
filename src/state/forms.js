@@ -1,6 +1,21 @@
 import { valueOf, StringType, BooleanType, Primitive } from 'microstates';
 import { Big, defaults } from './customTypes.js';
 
+class AmountComputedForm extends Primitive {
+  operation = StringType;
+  reference = StringType;
+  references = { Big };
+  on = AmountComputedForm;
+
+  setAmountComputed() {
+    if (!this.on.state) {
+      return this.operation.set('none');
+    } else {
+      return this.setAmountComputed();
+    }
+  }
+}
+
 class TransactionForm extends Primitive {
   id = defaults(StringType, '');
   raccount = defaults(StringType, 'select');
@@ -16,6 +31,17 @@ class TransactionForm extends Primitive {
   cycle = defaults(Big, 0);
   valueType = defaults(StringType, 'static');
   value = defaults(Big, 0);
+  amountComputed = AmountComputedForm;
+
+  setForm(nextTransaction) {
+    if (!!nextTransaction.computedAmount) {
+      return this.set(nextTransaction)
+        .valueType.set('dynamic')
+        .amountComputed.setAmountComputed();
+    } else {
+      return this.set(nextTransaction);
+    }
+  }
 
   get values() {
     return Object.keys(this).reduce(
