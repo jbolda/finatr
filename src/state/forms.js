@@ -1,7 +1,13 @@
-import { create, valueOf, StringType, BooleanType } from 'microstates';
+import {
+  create,
+  valueOf,
+  StringType,
+  BooleanType,
+  Primitive
+} from 'microstates';
 import { Big } from './customTypes.js';
 
-class TransactionForm {
+class TransactionForm extends Primitive {
   /*defaults dont seem to actually take,
   so also setting these defaults in the form themselves.
   Come back and fix when bugs or whatever are resolved.*/
@@ -13,10 +19,15 @@ class TransactionForm {
   start = create(StringType, '');
   rtype = create(StringType, '');
   cycle = create(Big, 0);
-  value = create(Big, 50);
+  valueType = StringType;
+  value = 0;
 
-  get state() {
-    return valueOf(this);
+  setForm(nextTransaction) {
+    if (!!nextTransaction.computedAmount) {
+      return this.set(nextTransaction).valueType.set('dynamic');
+    } else {
+      return this.set(nextTransaction);
+    }
   }
 
   get values() {
@@ -48,18 +59,23 @@ class AccountForm {
   }
 }
 
-class AccountTransactionForm {
+class AccountTransactionForm extends Primitive {
   id = StringType;
   debtAccount = StringType;
   raccount = StringType;
   start = StringType;
   rtype = StringType;
-  cycle = create(Big, 0);
-  occurrences = create(Big, 0);
-  value = create(Big, 0);
+  cycle = Big;
+  occurrences = Big;
+  valueType = StringType;
+  value = Big;
 
-  get state() {
-    return valueOf(this);
+  setForm(nextAccountTransaction) {
+    if (!!nextAccountTransaction.computedAmount) {
+      return this.set(nextAccountTransaction).valueType.set('dynamic');
+    } else {
+      return this.set(nextAccountTransaction);
+    }
   }
 }
 
