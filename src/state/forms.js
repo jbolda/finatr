@@ -7,6 +7,21 @@ import {
 } from 'microstates';
 import { Big } from './customTypes.js';
 
+class AmountComputedForm extends Primitive {
+  operation = StringType;
+  reference = StringType;
+  references = { Big };
+  on = AmountComputedForm;
+
+  setAmountComputed() {
+    if (!this.on.state) {
+      return this.operation.set('none');
+    } else {
+      return this.setAmountComputed();
+    }
+  }
+}
+
 class TransactionForm extends Primitive {
   /*defaults dont seem to actually take,
   so also setting these defaults in the form themselves.
@@ -21,10 +36,13 @@ class TransactionForm extends Primitive {
   cycle = create(Big, 0);
   valueType = StringType;
   value = 0;
+  amountComputed = AmountComputedForm;
 
   setForm(nextTransaction) {
     if (!!nextTransaction.computedAmount) {
-      return this.set(nextTransaction).valueType.set('dynamic');
+      return this.set(nextTransaction)
+        .valueType.set('dynamic')
+        .amountComputed.setAmountComputed();
     } else {
       return this.set(nextTransaction);
     }
