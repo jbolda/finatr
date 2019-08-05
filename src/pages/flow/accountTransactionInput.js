@@ -3,6 +3,7 @@ import { State } from '../../state';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';
+import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
 const AccountTransactionSchema = Yup.object().shape({
   id: Yup.string(),
@@ -246,9 +247,12 @@ class AccountTransactionInput extends React.Component {
                       <Field type="number" name="cycle" className="input" />
                     </FieldGroup>
 
-                    <FieldGroup errors={errors} name="value" touched={touched}>
-                      <Field type="number" name="value" className="input" />
-                    </FieldGroup>
+                    <TransactionInputAmountComputed
+                      errors={errors}
+                      touched={touched}
+                      values={values}
+                      setFieldValue={setFieldValue}
+                    />
 
                     <div className="field is-grouped is-grouped-centered">
                       <div className="control">

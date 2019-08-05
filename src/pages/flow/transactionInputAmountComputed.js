@@ -6,6 +6,59 @@ const TransactionInputAmountComputed = ({
   errors,
   touched,
   values,
+  setFieldValue
+}) => (
+  <FieldGroup
+    errors={errors}
+    name="valueType"
+    prettyName="value"
+    touched={touched}
+  >
+    <label className="radio">
+      <Field
+        type="radio"
+        name="valueType"
+        checked={values.valueType === 'static'}
+        onChange={() => setFieldValue('valueType', 'static')}
+      />
+      Static
+    </label>
+    <label className="radio">
+      <Field
+        type="radio"
+        name="valueType"
+        checked={values.valueType === 'dynamic'}
+        onChange={() => {
+          setFieldValue('computedAmount.reference', '');
+          setFieldValue('computedAmount.operation', 'none');
+          setFieldValue('valueType', 'dynamic');
+          setFieldValue('value', 0);
+        }}
+      />
+      Dynamic
+    </label>
+    {values.valueType === 'static' ? (
+      <FieldGroup errors={errors} name="value" touched={touched}>
+        <Field name="value" type="number" className="input" />
+      </FieldGroup>
+    ) : (
+      <RecursiveAmountComputed
+        errors={errors}
+        touched={touched}
+        values={values}
+        setFieldValue={setFieldValue}
+        level={0}
+      />
+    )}
+  </FieldGroup>
+);
+
+export default TransactionInputAmountComputed;
+
+const RecursiveAmountComputed = ({
+  errors,
+  touched,
+  values,
   setFieldValue,
   level
 }) => (
@@ -49,7 +102,7 @@ const TransactionInputAmountComputed = ({
 
       {retrieveNested('operation', values, level) !== 'none' ? (
         <React.Fragment>
-          <TransactionInputAmountComputed
+          <RecursiveAmountComputed
             errors={errors}
             touched={touched}
             values={values}
@@ -61,8 +114,6 @@ const TransactionInputAmountComputed = ({
     </FieldGroup>
   </React.Fragment>
 );
-
-export default TransactionInputAmountComputed;
 
 const retrieveNested = (value, values, levelRequired, recursiveLevel = 0) => {
   if (!values) return 'none';
