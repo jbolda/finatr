@@ -7,17 +7,17 @@ import {
 } from 'microstates';
 import { Big } from './customTypes.js';
 
-class AmountComputedForm extends Primitive {
+class ComputedAmountForm extends Primitive {
   operation = StringType;
   reference = StringType;
   references = { Big };
-  on = AmountComputedForm;
+  on = ComputedAmountForm;
 
-  setAmountComputed() {
+  setComputedAmount() {
     if (!this.on.state) {
       return this.operation.set('none');
     } else {
-      return this.setAmountComputed();
+      return this;
     }
   }
 }
@@ -36,13 +36,13 @@ class TransactionForm extends Primitive {
   cycle = create(Big, 0);
   valueType = StringType;
   value = 0;
-  amountComputed = AmountComputedForm;
+  computedAmount = ComputedAmountForm;
 
   setForm(nextTransaction) {
     if (!!nextTransaction.computedAmount) {
       return this.set(nextTransaction)
         .valueType.set('dynamic')
-        .amountComputed.setAmountComputed();
+        .computedAmount.setComputedAmount();
     } else {
       return this.set(nextTransaction);
     }
@@ -87,10 +87,13 @@ class AccountTransactionForm extends Primitive {
   occurrences = Big;
   valueType = StringType;
   value = Big;
+  computedAmount = ComputedAmountForm;
 
   setForm(nextAccountTransaction) {
     if (!!nextAccountTransaction.computedAmount) {
-      return this.set(nextAccountTransaction).valueType.set('dynamic');
+      return this.set(nextAccountTransaction)
+        .valueType.set('dynamic')
+        .computedAmount.setComputedAmount();
     } else {
       return this.set(nextAccountTransaction);
     }

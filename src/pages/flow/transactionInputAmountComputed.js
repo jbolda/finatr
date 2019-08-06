@@ -147,7 +147,7 @@ const Operation = ({ operationType, values, level, setFieldValue }) => (
             );
             setFieldValue(
               `computedAmount${'.on'.repeat(level + 1)}.reference`,
-              ''
+              null
             );
           }
         }}
