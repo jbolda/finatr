@@ -21,17 +21,17 @@ class KeyValue extends Primitive {
   value = Big;
 }
 
-class AmountComputedForm extends Primitive {
+class ComputedAmountForm extends Primitive {
   operation = StringType;
   reference = StringType;
   references = { Big };
-  on = AmountComputedForm;
+  on = ComputedAmountForm;
 
-  setAmountComputed() {
+  setComputedAmount() {
     if (!this.on.state) {
       return this.operation.set('none');
     } else {
-      return this.setAmountComputed();
+      return this;
     }
   }
 }
