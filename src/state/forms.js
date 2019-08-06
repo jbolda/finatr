@@ -16,6 +16,11 @@ class ComputedAmountForm extends Primitive {
   }
 }
 
+class KeyValue extends Primitive {
+  name = StringType;
+  value = Big;
+}
+
 class TransactionForm extends Primitive {
   id = defaults(StringType, '');
   raccount = defaults(StringType, 'select');
@@ -31,15 +36,29 @@ class TransactionForm extends Primitive {
   cycle = defaults(Big, 0);
   valueType = defaults(StringType, 'static');
   value = defaults(Big, 0);
+  referencesArray = [KeyValue];
   computedAmount = ComputedAmountForm;
 
   setForm(nextTransaction) {
     if (!!nextTransaction.computedAmount) {
       return this.set(nextTransaction)
         .valueType.set('dynamic')
+        .setEachReference(this.references.state)
         .computedAmount.setComputedAmount();
     } else {
       return this.set(nextTransaction);
+    }
+  }
+
+  setEachReference(references) {
+    if (!!references) {
+      return this.referencesArray.set(
+        references.keys().reduce((refArray, ref) => {
+          return refArray.concat([{ name: ref, value: references[ref] }]);
+        }, [])
+      );
+    } else {
+      return this;
     }
   }
 
@@ -75,15 +94,30 @@ class AccountTransactionForm extends Primitive {
   occurrences = defaults(Big, 0);
   valueType = defaults(StringType, 'static');
   value = defaults(Big, 0);
+  references = { Big };
+  referencesArray = [KeyValue];
   computedAmount = ComputedAmountForm;
 
   setForm(nextAccountTransaction) {
     if (!!nextAccountTransaction.computedAmount) {
       return this.set(nextAccountTransaction)
         .valueType.set('dynamic')
+        .setEachReference(this.references.state)
         .computedAmount.setComputedAmount();
     } else {
       return this.set(nextAccountTransaction);
+    }
+  }
+
+  setEachReference(references) {
+    if (!!references) {
+      return this.referencesArray.set(
+        references.keys().reduce((refArray, ref) => {
+          return refArray.concat([{ name: ref, value: references[ref] }]);
+        }, [])
+      );
+    } else {
+      return this;
     }
   }
 
