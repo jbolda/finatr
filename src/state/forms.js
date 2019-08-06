@@ -36,6 +36,11 @@ class ComputedAmountForm extends Primitive {
   }
 }
 
+class KeyValue extends Primitive {
+  name = StringType;
+  value = Big;
+}
+
 class TransactionForm extends Primitive {
   id = defaults(StringType, '');
   raccount = defaults(StringType, 'select');
@@ -51,6 +56,7 @@ class TransactionForm extends Primitive {
   cycle = defaults(Big, 0);
   valueType = defaults(StringType, 'static');
   value = defaults(Big, 0);
+  references = { Big };
   referencesArray = [KeyValue];
   computedAmount = ComputedAmountForm;
 
