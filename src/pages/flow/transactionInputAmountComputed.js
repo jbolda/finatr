@@ -1,5 +1,5 @@
 import React from 'react';
-import { Field } from 'formik';
+import { Field, FieldArray } from 'formik';
 import { FieldGroup } from '../../components/bootstrap/Form';
 
 const TransactionInputAmountComputed = ({
@@ -31,6 +31,10 @@ const TransactionInputAmountComputed = ({
         onChange={() => {
           setFieldValue('computedAmount.reference', '');
           setFieldValue('computedAmount.operation', 'none');
+          setFieldValue('referencesArray[0]', {
+            name: 'give me a name',
+            value: 0
+          });
           setFieldValue('valueType', 'dynamic');
           setFieldValue('value', 0);
         }}
@@ -42,18 +46,89 @@ const TransactionInputAmountComputed = ({
         <Field name="value" type="number" className="input" />
       </FieldGroup>
     ) : (
-      <RecursiveAmountComputed
-        errors={errors}
-        touched={touched}
-        values={values}
-        setFieldValue={setFieldValue}
-        level={0}
-      />
+      <React.Fragment>
+        <References
+          errors={errors}
+          touched={touched}
+          values={values}
+          setFieldValue={setFieldValue}
+        />
+        <RecursiveAmountComputed
+          errors={errors}
+          touched={touched}
+          values={values}
+          setFieldValue={setFieldValue}
+          level={0}
+        />
+      </React.Fragment>
     )}
   </FieldGroup>
 );
 
 export default TransactionInputAmountComputed;
+
+const References = ({ errors, touched, values, setFieldValue }) => (
+  <FieldArray
+    name="referencesArray"
+    render={arrayHelpers => (
+      <React.Fragment>
+        {values.referencesArray && values.referencesArray.length > 0 ? (
+          <React.Fragment>
+            {values.referencesArray.map((reference, index) => (
+              <React.Fragment key={index}>
+                <FieldGroup
+                  errors={errors}
+                  name={`referencesArray[${index}].name`}
+                  prettyName={`reference ${index} name`}
+                  touched={touched}
+                >
+                  <Field
+                    name={`referencesArray[${index}].name`}
+                    className="input"
+                  />
+                </FieldGroup>
+                <FieldGroup
+                  errors={errors}
+                  name={`referencesArray[${index}].value`}
+                  prettyName={`reference ${index} value`}
+                  touched={touched}
+                >
+                  <Field
+                    name={`referencesArray[${index}].value`}
+                    type="number"
+                    className="input"
+                  />
+                </FieldGroup>
+                <button
+                  type="button"
+                  className="button"
+                  onClick={() => arrayHelpers.remove(index)}
+                >
+                  -
+                </button>
+              </React.Fragment>
+            ))}
+            <button
+              type="button"
+              className="button"
+              onClick={() => arrayHelpers.push({ name: '', value: 0 })}
+            >
+              +
+            </button>
+          </React.Fragment>
+        ) : (
+          <button
+            type="button"
+            className="button"
+            onClick={() => arrayHelpers.push({ name: '', value: 0 })}
+          >
+            {/* show this when user has removed all friends from the list */}+
+          </button>
+        )}
+      </React.Fragment>
+    )}
+  />
+);
 
 const RecursiveAmountComputed = ({
   errors,
@@ -69,10 +144,23 @@ const RecursiveAmountComputed = ({
       prettyName="reference"
       touched={touched}
     >
-      <Field
-        name={`computedAmount${'.on'.repeat(level)}.reference`}
-        className="input"
-      />
+      <div className="select">
+        <Field
+          as="select"
+          name={`computedAmount${'.on'.repeat(level)}.reference`}
+        >
+          <option key={'default'} value="select" disabled>
+            Select
+          </option>
+          {!values.referencesArray
+            ? null
+            : values.referencesArray.map((reference, index) => (
+                <option key={index} value={reference.name}>
+                  {reference.name}
+                </option>
+              ))}
+        </Field>
+      </div>
     </FieldGroup>
 
     <FieldGroup
