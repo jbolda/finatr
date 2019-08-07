@@ -41,7 +41,7 @@ class TransactionInput extends React.Component {
         <State.Consumer>
           {model => (
             <Formik
-              initialValues={model.forms.transactionForm.state}
+              initialValues={model.forms.transactionForm.values}
               validationSchema={TransactionSchema}
               onSubmit={(values, actions) => {
                 model.transactionUpsert(values);
@@ -60,6 +60,7 @@ class TransactionInput extends React.Component {
                 setFieldValue
               }) => (
                 <form onSubmit={handleSubmit} autoComplete="off">
+                  {console.log(values)}
                   <Field
                     type="text"
                     name="id"
