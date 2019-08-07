@@ -43,17 +43,7 @@ class AccountTransactionInput extends React.Component {
               <h1 className="title has-text-centered">Add Debt Payback</h1>
               <Formik
                 enableReinitialize={true}
-                initialValues={{
-                  id: '',
-                  debtAccount: 'select',
-                  raccount: 'select',
-                  start: '',
-                  rtype: 'none',
-                  cycle: 0,
-                  occurrences: 0,
-                  value: 0,
-                  ...model.forms.accountTransactionForm.state
-                }}
+                initialValues={model.forms.accountTransactionForm.values}
                 validationSchema={AccountTransactionSchema}
                 onSubmit={(values, actions) => {
                   model.upsertAccountTransaction(values);

@@ -23,13 +23,7 @@ class AccountInput extends React.Component {
         <State.Consumer>
           {model => (
             <Formik
-              initialValues={{
-                name: '',
-                starting: 0,
-                interest: 0,
-                vehicle: 'operating',
-                ...model.forms.accountForm.state
-              }}
+              initialValues={model.forms.accountForm.values}
               validationSchema={AccountSchema}
               onSubmit={(values, actions) => {
                 model.upsertAccount(values);
