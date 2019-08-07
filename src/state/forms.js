@@ -8,9 +8,6 @@ import {
 import { Big, defaults } from './customTypes.js';
 
 class TransactionForm extends Primitive {
-  /*defaults dont seem to actually take,
-  so also setting these defaults in the form themselves.
-  Come back and fix when bugs or whatever are resolved.*/
   id = defaults(StringType, '');
   raccount = defaults(StringType, 'select');
   description = defaults(StringType, '');
@@ -23,12 +20,9 @@ class TransactionForm extends Primitive {
   occurrences = defaults(Big, 0);
   rtype = defaults(StringType, '');
   cycle = defaults(Big, 0);
-  value = defaults(Big, 50);
+  value = defaults(Big, 0);
 
   get values() {
-    // this should pull defaults, however maybe relationship
-    // is the better way to deal with defaults, save for now
-    // (also this doesn't seem to work, will come back later)
     return Object.keys(this).reduce(
       (values, key) => Object.assign(values, { [key]: valueOf(this[key]) }),
       {}
@@ -36,54 +30,49 @@ class TransactionForm extends Primitive {
   }
 }
 
-class AccountForm {
-  /*defaults dont seem to actually take,
-  so also setting these defaults in the form themselves.
-  Come back and fix when bugs or whatever are resolved.*/
-  name = create(StringType, '');
-  starting = create(Big, 0);
-  interest = create(Big, 0);
-  vehicle = create(StringType, 'operating');
+class AccountForm extends Primitive {
+  name = defaults(StringType, '');
+  starting = defaults(Big, 0);
+  interest = defaults(Big, 0);
+  vehicle = defaults(StringType, 'operating');
 
-  intialize() {
-    return this;
-  }
-
-  get state() {
-    return valueOf(this);
+  get values() {
+    return Object.keys(this).reduce(
+      (values, key) => Object.assign(values, { [key]: valueOf(this[key]) }),
+      {}
+    );
   }
 }
 
-class AccountTransactionForm {
-  id = StringType;
-  debtAccount = StringType;
-  raccount = StringType;
-  start = StringType;
-  rtype = StringType;
-  cycle = create(Big, 0);
-  occurrences = create(Big, 0);
-  value = create(Big, 0);
+class AccountTransactionForm extends Primitive {
+  id = defaults(StringType, '');
+  debtAccount = defaults(StringType, 'select');
+  raccount = defaults(StringType, 'select');
+  start = defaults(StringType, '');
+  rtype = defaults(StringType, 'none');
+  cycle = defaults(Big, 0);
+  occurrences = defaults(Big, 0);
+  value = defaults(Big, 0);
 
-  get state() {
-    return valueOf(this);
+  get values() {
+    return Object.keys(this).reduce(
+      (values, key) => Object.assign(values, { [key]: valueOf(this[key]) }),
+      {}
+    );
   }
 }
 
-class YNABForm {
-  devToken = create(StringType, '');
-  budgetId = create(StringType, '');
+class YNABForm extends Primitive {
+  devToken = defaults(StringType, '');
+  budgetId = defaults(StringType, '');
 }
 
-class Forms {
+class Forms extends Primitive {
   transactionForm = TransactionForm;
   accountForm = AccountForm;
   accountTransactionForm = AccountTransactionForm;
   accountTransactionFormVisible = BooleanType;
   ynabForm = YNABForm;
-
-  get state() {
-    return valueOf(this);
-  }
 }
 
 export { Forms };
