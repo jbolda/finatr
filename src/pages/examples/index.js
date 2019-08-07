@@ -45,7 +45,7 @@ const Examples = () => (
         <section className="section">
           <div className="columns is-centered is-multiline">
             {listOfExamples.map(example => (
-              <div className="column is-one-quarter">
+              <div className="column is-one-quarter" key={example.file}>
                 <div className="card">
                   <header className="card-header">
                     <p className="card-header-title">{example.name}</p>
