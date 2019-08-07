@@ -1,5 +1,5 @@
 import { default as _Big } from 'big.js';
-import { Primitive } from 'microstates';
+import { create, Primitive, relationship } from 'microstates';
 
 class Big extends Primitive {
   initialize(value = 0) {
@@ -44,4 +44,10 @@ class Big extends Primitive {
   }
 }
 
-export { Big, _Big };
+const defaults = (Type, defaultValue) => {
+  return relationship((parent, value) =>
+    create(Type, value == null ? defaultValue : value)
+  );
+};
+
+export { Big, _Big, defaults };
