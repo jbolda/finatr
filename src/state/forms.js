@@ -1,7 +1,13 @@
-import { create, valueOf, StringType, BooleanType } from 'microstates';
+import {
+  create,
+  valueOf,
+  StringType,
+  BooleanType,
+  Primitive
+} from 'microstates';
 import { Big, defaults } from './customTypes.js';
 
-class TransactionForm {
+class TransactionForm extends Primitive {
   /*defaults dont seem to actually take,
   so also setting these defaults in the form themselves.
   Come back and fix when bugs or whatever are resolved.*/
@@ -11,17 +17,13 @@ class TransactionForm {
   category = defaults(StringType, '');
   type = defaults(StringType, 'income');
   start = defaults(StringType, '2019-01-01');
+  ending = defaults(StringType, 'never');
   beginAfterOccurrences = defaults(Big, 0);
   end = defaults(StringType, '');
   occurrences = defaults(Big, 0);
   rtype = defaults(StringType, '');
-  ending = defaults(StringType, 'never');
   cycle = defaults(Big, 0);
   value = defaults(Big, 50);
-
-  get state() {
-    return valueOf(this);
-  }
 
   get values() {
     // this should pull defaults, however maybe relationship
