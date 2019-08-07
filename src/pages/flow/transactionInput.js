@@ -41,22 +41,7 @@ class TransactionInput extends React.Component {
         <State.Consumer>
           {model => (
             <Formik
-              initialValues={{
-                id: '',
-                raccount: 'select',
-                description: '',
-                category: '',
-                type: 'income',
-                start: '2018-01-01',
-                beginAfterOccurrences: 0,
-                end: '',
-                occurrences: 0,
-                rtype: 'none',
-                ending: 'never',
-                cycle: 0,
-                value: 0,
-                ...model.forms.transactionForm.state
-              }}
+              initialValues={model.forms.transactionForm.state}
               validationSchema={TransactionSchema}
               onSubmit={(values, actions) => {
                 model.transactionUpsert(values);
