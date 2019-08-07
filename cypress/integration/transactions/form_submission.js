@@ -12,22 +12,38 @@ describe('Transaction Form Tests', () => {
 
   it('submits simple transaction', () => {
     cy.get('form')
-      .contains('value')
+      .contains('rtype')
       .parent()
       .parent()
-      .find('input')
-      .type('55');
-    cy.get('form').submit();
-    cy.get('#transactions').contains('55.00');
-  });
+      .find('select')
+      .select('No Repeating');
 
-  it('check income is listed in income tab after submit', () => {
     cy.get('form')
       .contains('value')
       .parent()
       .parent()
       .find('input')
       .type('55');
+
+    cy.get('form').submit();
+    cy.get('#transactions').contains('55.00');
+  });
+
+  it('check income is listed in income tab after submit', () => {
+    cy.get('form')
+      .contains('rtype')
+      .parent()
+      .parent()
+      .find('select')
+      .select('No Repeating');
+
+    cy.get('form')
+      .contains('value')
+      .parent()
+      .parent()
+      .find('input')
+      .type('55');
+
     cy.get('form').submit();
     cy.get('#transactions')
       .contains('Income')
@@ -36,6 +52,13 @@ describe('Transaction Form Tests', () => {
   });
 
   it('check expense is listed in expense tab after submit', () => {
+    cy.get('form')
+      .contains('rtype')
+      .parent()
+      .parent()
+      .find('select')
+      .select('No Repeating');
+
     cy.get('form')
       .contains('value')
       .parent()
@@ -58,6 +81,13 @@ describe('Transaction Form Tests', () => {
   });
 
   it('check transfer is listed in transfer tab after submit', () => {
+    cy.get('form')
+      .contains('rtype')
+      .parent()
+      .parent()
+      .find('select')
+      .select('No Repeating');
+
     cy.get('form')
       .contains('value')
       .parent()

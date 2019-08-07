@@ -6,6 +6,13 @@ describe('Transaction Delete Tests', () => {
       .click();
 
     cy.get('form')
+      .contains('rtype')
+      .parent()
+      .parent()
+      .find('select')
+      .select('No Repeating');
+
+    cy.get('form')
       .contains('value')
       .parent()
       .parent()
