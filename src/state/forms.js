@@ -1,10 +1,4 @@
-import {
-  create,
-  valueOf,
-  StringType,
-  BooleanType,
-  Primitive
-} from 'microstates';
+import { valueOf, StringType, BooleanType, Primitive } from 'microstates';
 import { Big, defaults } from './customTypes.js';
 
 class TransactionForm extends Primitive {
