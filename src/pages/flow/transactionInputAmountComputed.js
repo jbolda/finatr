@@ -74,40 +74,42 @@ const References = ({ errors, touched, values, setFieldValue }) => (
       <React.Fragment>
         {values.referencesArray && values.referencesArray.length > 0 ? (
           <React.Fragment>
-            {values.referencesArray.map((reference, index) => (
-              <React.Fragment key={index}>
-                <FieldGroup
-                  errors={errors}
-                  name={`referencesArray[${index}].name`}
-                  prettyName={`reference ${index} name`}
-                  touched={touched}
-                >
-                  <Field
+            {values.referencesArray.map((reference, index) =>
+              reference.name === 'starting' ? null : (
+                <React.Fragment key={index}>
+                  <FieldGroup
+                    errors={errors}
                     name={`referencesArray[${index}].name`}
-                    className="input"
-                  />
-                </FieldGroup>
-                <FieldGroup
-                  errors={errors}
-                  name={`referencesArray[${index}].value`}
-                  prettyName={`reference ${index} value`}
-                  touched={touched}
-                >
-                  <Field
+                    prettyName={`reference name`}
+                    touched={touched}
+                  >
+                    <Field
+                      name={`referencesArray[${index}].name`}
+                      className="input"
+                    />
+                  </FieldGroup>
+                  <FieldGroup
+                    errors={errors}
                     name={`referencesArray[${index}].value`}
-                    type="number"
-                    className="input"
-                  />
-                </FieldGroup>
-                <button
-                  type="button"
-                  className="button"
-                  onClick={() => arrayHelpers.remove(index)}
-                >
-                  -
-                </button>
-              </React.Fragment>
-            ))}
+                    prettyName={`reference value`}
+                    touched={touched}
+                  >
+                    <Field
+                      name={`referencesArray[${index}].value`}
+                      type="number"
+                      className="input"
+                    />
+                  </FieldGroup>
+                  <button
+                    type="button"
+                    className="button"
+                    onClick={() => arrayHelpers.remove(index)}
+                  >
+                    -
+                  </button>
+                </React.Fragment>
+              )
+            )}
             <button
               type="button"
               className="button"

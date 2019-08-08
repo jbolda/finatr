@@ -59,7 +59,6 @@ class TransactionInput extends React.Component {
                 setFieldValue
               }) => (
                 <form onSubmit={handleSubmit} autoComplete="off">
-                  {console.log(values)}
                   <Field
                     type="text"
                     name="id"

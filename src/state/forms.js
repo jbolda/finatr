@@ -103,7 +103,7 @@ class AccountTransactionForm extends Primitive {
     if (!!nextAccountTransaction.computedAmount) {
       return this.set(nextAccountTransaction)
         .valueType.set('dynamic')
-        .setEachReference(this.references.state)
+        .setEachReference(nextAccountTransaction.references)
         .computedAmount.setComputedAmount();
     } else {
       return this.set(nextAccountTransaction);
@@ -113,12 +113,15 @@ class AccountTransactionForm extends Primitive {
   setEachReference(references) {
     if (!!references) {
       return this.referencesArray.set(
-        references.keys().reduce((refArray, ref) => {
-          return refArray.concat([{ name: ref, value: references[ref] }]);
-        }, [])
+        references
+          .keys()
+          .reduce((refArray, ref) => {
+            return refArray.concat([{ name: ref, value: references[ref] }]);
+          }, [])
+          .concat([{ name: 'starting', value: 0 }])
       );
     } else {
-      return this;
+      return this.referencesArray.set([{ name: 'starting', value: 0 }]);
     }
   }
 
