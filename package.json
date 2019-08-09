@@ -22,7 +22,7 @@
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "react-file-reader-input": "2.0.0",
-    "react-scripts": "3.0.1",
+    "react-scripts": "3.1.0",
     "ynab": "1.15.0",
     "yup": "^0.27.0"
   },
