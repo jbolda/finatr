@@ -4780,15 +4780,15 @@ form-data@~2.3.2:
     combined-stream "1.0.6"
     mime-types "^2.1.12"
 
-formik@2.0.1-rc.4:
-  version "2.0.1-rc.4"
-  resolved "https://registry.yarnpkg.com/formik/-/formik-2.0.1-rc.4.tgz#0e282fe2dfdd03c7adf2e8a3f0720c700bc5f74e"
-  integrity sha512-YdB2CO590B2l1JWzHzAGq7SXivwj/Hn1UlWjeknbK0Nv60VKVAgAInTIHgw6qv57LbbuQRAuSy7H2rbGdIntOw==
+formik@2.0.1-rc.12:
+  version "2.0.1-rc.12"
+  resolved "https://registry.yarnpkg.com/formik/-/formik-2.0.1-rc.12.tgz#6cd4d98d125ba4badcbc70e8d22c1f0f1840f4c1"
+  integrity sha512-V7eaOsbu+U+NWrPrAy3D1XUSYWpGjDMyES1COPGQHaTUr2e/RolUDAbBTqBSgzsMSSfHohDHGQRBQPMYVL3UfA==
   dependencies:
     deepmerge "^2.1.1"
     hoist-non-react-statics "^3.3.0"
-    lodash "^4.17.11"
-    lodash-es "^4.17.11"
+    lodash "^4.17.14"
+    lodash-es "^4.17.14"
     react-fast-compare "^2.0.1"
     scheduler "^0.14.0"
     tiny-warning "^1.0.2"
@@ -6650,7 +6650,7 @@ locate-path@^3.0.0:
     p-locate "^3.0.0"
     path-exists "^3.0.0"
 
-lodash-es@^4.17.11:
+lodash-es@^4.17.14:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.15.tgz#21bd96839354412f23d7a10340e5eac6ee455d78"
   integrity sha512-rlrc3yU3+JNOpZ9zj5pQtxnx2THmvRykwL4Xlxoa8I9lHBlVbbyPhgyPMioxVZ4NqyxaVVtaJnzsyOidQIhyyQ==
