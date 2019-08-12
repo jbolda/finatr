@@ -42,8 +42,8 @@ jobs:
       install:
         - yarn
       script:
-        - yarn cy:verify
         - yarn start &
+        - yarn cy:verify
         - yarn cy:run
         # after all tests finish running we need
         # to kill all background jobs (like "npm start &")
@@ -59,8 +59,8 @@ jobs:
       install:
         - npm ci
       script:
-        - npm run cy:verify
         - npm run start &
+        - npm run cy:verify
         - npm run cy:run
         # after all tests finish running we need
         # to kill all background jobs (like "npm start &")
