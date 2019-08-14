@@ -33,7 +33,8 @@ const TransactionInputAmountComputed = ({
           setFieldValue('computedAmount.operation', 'none');
           setFieldValue('referencesArray[0]', {
             name: 'give me a name',
-            value: 0
+            value: 0,
+            whereFrom: 'transaction'
           });
           setFieldValue('valueType', 'dynamic');
           setFieldValue('value', 0);
@@ -113,7 +114,13 @@ const References = ({ errors, touched, values, setFieldValue }) => (
             <button
               type="button"
               className="button"
-              onClick={() => arrayHelpers.push({ name: '', value: 0 })}
+              onClick={() =>
+                arrayHelpers.push({
+                  name: '',
+                  value: 0,
+                  whereFrom: 'transaction'
+                })
+              }
             >
               +
             </button>
@@ -122,7 +129,13 @@ const References = ({ errors, touched, values, setFieldValue }) => (
           <button
             type="button"
             className="button"
-            onClick={() => arrayHelpers.push({ name: '', value: 0 })}
+            onClick={() =>
+              arrayHelpers.push({
+                name: '',
+                value: 0,
+                whereFrom: 'transaction'
+              })
+            }
           >
             {/* show this when user has removed all friends from the list */}+
           </button>

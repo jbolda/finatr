@@ -116,7 +116,6 @@ class AccountTransactionForm extends TransactionFormPrimitive {
   ) {
     // we are working in .state here
     const reftoArray = (references, whereFrom) => {
-      console.log(references, whereFrom);
       return !references
         ? []
         : Object.keys(references).reduce((refArray, ref) => {
