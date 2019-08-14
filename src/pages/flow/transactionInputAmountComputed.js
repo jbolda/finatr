@@ -11,7 +11,7 @@ const TransactionInputAmountComputed = ({
   <FieldGroup
     errors={errors}
     name="valueType"
-    prettyName="value"
+    prettyName="amount"
     touched={touched}
   >
     <label className="radio">
