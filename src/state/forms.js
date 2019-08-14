@@ -21,7 +21,7 @@ class KeyValue extends Primitive {
   value = Big;
 }
 
-class TransactionForm extends Primitive {
+class TransactionFormPrimitive extends Primitive {
   id = defaults(StringType, '');
   raccount = defaults(StringType, 'select');
   description = defaults(StringType, '');
@@ -40,11 +40,21 @@ class TransactionForm extends Primitive {
   referencesArray = [KeyValue];
   computedAmount = ComputedAmountForm;
 
+  get values() {
+    return Object.keys(this).reduce(
+      (values, key) => Object.assign(values, { [key]: valueOf(this[key]) }),
+      {}
+    );
+  }
+}
+
+class TransactionForm extends TransactionFormPrimitive {
+  // we are working in .state here
   setForm(nextTransaction) {
     if (!!nextTransaction.computedAmount) {
       return this.set(nextTransaction)
         .valueType.set('dynamic')
-        .setEachReference(this.references.state)
+        .setEachReference(nextTransaction.references)
         .computedAmount.setComputedAmount();
     } else {
       return this.set(nextTransaction);
@@ -52,21 +62,15 @@ class TransactionForm extends Primitive {
   }
 
   setEachReference(references) {
-    if (!!references) {
-      return this.referencesArray.set(
-        references.keys().reduce((refArray, ref) => {
-          return refArray.concat([{ name: ref, value: references[ref] }]);
-        }, [])
-      );
-    } else {
-      return this;
-    }
-  }
-
-  get values() {
-    return Object.keys(this).reduce(
-      (values, key) => Object.assign(values, { [key]: valueOf(this[key]) }),
-      {}
+    // we are working in .state here
+    return this.referencesArray.set(
+      !references
+        ? []
+        : Object.keys(references).reduce((refArray, ref) => {
+            return refArray.concat([
+              { name: ref, value: references[ref], whereFrom: 'transaction' }
+            ]);
+          }, [])
     );
   }
 }
@@ -85,21 +89,11 @@ class AccountForm extends Primitive {
   }
 }
 
-class AccountTransactionForm extends Primitive {
-  id = defaults(StringType, '');
+class AccountTransactionForm extends TransactionFormPrimitive {
   debtAccount = defaults(StringType, 'select');
-  raccount = defaults(StringType, 'select');
-  start = defaults(StringType, '');
-  rtype = defaults(StringType, 'none');
-  cycle = defaults(Big, 0);
-  occurrences = defaults(Big, 0);
-  valueType = defaults(StringType, 'static');
-  value = defaults(Big, 0);
-  references = { Big };
-  referencesArray = [KeyValue];
-  computedAmount = ComputedAmountForm;
 
   setForm(nextAccount, index) {
+    // we are working in .state here
     const nextAccountTransaction = nextAccount.payback.transactions[index];
     if (!!nextAccountTransaction.computedAmount) {
       return this.set(nextAccountTransaction)
@@ -120,6 +114,7 @@ class AccountTransactionForm extends Primitive {
     paybackReferences,
     transactionReferences
   ) {
+    // we are working in .state here
     const reftoArray = (references, whereFrom) => {
       console.log(references, whereFrom);
       return !references
@@ -136,13 +131,6 @@ class AccountTransactionForm extends Primitive {
         .concat(reftoArray(accountReferences, 'account'))
         .concat(reftoArray(paybackReferences, 'payback'))
         .concat(reftoArray(transactionReferences, 'transaction'))
-    );
-  }
-
-  get values() {
-    return Object.keys(this).reduce(
-      (values, key) => Object.assign(values, { [key]: valueOf(this[key]) }),
-      {}
     );
   }
 }
