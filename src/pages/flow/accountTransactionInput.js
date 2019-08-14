@@ -77,7 +77,7 @@ class AccountTransactionInput extends React.Component {
                       touched={touched}
                     >
                       <div className="select">
-                        <Field component="select" name="debtAccount">
+                        <Field as="select" name="debtAccount">
                           <option key={'default'} value={'select'} disabled>
                             Select an Option
                           </option>
@@ -104,7 +104,7 @@ class AccountTransactionInput extends React.Component {
                       touched={touched}
                     >
                       <div className="select">
-                        <Field component="select" name="raccount">
+                        <Field as="select" name="raccount">
                           <option key={'default'} value={'select'} disabled>
                             Select an Option
                           </option>
@@ -216,7 +216,7 @@ class AccountTransactionInput extends React.Component {
 
                     <FieldGroup errors={errors} name="rtype" touched={touched}>
                       <div className="select">
-                        <Field component="select" name="rtype">
+                        <Field as="select" name="rtype">
                           <option value="none">No Repeating</option>
                           <option value="day">
                             Repeat Daily (or Every X Day)
