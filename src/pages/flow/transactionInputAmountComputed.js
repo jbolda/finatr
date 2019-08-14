@@ -75,7 +75,7 @@ const References = ({ errors, touched, values, setFieldValue }) => (
         {values.referencesArray && values.referencesArray.length > 0 ? (
           <React.Fragment>
             {values.referencesArray.map((reference, index) =>
-              reference.name === 'starting' ? null : (
+              reference.whereFrom !== 'transaction' ? null : (
                 <React.Fragment key={index}>
                   <FieldGroup
                     errors={errors}

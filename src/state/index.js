@@ -321,10 +321,9 @@ class AppModel extends Primitive {
   }
 
   modifyAccountTransaction(name, index) {
-    const payback = this.state.accounts.find(element => element.name === name)
-      .payback;
+    const account = this.state.accounts.find(element => element.name === name);
     return this.forms.accountTransactionForm
-      .setForm(payback.transactions[index])
+      .setForm(account, index)
       .forms.accountTransactionFormVisible.toggle();
   }
 

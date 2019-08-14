@@ -99,30 +99,44 @@ class AccountTransactionForm extends Primitive {
   referencesArray = [KeyValue];
   computedAmount = ComputedAmountForm;
 
-  setForm(nextAccountTransaction) {
+  setForm(nextAccount, index) {
+    const nextAccountTransaction = nextAccount.payback.transactions[index];
     if (!!nextAccountTransaction.computedAmount) {
       return this.set(nextAccountTransaction)
         .valueType.set('dynamic')
-        .setEachReference(nextAccountTransaction.references)
+        .setEachReference(
+          { starting: nextAccount.starting },
+          nextAccount.payback.references,
+          nextAccountTransaction.references
+        )
         .computedAmount.setComputedAmount();
     } else {
       return this.set(nextAccountTransaction);
     }
   }
 
-  setEachReference(references) {
-    if (!!references) {
-      return this.referencesArray.set(
-        references
-          .keys()
-          .reduce((refArray, ref) => {
-            return refArray.concat([{ name: ref, value: references[ref] }]);
-          }, [])
-          .concat([{ name: 'starting', value: 0 }])
-      );
-    } else {
-      return this.referencesArray.set([{ name: 'starting', value: 0 }]);
-    }
+  setEachReference(
+    accountReferences,
+    paybackReferences,
+    transactionReferences
+  ) {
+    const reftoArray = (references, whereFrom) => {
+      console.log(references, whereFrom);
+      return !references
+        ? []
+        : Object.keys(references).reduce((refArray, ref) => {
+            return refArray.concat([
+              { name: ref, value: references[ref], whereFrom: whereFrom }
+            ]);
+          }, []);
+    };
+
+    return this.referencesArray.set(
+      []
+        .concat(reftoArray(accountReferences, 'account'))
+        .concat(reftoArray(paybackReferences, 'payback'))
+        .concat(reftoArray(transactionReferences, 'transaction'))
+    );
   }
 
   get values() {
