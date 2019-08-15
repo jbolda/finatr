@@ -306,7 +306,18 @@ class AppModel extends Primitive {
       rtype: result.rtype,
       cycle: result.cycle,
       occurrences: result.occurrences,
-      value: result.value
+      value: result.value,
+      ...(!!result.referencesArray.length > 0
+        ? {
+            references: result.referencesArray.reduce((ref, keyVal) => {
+              ref[keyVal.name] = keyVal.value;
+              return ref;
+            }, {})
+          }
+        : {}),
+      ...(!!result.valueType === 'dynamic'
+        ? { computedAmount: result.computedAmount }
+        : {})
     };
 
     if (!payback.id) {
@@ -314,7 +325,7 @@ class AppModel extends Primitive {
     }
 
     account.payback.transactions.push(payback);
-
+    console.log(result, account);
     nextState[accountIndex] = account;
     let nextSetState = this.accounts.set(nextState);
     return nextSetState.reCalc().forms.accountTransactionForm.id.set('');
