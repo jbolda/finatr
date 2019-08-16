@@ -52,13 +52,16 @@ class TransactionInput extends React.Component {
                 values,
                 errors,
                 touched,
-                handleChange,
-                handleBlur,
+                handleReset,
                 handleSubmit,
                 isSubmitting,
                 setFieldValue
               }) => (
-                <form onSubmit={handleSubmit} autoComplete="off">
+                <form
+                  onReset={handleReset}
+                  onSubmit={handleSubmit}
+                  autoComplete="off"
+                >
                   <Field
                     type="text"
                     name="id"

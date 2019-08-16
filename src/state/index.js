@@ -325,7 +325,6 @@ class AppModel extends Primitive {
     }
 
     account.payback.transactions.push(payback);
-    console.log(result, account);
     nextState[accountIndex] = account;
     let nextSetState = this.accounts.set(nextState);
     return nextSetState.reCalc().forms.accountTransactionForm.id.set('');
