@@ -5,14 +5,33 @@ import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';
 import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
+const ComputedAmountSchema = Yup.object()
+  .shape({
+    operation: Yup.string(),
+    reference: Yup.string()
+      .notOneOf(['select'])
+      .required('Required'),
+    on: Yup.object().when('operation', {
+      is: operation => operation !== 'none',
+      // eslint-disable-next-line
+      then: ComputedAmountSchema,
+      otherwise: Yup.object().strip()
+    })
+  })
+  .required('Required');
+
 const AccountTransactionSchema = Yup.object().shape({
   id: Yup.string(),
-  debtAccount: Yup.string().required('Required'),
-  raccount: Yup.string().required('Required'),
+  debtAccount: Yup.string()
+    .notOneOf(['select'])
+    .required('Required'),
+  raccount: Yup.string()
+    .notOneOf(['select'])
+    .required('Required'),
   description: Yup.string(),
   category: Yup.string(),
   start: Yup.date().required('Required'),
-  rtype: Yup.mixed()
+  rtype: Yup.string()
     .oneOf([
       'none',
       'day',
@@ -26,7 +45,17 @@ const AccountTransactionSchema = Yup.object().shape({
     .required('Required'),
   occurrences: Yup.number(),
   cycle: Yup.number().required('Required'),
-  value: Yup.number().required('Required')
+  value: Yup.number().when('valueType', {
+    is: 'static',
+    then: Yup.number().required('Required'),
+    otherwise: Yup.number()
+  }),
+  valueType: Yup.string().required(),
+  computedAmount: Yup.object().when('valueType', {
+    is: 'dynamic',
+    then: ComputedAmountSchema,
+    otherwise: Yup.object().strip()
+  })
 });
 
 class AccountTransactionInput extends React.Component {
