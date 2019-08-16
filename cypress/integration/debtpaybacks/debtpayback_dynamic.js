@@ -87,6 +87,13 @@ describe('Debt Payback Form Tests', () => {
       .parent()
       .find('input')
       .type('{selectall}250');
+    cy.get('form').within($form => {
+      cy.get('div[name="computedAmount.reference"]')
+        .parent()
+        .find('select')
+        .select('Special Balance');
+    });
+
     cy.get('form').submit();
 
     cy.get('#accounts').contains('1 for 0');
