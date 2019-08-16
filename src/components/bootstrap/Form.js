@@ -25,13 +25,7 @@ export function FieldControl({ children }) {
   return <div className="control">{children}</div>;
 }
 
-export function FieldGroup({
-  name,
-  prettyName = name,
-  touched,
-  errors,
-  children
-}) {
+export function FieldGroup({ name, prettyName = name, children }) {
   return (
     <FieldHorizontal>
       <FieldLabel>{prettyName}</FieldLabel>
