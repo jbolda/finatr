@@ -29,7 +29,13 @@ const TransactionSchema = Yup.object().shape({
     ])
     .required('Required'),
   cycle: Yup.number().required('Required'),
-  value: Yup.number()
+  value: Yup.number(),
+  computedAmount: Yup.object().shape({
+    operation: Yup.string(),
+    reference: Yup.mixed().notOneOf(['select']),
+    references: Yup.object(),
+    on: Yup.object()
+  })
 });
 
 class TransactionInput extends React.Component {
