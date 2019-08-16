@@ -8,12 +8,7 @@ const TransactionInputAmountComputed = ({
   values,
   setFieldValue
 }) => (
-  <FieldGroup
-    errors={errors}
-    name="valueType"
-    prettyName="amount"
-    touched={touched}
-  >
+  <FieldGroup name="valueType" prettyName="amount">
     <label className="radio">
       <Field
         type="radio"
@@ -48,15 +43,8 @@ const TransactionInputAmountComputed = ({
       </FieldGroup>
     ) : (
       <React.Fragment>
-        <References
-          errors={errors}
-          touched={touched}
-          values={values}
-          setFieldValue={setFieldValue}
-        />
+        <References values={values} setFieldValue={setFieldValue} />
         <RecursiveAmountComputed
-          errors={errors}
-          touched={touched}
           values={values}
           setFieldValue={setFieldValue}
           level={0}
@@ -79,10 +67,8 @@ const References = ({ errors, touched, values, setFieldValue }) => (
               reference.whereFrom !== 'transaction' ? null : (
                 <React.Fragment key={index}>
                   <FieldGroup
-                    errors={errors}
                     name={`referencesArray[${index}].name`}
                     prettyName={`reference name`}
-                    touched={touched}
                   >
                     <Field
                       name={`referencesArray[${index}].name`}
@@ -90,10 +76,8 @@ const References = ({ errors, touched, values, setFieldValue }) => (
                     />
                   </FieldGroup>
                   <FieldGroup
-                    errors={errors}
                     name={`referencesArray[${index}].value`}
                     prettyName={`reference value`}
-                    touched={touched}
                   >
                     <Field
                       name={`referencesArray[${index}].value`}
@@ -145,19 +129,11 @@ const References = ({ errors, touched, values, setFieldValue }) => (
   />
 );
 
-const RecursiveAmountComputed = ({
-  errors,
-  touched,
-  values,
-  setFieldValue,
-  level
-}) => (
+const RecursiveAmountComputed = ({ values, setFieldValue, level }) => (
   <React.Fragment>
     <FieldGroup
-      errors={errors}
       name={`computedAmount${'.on'.repeat(level)}.reference`}
       prettyName="reference"
-      touched={touched}
     >
       <div className="select">
         <Field
@@ -179,10 +155,8 @@ const RecursiveAmountComputed = ({
     </FieldGroup>
 
     <FieldGroup
-      errors={errors}
       name={`computedAmount${'.on'.repeat(level)}.operation`}
       prettyName="operate on"
-      touched={touched}
     >
       <Operation
         operationType="none"
@@ -206,8 +180,6 @@ const RecursiveAmountComputed = ({
       {retrieveNested('operation', values, level) !== 'none' ? (
         <React.Fragment>
           <RecursiveAmountComputed
-            errors={errors}
-            touched={touched}
             values={values}
             setFieldValue={setFieldValue}
             level={level + 1}
