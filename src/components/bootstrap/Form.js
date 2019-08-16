@@ -1,4 +1,5 @@
 import React from 'react';
+import { ErrorMessage } from 'formik';
 
 export function FieldHorizontal({ children }) {
   return <div className="field is-horizontal">{children}</div>;
@@ -36,9 +37,10 @@ export function FieldGroup({
       <FieldLabel>{prettyName}</FieldLabel>
       <FieldBody>
         <FieldControl>{children}</FieldControl>
-        {touched[name] && errors[name] ? (
-          <p className="help is-danger">{errors[name]}</p>
-        ) : null}
+        <ErrorMessage
+          name={name}
+          render={msg => <p className="help is-danger">{msg}</p>}
+        />
       </FieldBody>
     </FieldHorizontal>
   );
