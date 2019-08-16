@@ -164,7 +164,7 @@ const RecursiveAmountComputed = ({
           as="select"
           name={`computedAmount${'.on'.repeat(level)}.reference`}
         >
-          <option key={'default'} value="select" disabled>
+          <option key={'default'} value="select">
             Select
           </option>
           {!values.referencesArray
@@ -250,7 +250,7 @@ const Operation = ({ operationType, values, level, setFieldValue }) => (
             );
             setFieldValue(
               `computedAmount${'.on'.repeat(level + 1)}.reference`,
-              null
+              'select'
             );
           }
         }}
