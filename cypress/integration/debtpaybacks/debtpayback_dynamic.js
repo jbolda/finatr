@@ -91,7 +91,8 @@ describe('Debt Payback Form Tests', () => {
       cy.get('div[name="computedAmount.reference"]')
         .parent()
         .find('select')
-        .select('Special Balance');
+        .select('Special Balance', { force: true });
+      // need to do {force: true} otherwise it doesn't select?
     });
 
     cy.get('form').submit();
