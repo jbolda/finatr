@@ -315,7 +315,7 @@ class AppModel extends Primitive {
             }, {})
           }
         : {}),
-      ...(!!result.valueType === 'dynamic'
+      ...(result.valueType === 'dynamic'
         ? { computedAmount: result.computedAmount }
         : {})
     };
