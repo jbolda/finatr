@@ -15,7 +15,7 @@
     "bulma": "0.7.5",
     "d3": "5.11.0",
     "date-fns": "2.0.0-alpha.25",
-    "formik": "2.0.1-rc.12",
+    "formik": "2.0.1-rc.13",
     "js-file-download": "0.4.8",
     "microstates": "0.15.0-alpha.0",
     "prop-types": "15.7.2",
