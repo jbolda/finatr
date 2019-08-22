@@ -5,7 +5,10 @@ import { Router, Link } from '@reach/router';
 import { Store, create } from 'microstates';
 import AppModel, { State } from './state';
 
-import 'bulma/css/bulma.css';
+import { ThemeProvider } from 'theme-ui';
+import { Flex, Box, Text } from 'rebass';
+import theme from '@rebass/preset';
+
 import Homepage from './pages/homepage';
 import Examples from './pages/examples';
 import Financial from './pages/flow';
