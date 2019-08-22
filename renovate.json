@@ -3,6 +3,7 @@
     "config:base"
   ],
   "baseBranches": [
-    "next"
+    "next",
+    "css-in-js"
   ]
 }
