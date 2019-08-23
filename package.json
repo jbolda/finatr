@@ -9,12 +9,15 @@
     "node": ">=8.10.0"
   },
   "dependencies": {
+    "@emotion/core": "10.0.16",
+    "@mdx-js/react": "1.3.1",
     "@microstates/react": "0.12.0",
     "@reach/router": "1.2.1",
+    "@rebass/preset": "^4.0.5",
     "big.js": "5.2.2",
-    "bulma": "0.7.5",
     "d3": "5.11.0",
     "date-fns": "2.0.0-alpha.25",
+    "emotion-theming": "^10.0.14",
     "formik": "2.0.1-rc.13",
     "js-file-download": "0.4.8",
     "microstates": "0.15.0-alpha.0",
@@ -23,6 +26,8 @@
     "react-dom": "16.9.0",
     "react-file-reader-input": "2.0.0",
     "react-scripts": "3.1.1",
+    "rebass": "4.0.5",
+    "theme-ui": "0.2.35",
     "ynab": "1.15.0",
     "yup": "^0.27.0"
   },
