@@ -114,17 +114,15 @@ class FinancialFlow extends React.Component {
             <Flex flexWrap="wrap" mx={3}>
               <Form.FieldHorizontal>
                 <Form.FieldLabel>Beginning Flow On</Form.FieldLabel>
-                <Form.FieldBody>
-                  <Input
-                    name="begin-graph"
-                    type="date"
-                    pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-                    value={model.charts.graphDates.start}
-                    onChange={event =>
-                      model.updateStartDateReCalc(event.target.value)
-                    }
-                  />
-                </Form.FieldBody>
+                <Input
+                  name="begin-graph"
+                  type="date"
+                  pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                  value={model.charts.graphDates.start}
+                  onChange={event =>
+                    model.updateStartDateReCalc(event.target.value)
+                  }
+                />
               </Form.FieldHorizontal>
             </Flex>
             <Transactions />
