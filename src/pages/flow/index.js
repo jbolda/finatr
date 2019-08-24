@@ -113,7 +113,7 @@ class FinancialFlow extends React.Component {
             </Flex>
             <Flex flexWrap="wrap" mx={3}>
               <Form.FieldHorizontal>
-                <Form.FieldLabel>Beginning Flow On</Form.FieldLabel>
+                <Form.Label htmlFor="begin-graph">Beginning Flow On</Form.Label>
                 <Input
                   name="begin-graph"
                   type="date"
