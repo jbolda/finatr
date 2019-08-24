@@ -2,6 +2,7 @@ import React from 'react';
 import { map } from 'microstates';
 import { State } from '../../state';
 
+import { Box, Heading, Button } from 'rebass';
 import TabView from '../../components/view/tabView';
 import TransactionInput from './transactionInput';
 
@@ -42,12 +43,13 @@ class TransactionsFlow extends React.Component {
                   <div className="buttons">
                     {Object.keys(model.state.transactionCategories).map(
                       category => (
-                        <button
+                        <Button
                           key={category}
-                          className={
+                          m={2}
+                          variant={
                             model.state.transactionCategories[category]
-                              ? 'button is-primary'
-                              : 'button is-secondary'
+                              ? 'primary'
+                              : 'outline'
                           }
                           onClick={model.filterTransactionsComputed.bind(
                             this,
@@ -55,7 +57,7 @@ class TransactionsFlow extends React.Component {
                           )}
                         >
                           {category}
-                        </button>
+                        </Button>
                       )
                     )}
                   </div>
