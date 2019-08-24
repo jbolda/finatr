@@ -1,5 +1,7 @@
 import React from 'react';
 import { State } from '../../state';
+import { Box, Heading, Button } from 'rebass';
+import { Label, Input, Select, Radio } from '@rebass/forms';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';
@@ -41,8 +43,14 @@ const TransactionSchema = Yup.object().shape({
 class TransactionInput extends React.Component {
   render() {
     return (
-      <React.Fragment>
-        <h1 className="title has-text-centered">Add a Transaction</h1>
+      <Box
+        sx={{
+          maxWidth: 512,
+          mx: 'auto',
+          px: 3
+        }}
+      >
+        <Heading>Add a Transaction</Heading>
         <State.Consumer>
           {model => (
             <Formik
@@ -69,25 +77,23 @@ class TransactionInput extends React.Component {
                   autoComplete="off"
                 >
                   <Field
-                    type="text"
+                    as={Input}
                     name="id"
-                    className="input"
-                    style={{ display: 'none' }}
+                    type="text"
+                    sx={{ display: 'none' }}
                   />
 
                   <FieldGroup errors={errors} name="raccount" touched={touched}>
-                    <div className="select">
-                      <Field as="select" name="raccount">
-                        <option key={'default'} value={'select'} disabled>
-                          Select an Option
+                    <Field as={Select} name="raccount">
+                      <option key={'default'} value={'select'} disabled>
+                        Select an Option
+                      </option>
+                      {model.state.accountsComputed.map(account => (
+                        <option key={account.name} value={account.name}>
+                          {account.name}
                         </option>
-                        {model.state.accountsComputed.map(account => (
-                          <option key={account.name} value={account.name}>
-                            {account.name}
-                          </option>
-                        ))}
-                      </Field>
-                    </div>
+                      ))}
+                    </Field>
                   </FieldGroup>
 
                   <FieldGroup
@@ -95,28 +101,26 @@ class TransactionInput extends React.Component {
                     name="description"
                     touched={touched}
                   >
-                    <Field name="description" className="input" />
+                    <Field as={Input} name="description" />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="category" touched={touched}>
-                    <Field name="category" className="input" />
+                    <Field as={Input} name="category" />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="type" touched={touched}>
-                    <div className="select">
-                      <Field as="select" name="type">
-                        <option value="income">Income</option>
-                        <option value="expense">Expense</option>
-                        <option value="transfer">Transfer</option>
-                      </Field>
-                    </div>
+                    <Field as={Select} name="type">
+                      <option value="income">Income</option>
+                      <option value="expense">Expense</option>
+                      <option value="transfer">Transfer</option>
+                    </Field>
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="start" touched={touched}>
                     <Field
+                      as={Input}
                       name="start"
                       type="date"
-                      className="input"
                       pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
                     />
                   </FieldGroup>
@@ -128,33 +132,36 @@ class TransactionInput extends React.Component {
                     touched={touched}
                   >
                     <Field
+                      as={Input}
                       name="beginAfterOccurrences"
                       type="number"
-                      className="input"
                     />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="ending" touched={touched}>
-                    <label className="radio">
+                    <Label>
                       <Field
+                        as={Radio}
                         type="radio"
                         name="ending"
                         checked={values.ending === 'never'}
                         onChange={() => setFieldValue('ending', 'never')}
                       />
                       never
-                    </label>
-                    <label className="radio">
+                    </Label>
+                    <Label>
                       <Field
+                        as={Radio}
                         type="radio"
                         name="ending"
                         checked={values.ending === 'at Date'}
                         onChange={() => setFieldValue('ending', 'at Date')}
                       />
                       at Date
-                    </label>
-                    <label className="radio">
+                    </Label>
+                    <Label>
                       <Field
+                        as={Radio}
                         type="radio"
                         name="ending"
                         checked={
@@ -165,18 +172,14 @@ class TransactionInput extends React.Component {
                         }
                       />
                       after Number of Occurrences
-                    </label>
+                    </Label>
                     {values.ending === 'after Number of Occurrences' ? (
                       <FieldGroup
                         errors={errors}
                         name="occurrences"
                         touched={touched}
                       >
-                        <Field
-                          name="occurrences"
-                          type="number"
-                          className="input"
-                        />
+                        <Field as={Input} name="occurrences" type="number" />
                       </FieldGroup>
                     ) : values.ending === 'at Date' ? (
                       <FieldGroup
@@ -185,42 +188,36 @@ class TransactionInput extends React.Component {
                         prettyName="At This Day"
                         touched={touched}
                       >
-                        <Field name="end" type="date" className="input" />
+                        <Field as={Input} name="end" type="date" />
                       </FieldGroup>
                     ) : null}
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="rtype" touched={touched}>
-                    <div className="select">
-                      <Field as="select" name="rtype">
-                        <option value="none">No Repeating</option>
-                        <option value="day">
-                          Repeat Daily (or Every X Day)
-                        </option>
-                        <option value="day of week">
-                          Repeat on a Day of the Week
-                        </option>
-                        <option value="day of month">
-                          Repeat on a Day of the Month
-                        </option>
-                        <option value="bimonthly">
-                          Repeat Every Other Month on Day
-                        </option>
-                        <option value="quarterly">
-                          Repeat Every Quarter on Day
-                        </option>
-                        <option value="semiannually">
-                          Repeat Twice a Year on Day
-                        </option>
-                        <option value="annually">
-                          Repeat Every Year on Day
-                        </option>
-                      </Field>
-                    </div>
+                    <Field as={Select} name="rtype">
+                      <option value="none">No Repeating</option>
+                      <option value="day">Repeat Daily (or Every X Day)</option>
+                      <option value="day of week">
+                        Repeat on a Day of the Week
+                      </option>
+                      <option value="day of month">
+                        Repeat on a Day of the Month
+                      </option>
+                      <option value="bimonthly">
+                        Repeat Every Other Month on Day
+                      </option>
+                      <option value="quarterly">
+                        Repeat Every Quarter on Day
+                      </option>
+                      <option value="semiannually">
+                        Repeat Twice a Year on Day
+                      </option>
+                      <option value="annually">Repeat Every Year on Day</option>
+                    </Field>
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="cycle" touched={touched}>
-                    <Field name="cycle" type="number" className="input" />
+                    <Field as={Input} name="cycle" type="number" />
                   </FieldGroup>
 
                   <TransactionInputAmountComputed
@@ -230,23 +227,15 @@ class TransactionInput extends React.Component {
                     setFieldValue={setFieldValue}
                   />
 
-                  <div className="field is-grouped is-grouped-centered">
-                    <div className="control">
-                      <button
-                        className="button is-link"
-                        type="submit"
-                        disabled={isSubmitting}
-                      >
-                        Add Transaction
-                      </button>
-                    </div>
-                  </div>
+                  <Button type="submit" disabled={isSubmitting}>
+                    Add Transaction
+                  </Button>
                 </form>
               )}
             />
           )}
         </State.Consumer>
-      </React.Fragment>
+      </Box>
     );
   }
 }
