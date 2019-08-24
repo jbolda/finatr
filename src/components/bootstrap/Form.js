@@ -4,19 +4,17 @@ import { Label } from '@rebass/forms';
 import { ErrorMessage } from 'formik';
 
 export function FieldHorizontal({ children }) {
-  return <Box>{children}</Box>;
-}
-
-export function FieldLabel({ name, children }) {
-  return <Label>{children}</Label>;
+  return <Box p={1}>{children}</Box>;
 }
 
 export function FieldGroup({ name, prettyName = name, children }) {
   return (
     <FieldHorizontal>
-      <FieldLabel name={name}>{prettyName}</FieldLabel>
+      <Label htmlFor={name}>{prettyName}</Label>
       {children}
       <ErrorMessage name={name} render={msg => <Text>{msg}</Text>} />
     </FieldHorizontal>
   );
 }
+
+export { Label };
