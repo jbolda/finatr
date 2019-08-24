@@ -1,8 +1,7 @@
 import React from 'react';
-import { map } from 'microstates';
 import { State } from '../../state';
 
-import { Box, Heading, Button } from 'rebass';
+import { Flex, Box, Button } from 'rebass';
 import TabView from '../../components/view/tabView';
 import TransactionInput from './transactionInput';
 
@@ -114,69 +113,97 @@ export default TransactionsFlow;
 
 const TransactionTable = ({ data, actions }) =>
   data.length === 0 || !data ? (
-    <div>There are no transactions to show.</div>
+    <Box m={2}>There are no transactions to show.</Box>
   ) : (
-    <table className="table is-striped is-hoverable">
-      <thead>
-        <tr>
-          <th>
-            <abbr title="real account">raccount</abbr>
-          </th>
-          <th>description</th>
-          <th>category</th>
-          <th>type</th>
-          <th>
-            <abbr title="start date">start</abbr>
-          </th>
-          <th>
-            <abbr title="repeat type">rtype</abbr>
-          </th>
-          <th>cycle</th>
-          <th>value</th>
-          <th>Daily Rate</th>
-          <th>Modify</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        {map(data, transaction => (
-          <tr
-            key={transaction.id}
-            style={
-              transaction.fromAccount ? { backgroundColor: 'seashell' } : null
-            }
-          >
-            <td>{transaction.raccount}</td>
-            <td>{transaction.description}</td>
-            <td>{transaction.category}</td>
-            <td>{transaction.type}</td>
-            <td>{transaction.start}</td>
-            <td>{transaction.rtype}</td>
-            <td>{!transaction.cycle ? '' : transaction.cycle.toFixed(0)}</td>
-            <td>{!transaction.value ? '' : transaction.value.toFixed(2)}</td>
-            <td>{transaction.dailyRate.toFixed(2)}</td>
-            <td>
-              <button
-                className="button is-rounded is-small is-info"
-                onClick={() =>
-                  actions.setTransactionForm(actions.model, 1, transaction.id)
-                }
-                disabled={transaction.fromAccount}
-              >
-                M
-              </button>
-            </td>
-            <td>
-              <button
-                className="button is-rounded is-small is-danger"
-                onClick={actions.deleteTransaction.bind(this, transaction.id)}
-                disabled={transaction.fromAccount}
-              >
-                <strong>X</strong>
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <React.Fragment>
+      <HeaderRow
+        columns={[11]}
+        items={[
+          'raccount',
+          'description',
+          'category',
+          'type',
+          'start',
+          'rtype',
+          'cycle',
+          'value',
+          'Daily Rate',
+          'Modify',
+          'Delete'
+        ]}
+      />
+      {data.map(transaction => (
+        <DataRow
+          key={transaction.id}
+          itemKey={transaction.id}
+          columns={11}
+          items={[
+            transaction.raccount,
+            transaction.description,
+            transaction.category,
+            transaction.type,
+            transaction.start,
+            transaction.rtype,
+            !transaction.cycle ? '' : transaction.cycle.toFixed(0),
+            !transaction.value ? '' : transaction.value.toFixed(2),
+            transaction.dailyRate.toFixed(2),
+            <Button
+              variant="outline"
+              color="blue"
+              onClick={() =>
+                actions.setTransactionForm(actions.model, 1, transaction.id)
+              }
+              disabled={transaction.fromAccount}
+            >
+              M
+            </Button>,
+            <Button
+              variant="outline"
+              color="red"
+              onClick={actions.deleteTransaction.bind(this, transaction.id)}
+              disabled={transaction.fromAccount}
+            >
+              <strong>X</strong>
+            </Button>
+          ]}
+        />
+      ))}
+    </React.Fragment>
   );
+
+const HeaderRow = ({ items, columns }) => (
+  <Flex>
+    {items.map(item => (
+      <HeaderItem columns={columns || items.count} key={item}>
+        {item}
+      </HeaderItem>
+    ))}
+  </Flex>
+);
+
+const HeaderItem = ({ children, columns }) => (
+  <Box m={1} width={[null, 1 / columns]}>
+    {children}
+  </Box>
+);
+
+const DataRow = ({ items, columns, itemKey }) => (
+  <Flex>
+    {items.map((item, index) => (
+      <DataItem columns={columns || items.count} key={`${itemKey}=${index}`}>
+        {item}
+      </DataItem>
+    ))}
+  </Flex>
+);
+
+const DataItem = ({ children, columns }) => (
+  <React.Fragment>
+    {/* <Box m={1} width={[1 / 2, null]}>
+      {children}
+    </Box> */}
+    <Box m={1} width={[1 / 2, 1 / columns]}>
+      {children}
+    </Box>
+  </React.Fragment>
+);
