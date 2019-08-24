@@ -6,12 +6,12 @@ const TabView = ({ tabTitles, tabContents }) => (
   <Tabs>
     <TabList>
       {tabTitles.map(title => (
-        <Tab>{title}</Tab>
+        <Tab key={title}>{title}</Tab>
       ))}
     </TabList>
     <TabPanels>
-      {tabContents.map(content => (
-        <TabPanel>{content}</TabPanel>
+      {tabContents.map((content, index) => (
+        <TabPanel key={index}>{content}</TabPanel>
       ))}
     </TabPanels>
   </Tabs>
