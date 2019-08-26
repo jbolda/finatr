@@ -1,8 +1,8 @@
 import React from 'react';
-import { map } from 'microstates';
 import { State } from '../../state';
 
 import TabView from '../../components/view/tabView';
+import { HeaderRow, DataRow } from '../../components/bootstrap/FlexTable';
 import AccountInput from './accountInput';
 import AccountTransactionInput from './accountTransactionInput';
 
@@ -41,7 +41,7 @@ class AccountFlow extends React.Component {
                     Toggle All Visibility
                   </button>
                   <AccountTable
-                    data={model.accountsComputed}
+                    data={model.state.accountsComputed}
                     actions={{
                       model: model,
                       setAccountForm: this.setAccountForm,
@@ -52,25 +52,21 @@ class AccountFlow extends React.Component {
                 </React.Fragment>,
                 <AccountInput tabClick={this.tabClick} />,
                 <React.Fragment>
-                  <div>
-                    <DebtTable
-                      data={model.state.accountsComputed}
-                      actions={{
-                        model: model,
-                        setAccountForm: this.setAccountForm
-                      }}
-                    />
-                  </div>
-                  <div>
-                    {model.state.accountsComputed.filter(
-                      account =>
-                        account.vehicle === 'debt' ||
-                        account.vehicle === 'loan' ||
-                        account.vehicle === 'credit line'
-                    ).length === 0 ? null : (
-                      <AccountTransactionInput tabClick={this.tabClick} />
-                    )}
-                  </div>
+                  <DebtTable
+                    data={model.state.accountsComputed}
+                    actions={{
+                      model: model,
+                      setAccountForm: this.setAccountForm
+                    }}
+                  />
+                  {model.state.accountsComputed.filter(
+                    account =>
+                      account.vehicle === 'debt' ||
+                      account.vehicle === 'loan' ||
+                      account.vehicle === 'credit line'
+                  ).length === 0 ? null : (
+                    <AccountTransactionInput tabClick={this.tabClick} />
+                  )}
                 </React.Fragment>
               ]}
             />
@@ -87,58 +83,62 @@ const AccountTable = ({ data, actions }) =>
   data.length === 0 || !data ? (
     <div>There are no accounts to show.</div>
   ) : (
-    <table className="table is-striped is-hoverable">
-      <thead>
-        <tr>
-          <th />
-          <th>name</th>
-          <th>
-            <abbr title="starting balance">starting</abbr>
-          </th>
-          <th>interest</th>
-          <th>vehicle</th>
-          <th>Modify</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        {map(data, account => (
-          <tr key={account.name.state}>
-            <td
-              onClick={actions.toggleAccountVisibility.bind(
-                this,
-                account.name.state
-              )}
-            >
-              {account.visible.state ? `👀` : `🤫`}
-            </td>
-            <th>{account.name.state}</th>
-            <td>{account.starting.toFixed}</td>
-            <td>{account.interest.toFixed}%</td>
-            <td>{account.vehicle.state}</td>
-            <td>
-              <button
-                className="button is-rounded is-small is-info"
-                onClick={() =>
-                  actions.setAccountForm(actions.model, 1, account.name.state)
-                }
-              >
-                M
-              </button>
-            </td>
-            <td>
-              <button
-                className="button is-rounded is-small is-danger"
-                onClick={actions.deleteAccount.bind(this, account.name.state)}
-              >
-                <strong>X</strong>
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <FlexAccountTable
+      itemHeaders={[
+        'visible',
+        'name',
+        'starting',
+        'interest',
+        'vehicle',
+        'Modify',
+        'Delete'
+      ]}
+      data={data}
+      actions={actions}
+    />
   );
+
+const FlexAccountTable = ({ itemHeaders, data, actions }) => (
+  <React.Fragment>
+    <HeaderRow columns={itemHeaders.length} items={itemHeaders} />
+    {data.map(account => (
+      <DataRow
+        key={account.name}
+        itemKey={account.name}
+        columns={itemHeaders.length}
+        itemHeaders={itemHeaders}
+        items={[
+          <button
+            onClick={actions.toggleAccountVisibility.bind(
+              this,
+              account.name.state
+            )}
+          >
+            {account.visible.state ? `👀` : `🤫`}
+          </button>,
+          account.name,
+          account.starting.toFixed(2),
+          `${account.interest.toFixed(2)}%`,
+          account.vehicle,
+          <button
+            className="button is-rounded is-small is-info"
+            onClick={() =>
+              actions.setAccountForm(actions.model, 1, account.name.state)
+            }
+          >
+            M
+          </button>,
+          <button
+            className="button is-rounded is-small is-danger"
+            onClick={actions.deleteAccount.bind(this, account.name.state)}
+          >
+            <strong>X</strong>
+          </button>
+        ]}
+      />
+    ))}
+  </React.Fragment>
+);
 
 const DebtTable = ({ data, actions }) =>
   data.filter(
@@ -149,7 +149,24 @@ const DebtTable = ({ data, actions }) =>
   ).length === 0 || !data ? (
     <div>There are no debts to show.</div>
   ) : (
-    data
+    <FlexDebtTable
+      itemHeaders={[
+        'account name',
+        'starting',
+        'interest',
+        'Add',
+        'Modify',
+        'Delete'
+      ]}
+      data={data}
+      actions={actions}
+    />
+  );
+
+const FlexDebtTable = ({ itemHeaders, data, actions }) => (
+  <React.Fragment>
+    <HeaderRow columns={itemHeaders.length} items={itemHeaders} />
+    {data
       .filter(
         account =>
           account.vehicle === 'debt' ||
@@ -157,71 +174,96 @@ const DebtTable = ({ data, actions }) =>
           account.vehicle === 'credit line'
       )
       .map(account => (
-        <div className="media box" key={account.name}>
-          <div className="media-content">
-            <div className="content">
-              <p>
-                <strong>{account.name}</strong>{' '}
-                <small>{`$${account.starting} @ ${account.interest}%`}</small>
-              </p>
-            </div>
-            {account.payback ? (
-              <PaybackTable data={account} actions={actions} />
-            ) : null}
-          </div>
-          <div className="media-right">
-            <button
-              className="button is-rounded is-small is-success"
-              onClick={actions.model.forms.accountTransactionFormVisible.toggle}
-            >
-              +
-            </button>
-            <button
-              className="button is-rounded is-small is-info"
-              onClick={() =>
-                actions.setAccountForm(actions.model, 1, account.name)
-              }
-            >
-              M
-            </button>
-            <button
-              className="button is-rounded is-small is-danger"
-              onClick={() => actions.model.deleteAccount(account.name)}
-            >
-              <strong>X</strong>
-            </button>
-          </div>
-        </div>
-      ))
-  );
+        <React.Fragment key={account.name}>
+          <DataRow
+            itemKey={account.name}
+            columns={itemHeaders.length}
+            itemHeaders={itemHeaders}
+            items={[
+              account.name,
+              account.starting.toFixed(2),
+              `${account.interest.toFixed(2)}%`,
+              <button
+                className="button is-rounded is-small is-success"
+                onClick={
+                  actions.model.forms.accountTransactionFormVisible.toggle
+                }
+              >
+                +
+              </button>,
+              <button
+                className="button is-rounded is-small is-info"
+                onClick={() =>
+                  actions.setAccountForm(actions.model, 1, account.name)
+                }
+              >
+                M
+              </button>,
+              <button
+                className="button is-rounded is-small is-danger"
+                onClick={() => actions.model.deleteAccount(account.name)}
+              >
+                <strong>X</strong>
+              </button>
+            ]}
+          />
+          {account.payback ? (
+            <PaybackTable data={account} actions={actions} />
+          ) : null}
+        </React.Fragment>
+      ))}
+  </React.Fragment>
+);
 
-const PaybackTable = ({ data, actions }) =>
-  data.payback.transactions.map((paybackTransaction, index) => (
-    <div className="media" key={index}>
-      <div className="media-content">
-        <p>
-          <strong>{paybackTransaction.start}</strong>{' '}
-          <small>{`${paybackTransaction.rtype} @ ${paybackTransaction.cycle} for ${paybackTransaction.value}`}</small>
-        </p>
-        <p>{paybackTransaction.description}</p>
-      </div>
-      <div className="media-right">
-        <button
-          className="button is-rounded is-small is-info"
-          onClick={() => {
-            actions.model.modifyAccountTransaction(data.name, index);
-          }}
-        >
-          M
-        </button>
-        <button
-          className="button is-rounded is-small is-danger"
-          onClick={() =>
-            actions.model.deleteAccountTransaction(data.name, index)
-          }
-        >
-          <strong>X</strong>
-        </button>
-      </div>
-    </div>
-  ));
+const PaybackTable = ({ data, actions }) => (
+  <FlexPaybackTable
+    itemHeaders={[
+      'description',
+      'start',
+      'rtype',
+      'cycle',
+      'value',
+      'Modify',
+      'Delete'
+    ]}
+    data={data}
+    actions={actions}
+  />
+);
+
+const FlexPaybackTable = ({ itemHeaders, data, actions }) => (
+  <React.Fragment>
+    <HeaderRow columns={itemHeaders.length} items={itemHeaders} />
+    {data.payback.transactions.map((paybackTransaction, index) => (
+      <DataRow
+        key={index}
+        itemKey={index}
+        columns={itemHeaders.length}
+        itemHeaders={itemHeaders}
+        items={[
+          paybackTransaction.description,
+          paybackTransaction.start,
+          paybackTransaction.rtype,
+          paybackTransaction.cycle,
+          paybackTransaction.value,
+          <button
+            className="button is-rounded is-small is-info"
+            onClick={() => {
+              actions.model.modifyAccountTransaction(data.name, index);
+            }}
+          >
+            M
+          </button>,
+          <button
+            className="button is-rounded is-small is-danger"
+            onClick={() =>
+              actions.model.deleteAccountTransaction(data.name, index)
+            }
+          >
+            <strong>X</strong>
+          </button>
+        ]}
+      />
+    ))}
+  </React.Fragment>
+);
