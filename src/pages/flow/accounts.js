@@ -1,7 +1,7 @@
 import React from 'react';
 import { State } from '../../state';
 
-import { Box, Button } from 'rebass';
+import { Button } from 'rebass';
 import TabView from '../../components/view/tabView';
 import { HeaderRow, DataRow } from '../../components/bootstrap/FlexTable';
 import AccountInput from './accountInput';
