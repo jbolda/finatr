@@ -1,6 +1,7 @@
 import React from 'react';
 import { State } from '../../state';
 
+import { Box, Button } from 'rebass';
 import TabView from '../../components/view/tabView';
 import { HeaderRow, DataRow } from '../../components/bootstrap/FlexTable';
 import AccountInput from './accountInput';
@@ -34,12 +35,9 @@ class AccountFlow extends React.Component {
               tabTitles={['All Accounts', 'Add Account', 'Debt']}
               tabContents={[
                 <React.Fragment>
-                  <button
-                    className="button is-rounded is-small is-info"
-                    onClick={model.toggleAllAccount}
-                  >
+                  <Button onClick={model.toggleAllAccount}>
                     Toggle All Visibility
-                  </button>
+                  </Button>
                   <AccountTable
                     data={model.state.accountsComputed}
                     actions={{
@@ -108,32 +106,30 @@ const FlexAccountTable = ({ itemHeaders, data, actions }) => (
         columns={itemHeaders.length}
         itemHeaders={itemHeaders}
         items={[
-          <button
-            onClick={actions.toggleAccountVisibility.bind(
-              this,
-              account.name.state
-            )}
+          <Button
+            variant="outline"
+            onClick={actions.toggleAccountVisibility.bind(this, account.name)}
           >
-            {account.visible.state ? `👀` : `🤫`}
-          </button>,
+            {account.visible ? `👀` : `🤫`}
+          </Button>,
           account.name,
           account.starting.toFixed(2),
           `${account.interest.toFixed(2)}%`,
           account.vehicle,
-          <button
-            className="button is-rounded is-small is-info"
+          <Button
+            color="blue"
             onClick={() =>
               actions.setAccountForm(actions.model, 1, account.name.state)
             }
           >
             M
-          </button>,
-          <button
-            className="button is-rounded is-small is-danger"
+          </Button>,
+          <Button
+            color="red"
             onClick={actions.deleteAccount.bind(this, account.name.state)}
           >
             <strong>X</strong>
-          </button>
+          </Button>
         ]}
       />
     ))}
@@ -183,28 +179,28 @@ const FlexDebtTable = ({ itemHeaders, data, actions }) => (
               account.name,
               account.starting.toFixed(2),
               `${account.interest.toFixed(2)}%`,
-              <button
-                className="button is-rounded is-small is-success"
+              <Button
+                color="green"
                 onClick={
                   actions.model.forms.accountTransactionFormVisible.toggle
                 }
               >
                 +
-              </button>,
-              <button
-                className="button is-rounded is-small is-info"
+              </Button>,
+              <Button
+                color="blue"
                 onClick={() =>
                   actions.setAccountForm(actions.model, 1, account.name)
                 }
               >
                 M
-              </button>,
-              <button
-                className="button is-rounded is-small is-danger"
+              </Button>,
+              <Button
+                color="red"
                 onClick={() => actions.model.deleteAccount(account.name)}
               >
-                <strong>X</strong>
-              </button>
+                X
+              </Button>
             ]}
           />
           {account.payback ? (
@@ -246,22 +242,22 @@ const FlexPaybackTable = ({ itemHeaders, data, actions }) => (
           paybackTransaction.rtype,
           paybackTransaction.cycle,
           paybackTransaction.value,
-          <button
-            className="button is-rounded is-small is-info"
+          <Button
+            color="blue"
             onClick={() => {
               actions.model.modifyAccountTransaction(data.name, index);
             }}
           >
             M
-          </button>,
-          <button
-            className="button is-rounded is-small is-danger"
+          </Button>,
+          <Button
+            color="red"
             onClick={() =>
               actions.model.deleteAccountTransaction(data.name, index)
             }
           >
-            <strong>X</strong>
-          </button>
+            X
+          </Button>
         ]}
       />
     ))}
