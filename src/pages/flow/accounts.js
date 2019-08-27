@@ -3,7 +3,10 @@ import { State } from '../../state';
 
 import { Button } from 'rebass';
 import TabView from '../../components/view/tabView';
-import { HeaderRow, DataRow } from '../../components/bootstrap/FlexTable';
+import FlexTable, {
+  HeaderRow,
+  DataRow
+} from '../../components/bootstrap/FlexTable';
 import AccountInput from './accountInput';
 import AccountTransactionInput from './accountTransactionInput';
 
@@ -81,7 +84,7 @@ const AccountTable = ({ data, actions }) =>
   data.length === 0 || !data ? (
     <div>There are no accounts to show.</div>
   ) : (
-    <FlexAccountTable
+    <FlexTable
       itemHeaders={[
         'visible',
         'name',
@@ -91,21 +94,9 @@ const AccountTable = ({ data, actions }) =>
         'Modify',
         'Delete'
       ]}
-      data={data}
-      actions={actions}
-    />
-  );
-
-const FlexAccountTable = ({ itemHeaders, data, actions }) => (
-  <React.Fragment>
-    <HeaderRow columns={itemHeaders.length} items={itemHeaders} />
-    {data.map(account => (
-      <DataRow
-        key={account.name}
-        itemKey={account.name}
-        columns={itemHeaders.length}
-        itemHeaders={itemHeaders}
-        items={[
+      itemData={data.map(account => ({
+        key: account.name,
+        data: [
           <Button
             variant="outline"
             onClick={actions.toggleAccountVisibility.bind(this, account.name)}
@@ -130,11 +121,11 @@ const FlexAccountTable = ({ itemHeaders, data, actions }) => (
           >
             <strong>X</strong>
           </Button>
-        ]}
-      />
-    ))}
-  </React.Fragment>
-);
+        ]
+      }))}
+      actions={actions}
+    />
+  );
 
 const DebtTable = ({ data, actions }) =>
   data.filter(
@@ -212,7 +203,7 @@ const FlexDebtTable = ({ itemHeaders, data, actions }) => (
 );
 
 const PaybackTable = ({ data, actions }) => (
-  <FlexPaybackTable
+  <FlexTable
     itemHeaders={[
       'description',
       'start',
@@ -222,44 +213,32 @@ const PaybackTable = ({ data, actions }) => (
       'Modify',
       'Delete'
     ]}
-    data={data}
+    itemData={data.payback.transactions.map((paybackTransaction, index) => ({
+      key: index,
+      data: [
+        paybackTransaction.description,
+        paybackTransaction.start,
+        paybackTransaction.rtype,
+        paybackTransaction.cycle,
+        paybackTransaction.value,
+        <Button
+          color="blue"
+          onClick={() => {
+            actions.model.modifyAccountTransaction(data.name, index);
+          }}
+        >
+          M
+        </Button>,
+        <Button
+          color="red"
+          onClick={() =>
+            actions.model.deleteAccountTransaction(data.name, index)
+          }
+        >
+          X
+        </Button>
+      ]
+    }))}
     actions={actions}
   />
-);
-
-const FlexPaybackTable = ({ itemHeaders, data, actions }) => (
-  <React.Fragment>
-    <HeaderRow columns={itemHeaders.length} items={itemHeaders} />
-    {data.payback.transactions.map((paybackTransaction, index) => (
-      <DataRow
-        key={index}
-        itemKey={index}
-        columns={itemHeaders.length}
-        itemHeaders={itemHeaders}
-        items={[
-          paybackTransaction.description,
-          paybackTransaction.start,
-          paybackTransaction.rtype,
-          paybackTransaction.cycle,
-          paybackTransaction.value,
-          <Button
-            color="blue"
-            onClick={() => {
-              actions.model.modifyAccountTransaction(data.name, index);
-            }}
-          >
-            M
-          </Button>,
-          <Button
-            color="red"
-            onClick={() =>
-              actions.model.deleteAccountTransaction(data.name, index)
-            }
-          >
-            X
-          </Button>
-        ]}
-      />
-    ))}
-  </React.Fragment>
 );

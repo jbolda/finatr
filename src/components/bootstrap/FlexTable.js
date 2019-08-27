@@ -47,3 +47,20 @@ const DataItem = ({ children, header, columns }) => (
 );
 
 export { HeaderRow, DataRow };
+
+const FlexTable = ({ itemHeaders, itemData }) => (
+  <React.Fragment>
+    <HeaderRow columns={itemHeaders.length} items={itemHeaders} />
+    {itemData.map(items => (
+      <DataRow
+        key={items.key}
+        itemKey={items.key}
+        columns={itemHeaders.length}
+        itemHeaders={itemHeaders}
+        items={items.data}
+      />
+    ))}
+  </React.Fragment>
+);
+
+export default FlexTable;

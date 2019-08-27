@@ -3,7 +3,7 @@ import { State } from '../../state';
 
 import { Box, Button } from 'rebass';
 import TabView from '../../components/view/tabView';
-import { HeaderRow, DataRow } from '../../components/bootstrap/FlexTable';
+import FlexTable from '../../components/bootstrap/FlexTable';
 import TransactionInput from './transactionInput';
 
 class TransactionsFlow extends React.Component {
@@ -130,21 +130,9 @@ const TransactionTable = ({ data, actions }) =>
         'Modify',
         'Delete'
       ]}
-      data={data}
-      actions={actions}
-    />
-  );
-
-const FlexTable = ({ itemHeaders, data, actions }) => (
-  <React.Fragment>
-    <HeaderRow columns={itemHeaders.length} items={itemHeaders} />
-    {data.map(transaction => (
-      <DataRow
-        key={transaction.id}
-        itemKey={transaction.id}
-        columns={itemHeaders.length}
-        itemHeaders={itemHeaders}
-        items={[
+      itemData={data.map(transaction => ({
+        key: transaction.id,
+        data: [
           transaction.raccount,
           transaction.description,
           transaction.category,
@@ -174,8 +162,8 @@ const FlexTable = ({ itemHeaders, data, actions }) => (
           >
             <strong>X</strong>
           </Button>
-        ]}
-      />
-    ))}
-  </React.Fragment>
-);
+        ]
+      }))}
+      actions={actions}
+    />
+  );
