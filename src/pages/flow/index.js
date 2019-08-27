@@ -1,6 +1,8 @@
 import React from 'react';
 import { State } from '../../state';
 import BarChart from './barChart';
+import { Box, Flex, Text } from 'rebass';
+import { Input } from '@rebass/forms';
 
 import Transactions from './transactions';
 import Accounts from './accounts';
@@ -13,180 +15,116 @@ class FinancialFlow extends React.Component {
       <State.Consumer>
         {model => (
           <React.Fragment>
-            <section className="section">
-              <div className="level">
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">Daily Income</p>
-                    <p className="heading">
-                      ${model.stats.dailyIncome.toFixed}
-                    </p>
-                  </div>
-                </div>
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">Daily Expenses</p>
-                    <p className="heading">
-                      ${model.stats.dailyExpense.toFixed}
-                    </p>
-                  </div>
-                </div>
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">Savings Rate</p>
-                    <p className="heading">
-                      {model.stats.savingsRate.toFixed}%
-                    </p>
-                  </div>
-                </div>
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">Expense Multiple</p>
-                    <p className="heading">
-                      {model.stats.expenseMultiple.toFixed}x
-                    </p>
-                    <p className="heading">
-                      +{model.stats.expenseMultipleIncreasePerYear.toFixed}
-                      x/year
-                    </p>
-                  </div>
-                </div>
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">% to FI (25x)</p>
-                    <p className="heading">
-                      {model.stats.percentToFINumber.toFixed}%
-                    </p>
-                    {model.stats.yearsToFINumber.toFixed === '999.00' ? null : (
-                      <p className="heading">
-                        {model.stats.yearsToFINumber.toFixed}y
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
+            <Flex flexWrap="wrap" mx={5}>
+              <Box px={2} py={2} width={[1, 1 / 5, null]}>
+                <Text p={1}>Daily Income</Text>
+                <Text p={1}>${model.stats.dailyIncome.toFixed}</Text>
+              </Box>
+              <Box px={2} py={2} width={[1, 1 / 5, null]}>
+                <Text p={1}>Daily Expenses</Text>
+                <Text p={1}>${model.stats.dailyExpense.toFixed}</Text>
+              </Box>
+              <Box px={2} py={2} width={[1, 1 / 5, null]}>
+                <Text p={1}>Savings Rate</Text>
+                <Text p={1}>{model.stats.savingsRate.toFixed}%</Text>
+              </Box>
+              <Box px={2} py={2} width={[1, 1 / 5, null]}>
+                <Text p={1}>Expense Multiple</Text>
+                <Text p={1}>{model.stats.expenseMultiple.toFixed}x</Text>
+                <Text p={1}>
+                  +{model.stats.expenseMultipleIncreasePerYear.toFixed}
+                  x/year
+                </Text>
+              </Box>
+              <Box px={2} py={2} width={[1, 1 / 5, null]}>
+                <Text p={1}>% to FI (25x)</Text>
+                <Text p={1}>{model.stats.percentToFINumber.toFixed}%</Text>
+                {model.stats.yearsToFINumber.toFixed === '999.00' ? null : (
+                  <Text p={1}>{model.stats.yearsToFINumber.toFixed}y</Text>
+                )}
+              </Box>
 
-              <div className="level">
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">% to +net worth</p>
-                    <p className="heading">
-                      {model.stats.percentToPositiveNetWorth.toFixed}%
-                    </p>
-                  </div>
-                </div>
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">% to FU Money (2x)</p>
-                    <p className="heading">
-                      {model.stats.percentToFUMoneyConsidering.toFixed}%
-                    </p>
-                    {model.stats.yearsToFUMoneyConsidering.toFixed ===
-                    '999.00' ? null : (
-                      <p className="heading">
-                        {model.stats.yearsToFUMoneyConsidering.toFixed}y
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">% to FU Money (3x)</p>
-                    <p className="heading">
-                      {model.stats.percentToFUMoneyConfident.toFixed}%
-                    </p>
-                    {model.stats.yearsToFUMoneyConfident.toFixed ===
-                    '999.00' ? null : (
-                      <p className="heading">
-                        {model.stats.yearsToFUMoneyConfident.toFixed}y
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">% to first FI milestone</p>
-                    <p className="heading">($100,000 Net Worth)</p>
-                    <p className="heading">
-                      {model.stats.percentToFirstFI.toFixed}%
-                    </p>
-                  </div>
-                </div>
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">% to half FI (12.5x)</p>
-                    <p className="heading">
-                      {model.stats.percentToHalfFI.toFixed}%
-                    </p>
-                    {model.stats.yearsToHalfFI.toFixed === '999.00' ? null : (
-                      <p className="heading">
-                        {model.stats.yearsToHalfFI.toFixed}y
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">% to lean FI (17.5x)</p>
-                    <p className="heading">
-                      {model.stats.percentToLeanFI.toFixed}%
-                    </p>
-                    {model.stats.yearsToLeanFI.toFixed === '999.00' ? null : (
-                      <p className="heading">
-                        {model.stats.yearsToLeanFI.toFixed}y
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">% to flex FI (20x)</p>
-                    <p className="heading">
-                      {model.stats.percentToFlexFI.toFixed}%
-                    </p>
-                    {model.stats.yearsToFlexFI.toFixed === '999.00' ? null : (
-                      <p className="heading">
-                        {model.stats.yearsToFlexFI.toFixed}y
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="level-item has-text-centered">
-                  <div>
-                    <p className="heading">% to fat FI (30x)</p>
-                    <p className="heading">
-                      {model.stats.percentToFatFI.toFixed}%
-                    </p>
-                    {model.stats.yearsToFatFI.toFixed === '999.00' ? null : (
-                      <p className="heading">
-                        {model.stats.yearsToFatFI.toFixed}y
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
+              <Box px={2} py={2} width={[1, 1 / 8, null]}>
+                <Text p={1}>% to +net worth</Text>
+                <Text p={1}>
+                  {model.stats.percentToPositiveNetWorth.toFixed}%
+                </Text>
+              </Box>
+              <Box px={2} py={2} width={[1, 1 / 8, null]}>
+                <Text p={1}>% to FU Money (2x)</Text>
+                <Text p={1}>
+                  {model.stats.percentToFUMoneyConsidering.toFixed}%
+                </Text>
+                {model.stats.yearsToFUMoneyConsidering.toFixed ===
+                '999.00' ? null : (
+                  <Text p={1}>
+                    {model.stats.yearsToFUMoneyConsidering.toFixed}y
+                  </Text>
+                )}
+              </Box>
+              <Box px={2} py={2} width={[1, 1 / 8, null]}>
+                <Text p={1}>% to FU Money (3x)</Text>
+                <Text p={1}>
+                  {model.stats.percentToFUMoneyConfident.toFixed}%
+                </Text>
+                {model.stats.yearsToFUMoneyConfident.toFixed ===
+                '999.00' ? null : (
+                  <Text p={1}>
+                    {model.stats.yearsToFUMoneyConfident.toFixed}y
+                  </Text>
+                )}
+              </Box>
+              <Box px={2} py={2} width={[1, 1 / 8, null]}>
+                <Text p={1}>% to first FI milestone</Text>
+                <Text p={1}>($100,000 Net Worth)</Text>
+                <Text p={1}>{model.stats.percentToFirstFI.toFixed}%</Text>
+              </Box>
+              <Box px={2} py={2} width={[1, 1 / 8, null]}>
+                <Text p={1}>% to half FI (12.5x)</Text>
+                <Text p={1}>{model.stats.percentToHalfFI.toFixed}%</Text>
+                {model.stats.yearsToHalfFI.toFixed === '999.00' ? null : (
+                  <Text p={1}>{model.stats.yearsToHalfFI.toFixed}y</Text>
+                )}
+              </Box>
+              <Box px={2} py={2} width={[1, 1 / 8, null]}>
+                <Text p={1}>% to lean FI (17.5x)</Text>
+                <Text p={1}>{model.stats.percentToLeanFI.toFixed}%</Text>
+                {model.stats.yearsToLeanFI.toFixed === '999.00' ? null : (
+                  <Text p={1}>{model.stats.yearsToLeanFI.toFixed}y</Text>
+                )}
+              </Box>
+              <Box px={2} py={2} width={[1, 1 / 8, null]}>
+                <Text p={1}>% to flex FI (20x)</Text>
+                <Text p={1}>{model.stats.percentToFlexFI.toFixed}%</Text>
+                {model.stats.yearsToFlexFI.toFixed === '999.00' ? null : (
+                  <Text p={1}>{model.stats.yearsToFlexFI.toFixed}y</Text>
+                )}
+              </Box>
+              <Box px={2} py={2} width={[1, 1 / 8, null]}>
+                <Text p={1}>% to fat FI (30x)</Text>
+                <Text p={1}>{model.stats.percentToFatFI.toFixed}%</Text>
+                {model.stats.yearsToFatFI.toFixed === '999.00' ? null : (
+                  <Text p={1}>{model.stats.yearsToFatFI.toFixed}y</Text>
+                )}
+              </Box>
+            </Flex>
+            <Flex flexWrap="wrap" mx={1}>
               <BarChart data={model.charts.state} />
-            </section>
-            <section className="section">
-              <div className="container">
-                <Form.FieldHorizontal>
-                  <Form.FieldLabel>Beginning Flow On</Form.FieldLabel>
-                  <Form.FieldBody>
-                    <input
-                      className="input"
-                      name="begin-graph"
-                      type="date"
-                      pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-                      value={model.charts.graphDates.start}
-                      onChange={event =>
-                        model.updateStartDateReCalc(event.target.value)
-                      }
-                    />
-                  </Form.FieldBody>
-                </Form.FieldHorizontal>
-              </div>
-            </section>
+            </Flex>
+            <Flex flexWrap="wrap" mx={3}>
+              <Form.FieldHorizontal>
+                <Form.Label htmlFor="begin-graph">Beginning Flow On</Form.Label>
+                <Input
+                  name="begin-graph"
+                  type="date"
+                  pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                  value={model.charts.graphDates.start}
+                  onChange={event =>
+                    model.updateStartDateReCalc(event.target.value)
+                  }
+                />
+              </Form.FieldHorizontal>
+            </Flex>
             <Transactions />
             <Accounts />
           </React.Fragment>

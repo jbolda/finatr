@@ -1,17 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { Box } from 'rebass';
+import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@reach/tabs';
+import '@reach/tabs/styles.css';
 
 class TabView extends React.Component {
   constructor(props) {
     super(props);
     this.state = { activeTab: null };
-    if (props.tabTitles.length > 0) {
+    if (!!props.tabTitles && props.tabTitles.length > 0) {
       this.state.activeTab = 0;
     }
   }
 
-  tabClick(index, event) {
-    if (event) event.preventDefault();
+  tabClick(index) {
     if (this.props.tabClick) {
       this.props.tabClick(index);
     } else {
@@ -19,59 +20,30 @@ class TabView extends React.Component {
     }
   }
 
-  computeUrl(tabName) {
-    // href={`#/${this.computeUrl(tab)}`}
-    let url = tabName.toLowerCase();
-    url = url.replace(' ', '_');
-    return url;
-  }
-
   render() {
-    let tabContents = null;
     let activeTab = this.props.activeTab
       ? this.props.activeTab
       : this.state.activeTab;
 
-    if (
-      activeTab !== null &&
-      this.props.tabContents &&
-      this.props.tabContents[activeTab]
-    ) {
-      tabContents = this.props.tabContents[activeTab];
-    }
-
     return (
-      <React.Fragment>
-        <div className="tabs">
-          <ul>
-            {this.props.tabTitles.map((tab, index) => (
-              <li key={tab} className={index === activeTab ? 'is-active' : ''}>
-                <a
-                  href={`#/${this.computeUrl(tab)}`}
-                  onClick={this.tabClick.bind(this, index)}
-                >
-                  {tab}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="container is-fluid" style={{ overflowX: 'auto' }}>
-          {tabContents}
-        </div>
-      </React.Fragment>
+      <Box pt={4} pb={4}>
+        {!this.props.tabTitles || !this.props.tabContents ? null : (
+          <Tabs index={activeTab} onChange={index => this.tabClick(index)}>
+            <TabList>
+              {this.props.tabTitles.map(title => (
+                <Tab key={title}>{title}</Tab>
+              ))}
+            </TabList>
+            <TabPanels>
+              {this.props.tabContents.map((content, index) => (
+                <TabPanel key={index}>{content}</TabPanel>
+              ))}
+            </TabPanels>
+          </Tabs>
+        )}
+      </Box>
     );
   }
 }
-
-TabView.defaultProps = {
-  tabTitles: [],
-  tabContents: null
-};
-
-TabView.propTypes = {
-  tabTitles: PropTypes.array,
-  tabContents: PropTypes.node
-};
 
 export default TabView;

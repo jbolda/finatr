@@ -7,7 +7,7 @@ import AppModel, { State } from './state';
 
 import { ThemeProvider } from 'theme-ui';
 import { Flex, Box, Text } from 'rebass';
-import theme from '@rebass/preset';
+import theme from './theme.js';
 
 import Homepage from './pages/homepage';
 import Examples from './pages/examples';
