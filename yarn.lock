@@ -10943,10 +10943,10 @@ yauzl@2.4.1:
   dependencies:
     fd-slicer "~1.0.1"
 
-ynab@1.15.0:
-  version "1.15.0"
-  resolved "https://registry.yarnpkg.com/ynab/-/ynab-1.15.0.tgz#bad2cdfe3269b45998154edd2443ece7ce651aa8"
-  integrity sha512-eI+B5IeVvJ94hb/77WI7E3ERHwMLYxnpOCVdHZEUy8XdR1XbYuSZ7G/HhWYnfEDXYkEunbTjos1L2JmzEwoSww==
+ynab@1.16.0:
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/ynab/-/ynab-1.16.0.tgz#1f12460941c9e64e73a30281e5842a4d253f857d"
+  integrity sha512-kJds8qAiyDJ3BzvPgItEXteVSUBS7ONBR5w3hIQDwybT80huBJNZ44MH6ptSZxkHZzbDvF7VFdHS8Bz1n8RS2w==
   dependencies:
     portable-fetch "^3.0.0"
 
