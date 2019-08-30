@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { map, valueOf } from 'microstates';
+import { map } from 'microstates';
 import { State } from '../../state';
 import { Flex, Box, Heading, Text, Button } from 'rebass';
 import TabView from '../../components/view/tabView';
@@ -130,8 +130,8 @@ const Table = ({ model }) => (
     ]}
     itemData={map(model.taxStrategy.incomeReceived, g =>
       map(g.income, income => ({
-        key: g.group.state,
-        data: valueOf([
+        key: `${g.group.state}::${income.date.state}`,
+        data: [
           g.group.state,
           income.gross.toFixed,
           income.federalTax.toFixed,
@@ -139,8 +139,8 @@ const Table = ({ model }) => (
           income.socialSecurity.toFixed,
           income.hsa.toFixed,
           income.pretaxInvestments.toFixed
-        ])
+        ]
       }))
-    )}
+    ).reduce((rootArray, childArray) => [...rootArray, ...childArray], [])}
   />
 );
