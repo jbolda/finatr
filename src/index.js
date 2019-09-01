@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Link } from '@reach/router';
+import { Router } from '@reach/router';
 
 import { Store, create } from 'microstates';
 import AppModel, { State } from './state';
 
-import { ThemeProvider } from 'theme-ui';
-import { Flex, Box, Text } from 'rebass';
+import { ThemeProvider, ColorMode } from 'theme-ui';
 import theme from './theme.js';
 
+import Header from './components/common/header';
+import Footer from './components/common/footer';
 import Homepage from './pages/homepage';
 import Examples from './pages/examples';
 import Financial from './pages/flow';
@@ -30,32 +31,8 @@ class App extends React.Component {
     return (
       <State.Provider value={this.state.model}>
         <ThemeProvider theme={theme}>
-          <Flex px={2} color="white" bg="black" alignItems="center">
-            <Text p={2} fontWeight="bold">
-              {' '}
-              <Link to="/">finatr</Link>
-            </Text>
-            <Box mx="auto" />
-            <Text p={2}>
-              <Link to="/">Home</Link>
-            </Text>
-            <Text p={2}>
-              <Link to="examples">Examples</Link>
-            </Text>
-            <Text p={2}>
-              <Link to="flow">Cash Flow</Link>
-            </Text>
-            <Text p={2}>
-              <Link to="accounts">Accounts</Link>
-            </Text>
-            <Text p={2}>
-              <Link to="import">Import</Link>
-            </Text>
-            <Text p={2}>
-              <Link to="taxes">Taxes</Link>
-            </Text>
-          </Flex>
-
+          <ColorMode />
+          <Header />
           <Router>
             <Homepage path="/" />
             <Examples path="examples" />
@@ -64,6 +41,7 @@ class App extends React.Component {
             <Importing path="import" />
             <Taxes path="taxes" />
           </Router>
+          <Footer />
         </ThemeProvider>
       </State.Provider>
     );
