@@ -11,22 +11,21 @@ describe('Transaction Form Tests', () => {
   });
 
   it('submits simple transaction', () => {
-    cy.get('form')
-      .contains('rtype')
-      .parent()
-      .parent()
-      .find('select')
-      .select('No Repeating');
+    cy.get('#transactions').within(() => {
+      cy.getByLabelText('value').type('55');
 
-    cy.get('form')
-      .contains('value')
-      .parent()
-      .parent()
-      .find('input')
-      .type('55');
+      cy.getByLabelText('rtype').select('No Repeating');
 
     cy.get('form').submit();
-    cy.get('#transactions').contains('55.00');
+
+      cy.get(`[aria-labelledby="tab\:1\:0"]`).within(() =>
+        cy.queryByText('55.00').should('exist')
+      );
+
+      cy.get(`[aria-labelledby="tab\:1\:2"]`).within(() =>
+        cy.queryByText('55.00').should('exist')
+      );
+  });
   });
 
   it('check income is listed in income tab after submit', () => {
