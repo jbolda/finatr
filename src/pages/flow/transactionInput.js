@@ -194,7 +194,7 @@ class TransactionInput extends React.Component {
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="rtype" touched={touched}>
-                    <Field as={Select} name="rtype">
+                    <Field as={Select} name="rtype" id="rtype">
                       <option value="none">No Repeating</option>
                       <option value="day">Repeat Daily (or Every X Day)</option>
                       <option value="day of week">

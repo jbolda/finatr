@@ -43,7 +43,7 @@ const TransactionInputAmountComputed = ({
     </Label>
     {values.valueType === 'static' ? (
       <FieldGroup errors={errors} name="value" touched={touched}>
-        <Field as={Input} name="value" type="number" />
+        <Field as={Input} name="value" id="value" type="number" />
       </FieldGroup>
     ) : (
       <React.Fragment>
