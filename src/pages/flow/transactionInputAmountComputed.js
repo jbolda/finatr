@@ -16,6 +16,7 @@ const TransactionInputAmountComputed = ({
         as={Radio}
         type="radio"
         name="valueType"
+        id="valueType"
         checked={values.valueType === 'static'}
         onChange={() => setFieldValue('valueType', 'static')}
       />
@@ -26,6 +27,7 @@ const TransactionInputAmountComputed = ({
         as={Radio}
         type="radio"
         name="valueType"
+        id="valueType"
         checked={values.valueType === 'dynamic'}
         onChange={() => {
           setFieldValue('computedAmount.reference', '');
@@ -74,7 +76,11 @@ const References = ({ errors, touched, values, setFieldValue }) => (
                     name={`referencesArray[${index}].name`}
                     prettyName={`reference name`}
                   >
-                    <Field as={Input} name={`referencesArray[${index}].name`} />
+                    <Field
+                      as={Input}
+                      name={`referencesArray[${index}].name`}
+                      id={`referencesArray[${index}].name`}
+                    />
                   </FieldGroup>
                   <FieldGroup
                     name={`referencesArray[${index}].value`}
@@ -83,6 +89,7 @@ const References = ({ errors, touched, values, setFieldValue }) => (
                     <Field
                       as={Input}
                       name={`referencesArray[${index}].value`}
+                      id={`referencesArray[${index}].value`}
                       type="number"
                     />
                   </FieldGroup>
@@ -145,6 +152,7 @@ const RecursiveAmountComputed = ({ values, setFieldValue, level }) => (
       <Field
         as={Select}
         name={`computedAmount${'.on'.repeat(level)}.reference`}
+        id={`computedAmount${'.on'.repeat(level)}.reference`}
       >
         <option key={'default'} value="select">
           Select
@@ -214,6 +222,7 @@ const Operation = ({ operationType, values, level, setFieldValue }) => (
       <Field
         as={Radio}
         name={`computedAmount${'.on'.repeat(level)}.operation`}
+        id={`computedAmount${'.on'.repeat(level)}.operation`}
         checked={retrieveNested('operation', values, level) === operationType}
         onChange={() => {
           setFieldValue(

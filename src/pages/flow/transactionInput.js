@@ -79,12 +79,13 @@ class TransactionInput extends React.Component {
                   <Field
                     as={Input}
                     name="id"
+                    id="id"
                     type="text"
                     sx={{ display: 'none' }}
                   />
 
                   <FieldGroup errors={errors} name="raccount" touched={touched}>
-                    <Field as={Select} name="raccount">
+                    <Field as={Select} name="raccount" id="raccount">
                       <option key={'default'} value={'select'} disabled>
                         Select an Option
                       </option>
@@ -101,15 +102,15 @@ class TransactionInput extends React.Component {
                     name="description"
                     touched={touched}
                   >
-                    <Field as={Input} name="description" />
+                    <Field as={Input} name="description" id="description" />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="category" touched={touched}>
-                    <Field as={Input} name="category" />
+                    <Field as={Input} name="category" id="category" />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="type" touched={touched}>
-                    <Field as={Select} name="type">
+                    <Field as={Select} name="type" id="type">
                       <option value="income">Income</option>
                       <option value="expense">Expense</option>
                       <option value="transfer">Transfer</option>
@@ -120,6 +121,7 @@ class TransactionInput extends React.Component {
                     <Field
                       as={Input}
                       name="start"
+                      id="start"
                       type="date"
                       pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
                     />
@@ -134,6 +136,7 @@ class TransactionInput extends React.Component {
                     <Field
                       as={Input}
                       name="beginAfterOccurrences"
+                      id="beginAfterOccurrences"
                       type="number"
                     />
                   </FieldGroup>
@@ -144,6 +147,7 @@ class TransactionInput extends React.Component {
                         as={Radio}
                         type="radio"
                         name="ending"
+                        id="ending"
                         checked={values.ending === 'never'}
                         onChange={() => setFieldValue('ending', 'never')}
                       />
@@ -154,6 +158,7 @@ class TransactionInput extends React.Component {
                         as={Radio}
                         type="radio"
                         name="ending"
+                        id="ending"
                         checked={values.ending === 'at Date'}
                         onChange={() => setFieldValue('ending', 'at Date')}
                       />
@@ -164,6 +169,7 @@ class TransactionInput extends React.Component {
                         as={Radio}
                         type="radio"
                         name="ending"
+                        id="ending"
                         checked={
                           values.ending === 'after Number of Occurrences'
                         }
@@ -179,7 +185,12 @@ class TransactionInput extends React.Component {
                         name="occurrences"
                         touched={touched}
                       >
-                        <Field as={Input} name="occurrences" type="number" />
+                        <Field
+                          as={Input}
+                          name="occurrences"
+                          id="occurrences"
+                          type="number"
+                        />
                       </FieldGroup>
                     ) : values.ending === 'at Date' ? (
                       <FieldGroup
@@ -188,7 +199,7 @@ class TransactionInput extends React.Component {
                         prettyName="At This Day"
                         touched={touched}
                       >
-                        <Field as={Input} name="end" type="date" />
+                        <Field as={Input} name="end" id="end" type="date" />
                       </FieldGroup>
                     ) : null}
                   </FieldGroup>
@@ -217,7 +228,7 @@ class TransactionInput extends React.Component {
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="cycle" touched={touched}>
-                    <Field as={Input} name="cycle" type="number" />
+                    <Field as={Input} name="cycle" id="cycle" type="number" />
                   </FieldGroup>
 
                   <TransactionInputAmountComputed
