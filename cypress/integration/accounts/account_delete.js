@@ -1,3 +1,5 @@
+import '@testing-library/cypress/add-commands';
+
 describe('Transaction Delete Tests', () => {
   beforeEach(() => {
     cy.visit('/flow');
@@ -5,33 +7,24 @@ describe('Transaction Delete Tests', () => {
       .contains('Add Account')
       .click();
 
-    cy.get('form')
-      .contains('starting')
-      .parent()
-      .parent()
-      .find('input')
-      .type('{selectall}55');
+    cy.get('#accounts').within(() => {
+      cy.getByLabelText('starting').type('{selectall}55');
 
-    cy.get('form')
-      .contains('name')
-      .parent()
-      .parent()
-      .find('input')
-      .type('test account');
+      cy.getByLabelText('name').type('test account');
 
-    cy.get('form').submit();
+      cy.get('form').submit();
+    });
   });
 
   it('deletes the recently added account', () => {
-    cy.get('#accounts')
-      .contains('55.00')
-      .parent()
-      .within(() => {
-        cy.contains('X').click();
-      });
+    cy.get('#accounts').within(() => {
+      cy.getByText('55.00')
+        .parent()
+        .within(() => {
+          cy.queryByText('X').click();
+        });
 
-    cy.get('#accounts')
-      .contains('test account')
-      .should('not.exist');
+      cy.queryByText('test account').should('not.exist');
+    });
   });
 });

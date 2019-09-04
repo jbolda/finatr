@@ -116,7 +116,7 @@ const AccountTable = ({ data, actions }) =>
           </Button>,
           <Button
             color="red"
-            onClick={actions.deleteAccount.bind(this, account.name.state)}
+            onClick={actions.deleteAccount.bind(this, account.name)}
           >
             <strong>X</strong>
           </Button>
