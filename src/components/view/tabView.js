@@ -26,7 +26,7 @@ class TabView extends React.Component {
       : this.state.activeTab;
 
     return (
-      <Box pt={4} pb={4}>
+      <Box id={this.props.id} pt={4} pb={4}>
         {!this.props.tabTitles || !this.props.tabContents ? null : (
           <Tabs index={activeTab} onChange={index => this.tabClick(index)}>
             <TabList>
@@ -36,7 +36,14 @@ class TabView extends React.Component {
             </TabList>
             <TabPanels>
               {this.props.tabContents.map((content, index) => (
-                <TabPanel key={index}>{content}</TabPanel>
+                <TabPanel
+                  key={index}
+                  data-testid={`${this.props.id}-${this.props.tabTitles[index]
+                    .toLowerCase()
+                    .replace(' ', '-')}`}
+                >
+                  {content}
+                </TabPanel>
               ))}
             </TabPanels>
           </Tabs>
