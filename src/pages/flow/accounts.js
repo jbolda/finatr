@@ -109,7 +109,7 @@ const AccountTable = ({ data, actions }) =>
           <Button
             color="blue"
             onClick={() =>
-              actions.setAccountForm(actions.model, 1, account.name.state)
+              actions.setAccountForm(actions.model, 1, account.name)
             }
           >
             M

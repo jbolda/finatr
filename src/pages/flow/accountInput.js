@@ -32,7 +32,7 @@ class AccountInput extends React.Component {
           {model => (
             <Formik
               initialValues={model.forms.accountForm.values}
-              enableReinitialize={false}
+              enableReinitialize={true}
               validationSchema={AccountSchema}
               onSubmit={(values, actions) => {
                 model.upsertAccount(values);
