@@ -31,47 +31,46 @@ class AccountFlow extends React.Component {
     return (
       <State.Consumer>
         {model => (
-          <section className="section" id="accounts">
-            <TabView
-              activeTab={this.state.activeTab}
-              tabClick={this.tabClick}
-              tabTitles={['All Accounts', 'Add Account', 'Debt']}
-              tabContents={[
-                <React.Fragment>
-                  <Button onClick={model.toggleAllAccount}>
-                    Toggle All Visibility
-                  </Button>
-                  <AccountTable
-                    data={model.state.accountsComputed}
-                    actions={{
-                      model: model,
-                      setAccountForm: this.setAccountForm,
-                      deleteAccount: model.deleteAccount,
-                      toggleAccountVisibility: model.toggleAccountVisibility
-                    }}
-                  />
-                </React.Fragment>,
-                <AccountInput tabClick={this.tabClick} />,
-                <React.Fragment>
-                  <DebtTable
-                    data={model.state.accountsComputed}
-                    actions={{
-                      model: model,
-                      setAccountForm: this.setAccountForm
-                    }}
-                  />
-                  {model.state.accountsComputed.filter(
-                    account =>
-                      account.vehicle === 'debt' ||
-                      account.vehicle === 'loan' ||
-                      account.vehicle === 'credit line'
-                  ).length === 0 ? null : (
-                    <AccountTransactionInput tabClick={this.tabClick} />
-                  )}
-                </React.Fragment>
-              ]}
-            />
-          </section>
+          <TabView
+            id="accounts"
+            activeTab={this.state.activeTab}
+            tabClick={this.tabClick}
+            tabTitles={['All Accounts', 'Add Account', 'Debt']}
+            tabContents={[
+              <React.Fragment>
+                <Button onClick={model.toggleAllAccount}>
+                  Toggle All Visibility
+                </Button>
+                <AccountTable
+                  data={model.state.accountsComputed}
+                  actions={{
+                    model: model,
+                    setAccountForm: this.setAccountForm,
+                    deleteAccount: model.deleteAccount,
+                    toggleAccountVisibility: model.toggleAccountVisibility
+                  }}
+                />
+              </React.Fragment>,
+              <AccountInput tabClick={this.tabClick} />,
+              <React.Fragment>
+                <DebtTable
+                  data={model.state.accountsComputed}
+                  actions={{
+                    model: model,
+                    setAccountForm: this.setAccountForm
+                  }}
+                />
+                {model.state.accountsComputed.filter(
+                  account =>
+                    account.vehicle === 'debt' ||
+                    account.vehicle === 'loan' ||
+                    account.vehicle === 'credit line'
+                ).length === 0 ? null : (
+                  <AccountTransactionInput tabClick={this.tabClick} />
+                )}
+              </React.Fragment>
+            ]}
+          />
         )}
       </State.Consumer>
     );

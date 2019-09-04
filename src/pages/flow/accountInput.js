@@ -32,6 +32,7 @@ class AccountInput extends React.Component {
           {model => (
             <Formik
               initialValues={model.forms.accountForm.values}
+              enableReinitialize={false}
               validationSchema={AccountSchema}
               onSubmit={(values, actions) => {
                 model.upsertAccount(values);
@@ -50,19 +51,29 @@ class AccountInput extends React.Component {
               }) => (
                 <form onSubmit={handleSubmit} autoComplete="off">
                   <FieldGroup errors={errors} name="name" touched={touched}>
-                    <Field as={Input} type="text" name="name" />
+                    <Field as={Input} type="text" name="name" id="name" />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="starting" touched={touched}>
-                    <Field as={Input} type="number" name="starting" />
+                    <Field
+                      as={Input}
+                      type="number"
+                      name="starting"
+                      id="starting"
+                    />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="interest" touched={touched}>
-                    <Field as={Input} type="number" name="interest" />
+                    <Field
+                      as={Input}
+                      type="number"
+                      name="interest"
+                      id="interest"
+                    />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="vehicle" touched={touched}>
-                    <Field as={Select} name="vehicle">
+                    <Field as={Select} name="vehicle" id="vehicle">
                       <option value="operating">Operating</option>
                       <option value="loan">Loan</option>
                       <option value="credit line">Credit Line</option>
