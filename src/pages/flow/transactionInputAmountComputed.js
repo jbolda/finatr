@@ -8,7 +8,8 @@ const TransactionInputAmountComputed = ({
   errors,
   touched,
   values,
-  setFieldValue
+  setFieldValue,
+  prefixID = ''
 }) => (
   <FieldGroup name="valueType" prettyName="amount">
     <Label>
@@ -44,16 +45,26 @@ const TransactionInputAmountComputed = ({
       Dynamic
     </Label>
     {values.valueType === 'static' ? (
-      <FieldGroup errors={errors} name="value" touched={touched}>
-        <Field as={Input} name="value" id="value" type="number" />
+      <FieldGroup
+        errors={errors}
+        name="value"
+        id={`${prefixID}value`}
+        touched={touched}
+      >
+        <Field as={Input} name="value" id={`${prefixID}value`} type="number" />
       </FieldGroup>
     ) : (
       <React.Fragment>
-        <References values={values} setFieldValue={setFieldValue} />
+        <References
+          values={values}
+          setFieldValue={setFieldValue}
+          prefixID={prefixID}
+        />
         <RecursiveAmountComputed
           values={values}
           setFieldValue={setFieldValue}
           level={0}
+          prefixID={prefixID}
         />
       </React.Fragment>
     )}
@@ -62,7 +73,13 @@ const TransactionInputAmountComputed = ({
 
 export default TransactionInputAmountComputed;
 
-const References = ({ errors, touched, values, setFieldValue }) => (
+const References = ({
+  errors,
+  touched,
+  values,
+  setFieldValue,
+  prefixID = ''
+}) => (
   <FieldArray
     name="referencesArray"
     render={arrayHelpers => (
@@ -79,7 +96,7 @@ const References = ({ errors, touched, values, setFieldValue }) => (
                     <Field
                       as={Input}
                       name={`referencesArray[${index}].name`}
-                      id={`referencesArray[${index}].name`}
+                      id={`${prefixID}referencesArray[${index}].name`}
                     />
                   </FieldGroup>
                   <FieldGroup
@@ -89,7 +106,7 @@ const References = ({ errors, touched, values, setFieldValue }) => (
                     <Field
                       as={Input}
                       name={`referencesArray[${index}].value`}
-                      id={`referencesArray[${index}].value`}
+                      id={`${prefixID}referencesArray[${index}].value`}
                       type="number"
                     />
                   </FieldGroup>
@@ -143,7 +160,12 @@ const References = ({ errors, touched, values, setFieldValue }) => (
   />
 );
 
-const RecursiveAmountComputed = ({ values, setFieldValue, level }) => (
+const RecursiveAmountComputed = ({
+  values,
+  setFieldValue,
+  level,
+  prefixID = ''
+}) => (
   <React.Fragment>
     <FieldGroup
       name={`computedAmount${'.on'.repeat(level)}.reference`}
@@ -152,7 +174,7 @@ const RecursiveAmountComputed = ({ values, setFieldValue, level }) => (
       <Field
         as={Select}
         name={`computedAmount${'.on'.repeat(level)}.reference`}
-        id={`computedAmount${'.on'.repeat(level)}.reference`}
+        id={`${prefixID}computedAmount${'.on'.repeat(level)}.reference`}
       >
         <option key={'default'} value="select">
           Select
@@ -176,18 +198,21 @@ const RecursiveAmountComputed = ({ values, setFieldValue, level }) => (
         values={values}
         level={level}
         setFieldValue={setFieldValue}
+        prefixID={prefixID}
       />
       <Operation
         operationType="plus"
         values={values}
         level={level}
         setFieldValue={setFieldValue}
+        prefixID={prefixID}
       />
       <Operation
         operationType="minus"
         values={values}
         level={level}
         setFieldValue={setFieldValue}
+        prefixID={prefixID}
       />
 
       {retrieveNested('operation', values, level) !== 'none' ? (
@@ -216,13 +241,19 @@ const retrieveNested = (value, values, levelRequired, recursiveLevel = 0) => {
       );
 };
 
-const Operation = ({ operationType, values, level, setFieldValue }) => (
+const Operation = ({
+  operationType,
+  values,
+  level,
+  setFieldValue,
+  prefixID = ''
+}) => (
   <React.Fragment>
     <Label>
       <Field
         as={Radio}
         name={`computedAmount${'.on'.repeat(level)}.operation`}
-        id={`computedAmount${'.on'.repeat(level)}.operation`}
+        id={`${prefixID}computedAmount${'.on'.repeat(level)}.operation`}
         checked={retrieveNested('operation', values, level) === operationType}
         onChange={() => {
           setFieldValue(

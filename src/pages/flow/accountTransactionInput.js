@@ -108,6 +108,7 @@ class AccountTransactionInput extends React.Component {
                       display="none"
                       type="text"
                       name="id"
+                      id="debt-id"
                       sx={{ display: 'none' }}
                     />
 
@@ -115,9 +116,14 @@ class AccountTransactionInput extends React.Component {
                       errors={errors}
                       name="debtAccount"
                       prettyName="debt account"
+                      id="debt-debtAccount"
                       touched={touched}
                     >
-                      <Field as={Select} name="debtAccount">
+                      <Field
+                        as={Select}
+                        name="debtAccount"
+                        id="debt-debtAccount"
+                      >
                         <option key={'default'} value={'select'} disabled>
                           Select an Option
                         </option>
@@ -140,9 +146,10 @@ class AccountTransactionInput extends React.Component {
                       errors={errors}
                       name="raccount"
                       prettyName="payment account"
+                      id="debt-raccount"
                       touched={touched}
                     >
-                      <Field as={Select} name="raccount">
+                      <Field as={Select} name="raccount" id="debt-raccount">
                         <option key={'default'} value={'select'} disabled>
                           Select an Option
                         </option>
@@ -157,23 +164,35 @@ class AccountTransactionInput extends React.Component {
                     <FieldGroup
                       errors={errors}
                       name="description"
+                      id="debt-description"
                       touched={touched}
                     >
-                      <Field as={Input} name="description" />
+                      <Field
+                        as={Input}
+                        name="description"
+                        id="debt-description"
+                      />
                     </FieldGroup>
 
                     <FieldGroup
                       errors={errors}
                       name="category"
+                      id="debt-category"
                       touched={touched}
                     >
-                      <Field as={Input} name="category" />
+                      <Field as={Input} name="category" id="debt-category" />
                     </FieldGroup>
 
-                    <FieldGroup errors={errors} name="start" touched={touched}>
+                    <FieldGroup
+                      errors={errors}
+                      name="start"
+                      id="debt-start"
+                      touched={touched}
+                    >
                       <Field
                         as={Input}
                         name="start"
+                        id="debt-start"
                         type="date"
                         pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
                       />
@@ -183,21 +202,29 @@ class AccountTransactionInput extends React.Component {
                       errors={errors}
                       name="beginAfterOccurrences"
                       prettyName="begin after X occurrences"
+                      id="debt-beginAfterOccurrences"
                       touched={touched}
                     >
                       <Field
                         as={Input}
                         name="beginAfterOccurrences"
+                        id="debt-beginAfterOccurrences"
                         type="number"
                       />
                     </FieldGroup>
 
-                    <FieldGroup errors={errors} name="ending" touched={touched}>
+                    <FieldGroup
+                      errors={errors}
+                      name="ending"
+                      id="debt-ending"
+                      touched={touched}
+                    >
                       <Label>
                         <Field
                           as={Radio}
                           type="radio"
                           name="ending"
+                          id="debt-ending"
                           checked={values.ending === 'never'}
                           onChange={() => setFieldValue('ending', 'never')}
                         />
@@ -208,6 +235,7 @@ class AccountTransactionInput extends React.Component {
                           as={Radio}
                           type="radio"
                           name="ending"
+                          id="debt-ending"
                           checked={values.ending === 'at Date'}
                           onChange={() => setFieldValue('ending', 'at Date')}
                         />
@@ -218,6 +246,7 @@ class AccountTransactionInput extends React.Component {
                           as={Radio}
                           type="radio"
                           name="ending"
+                          id="debt-ending"
                           checked={
                             values.ending === 'after Number of Occurrences'
                           }
@@ -234,24 +263,41 @@ class AccountTransactionInput extends React.Component {
                         <FieldGroup
                           errors={errors}
                           name="occurrences"
+                          id="debt-occurrences"
                           touched={touched}
                         >
-                          <Field as={Input} name="occurrences" type="number" />
+                          <Field
+                            as={Input}
+                            name="occurrences"
+                            id="debt-occurrences"
+                            type="number"
+                          />
                         </FieldGroup>
                       ) : values.ending === 'at Date' ? (
                         <FieldGroup
                           errors={errors}
                           name="end"
+                          id="debt-end"
                           prettyName="At This Day"
                           touched={touched}
                         >
-                          <Field as={Input} name="end" type="date" />
+                          <Field
+                            as={Input}
+                            name="end"
+                            id="debt-end"
+                            type="date"
+                          />
                         </FieldGroup>
                       ) : null}
                     </FieldGroup>
 
-                    <FieldGroup errors={errors} name="rtype" touched={touched}>
-                      <Field as={Select} name="rtype">
+                    <FieldGroup
+                      errors={errors}
+                      name="rtype"
+                      id="debt-rtype"
+                      touched={touched}
+                    >
+                      <Field as={Select} name="rtype" id="debt-rtype">
                         <option value="none">No Repeating</option>
                         <option value="day">
                           Repeat Daily (or Every X Day)
@@ -277,8 +323,18 @@ class AccountTransactionInput extends React.Component {
                       </Field>
                     </FieldGroup>
 
-                    <FieldGroup errors={errors} name="cycle" touched={touched}>
-                      <Field as={Input} type="number" name="cycle" />
+                    <FieldGroup
+                      errors={errors}
+                      name="cycle"
+                      id="debt-cycle"
+                      touched={touched}
+                    >
+                      <Field
+                        as={Input}
+                        type="number"
+                        name="cycle"
+                        id="debt-cycle"
+                      />
                     </FieldGroup>
 
                     <TransactionInputAmountComputed
@@ -286,6 +342,7 @@ class AccountTransactionInput extends React.Component {
                       touched={touched}
                       values={values}
                       setFieldValue={setFieldValue}
+                      prefixID={'debt-'}
                     />
 
                     <Button type="submit" disabled={isSubmitting}>
