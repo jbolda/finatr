@@ -55,6 +55,7 @@ class TransactionInput extends React.Component {
           {model => (
             <Formik
               initialValues={model.forms.transactionForm.values}
+              enableReinitialize={true}
               validationSchema={TransactionSchema}
               onSubmit={(values, actions) => {
                 model.transactionUpsert(values);
