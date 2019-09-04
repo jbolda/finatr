@@ -1,3 +1,5 @@
+import '@testing-library/cypress/add-commands';
+
 describe('Transaction Form Tests', () => {
   beforeEach(() => {
     cy.visit('/flow');
@@ -16,95 +18,61 @@ describe('Transaction Form Tests', () => {
 
       cy.getByLabelText('rtype').select('No Repeating');
 
-    cy.get('form').submit();
+      cy.get('form').submit();
 
-      cy.get(`[aria-labelledby="tab\:1\:0"]`).within(() =>
+      cy.getByTestId('transactions-all-transactions').within(() =>
         cy.queryByText('55.00').should('exist')
       );
 
-      cy.get(`[aria-labelledby="tab\:1\:2"]`).within(() =>
+      cy.getByTestId('transactions-income').within(() =>
         cy.queryByText('55.00').should('exist')
       );
-  });
+    });
   });
 
   it('check income is listed in income tab after submit', () => {
-    cy.get('form')
-      .contains('rtype')
-      .parent()
-      .parent()
-      .find('select')
-      .select('No Repeating');
+    cy.get('#transactions').within(() => {
+      cy.getByLabelText('rtype').select('No Repeating');
 
-    cy.get('form')
-      .contains('value')
-      .parent()
-      .parent()
-      .find('input')
-      .type('55');
+      cy.getByLabelText('value').type('55');
 
-    cy.get('form').submit();
-    cy.get('#transactions')
-      .contains('Income')
-      .click();
-    cy.get('#transactions').contains('55.00');
+      cy.get('form').submit();
+
+      cy.getByTestId('transactions-income').within(() =>
+        cy.queryByText('55.00').should('exist')
+      );
+    });
   });
 
   it('check expense is listed in expense tab after submit', () => {
-    cy.get('form')
-      .contains('rtype')
-      .parent()
-      .parent()
-      .find('select')
-      .select('No Repeating');
+    cy.get('#transactions').within(() => {
+      cy.getByLabelText('rtype').select('No Repeating');
 
-    cy.get('form')
-      .contains('value')
-      .parent()
-      .parent()
-      .find('input')
-      .type('67');
+      cy.getByLabelText('value').type('67');
 
-    cy.get('form')
-      .contains('type')
-      .parent()
-      .parent()
-      .find('select')
-      .select('Expense');
+      cy.getByLabelText('type').select('Expense');
 
-    cy.get('form').submit();
-    cy.get('#transactions')
-      .contains('Expenses')
-      .click();
-    cy.get('#transactions').contains('67.00');
+      cy.get('form').submit();
+
+      cy.getByTestId('transactions-expenses').within(() =>
+        cy.queryByText('67.00').should('exist')
+      );
+    });
   });
 
   it('check transfer is listed in transfer tab after submit', () => {
-    cy.get('form')
-      .contains('rtype')
-      .parent()
-      .parent()
-      .find('select')
-      .select('No Repeating');
+    cy.get('#transactions').within(() => {
+      cy.getByLabelText('rtype').select('No Repeating');
 
-    cy.get('form')
-      .contains('value')
-      .parent()
-      .parent()
-      .find('input')
-      .type('53');
+      cy.getByLabelText('value').type('53');
 
-    cy.get('form')
-      .contains('type')
-      .parent()
-      .parent()
-      .find('select')
-      .select('Transfer');
+      cy.getByLabelText('type').select('Transfer');
 
-    cy.get('form').submit();
-    cy.get('#transactions')
-      .contains('Transfer')
-      .click();
-    cy.get('#transactions').contains('53.00');
+      cy.get('form').submit();
+
+      cy.getByTestId('transactions-transfers').within(() =>
+        cy.queryByText('53.00').should('exist')
+      );
+    });
   });
 });
