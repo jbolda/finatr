@@ -9,7 +9,9 @@ describe('Transaction Form Tests', () => {
   });
 
   it('tab switches to the form', () => {
-    cy.contains('Add a Transaction');
+    cy.get('#transactions').within(() => {
+      cy.getByText('Add a Transaction').should('exist');
+    });
   });
 
   it('submits simple transaction', () => {
