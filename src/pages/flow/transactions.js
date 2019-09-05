@@ -27,83 +27,82 @@ class TransactionsFlow extends React.Component {
     return (
       <State.Consumer>
         {model => (
-          <section className="section" id="transactions">
-            <TabView
-              activeTab={this.state.activeTab}
-              tabClick={this.tabClick}
-              tabTitles={[
-                'All Transactions',
-                'Add Transaction',
-                'Income',
-                'Expenses',
-                'Transfers'
-              ]}
-              tabContents={[
-                <React.Fragment>
-                  <div className="buttons">
-                    {Object.keys(model.state.transactionCategories).map(
-                      category => (
-                        <Button
-                          key={category}
-                          m={2}
-                          variant={
-                            model.state.transactionCategories[category]
-                              ? 'primary'
-                              : 'outline'
-                          }
-                          onClick={model.filterTransactionsComputed.bind(
-                            this,
-                            category
-                          )}
-                        >
-                          {category}
-                        </Button>
-                      )
-                    )}
-                  </div>
-                  <TransactionTable
-                    data={model.state.transactionsComputed}
-                    actions={{
-                      model: model,
-                      setTransactionForm: this.setTransactionForm,
-                      deleteTransaction: model.deleteTransaction
-                    }}
-                  />
-                </React.Fragment>,
-                <TransactionInput tabClick={this.tabClick} />,
-                <TransactionTable
-                  data={model.state.transactionsComputed.filter(
-                    transaction => transaction.type === 'income'
+          <TabView
+            id="transactions"
+            activeTab={this.state.activeTab}
+            tabClick={this.tabClick}
+            tabTitles={[
+              'All Transactions',
+              'Add Transaction',
+              'Income',
+              'Expenses',
+              'Transfers'
+            ]}
+            tabContents={[
+              <React.Fragment>
+                <div className="buttons">
+                  {Object.keys(model.state.transactionCategories).map(
+                    category => (
+                      <Button
+                        key={category}
+                        m={2}
+                        variant={
+                          model.state.transactionCategories[category]
+                            ? 'primary'
+                            : 'outline'
+                        }
+                        onClick={model.filterTransactionsComputed.bind(
+                          this,
+                          category
+                        )}
+                      >
+                        {category}
+                      </Button>
+                    )
                   )}
-                  actions={{
-                    model: model,
-                    setTransactionForm: this.setTransactionForm,
-                    deleteTransaction: model.deleteTransaction
-                  }}
-                />,
+                </div>
                 <TransactionTable
-                  data={model.state.transactionsComputed.filter(
-                    transaction => transaction.type === 'expense'
-                  )}
-                  actions={{
-                    model: model,
-                    setTransactionForm: this.setTransactionForm,
-                    deleteTransaction: model.deleteTransaction
-                  }}
-                />,
-                <TransactionTable
-                  data={model.state.transactionsComputed.filter(
-                    transaction => transaction.type === 'transfer'
-                  )}
+                  data={model.state.transactionsComputed}
                   actions={{
                     model: model,
                     setTransactionForm: this.setTransactionForm,
                     deleteTransaction: model.deleteTransaction
                   }}
                 />
-              ]}
-            />
-          </section>
+              </React.Fragment>,
+              <TransactionInput tabClick={this.tabClick} />,
+              <TransactionTable
+                data={model.state.transactionsComputed.filter(
+                  transaction => transaction.type === 'income'
+                )}
+                actions={{
+                  model: model,
+                  setTransactionForm: this.setTransactionForm,
+                  deleteTransaction: model.deleteTransaction
+                }}
+              />,
+              <TransactionTable
+                data={model.state.transactionsComputed.filter(
+                  transaction => transaction.type === 'expense'
+                )}
+                actions={{
+                  model: model,
+                  setTransactionForm: this.setTransactionForm,
+                  deleteTransaction: model.deleteTransaction
+                }}
+              />,
+              <TransactionTable
+                data={model.state.transactionsComputed.filter(
+                  transaction => transaction.type === 'transfer'
+                )}
+                actions={{
+                  model: model,
+                  setTransactionForm: this.setTransactionForm,
+                  deleteTransaction: model.deleteTransaction
+                }}
+              />
+            ]}
+          />
         )}
       </State.Consumer>
     );

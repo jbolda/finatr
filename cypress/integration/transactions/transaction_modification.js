@@ -5,63 +5,46 @@ describe('Transaction Modifications Tests', () => {
       .contains('Add Transaction')
       .click();
 
-    cy.get('form')
-      .contains('rtype')
-      .parent()
-      .parent()
-      .find('select')
-      .select('No Repeating');
+    cy.get('#transactions').within(() => {
+      cy.getByLabelText('rtype').select('No Repeating');
+      cy.getByLabelText('value').type('{selectall}55');
+      cy.getByLabelText('description').type('test transaction');
+      cy.get('form').submit();
 
-    cy.get('form')
-      .contains('value')
-      .parent()
-      .parent()
-      .find('input')
-      .type('{selectall}55');
-
-    cy.get('form')
-      .contains('description')
-      .parent()
-      .parent()
-      .find('input')
-      .type('test transaction');
-
-    cy.get('form').submit();
-    cy.get('#transactions')
-      .contains('55.00')
-      .parent()
-      .contains('M')
-      .click();
+      cy.getByTestId('transactions-all-transactions')
+        .contains('55.00')
+        .parent()
+        .within(() => cy.getByText('M').click());
+    });
   });
 
   it('switches back to the form', () => {
-    cy.contains('Add a Transaction');
+    cy.getByTestId('transactions-add-transaction')
+      .contains('Add a Transaction')
+      .should('be.visible');
   });
 
   it('submits modified transaction', () => {
-    cy.get('form')
-      .contains('value')
-      .parent()
-      .parent()
-      .find('input')
-      .type('{selectall}59');
+    cy.get('#transactions').within(() => {
+      cy.getByLabelText('value').type('{selectall}59');
+      cy.get('form').submit();
 
-    cy.get('form').submit();
-    cy.get('#transactions').contains('59.00');
+      cy.getByTestId('transactions-all-transactions')
+        .contains('59.00')
+        .should('be.visible');
+    });
   });
 
   it('check income is listed in income tab after submit', () => {
-    cy.get('form')
-      .contains('value')
-      .parent()
-      .parent()
-      .find('input')
-      .type('{selectall}57');
+    cy.get('#transactions').within(() => {
+      cy.getByLabelText('value').type('{selectall}57');
+      cy.get('form').submit();
 
-    cy.get('form').submit();
-    cy.get('#transactions')
-      .contains('Income')
-      .click();
-    cy.get('#transactions').contains('57.00');
+      cy.contains('Income').click();
+
+      cy.getByTestId('transactions-income')
+        .contains('57.00')
+        .should('be.visible');
+    });
   });
 });
