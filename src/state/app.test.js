@@ -1,12 +1,13 @@
 import { create } from 'microstates';
 import AppModel from './../state';
+import parseISO from 'date-fns/fp/parseISO';
 import startOfDay from 'date-fns/fp/startOfDay';
 
 import { testData } from './resolveFinancials/index.testdata.js';
 
 let graphRange = {
-  start: startOfDay('2018-03-01'),
-  end: startOfDay('2018-09-01')
+  start: startOfDay(parseISO('2018-03-01')),
+  end: startOfDay(parseISO('2018-09-01'))
 };
 testData.charts = {};
 testData.charts.GraphRange = graphRange;
