@@ -7,11 +7,8 @@ describe('Transaction Delete Tests', () => {
 
     cy.get('#transactions').within(() => {
       cy.getByLabelText('rtype').select('No Repeating');
-
       cy.getByLabelText('value').type('{selectall}55');
-
       cy.getByLabelText('description').type('test transaction');
-
       cy.get('form').submit();
     });
   });

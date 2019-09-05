@@ -7,9 +7,7 @@ describe('Account Modifications Tests', () => {
 
     cy.get('#accounts').within(() => {
       cy.getByLabelText('starting').type('{selectall}550');
-
       cy.getByLabelText('name').type('test account');
-
       cy.get('form').submit();
 
       cy.getByTestId('accounts-all-accounts').within(() =>
@@ -28,7 +26,6 @@ describe('Account Modifications Tests', () => {
   it('submits modified account', () => {
     cy.get('#accounts').within(() => {
       cy.getByLabelText('starting').type('{selectall}5996');
-
       cy.get('form').submit();
 
       cy.getByTestId('accounts-all-accounts').within(() =>
@@ -40,9 +37,7 @@ describe('Account Modifications Tests', () => {
   it('check debt is listed in debt tab after submit', () => {
     cy.get('#accounts').within(() => {
       cy.getByLabelText('starting').type('{selectall}577');
-
       cy.getByLabelText('vehicle').select('Loan');
-
       cy.get('form').submit();
 
       cy.getByText('Debt').click();

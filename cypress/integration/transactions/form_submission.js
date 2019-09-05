@@ -8,23 +8,22 @@ describe('Transaction Form Tests', () => {
 
   it('tab switches to the form', () => {
     cy.get('#transactions').within(() => {
-      cy.getByText('Add a Transaction').should('exist');
+      cy.getByText('Add a Transaction').should('be.visible');
     });
   });
 
   it('submits simple transaction', () => {
     cy.get('#transactions').within(() => {
       cy.getByLabelText('value').type('55');
-
       cy.getByLabelText('rtype').select('No Repeating');
-
       cy.get('form').submit();
 
       cy.getByTestId('transactions-all-transactions').within(() =>
-        cy.queryByText('55.00').should('exist')
+        cy.queryByText('55.00').should('be.visible')
       );
 
       cy.getByTestId('transactions-income').within(() =>
+        // all transactions should be visible, so just check existence
         cy.queryByText('55.00').should('exist')
       );
     });
@@ -33,12 +32,11 @@ describe('Transaction Form Tests', () => {
   it('check income is listed in income tab after submit', () => {
     cy.get('#transactions').within(() => {
       cy.getByLabelText('rtype').select('No Repeating');
-
       cy.getByLabelText('value').type('55');
-
       cy.get('form').submit();
 
       cy.getByTestId('transactions-income').within(() =>
+        // all transactions should be visible, so just check existence
         cy.queryByText('55.00').should('exist')
       );
     });
@@ -47,14 +45,12 @@ describe('Transaction Form Tests', () => {
   it('check expense is listed in expense tab after submit', () => {
     cy.get('#transactions').within(() => {
       cy.getByLabelText('rtype').select('No Repeating');
-
       cy.getByLabelText('value').type('67');
-
       cy.getByLabelText('type').select('Expense');
-
       cy.get('form').submit();
 
       cy.getByTestId('transactions-expenses').within(() =>
+        // all transactions should be visible, so just check existence
         cy.queryByText('67.00').should('exist')
       );
     });
@@ -63,14 +59,12 @@ describe('Transaction Form Tests', () => {
   it('check transfer is listed in transfer tab after submit', () => {
     cy.get('#transactions').within(() => {
       cy.getByLabelText('rtype').select('No Repeating');
-
       cy.getByLabelText('value').type('53');
-
       cy.getByLabelText('type').select('Transfer');
-
       cy.get('form').submit();
 
       cy.getByTestId('transactions-transfers').within(() =>
+        // all transactions should be visible, so just check existence
         cy.queryByText('53.00').should('exist')
       );
     });

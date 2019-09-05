@@ -7,9 +7,7 @@ describe('Transaction Delete Tests', () => {
 
     cy.get('#accounts').within(() => {
       cy.getByLabelText('starting').type('{selectall}55');
-
       cy.getByLabelText('name').type('test account');
-
       cy.get('form').submit();
     });
   });

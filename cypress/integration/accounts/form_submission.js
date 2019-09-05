@@ -15,7 +15,6 @@ describe('Account Form Tests', () => {
   it('submits simple account', () => {
     cy.get('#accounts').within(() => {
       cy.getByLabelText('name').type('Test Account Submission');
-
       cy.get('form').submit();
 
       cy.getByTestId('accounts-all-accounts').within(() =>
@@ -27,9 +26,7 @@ describe('Account Form Tests', () => {
   it('check debt is listed in debt tab after submit', () => {
     cy.get('#accounts').within(() => {
       cy.getByLabelText('name').type('Test Debt Account');
-
       cy.getByLabelText('vehicle').select('Loan');
-
       cy.get('form').submit();
 
       cy.getByTestId('accounts-debt').within(() =>
