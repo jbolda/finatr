@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands';
-
 describe('Transaction Delete Tests', () => {
   beforeEach(() => {
     cy.visit('/flow');

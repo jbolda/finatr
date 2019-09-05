@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands';
-
 describe('Debt Payback Form Tests', () => {
   beforeEach(() => {
     cy.visit('/flow');

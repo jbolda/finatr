@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands';
-
 describe('Account Form Tests', () => {
   beforeEach(() => {
     cy.visit('/flow');
