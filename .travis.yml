@@ -61,7 +61,7 @@ jobs:
       script:
         - npm run start &
         - npm run cy:verify
-        - npm run cy:run -- --record --parallel --group npm --browser chrome
+        - npm run cy:run -- --group npm --browser chrome
         # after all tests finish running we need
         # to kill all background jobs (like "npm start &")
         - kill $(jobs -p) || true
