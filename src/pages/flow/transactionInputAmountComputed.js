@@ -11,13 +11,13 @@ const TransactionInputAmountComputed = ({
   setFieldValue,
   prefixID = ''
 }) => (
-  <FieldGroup name="valueType" prettyName="amount">
+  <FieldGroup name="valueType" prettyName="amount" id={`${prefixID}valueType`}>
     <Label>
       <Field
         as={Radio}
         type="radio"
         name="valueType"
-        id="valueType"
+        id={`${prefixID}valueType`}
         checked={values.valueType === 'static'}
         onChange={() => setFieldValue('valueType', 'static')}
       />
@@ -28,7 +28,7 @@ const TransactionInputAmountComputed = ({
         as={Radio}
         type="radio"
         name="valueType"
-        id="valueType"
+        id={`${prefixID}valueType`}
         checked={values.valueType === 'dynamic'}
         onChange={() => {
           setFieldValue('computedAmount.reference', '');
@@ -92,6 +92,7 @@ const References = ({
                   <FieldGroup
                     name={`referencesArray[${index}].name`}
                     prettyName={`reference name`}
+                    id={`${prefixID}referencesArray[${index}].name`}
                   >
                     <Field
                       as={Input}
@@ -102,6 +103,7 @@ const References = ({
                   <FieldGroup
                     name={`referencesArray[${index}].value`}
                     prettyName={`reference value`}
+                    id={`${prefixID}referencesArray[${index}].value`}
                   >
                     <Field
                       as={Input}
@@ -170,6 +172,7 @@ const RecursiveAmountComputed = ({
     <FieldGroup
       name={`computedAmount${'.on'.repeat(level)}.reference`}
       prettyName="reference"
+      id={`${prefixID}computedAmount${'.on'.repeat(level)}.reference`}
     >
       <Field
         as={Select}
@@ -192,6 +195,7 @@ const RecursiveAmountComputed = ({
     <FieldGroup
       name={`computedAmount${'.on'.repeat(level)}.operation`}
       prettyName="operate on"
+      id={`${prefixID}computedAmount${'.on'.repeat(level)}.operation`}
     >
       <Operation
         operationType="none"
@@ -221,6 +225,7 @@ const RecursiveAmountComputed = ({
             values={values}
             setFieldValue={setFieldValue}
             level={level + 1}
+            prefixID={prefixID}
           />
         </React.Fragment>
       ) : null}
