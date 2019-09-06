@@ -1,4 +1,5 @@
 import Big from 'big.js';
+import parseISO from 'date-fns/fp/parseISO';
 import startOfDay from 'date-fns/fp/startOfDay';
 
 import { transactionQuarterlyReoccur } from './index.js';
@@ -6,17 +7,17 @@ import { transactionQuarterlyReoccur } from './index.js';
 describe('transactionQuarterlyReoccur', () => {
   it('has the next date', () => {
     const transaction = { value: Big(10), cycle: Big(1) };
-    const seedDate = startOfDay('2018-02-01');
+    const seedDate = startOfDay(parseISO('2018-02-01'));
     const next = transactionQuarterlyReoccur({
       transaction,
       seedDate
     });
-    expect(next.date).toEqual(startOfDay('2018-05-01'));
+    expect(next.date).toEqual(startOfDay(parseISO('2018-05-01')));
   });
 
   it('throws when transaction.cycle=null', () => {
     const transaction = { value: Big(10) };
-    const seedDate = startOfDay('2018-02-01');
+    const seedDate = startOfDay(parseISO('2018-02-01'));
     expect(() => {
       transactionQuarterlyReoccur({
         transaction,
@@ -27,7 +28,7 @@ describe('transactionQuarterlyReoccur', () => {
 
   it('has a value', () => {
     const transaction = { value: Big(10), cycle: Big(1) };
-    const seedDate = startOfDay('2018-01-01');
+    const seedDate = startOfDay(parseISO('2018-01-01'));
     const next = transactionQuarterlyReoccur({
       transaction,
       seedDate
@@ -36,7 +37,7 @@ describe('transactionQuarterlyReoccur', () => {
   });
 
   it('throws on missing value', () => {
-    const seedDate = startOfDay('2018-01-01');
+    const seedDate = startOfDay(parseISO('2018-01-01'));
     expect(() => {
       transactionQuarterlyReoccur({
         transaction: {},
@@ -46,7 +47,7 @@ describe('transactionQuarterlyReoccur', () => {
   });
 
   it('fails if transaction is null', () => {
-    const seedDate = startOfDay('2018-01-01');
+    const seedDate = startOfDay(parseISO('2018-01-01'));
     expect(() => {
       transactionQuarterlyReoccur({ transaction: null, seedDate });
     }).toThrow();
