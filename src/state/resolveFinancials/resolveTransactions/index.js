@@ -256,13 +256,13 @@ const transactionDayOfWeekReoccur = ({
 
   const parsedStartDate = parseISO(transaction.start);
   const seedDay = getDay(seedDate);
-  const startDay = getDay(transaction.start);
+  const startDay = getDay(parsedStartDate);
   const dayAdjust = transaction.cycle.gte(seedDay)
     ? transaction.cycle.minus(seedDay)
     : transaction.cycle.minus(seedDay).plus(7);
 
-  const dayCycles = isBefore(seedDate)(transaction.start)
-    ? Big(differenceInCalendarDays(transaction.start)(seedDate))
+  const dayCycles = isBefore(seedDate)(parsedStartDate)
+    ? Big(differenceInCalendarDays(parsedStartDate)(seedDate))
         .plus(dayAdjust)
         .div(7)
         .round(0, 3)
@@ -272,7 +272,7 @@ const transactionDayOfWeekReoccur = ({
     : transaction.cycle.minus(startDay).plus(7);
 
   return {
-    date: addDays(dayCycles)(transaction.start),
+    date: addDays(dayCycles)(parsedStartDate),
     y: transaction.value
   };
 };
