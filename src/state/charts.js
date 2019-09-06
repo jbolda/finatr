@@ -79,7 +79,6 @@ class Charts extends Primitive {
   }
 
   calcBarCharts(transactionsSplit) {
-    const parsedGraphRange = { start: parseISO(), end: parseISO() };
     let income = resolveBarChart(transactionsSplit.income, {
       graphRange: this.state.GraphRange
     });
