@@ -472,7 +472,7 @@ describe('check AccountChart', () => {
   it('outputs an empty array if values is empty', () => {
     let accounts = [{ name: 'test1' }, { name: 'test2' }];
     let incomeRaw = [
-      { raccount: 'test1', start: graphRange.start, value: Big(10) }
+      { raccount: 'test1', start: '2018-03-01', value: Big(10) }
     ];
     let income = resolveBarChart(incomeRaw, { graphRange });
     let expense = [];
