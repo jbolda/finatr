@@ -42,18 +42,26 @@ const computeTransactionModifications = (transactions, graphRange) =>
 
 export default computeTransactionModifications;
 
-const convertRangeToInterval = (transaction, graphRange) => ({
-  start: dateMax([
+const convertRangeToInterval = (transaction, graphRange) => {
+  const startDate = dateMax([
     graphRange.start,
     !!transaction && transaction.start ? parseISO(transaction.start) : 0
-  ]),
-  end: dateMin([
-    graphRange.end,
-    !!transaction && transaction.end
-      ? parseISO(transaction.end)
-      : addDays(365)(new Date())
-  ])
-});
+  ]);
+  // the endDate always has to be equal to or after startDate
+  const endDate = dateMax([
+    startDate,
+    dateMin([
+      graphRange.end,
+      !!transaction && transaction.end
+        ? parseISO(transaction.end)
+        : addDays(365)(new Date())
+    ])
+  ]);
+  return {
+    start: startDate,
+    end: endDate
+  };
+};
 
 export { convertRangeToInterval };
 

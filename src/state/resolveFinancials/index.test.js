@@ -340,10 +340,11 @@ describe(`check resolveData handles paybacks`, () => {
     revisedTestData.transactions = [];
     let resolvedTestData = create(AppModel, revisedTestData).reCalc();
 
-    // that is 163 days between start and end
-    // 164*$140 + 164/3*$60 + (1) extra $60 = 22960 + 3240 + 60 = 26260
+    // that is 163 days between start and end, 185 days in our full range
+    // 163*$140 + 164/3*$60 + (1) extra $60 = 22820 + 3240 + 60 = 26260
     const count =
       resolvedTestData.charts.state.AccountChart[0].values.length - 1;
+    expect(count).toEqual(185 * 2 - 1);
     // this tests the transfer, which reduces the balance of the payment account
     // $3000 starting - 26260 = -23260
     expect(
