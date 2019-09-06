@@ -201,11 +201,11 @@ describe(`check integrated transaction reoccurence`, () => {
 
     const values = singleTransaction.charts.state.AccountChart[0].values;
     expect(values[132]).toEqual({
-      date: startOfDay('2019-05-06'),
+      date: startOfDay(parseISO('2019-05-06')),
       value: 2950
     });
     expect(values[188]).toEqual({
-      date: startOfDay('2019-06-03'),
+      date: startOfDay(parseISO('2019-06-03')),
       value: 2750
     });
 
@@ -252,7 +252,7 @@ describe(`check integrated transaction reoccurence`, () => {
     expect(singleTransaction.charts.state.LineChartMax).toEqual(2400);
 
     expect(singleTransaction.charts.state.AccountChart[0].values[312]).toEqual({
-      date: startOfDay('2019-08-04'),
+      date: startOfDay(parseISO('2019-08-04')),
       value: 1200
     });
 
@@ -300,11 +300,11 @@ describe(`check integrated transaction reoccurence`, () => {
     expect(singleTransaction.charts.state.LineChartMax).toEqual(12000);
 
     expect(singleTransaction.charts.state.AccountChart[0].values[128]).toEqual({
-      date: startOfDay('2019-05-04'),
+      date: startOfDay(parseISO('2019-05-04')),
       value: 7000
     });
     expect(singleTransaction.charts.state.AccountChart[0].values[860]).toEqual({
-      date: startOfDay('2020-05-04'),
+      date: startOfDay(parseISO('2020-05-04')),
       value: 2000
     });
 
