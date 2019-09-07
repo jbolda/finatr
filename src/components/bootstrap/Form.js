@@ -1,12 +1,13 @@
 import React from 'react';
+import { ErrorMessage } from 'formik';
 
 export function FieldHorizontal({ children }) {
   return <div className="field is-horizontal">{children}</div>;
 }
 
-export function FieldLabel({ children }) {
+export function FieldLabel({ name, children }) {
   return (
-    <div className="field-label is-normal">
+    <div className="field-label is-normal" name={name}>
       <label className="label">{children}</label>
     </div>
   );
@@ -24,21 +25,16 @@ export function FieldControl({ children }) {
   return <div className="control">{children}</div>;
 }
 
-export function FieldGroup({
-  name,
-  prettyName = name,
-  touched,
-  errors,
-  children
-}) {
+export function FieldGroup({ name, prettyName = name, children }) {
   return (
     <FieldHorizontal>
-      <FieldLabel>{prettyName}</FieldLabel>
+      <FieldLabel name={name}>{prettyName}</FieldLabel>
       <FieldBody>
         <FieldControl>{children}</FieldControl>
-        {touched[name] && errors[name] ? (
-          <p className="help is-danger">{errors[name]}</p>
-        ) : null}
+        <ErrorMessage
+          name={name}
+          render={msg => <p className="help is-danger">{msg}</p>}
+        />
       </FieldBody>
     </FieldHorizontal>
   );
