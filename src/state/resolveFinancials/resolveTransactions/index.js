@@ -18,26 +18,25 @@ import differenceInCalendarYears from 'date-fns/fp/differenceInCalendarYears';
 
 const computeTransactionModifications = (transactions, graphRange) =>
   transactions.reduce((modifications, transaction) => {
-    let transactionInterval = convertRangeToInterval(transaction, graphRange);
-    // early return if end is before start, we will have no modifications
-    if (
-      isBefore(parseISO(transactionInterval.start))(
-        parseISO(transactionInterval.end)
-      )
-    )
-      return [];
+    try {
+      let transactionInterval = convertRangeToInterval(transaction, graphRange);
 
-    // and if the value is positive, generate the necessary mods
-    return modifications.concat(
-      generateModification(
-        transaction,
-        transactionInterval,
-        transactionInterval.start,
-        [],
-        Big(0),
-        Big(0)
-      )
-    );
+      // and if the value is positive, generate the necessary mods
+      return modifications.concat(
+        generateModification(
+          transaction,
+          transactionInterval,
+          transactionInterval.start,
+          [],
+          Big(0),
+          Big(0)
+        )
+      );
+    } catch (e) {
+      // early return if end is before start, we will have no modifications
+      // we will RangeError if this happens and catch
+      return [];
+    }
   }, []);
 
 export default computeTransactionModifications;
@@ -48,15 +47,13 @@ const convertRangeToInterval = (transaction, graphRange) => {
     !!transaction && transaction.start ? parseISO(transaction.start) : 0
   ]);
   // the endDate always has to be equal to or after startDate
-  const endDate = dateMax([
-    startDate,
-    dateMin([
-      graphRange.end,
-      !!transaction && transaction.end
-        ? parseISO(transaction.end)
-        : addDays(365)(new Date())
-    ])
+  const endDate = dateMin([
+    graphRange.end,
+    !!transaction && transaction.end
+      ? parseISO(transaction.end)
+      : addDays(365)(new Date())
   ]);
+
   return {
     start: startDate,
     end: endDate

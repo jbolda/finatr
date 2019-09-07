@@ -341,7 +341,7 @@ describe(`check resolveData handles paybacks`, () => {
     let resolvedTestData = create(AppModel, revisedTestData).reCalc();
 
     // that is 163 days between start and end, 185 days in our full range
-    // 163*$140 + 164/3*$60 + (1) extra $60 = 22820 + 3240 + 60 = 26260
+    // 164*$140 + 164/3*$60 + (1) extra $60 = 22960 + 3240 + 60 = 26260
     const count =
       resolvedTestData.charts.state.AccountChart[0].values.length - 1;
     expect(count).toEqual(185 * 2 - 1);
