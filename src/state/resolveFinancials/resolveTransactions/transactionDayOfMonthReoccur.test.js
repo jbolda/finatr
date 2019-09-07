@@ -1,4 +1,5 @@
 import Big from 'big.js';
+import parseISO from 'date-fns/fp/parseISO';
 import startOfDay from 'date-fns/fp/startOfDay';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
 
@@ -20,8 +21,8 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     value: Big(150)
   };
   let graphRange = {
-    start: startOfDay('2018-01-16'),
-    end: startOfDay('2018-04-01')
+    start: startOfDay(parseISO('2018-01-16')),
+    end: startOfDay(parseISO('2018-04-01'))
   };
   let seedDate = graphRange.start;
   let occurrences = Big(0);
@@ -147,8 +148,8 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       value: Big(150)
     };
     let testRange = {
-      start: startOfDay('2018-01-16'),
-      end: startOfDay('2018-08-01')
+      start: startOfDay(parseISO('2018-01-16')),
+      end: startOfDay(parseISO('2018-08-01'))
     };
     let resolvedTestData1 = generateModification(
       testData,
@@ -175,7 +176,10 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       cycle: 17,
       occurrences: Big(1)
     };
-    let testRange = { start: graphRange.start, end: '2018-12-01' };
+    let testRange = {
+      start: graphRange.start,
+      end: startOfDay(parseISO('2018-12-01'))
+    };
 
     let resolvedTestData1 = generateModification(
       testData1,
@@ -206,7 +210,10 @@ describe(`check transactionDayOfMonthReoccur`, () => {
       cycle: 17,
       occurrences: 1
     };
-    let testRange = { start: graphRange.start, end: '2018-12-01' };
+    let testRange = {
+      start: graphRange.start,
+      end: startOfDay(parseISO('2018-12-01'))
+    };
 
     let resolvedTestData1 = generateModification(
       testData1,

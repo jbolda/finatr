@@ -1,6 +1,7 @@
 import { resolveBarChart } from './index.js';
-import startOfDay from 'date-fns/fp/startOfDay';
 import Big from 'big.js';
+import parseISO from 'date-fns/fp/parseISO';
+import startOfDay from 'date-fns/fp/startOfDay';
 
 const testData = {
   transactions: [
@@ -22,8 +23,8 @@ const testData = {
 describe(`check resolveBarChart`, () => {
   it(`has all the correct original properties`, () => {
     let graphRange = {
-      start: startOfDay('2018-01-01'),
-      end: startOfDay('2019-01-01')
+      start: startOfDay(parseISO('2018-01-01')),
+      end: startOfDay(parseISO('2019-01-01'))
     };
     let resolvedTestData = resolveBarChart(testData.transactions, {
       graphRange
@@ -42,8 +43,8 @@ describe(`check resolveBarChart`, () => {
 
   it(`has the new properties`, () => {
     let graphRange = {
-      start: startOfDay('2018-01-01'),
-      end: startOfDay('2018-02-01')
+      start: startOfDay(parseISO('2018-01-01')),
+      end: startOfDay(parseISO('2018-02-01'))
     };
     let resolvedTestData = resolveBarChart(testData.transactions, {
       graphRange
