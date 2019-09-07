@@ -1,27 +1,7 @@
 import { valueOf, StringType, BooleanType, Primitive } from 'microstates';
 import { Big, defaults } from './customTypes.js';
 
-class ComputedAmountForm extends Primitive {
-  operation = StringType;
-  reference = StringType;
-  references = { Big };
-  on = ComputedAmountForm;
-
-  setComputedAmount() {
-    if (!this.on.state) {
-      return this.operation.set('none');
-    } else {
-      return this;
-    }
-  }
-}
-
-class KeyValue extends Primitive {
-  name = StringType;
-  value = Big;
-}
-
-class TransactionFormPrimitive extends Primitive {
+class TransactionForm extends Primitive {
   id = defaults(StringType, '');
   raccount = defaults(StringType, 'select');
   description = defaults(StringType, '');
@@ -34,43 +14,12 @@ class TransactionFormPrimitive extends Primitive {
   occurrences = defaults(Big, 0);
   rtype = defaults(StringType, '');
   cycle = defaults(Big, 0);
-  valueType = defaults(StringType, 'static');
   value = defaults(Big, 0);
-  references = { Big };
-  referencesArray = [KeyValue];
-  computedAmount = ComputedAmountForm;
 
   get values() {
     return Object.keys(this).reduce(
       (values, key) => Object.assign(values, { [key]: valueOf(this[key]) }),
       {}
-    );
-  }
-}
-
-class TransactionForm extends TransactionFormPrimitive {
-  // we are working in .state here
-  setForm(nextTransaction) {
-    if (!!nextTransaction.computedAmount) {
-      return this.set(nextTransaction)
-        .valueType.set('dynamic')
-        .setEachReference(nextTransaction.references)
-        .computedAmount.setComputedAmount();
-    } else {
-      return this.set(nextTransaction);
-    }
-  }
-
-  setEachReference(references) {
-    // we are working in .state here
-    return this.referencesArray.set(
-      !references
-        ? []
-        : Object.keys(references).reduce((refArray, ref) => {
-            return refArray.concat([
-              { name: ref, value: references[ref], whereFrom: 'transaction' }
-            ]);
-          }, [])
     );
   }
 }
@@ -89,47 +38,20 @@ class AccountForm extends Primitive {
   }
 }
 
-class AccountTransactionForm extends TransactionFormPrimitive {
+class AccountTransactionForm extends Primitive {
+  id = defaults(StringType, '');
   debtAccount = defaults(StringType, 'select');
+  raccount = defaults(StringType, 'select');
+  start = defaults(StringType, '');
+  rtype = defaults(StringType, 'none');
+  cycle = defaults(Big, 0);
+  occurrences = defaults(Big, 0);
+  value = defaults(Big, 0);
 
-  setForm(nextAccount, index) {
-    // we are working in .state here
-    const nextAccountTransaction = nextAccount.payback.transactions[index];
-    if (!!nextAccountTransaction.computedAmount) {
-      return this.set(nextAccountTransaction)
-        .valueType.set('dynamic')
-        .setEachReference(
-          { starting: nextAccount.starting },
-          nextAccount.payback.references,
-          nextAccountTransaction.references
-        )
-        .computedAmount.setComputedAmount();
-    } else {
-      return this.set(nextAccountTransaction);
-    }
-  }
-
-  setEachReference(
-    accountReferences,
-    paybackReferences,
-    transactionReferences
-  ) {
-    // we are working in .state here
-    const reftoArray = (references, whereFrom) => {
-      return !references
-        ? []
-        : Object.keys(references).reduce((refArray, ref) => {
-            return refArray.concat([
-              { name: ref, value: references[ref], whereFrom: whereFrom }
-            ]);
-          }, []);
-    };
-
-    return this.referencesArray.set(
-      []
-        .concat(reftoArray(accountReferences, 'account'))
-        .concat(reftoArray(paybackReferences, 'payback'))
-        .concat(reftoArray(transactionReferences, 'transaction'))
+  get values() {
+    return Object.keys(this).reduce(
+      (values, key) => Object.assign(values, { [key]: valueOf(this[key]) }),
+      {}
     );
   }
 }

@@ -8,7 +8,6 @@ import {
 } from './index.js';
 import computeTransactionModifications from './resolveTransactions';
 import Big from 'big.js';
-import parseISO from 'date-fns/fp/parseISO';
 import startOfDay from 'date-fns/fp/startOfDay';
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval';
 import format from 'date-fns/fp/format';
@@ -18,8 +17,8 @@ import { testData, testData2 } from './index.testdata.js';
 const formatDate = format('yyyy-MM-dd kkmmss');
 
 let graphRange = {
-  start: startOfDay(parseISO('2018-03-01')),
-  end: startOfDay(parseISO('2018-09-01'))
+  start: startOfDay('2018-03-01'),
+  end: startOfDay('2018-09-01')
 };
 testData.charts = {};
 testData.charts.GraphRange = graphRange;
@@ -201,11 +200,11 @@ describe(`check integrated transaction reoccurence`, () => {
 
     const values = singleTransaction.charts.state.AccountChart[0].values;
     expect(values[132]).toEqual({
-      date: startOfDay(parseISO('2019-05-06')),
+      date: startOfDay('2019-05-06'),
       value: 2950
     });
     expect(values[188]).toEqual({
-      date: startOfDay(parseISO('2019-06-03')),
+      date: startOfDay('2019-06-03'),
       value: 2750
     });
 
@@ -252,7 +251,7 @@ describe(`check integrated transaction reoccurence`, () => {
     expect(singleTransaction.charts.state.LineChartMax).toEqual(2400);
 
     expect(singleTransaction.charts.state.AccountChart[0].values[312]).toEqual({
-      date: startOfDay(parseISO('2019-08-04')),
+      date: startOfDay('2019-08-04'),
       value: 1200
     });
 
@@ -300,11 +299,11 @@ describe(`check integrated transaction reoccurence`, () => {
     expect(singleTransaction.charts.state.LineChartMax).toEqual(12000);
 
     expect(singleTransaction.charts.state.AccountChart[0].values[128]).toEqual({
-      date: startOfDay(parseISO('2019-05-04')),
+      date: startOfDay('2019-05-04'),
       value: 7000
     });
     expect(singleTransaction.charts.state.AccountChart[0].values[860]).toEqual({
-      date: startOfDay(parseISO('2020-05-04')),
+      date: startOfDay('2020-05-04'),
       value: 2000
     });
 
@@ -340,11 +339,10 @@ describe(`check resolveData handles paybacks`, () => {
     revisedTestData.transactions = [];
     let resolvedTestData = create(AppModel, revisedTestData).reCalc();
 
-    // that is 163 days between start and end, 185 days in our full range
+    // that is 163 days between start and end
     // 164*$140 + 164/3*$60 + (1) extra $60 = 22960 + 3240 + 60 = 26260
     const count =
       resolvedTestData.charts.state.AccountChart[0].values.length - 1;
-    expect(count).toEqual(185 * 2 - 1);
     // this tests the transfer, which reduces the balance of the payment account
     // $3000 starting - 26260 = -23260
     expect(
@@ -473,7 +471,7 @@ describe('check AccountChart', () => {
   it('outputs an empty array if values is empty', () => {
     let accounts = [{ name: 'test1' }, { name: 'test2' }];
     let incomeRaw = [
-      { raccount: 'test1', start: '2018-03-01', value: Big(10) }
+      { raccount: 'test1', start: graphRange.start, value: Big(10) }
     ];
     let income = resolveBarChart(incomeRaw, { graphRange });
     let expense = [];

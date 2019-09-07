@@ -3,35 +3,15 @@ import { State } from '../../state';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';
-import TransactionInputAmountComputed from './transactionInputAmountComputed';
-
-const ComputedAmountSchema = Yup.object()
-  .shape({
-    operation: Yup.string(),
-    reference: Yup.string()
-      .notOneOf(['select'])
-      .required('Required'),
-    on: Yup.object().when('operation', {
-      is: operation => operation !== 'none',
-      // eslint-disable-next-line
-      then: ComputedAmountSchema,
-      otherwise: Yup.object().strip()
-    })
-  })
-  .required('Required');
 
 const AccountTransactionSchema = Yup.object().shape({
   id: Yup.string(),
-  debtAccount: Yup.string()
-    .notOneOf(['select'])
-    .required('Required'),
-  raccount: Yup.string()
-    .notOneOf(['select'])
-    .required('Required'),
+  debtAccount: Yup.string().required('Required'),
+  raccount: Yup.string().required('Required'),
   description: Yup.string(),
   category: Yup.string(),
   start: Yup.date().required('Required'),
-  rtype: Yup.string()
+  rtype: Yup.mixed()
     .oneOf([
       'none',
       'day',
@@ -45,17 +25,7 @@ const AccountTransactionSchema = Yup.object().shape({
     .required('Required'),
   occurrences: Yup.number(),
   cycle: Yup.number().required('Required'),
-  value: Yup.number().when('valueType', {
-    is: 'static',
-    then: Yup.number().required('Required'),
-    otherwise: Yup.number()
-  }),
-  valueType: Yup.string().required(),
-  computedAmount: Yup.object().when('valueType', {
-    is: 'dynamic',
-    then: ComputedAmountSchema,
-    otherwise: Yup.object().strip()
-  })
+  value: Yup.number().required('Required')
 });
 
 class AccountTransactionInput extends React.Component {
@@ -85,16 +55,13 @@ class AccountTransactionInput extends React.Component {
                   values,
                   errors,
                   touched,
-                  handleReset,
+                  handleChange,
+                  handleBlur,
                   handleSubmit,
                   isSubmitting,
                   setFieldValue
                 }) => (
-                  <form
-                    onReset={handleReset}
-                    onSubmit={handleSubmit}
-                    autoComplete="off"
-                  >
+                  <form onSubmit={handleSubmit} autoComplete="off">
                     <Field
                       type="text"
                       name="id"
@@ -109,7 +76,7 @@ class AccountTransactionInput extends React.Component {
                       touched={touched}
                     >
                       <div className="select">
-                        <Field as="select" name="debtAccount">
+                        <Field component="select" name="debtAccount">
                           <option key={'default'} value={'select'} disabled>
                             Select an Option
                           </option>
@@ -136,7 +103,7 @@ class AccountTransactionInput extends React.Component {
                       touched={touched}
                     >
                       <div className="select">
-                        <Field as="select" name="raccount">
+                        <Field component="select" name="raccount">
                           <option key={'default'} value={'select'} disabled>
                             Select an Option
                           </option>
@@ -248,7 +215,7 @@ class AccountTransactionInput extends React.Component {
 
                     <FieldGroup errors={errors} name="rtype" touched={touched}>
                       <div className="select">
-                        <Field as="select" name="rtype">
+                        <Field component="select" name="rtype">
                           <option value="none">No Repeating</option>
                           <option value="day">
                             Repeat Daily (or Every X Day)
@@ -279,12 +246,9 @@ class AccountTransactionInput extends React.Component {
                       <Field type="number" name="cycle" className="input" />
                     </FieldGroup>
 
-                    <TransactionInputAmountComputed
-                      errors={errors}
-                      touched={touched}
-                      values={values}
-                      setFieldValue={setFieldValue}
-                    />
+                    <FieldGroup errors={errors} name="value" touched={touched}>
+                      <Field type="number" name="value" className="input" />
+                    </FieldGroup>
 
                     <div className="field is-grouped is-grouped-centered">
                       <div className="control">

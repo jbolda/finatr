@@ -14,7 +14,6 @@ import {
   resolveAccountChart
 } from './resolveFinancials';
 import format from 'date-fns/fp/format';
-import parseISO from 'date-fns/fp/parseISO';
 import startOfDay from 'date-fns/fp/startOfDay';
 import addDays from 'date-fns/fp/addDays';
 const addYear = addDays(365);
@@ -66,10 +65,10 @@ class Charts extends Primitive {
   }
 
   updateStartDate(start, end) {
-    const startDate = startOfDay(parseISO(start));
+    const startDate = startOfDay(start);
     const graphRange = {
       start: startDate,
-      end: !!end ? startOfDay(parseISO(end)) : addYear(parseISO(start))
+      end: !!end ? startOfDay(end) : addYear(start)
     };
     return this.GraphRange.set(graphRange);
   }

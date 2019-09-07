@@ -3,7 +3,6 @@ import { State } from '../../state';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';
-import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
 const TransactionSchema = Yup.object().shape({
   id: Yup.string(),
@@ -29,13 +28,9 @@ const TransactionSchema = Yup.object().shape({
     ])
     .required('Required'),
   cycle: Yup.number().required('Required'),
-  value: Yup.number(),
-  computedAmount: Yup.object().shape({
-    operation: Yup.string(),
-    reference: Yup.mixed().notOneOf(['select']),
-    references: Yup.object(),
-    on: Yup.object()
-  })
+  value: Yup.number()
+    .moreThan(0)
+    .required('Required')
 });
 
 class TransactionInput extends React.Component {
@@ -58,16 +53,14 @@ class TransactionInput extends React.Component {
                 values,
                 errors,
                 touched,
-                handleReset,
+                handleChange,
+                handleBlur,
                 handleSubmit,
                 isSubmitting,
                 setFieldValue
               }) => (
-                <form
-                  onReset={handleReset}
-                  onSubmit={handleSubmit}
-                  autoComplete="off"
-                >
+                <form onSubmit={handleSubmit} autoComplete="off">
+                  {console.log(values)}
                   <Field
                     type="text"
                     name="id"
@@ -223,12 +216,9 @@ class TransactionInput extends React.Component {
                     <Field name="cycle" type="number" className="input" />
                   </FieldGroup>
 
-                  <TransactionInputAmountComputed
-                    errors={errors}
-                    touched={touched}
-                    values={values}
-                    setFieldValue={setFieldValue}
-                  />
+                  <FieldGroup errors={errors} name="value" touched={touched}>
+                    <Field name="value" type="number" className="input" />
+                  </FieldGroup>
 
                   <div className="field is-grouped is-grouped-centered">
                     <div className="control">

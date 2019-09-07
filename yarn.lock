@@ -3565,10 +3565,10 @@ d3-zoom@1:
     d3-selection "1"
     d3-transition "1"
 
-d3@5.11.0:
-  version "5.11.0"
-  resolved "https://registry.yarnpkg.com/d3/-/d3-5.11.0.tgz#d5ffc84f930eeb895d88699195d2d852778ab158"
-  integrity sha512-LXgMVUAEAzQh6WfEEOa8tJX4RA64ZJ6twC3CJ+Xzid+fXWLTZkkglagXav/eOoQgzQi5rzV0xC4Sfspd6hFDHA==
+d3@5.9.7:
+  version "5.9.7"
+  resolved "https://registry.yarnpkg.com/d3/-/d3-5.9.7.tgz#f3835648a172b438e89ed57eb6c525bdabdcd7dc"
+  integrity sha512-jENytrmdXtGPw7HuSK2S4gxRM1eUGjKvWQkQ6ct4yK+DB8SG3VcnVrwesfnsv8rIcxMUg18TafT4Q8mOZUMP4Q==
   dependencies:
     d3-array "1"
     d3-axis "1"
@@ -3638,10 +3638,10 @@ data-urls@^1.1.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
-date-fns@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.1.0.tgz#0d7e806c3cefe14a943532dbf968995ccfd46bd9"
-  integrity sha512-eKeLk3sLCnxB/0PN4t1+zqDtSs4jb4mXRSTZ2okmx/myfWyDqeO4r5nnmA5LClJiCwpuTMeK2v5UQPuE4uMaxA==
+date-fns@2.0.0-alpha.25:
+  version "2.0.0-alpha.25"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.0.0-alpha.25.tgz#651a5d1f59a01af6cf0371e39b2ae29df5d521ee"
+  integrity sha512-iQzJkHF0L4wah9Ae9PkvwemwFz6qmRLuNZcghmvf2t+ptLs1qXzONLiGtjmPQzL6+JpC01JjlTopY2AEy4NFAg==
 
 date-fns@^1.27.2:
   version "1.30.1"
@@ -4784,10 +4784,10 @@ form-data@~2.3.2:
     combined-stream "1.0.6"
     mime-types "^2.1.12"
 
-formik@2.0.1-rc.13:
-  version "2.0.1-rc.13"
-  resolved "https://registry.yarnpkg.com/formik/-/formik-2.0.1-rc.13.tgz#4d06119a186ed5b754dfeabe72fcbf81157b849d"
-  integrity sha512-WrIP9Rvsx7trfUAnvpHVrMmIqI6N8fQvK9GWHbP6UTAyyur33g/wEaz+ddhtjZ2JfupQ0Sdl4nVC3Z0tZtVM8w==
+formik@2.0.1-rc.12:
+  version "2.0.1-rc.12"
+  resolved "https://registry.yarnpkg.com/formik/-/formik-2.0.1-rc.12.tgz#6cd4d98d125ba4badcbc70e8d22c1f0f1840f4c1"
+  integrity sha512-V7eaOsbu+U+NWrPrAy3D1XUSYWpGjDMyES1COPGQHaTUr2e/RolUDAbBTqBSgzsMSSfHohDHGQRBQPMYVL3UfA==
   dependencies:
     deepmerge "^2.1.1"
     hoist-non-react-statics "^3.3.0"
@@ -6283,10 +6283,10 @@ jest@24.8.0:
     import-local "^2.0.0"
     jest-cli "^24.8.0"
 
-js-file-download@0.4.8:
-  version "0.4.8"
-  resolved "https://registry.yarnpkg.com/js-file-download/-/js-file-download-0.4.8.tgz#f91c532acd685d8b16685672010b99473ca7f606"
-  integrity sha512-8xygX/IkjQbr/2nWqJnyc0IWOMvA1R/78HQVyexB22YZDBAEz2MG59s+ieLFKOkDFzyDDk3bezKXEjyGW5HPCw==
+js-file-download@0.4.7:
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/js-file-download/-/js-file-download-0.4.7.tgz#cafea2f7230b63fa1747e80efe1257649b59143e"
+  integrity sha512-9AQYwIpgTz3BqKQQ9kZldCXd0BekFmxvUguEVJwVlTe9cON1slRaT+hqctEbjoXbz9Aj+8Qgl3841zYWeCstuA==
 
 js-levenshtein@^1.1.3:
   version "1.1.4"
@@ -10951,10 +10951,10 @@ yauzl@2.4.1:
   dependencies:
     fd-slicer "~1.0.1"
 
-ynab@1.16.0:
-  version "1.16.0"
-  resolved "https://registry.yarnpkg.com/ynab/-/ynab-1.16.0.tgz#1f12460941c9e64e73a30281e5842a4d253f857d"
-  integrity sha512-kJds8qAiyDJ3BzvPgItEXteVSUBS7ONBR5w3hIQDwybT80huBJNZ44MH6ptSZxkHZzbDvF7VFdHS8Bz1n8RS2w==
+ynab@1.15.0:
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/ynab/-/ynab-1.15.0.tgz#bad2cdfe3269b45998154edd2443ece7ce651aa8"
+  integrity sha512-eI+B5IeVvJ94hb/77WI7E3ERHwMLYxnpOCVdHZEUy8XdR1XbYuSZ7G/HhWYnfEDXYkEunbTjos1L2JmzEwoSww==
   dependencies:
     portable-fetch "^3.0.0"
 

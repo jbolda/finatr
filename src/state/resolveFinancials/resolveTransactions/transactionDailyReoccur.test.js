@@ -1,5 +1,4 @@
 import Big from 'big.js';
-import parseISO from 'date-fns/fp/parseISO';
 import startOfDay from 'date-fns/fp/startOfDay';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
 import getDate from 'date-fns/fp/getDate';
@@ -21,8 +20,8 @@ describe(`check transactionDailyReoccur`, () => {
     value: Big(150)
   };
   let graphRange = {
-    start: startOfDay(parseISO('2018-03-01')),
-    end: startOfDay(parseISO('2018-06-01'))
+    start: startOfDay('2018-03-01'),
+    end: startOfDay('2018-06-01')
   };
   let interval = convertRangeToInterval(transaction, graphRange);
   let seedDate = interval.start;
@@ -68,9 +67,7 @@ describe(`check transactionDailyReoccur`, () => {
       occurrences: Big(1)
     });
     expect(
-      differenceInCalendarDays(parseISO(transaction.start))(
-        secondIteration.date
-      )
+      differenceInCalendarDays(transaction.start)(secondIteration.date)
     ).toBe(1);
   });
 
@@ -94,9 +91,7 @@ describe(`check transactionDailyReoccur`, () => {
       occurrences: Big(1)
     });
     expect(
-      differenceInCalendarDays(parseISO(transaction.start))(
-        secondIteration.date
-      )
+      differenceInCalendarDays(transaction.start)(secondIteration.date)
     ).toBe(3);
   });
 
@@ -120,9 +115,7 @@ describe(`check transactionDailyReoccur`, () => {
       occurrences: Big(1)
     });
     expect(
-      differenceInCalendarDays(parseISO(transaction.start))(
-        secondIteration.date
-      )
+      differenceInCalendarDays(transaction.start)(secondIteration.date)
     ).toBe(5);
   });
 
@@ -146,9 +139,7 @@ describe(`check transactionDailyReoccur`, () => {
       occurrences: Big(1)
     });
     expect(
-      differenceInCalendarDays(parseISO(transaction.start))(
-        secondIteration.date
-      )
+      differenceInCalendarDays(transaction.start)(secondIteration.date)
     ).toBe(14);
   });
 });
