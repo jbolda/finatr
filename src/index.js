@@ -11,6 +11,7 @@ import theme from './theme.js';
 import Header from './components/common/header';
 import Footer from './components/common/footer';
 import Homepage from './pages/homepage';
+import StyleGuide from './pages/styleguide';
 import Examples from './pages/examples';
 import Financial from './pages/flow';
 import Accounts from './pages/accounts';
@@ -35,6 +36,7 @@ class App extends React.Component {
           <Header />
           <Router>
             <Homepage path="/" />
+            <StyleGuide path="style-guide" />
             <Examples path="examples" />
             <Financial path="flow" />
             <Accounts path="accounts" />
