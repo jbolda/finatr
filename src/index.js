@@ -41,6 +41,7 @@ class App extends React.Component {
             <Box p="0" m="0" flex="1 1 auto">
               <Router>
                 <Homepage path="/" />
+                <StyleGuide path="style-guide" />
                 <Examples path="examples" />
                 <Financial path="flow" />
                 <Accounts path="accounts" />
