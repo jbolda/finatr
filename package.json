@@ -28,7 +28,7 @@
     "react": "16.9.0",
     "react-dom": "16.9.0",
     "react-file-reader-input": "2.0.0",
-    "react-scripts": "3.1.1",
+    "react-scripts": "3.1.2",
     "rebass": "4.0.5",
     "theme-ui": "0.2.43",
     "ynab": "1.16.0",
