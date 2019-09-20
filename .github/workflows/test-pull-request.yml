@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [10.x, 12.x]
         platform: [ubuntu-latest, macos-latest, windows-latest]
         runner: [npm, yarn]
 
@@ -23,7 +23,7 @@ jobs:
     - name: ${{ matrix.runner }} cypress
       run: |
         ${{ matrix.runner }} install
-        ${{ matrix.runner }} test
+        ${{ matrix.runner }} test --ci
     - name: ${{ matrix.runner }} cypress (record)
       if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10'
       run: |
