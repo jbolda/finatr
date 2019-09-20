@@ -16,15 +16,14 @@ jobs:
     - uses: actions/checkout@v1
       with:
         fetch-depth: 3
-    - name: Test node ${{ matrix.node-version }} on ${{ matrix.platform }}
-      uses: actions/setup-node@v1
+    - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: ${{ matrix.runner }} cypress
+    - name: run tests
       run: |
         ${{ matrix.runner }} install
-        ${{ matrix.runner }} test --ci
-    - name: ${{ matrix.runner }} cypress (record)
+        ${{ matrix.runner }} test --ci --all
+    - name: run cypress (record)
       if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10'
       run: |
         ${{ matrix.runner }} start &
@@ -33,7 +32,7 @@ jobs:
         # after all tests finish running we need
         # to kill all background jobs (like "npm start &")
         kill $(jobs -p) || true
-    - name: ${{ matrix.runner }} cypress
+    - name: run cypress
       if: matrix.runner != 'yarn' || matrix.platform != 'ubuntu-latest' || matrix.node-version != '10'
       run: |
         ${{ matrix.runner }} start &
