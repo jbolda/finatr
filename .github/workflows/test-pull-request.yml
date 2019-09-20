@@ -26,20 +26,14 @@ jobs:
     - name: run cypress (record)
       if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10'
       run: |
-        ${{ matrix.runner }} start &
+        ${{ matrix.runner }} start
         ${{ matrix.runner }} cy:verify
         ${{ matrix.runner }} cy:run --record --parallel --browser chrome
-        # after all tests finish running we need
-        # to kill all background jobs (like "npm start &")
-        kill $(jobs -p) || true
     - name: run cypress
       if: matrix.runner != 'yarn' || matrix.platform != 'ubuntu-latest' || matrix.node-version != '10'
       run: |
-        ${{ matrix.runner }} start &
+        ${{ matrix.runner }} start
         ${{ matrix.runner }} cy:verify
         ${{ matrix.runner }} cy:run --browser chrome
-        # after all tests finish running we need
-        # to kill all background jobs (like "npm start &")
-        kill $(jobs -p) || true
       env:
         CI: true
