@@ -24,13 +24,13 @@ jobs:
         ${{ matrix.runner }} install
         ${{ matrix.runner }} test --ci --all
     - name: run cypress (record)
-      if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10'
+      if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10.x'
       run: |
         ${{ matrix.runner }} start
         ${{ matrix.runner }} cy:verify
         ${{ matrix.runner }} cy:run --record --parallel --browser chrome
     - name: run cypress
-      if: matrix.runner != 'yarn' || matrix.platform != 'ubuntu-latest' || matrix.node-version != '10'
+      if: matrix.runner != 'yarn' || matrix.platform != 'ubuntu-latest' || matrix.node-version != '10.x'
       run: |
         ${{ matrix.runner }} start
         ${{ matrix.runner }} cy:verify
