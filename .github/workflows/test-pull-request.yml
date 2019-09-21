@@ -27,7 +27,7 @@ jobs:
         echo ${{ matrix.node-version }}
         echo ${{ matrix.runner }}
         ${{ matrix.runner }} install
-        ${{ matrix.runner }} test --all
+        ${{ matrix.runner }} run test
     - name: run cypress (record)
       env:
         CI: true
