@@ -19,7 +19,7 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: run tests
+    - name: install packages
       env:
         CI: true
       run: |
@@ -27,6 +27,10 @@ jobs:
         echo ${{ matrix.node-version }}
         echo ${{ matrix.runner }}
         ${{ matrix.runner }} install
+    - name: run tests
+      env:
+        CI: true
+      run: |
         ${{ matrix.runner }} run test
     - name: run cypress (record)
       env:
