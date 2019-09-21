@@ -16,16 +16,15 @@ jobs:
     - uses: actions/checkout@v1
       with:
         fetch-depth: 3
-      run: |
-        echo ${{ matrix.platform }}
-        echo ${{ matrix.node-version }}
-        echo ${{ matrix.runner }}
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - name: run tests
       run: |
         ${{ matrix.runner }} install
+        echo ${{ matrix.platform }}
+        echo ${{ matrix.node-version }}
+        echo ${{ matrix.runner }}
         ${{ matrix.runner }} test --all
     - name: run cypress (record)
       if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10.x'
