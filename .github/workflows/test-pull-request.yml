@@ -21,10 +21,10 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: run tests
       run: |
-        ${{ matrix.runner }} install
         echo ${{ matrix.platform }}
         echo ${{ matrix.node-version }}
         echo ${{ matrix.runner }}
+        ${{ matrix.runner }} install
         ${{ matrix.runner }} test --all
     - name: run cypress (record)
       if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10.x'
