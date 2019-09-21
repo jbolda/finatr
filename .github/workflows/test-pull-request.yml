@@ -5,6 +5,8 @@ on: [pull_request]
 jobs:
   test:
     runs-on: ${{ matrix.platform }}
+    env:
+      CI: true
 
     strategy:
       matrix:
@@ -38,5 +40,3 @@ jobs:
         ${{ matrix.runner }} start
         ${{ matrix.runner }} cy:verify
         ${{ matrix.runner }} cy:run --browser chrome
-      env:
-        CI: true
