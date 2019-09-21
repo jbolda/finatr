@@ -9,13 +9,17 @@ jobs:
     strategy:
       matrix:
         node-version: [10.x, 12.x]
-        platform: [ubuntu-latest, windows-latest]
+        platform: [windows-latest]
         runner: [npm, yarn]
 
     steps:
     - uses: actions/checkout@v1
       with:
         fetch-depth: 3
+      run: |
+        echo ${{ matrix.platform }}
+        echo ${{ matrix.node-version }}
+        echo ${{ matrix.runner }}
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
@@ -29,11 +33,11 @@ jobs:
         ${{ matrix.runner }} start
         ${{ matrix.runner }} cy:verify
         ${{ matrix.runner }} cy:run --record --parallel --browser chrome
-   # - name: run cypress
-   #   if: matrix.runner != 'yarn' || matrix.platform != 'ubuntu-latest' || matrix.node-version != '10.x'
-   #   run: |
-   #     ${{ matrix.runner }} start
-   #     ${{ matrix.runner }} cy:verify
-   #     ${{ matrix.runner }} cy:run --browser chrome
+    - name: run cypress
+      if: matrix.runner != 'yarn' || matrix.platform != 'ubuntu-latest' || matrix.node-version != '10.x'
+      run: |
+        ${{ matrix.runner }} start
+        ${{ matrix.runner }} cy:verify
+        ${{ matrix.runner }} cy:run --browser chrome
       env:
         CI: true
