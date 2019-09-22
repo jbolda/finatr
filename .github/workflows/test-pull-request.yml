@@ -33,8 +33,10 @@ jobs:
       run: |
         ${{ matrix.runner }} run test
     - name: start up dev server
+      uses: maddox/actions/wait-for-200@master
       env:
         CI: true
+        URL: "http://localhost:3000"
       run: |
         ${{ matrix.runner }} start
     - name: run cypress (record)
