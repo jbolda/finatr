@@ -29,7 +29,7 @@
     "react-dom": "16.9.0",
     "react-file-reader-input": "2.0.0",
     "react-scripts": "3.1.2",
-    "rebass": "4.0.5",
+    "rebass": "4.0.6",
     "theme-ui": "0.2.43",
     "ynab": "1.16.0",
     "yup": "0.27.0"
