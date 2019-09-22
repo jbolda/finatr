@@ -37,7 +37,7 @@ jobs:
         CI: true
       if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10.x'
       run: |
-        ${{ matrix.runner }} build
+        ${{ matrix.runner }} run build
         npm install -g http-server
         npx start-server-and-test 'http-server -c-1 --silent' 8000 '${{ matrix.runner }} cy:run --record --parallel --browser chrome'
     - name: run cypress
@@ -45,6 +45,6 @@ jobs:
         CI: true
       if: matrix.runner != 'yarn' || matrix.platform != 'ubuntu-latest' || matrix.node-version != '10.x'
       run: |
-        ${{ matrix.runner }} build
+        ${{ matrix.runner }} run build
         npm install -g http-server
         npx start-server-and-test 'http-server -c-1 --silent' 8000 '${{ matrix.runner }} cy:run --browser chrome'
