@@ -32,19 +32,20 @@ jobs:
         CI: true
       run: |
         ${{ matrix.runner }} run test
+    - name: start up dev server
+      env:
+        CI: true
+      run: |
+        ${{ matrix.runner }} start
     - name: run cypress (record)
       env:
         CI: true
       if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10.x'
       run: |
-        ${{ matrix.runner }} start
-        ${{ matrix.runner }} cy:verify
         ${{ matrix.runner }} cy:run --record --parallel --browser chrome
     - name: run cypress
       env:
         CI: true
       if: matrix.runner != 'yarn' || matrix.platform != 'ubuntu-latest' || matrix.node-version != '10.x'
       run: |
-        ${{ matrix.runner }} start
-        ${{ matrix.runner }} cy:verify
         ${{ matrix.runner }} cy:run --browser chrome
