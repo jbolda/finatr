@@ -36,7 +36,7 @@ jobs:
     - name: start up dev server
       env:
         CI: true
-      run: ${{ matrix.runner }} start && wait-on http://localhost:3000
+      run: ${{ matrix.runner }} start & wait-on http://localhost:3000
     - name: run cypress (record)
       env:
         CI: true
