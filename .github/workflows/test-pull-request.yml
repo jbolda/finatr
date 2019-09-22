@@ -35,16 +35,18 @@ jobs:
     - name: run cypress (record)
       env:
         CI: true
+        CYPRESS_BASE_URL: http://localhost:8080
       if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10.x'
       run: |
         ${{ matrix.runner }} run build
         npm install -g http-server
-        npx start-server-and-test 'http-server ./build -c-1 --silent' 8080 '${{ matrix.runner }} run cy:run --port 8080 --record --parallel --browser chrome'
+        npx start-server-and-test 'http-server ./build -c-1 --silent' 8080 '${{ matrix.runner }} run cy:run  --record --parallel --browser chrome'
     - name: run cypress
       env:
         CI: true
+        CYPRESS_BASE_URL: http://localhost:8080
       if: matrix.runner != 'yarn' || matrix.platform != 'ubuntu-latest' || matrix.node-version != '10.x'
       run: |
         ${{ matrix.runner }} run build
         npm install -g http-server
-        npx start-server-and-test 'http-server ./build -c-1 --silent' 8080 '${{ matrix.runner }} run cy:run --port 8080 --browser chrome'
+        npx start-server-and-test 'http-server ./build -c-1 --silent' 8080 '${{ matrix.runner }} run cy:run --browser chrome'
