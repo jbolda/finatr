@@ -27,18 +27,16 @@ jobs:
         echo ${{ matrix.node-version }}
         echo ${{ matrix.runner }}
         ${{ matrix.runner }} install
+        npm install -g wait-on
     - name: run tests
       env:
         CI: true
       run: |
         ${{ matrix.runner }} run test
     - name: start up dev server
-      uses: maddox/actions/wait-for-200@master
       env:
         CI: true
-        URL: "http://localhost:3000"
-      with:
-        args: ${{ matrix.runner }} start
+      run: ${{ matrix.runner }} start && wait-on http://localhost:3000
     - name: run cypress (record)
       env:
         CI: true
