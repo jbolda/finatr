@@ -37,8 +37,8 @@ jobs:
       env:
         CI: true
         URL: "http://localhost:3000"
-      run: |
-        ${{ matrix.runner }} start
+      with:
+        args: ${{ matrix.runner }} start
     - name: run cypress (record)
       env:
         CI: true
