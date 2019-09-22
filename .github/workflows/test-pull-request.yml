@@ -27,27 +27,24 @@ jobs:
         echo ${{ matrix.node-version }}
         echo ${{ matrix.runner }}
         ${{ matrix.runner }} install
-        npm install -g wait-on
     - name: run tests
       env:
         CI: true
       run: |
         ${{ matrix.runner }} run test
-    - name: start up dev server
-      env:
-        CI: true
-      run: |
-        ${{ matrix.runner }} start &
-        wait-on http://localhost:3000
     - name: run cypress (record)
       env:
         CI: true
       if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10.x'
       run: |
-        ${{ matrix.runner }} cy:run --record --parallel --browser chrome
+        ${{ matrix.runner }} build
+        npm install -g http-server
+        npx start-server-and-test 'http-server -c-1 --silent' 8000 '${{ matrix.runner }} cy:run --record --parallel --browser chrome'
     - name: run cypress
       env:
         CI: true
       if: matrix.runner != 'yarn' || matrix.platform != 'ubuntu-latest' || matrix.node-version != '10.x'
       run: |
-        ${{ matrix.runner }} cy:run --browser chrome
+        ${{ matrix.runner }} build
+        npm install -g http-server
+        npx start-server-and-test 'http-server -c-1 --silent' 8000 '${{ matrix.runner }} cy:run --browser chrome'
