@@ -41,7 +41,7 @@ jobs:
       run: |
         ${{ matrix.runner }} run build
         npm install -g http-server
-        npx start-server-and-test 'http-server ./build -c-1 --silent' 8080 '${{ matrix.runner }} run cy:run -- --ci-build-id ${{ github.ref }}${{ github.sha }} --record --parallel --browser chrome'
+        npx start-server-and-test 'http-server ./build -c-1 --silent --proxy http://localhost:8080' 8080 '${{ matrix.runner }} run cy:run -- --ci-build-id ${{ github.ref }}/${{ github.sha }} --record --parallel --browser chrome'
     - name: run cypress
       env:
         CI: true
@@ -50,4 +50,4 @@ jobs:
       run: |
         ${{ matrix.runner }} run build
         npm install -g http-server
-        npx start-server-and-test 'http-server ./build -c-1 --silent' 8080 '${{ matrix.runner }} run cy:run -- --browser chrome'
+        npx start-server-and-test 'http-server ./build -c-1 --silent --proxy http://localhost:8080' 8080 '${{ matrix.runner }} run cy:run -- --browser chrome'
