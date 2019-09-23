@@ -36,6 +36,7 @@ jobs:
       env:
         CI: true
         CYPRESS_BASE_URL: http://localhost:8080
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10.x'
       run: |
         ${{ matrix.runner }} run build
