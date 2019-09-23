@@ -11,7 +11,7 @@ jobs:
         node-version: [10.x, 12.x]
         platform: [ubuntu-latest, macos-latest]
         runner: [npm, yarn]
-        browser: chrome
+        browser: [chrome]
         include:
           - platform: macos-latest
             brower: electron
