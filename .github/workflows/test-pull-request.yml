@@ -14,7 +14,7 @@ jobs:
         browser: [chrome]
         include:
           - platform: macos-latest
-            brower: electron
+            browser: electron
 
     steps:
     - uses: actions/checkout@v1
