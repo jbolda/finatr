@@ -41,7 +41,7 @@ jobs:
       run: |
         ${{ matrix.runner }} run build
         npm install -g pushstate-server
-        npx start-server-and-test 'pushstate-server -d ./build -p 8080' 8080 '${{ matrix.runner }} run cy:run -- --ci-build-id ${{ github.ref }}/${{ github.sha }} --record --parallel --browser chrome'
+        npx start-server-and-test 'pushstate-server -d ./build -p 8080' 8080 '${{ matrix.runner }} run cy:run -- --ci-build-id ${{ github.ref }}/${{ github.sha }} --record --parallel --browser electron'
     - name: run cypress
       env:
         CI: true
