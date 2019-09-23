@@ -11,6 +11,10 @@ jobs:
         node-version: [10.x, 12.x]
         platform: [ubuntu-latest, macos-latest]
         runner: [npm, yarn]
+        browser: chrome
+        include:
+          - platform: macos-latest
+            brower: electron
 
     steps:
     - uses: actions/checkout@v1
@@ -50,4 +54,4 @@ jobs:
       run: |
         ${{ matrix.runner }} run build
         npm install -g pushstate-server
-        npx start-server-and-test 'pushstate-server -d ./build -p 8080' 8080 '${{ matrix.runner }} run cy:run -- --browser ${{ matrix.platform == 'macos-latest' ? "electron" : "chrome" }}'
+        npx start-server-and-test 'pushstate-server -d ./build -p 8080' 8080 '${{ matrix.runner }} run cy:run -- --browser ${{ matrix.browser }}'
