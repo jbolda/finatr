@@ -37,24 +37,25 @@ jobs:
     - name: run tests
       env:
         CI: true
-      run: |
-        ${{ matrix.runner }} run test
+      run: ${{ matrix.runner }} run test
+    - name: run build
+      env:
+        CI: true
+      run: ${{ matrix.runner }} run build
+    - name: install build host for cypress
+      env:
+        CI: true
+      run: npm install -g pushstate-server
     - name: run cypress (record)
       env:
         CI: true
         CYPRESS_BASE_URL: http://localhost:8080
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10.x'
-      run: |
-        ${{ matrix.runner }} run build
-        npm install -g pushstate-server
-        npx start-server-and-test 'pushstate-server -d ./build -p 8080' 8080 '${{ matrix.runner }} run cy:run -- --ci-build-id ${{ github.ref }}/${{ github.sha }} --record --parallel --browser electron'
+      run: npx start-server-and-test 'pushstate-server -d ./build -p 8080' 8080 '${{ matrix.runner }} run cy:run -- --ci-build-id ${{ github.ref }}/${{ github.sha }} --record --parallel --browser electron'
     - name: run cypress
       env:
         CI: true
         CYPRESS_BASE_URL: http://localhost:8080
       if: matrix.runner != 'yarn' || matrix.platform != 'ubuntu-latest' || matrix.node-version != '10.x'
-      run: |
-        ${{ matrix.runner }} run build
-        npm install -g pushstate-server
-        npx start-server-and-test 'pushstate-server -d ./build -p 8080' 8080 '${{ matrix.runner }} run cy:run -- --browser ${{ matrix.browser }}'
+      run: npx start-server-and-test 'pushstate-server -d ./build -p 8080' 8080 '${{ matrix.runner }} run cy:run -- --browser ${{ matrix.browser }}'
