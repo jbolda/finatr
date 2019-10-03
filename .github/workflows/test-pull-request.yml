@@ -57,5 +57,6 @@ jobs:
       env:
         CI: true
         CYPRESS_BASE_URL: http://localhost:8080
+        DEBUG: cypress:*
       if: matrix.runner != 'yarn' || matrix.platform != 'ubuntu-latest' || matrix.node-version != '10.x'
       run: npx start-server-and-test "pushstate-server -d ./build -p 8080" 8080 "${{ matrix.runner }} run cy:run -- --browser ${{ matrix.browser }}"
