@@ -17,7 +17,7 @@ jobs:
             return-node-version: ls $RUNNER_TOOL_CACHE/node
           - platform: windows-latest
             browser: chrome
-            return-node-version: dir $RUNNER_TOOL_CACHE
+            return-node-version: dir %RUNNER_TOOL_CACHE%/node
           - platform: macos-latest
             browser: electron
             return-node-version: ls $RUNNER_TOOL_CACHE/node
@@ -38,7 +38,6 @@ jobs:
         echo ${{ matrix.node-version }}
         echo ${{ matrix.runner }}
         echo === exact node version ===
-        echo $RUNNER_TOOL_CACHE
         ${{ matrix.return-node-version }}
         ${{ matrix.runner }} install
     - name: run tests
