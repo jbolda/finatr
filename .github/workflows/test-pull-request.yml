@@ -8,16 +8,19 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['10.x', '12.11']
+        node-version: ['10.x', '12.x']
         platform: [ubuntu-latest, macos-latest, windows-latest]
         runner: [npm, yarn]
         include:
           - platform: ubuntu-latest
             browser: chrome
+            return-node-version: ls $RUNNER_TOOL_CACHE/node
           - platform: windows-latest
             browser: chrome
+            return-node-version: dir $RUNNER_TOOL_CACHE/node
           - platform: macos-latest
             browser: electron
+            return-node-version: ls $RUNNER_TOOL_CACHE/node
 
     steps:
     - uses: actions/checkout@v1
@@ -33,6 +36,7 @@ jobs:
         echo ${{ matrix.platform }}
         echo ${{ matrix.node-version }}
         echo ${{ matrix.runner }}
+        ${{ matrix.return-node-version }}
         ${{ matrix.runner }} install
     - name: run tests
       env:
