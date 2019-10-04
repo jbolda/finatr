@@ -50,9 +50,8 @@ jobs:
       env:
         CI: true
         CYPRESS_BASE_URL: http://localhost:8080
-        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10.x'
-      run: npx start-server-and-test "pushstate-server -d ./build -p 8080" 8080 "${{ matrix.runner }} run cy:run -- --ci-build-id ${{ github.ref }}/${{ github.sha }} --record --parallel --browser electron"
+      run: npx start-server-and-test "pushstate-server -d ./build -p 8080" 8080 "${{ matrix.runner }} run cy:run -- --ci-build-id ${{ github.ref }}/${{ github.sha }} --key ${{ secrets.CYPRESS_RECORD_KEY }} --record --parallel --browser electron"
     - name: run cypress
       env:
         CI: true
