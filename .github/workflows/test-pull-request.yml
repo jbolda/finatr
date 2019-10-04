@@ -17,7 +17,7 @@ jobs:
             return-node-version: ls $RUNNER_TOOL_CACHE/node
           - platform: windows-latest
             browser: chrome
-            return-node-version: dir C:\hostedtoolcachewindows\node
+            return-node-version: dir C:\hostedtoolcachewindows\windows\node
           - platform: macos-latest
             browser: electron
             return-node-version: ls $RUNNER_TOOL_CACHE/node
