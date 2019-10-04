@@ -38,6 +38,7 @@ jobs:
         echo ${{ matrix.node-version }}
         echo ${{ matrix.runner }}
         echo === exact node version ===
+        echo $RUNNER_TOOL_CACHE
         ${{ matrix.return-node-version }}
         ${{ matrix.runner }} install
     - name: run tests
