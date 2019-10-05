@@ -26,7 +26,7 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: install packages
+    - name: install packages and show matrix input
       env:
         CI: true
       run: |
