@@ -44,7 +44,7 @@ jobs:
       script:
         - yarn start &
         - yarn cy:verify
-        - DEBUG=commit-info,cypress:server:record yarn cy:run --browser chrome
+        - env DEBUG=commit-info,cypress:server:record yarn cy:run --record --browser chrome
         # after all tests finish running we need
         # to kill all background jobs (like "npm start &")
         - kill $(jobs -p) || true
