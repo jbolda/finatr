@@ -31,7 +31,7 @@
     "react-scripts": "3.2.0",
     "rebass": "4.0.6",
     "theme-ui": "0.2.43",
-    "ynab": "1.16.0",
+    "ynab": "1.17.0",
     "yup": "0.27.0"
   },
   "devDependencies": {
