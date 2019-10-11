@@ -23,7 +23,7 @@
     "emotion-theming": "10.0.19",
     "formik": "2.0.1-rc.13",
     "js-file-download": "0.4.8",
-    "microstates": "0.15.0-alpha.0",
+    "microstates": "0.15.1",
     "prop-types": "15.7.2",
     "react": "16.10.2",
     "react-dom": "16.10.2",
