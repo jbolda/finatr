@@ -1,9 +1,16 @@
+const heading = {
+  fontFamily: 'heading',
+  lineHeight: 'heading',
+  fontWeight: 'heading',
+}
+
 export default {
   breakpoints: ['40em', '52em', '64em'],
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64],
   initialColorMode: 'light',
-  useCustomProperties: true,
-  useColorSchemeMediaQuery: true,
+  useCustomProperties: true, // true is default
+  // ^ prevents FOUC aka flash of unstyled content
+  useColorSchemeMediaQuery: true, // turns on dark mode if set in browser
   colors: {
     text: '#000',
     background: '#fff',
@@ -48,5 +55,60 @@ export default {
       color: 'white',
       bg: 'primary'
     }
-  }
+  },
+  styles: {
+    root: {
+      fontFamily: 'body',
+      lineHeight: 'body',
+      fontWeight: 'body',
+    },
+    h1: {
+      ...heading,
+      fontSize: 5,
+    },
+    h2: {
+      ...heading,
+      fontSize: 4,
+    },
+    h3: {
+      ...heading,
+      fontSize: 3,
+    },
+    h4: {
+      ...heading,
+      fontSize: 2,
+    },
+    h5: {
+      ...heading,
+      fontSize: 1,
+    },
+    h6: {
+      ...heading,
+      fontSize: 0,
+    },
+    pre: {
+      fontFamily: 'monospace',
+      overflowX: 'auto',
+      code: {
+        color: 'inherit',
+      },
+    },
+    code: {
+      fontFamily: 'monospace',
+      fontSize: 'inherit',
+    },
+    table: {
+      width: '100%',
+      borderCollapse: 'separate',
+      borderSpacing: 0,
+    },
+    th: {
+      textAlign: 'left',
+      borderBottomStyle: 'solid',
+    },
+    td: {
+      textAlign: 'left',
+      borderBottomStyle: 'solid',
+    },
+  },
 };
