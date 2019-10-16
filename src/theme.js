@@ -3,6 +3,7 @@ export default {
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64],
   initialColorMode: 'light',
   useCustomProperties: true,
+  useColorSchemeMediaQuery: true,
   colors: {
     text: '#000',
     background: '#fff',
