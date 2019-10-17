@@ -347,7 +347,10 @@ class AccountTransactionInput extends React.Component {
                       prefixID={'debt-'}
                     />
 
-                    <Button type="submit" disabled={isSubmitting}>
+                    <Button
+                      sx={{ variant: 'primary' }}
+                      type="submit"
+                      disabled={isSubmitting}>
                       Add Transaction
                     </Button>
                   </form>
