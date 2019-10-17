@@ -8,7 +8,7 @@ export default props => {
   const [colorMode, setColorMode] = useColorMode();
   return (
     <header sx={{ variant: 'variants.header' }}>
-      <Flex px={2} alignItems="center" flexWrap="wrap">
+      <Flex px={2} py={1} alignItems="center" flexWrap="wrap">
         <Box>
           <Text fontWeight="bold">
             <NavLink to="/">finatr</NavLink>
@@ -19,9 +19,7 @@ export default props => {
           <Flex flexWrap="wrap">
             <Box>
               <Text p={2}>
-                <NavLink sx={{ variant: 'variants.link' }} to="/">
-                  Home
-                </NavLink>
+                <NavLink to="/">Home</NavLink>
               </Text>
             </Box>
             <Box>
@@ -51,6 +49,7 @@ export default props => {
             </Box>
             <Box>
               <Button
+                sx={{ variant: 'buttons.nav' }}
                 onClick={e => {
                   setColorMode(colorMode === 'light' ? 'dark' : 'light');
                 }}

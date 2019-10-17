@@ -51,8 +51,20 @@ export default {
   text: { heading: {} },
   buttons: {
     primary: {
-      color: 'text',
+      color: 'background',
       bg: 'primary'
+    },
+    nav: {
+      variant: 'buttons.primary',
+      color: 'muted',
+      bg: 'background',
+      boxShadow: 'inset 0 0 2px'
+    },
+    outline: {
+      variant: 'buttons.primary',
+      color: 'primary',
+      bg: 'transparent',
+      boxShadow: 'inset 0 0 2px'
     }
   },
   variants: {
