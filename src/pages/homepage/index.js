@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React from 'react';
-import { Link } from '@reach/router';
+import Link from '../../components/common/link';
 import { State } from '../../state';
 import { Box, Flex, Heading, Text } from 'rebass';
 

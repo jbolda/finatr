@@ -1,16 +1,17 @@
-import React from 'react';
-import { Link } from '@reach/router';
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
+import { NavLink } from './link';
 import { useColorMode } from 'theme-ui';
 import { Flex, Box, Button, Text } from 'rebass';
 
 export default props => {
   const [colorMode, setColorMode] = useColorMode();
   return (
-    <header>
+    <header sx={{ variant: 'variants.header' }}>
       <Flex px={2} alignItems="center" flexWrap="wrap">
         <Box>
           <Text fontWeight="bold">
-            <Link to="/">finatr</Link>
+            <NavLink to="/">finatr</NavLink>
           </Text>
         </Box>
         <Box mx="auto" />
@@ -18,32 +19,34 @@ export default props => {
           <Flex flexWrap="wrap">
             <Box>
               <Text p={2}>
-                <Link to="/">Home</Link>
+                <NavLink sx={{ variant: 'variants.link' }} to="/">
+                  Home
+                </NavLink>
               </Text>
             </Box>
             <Box>
               <Text p={2}>
-                <Link to="examples">Examples</Link>
+                <NavLink to="examples">Examples</NavLink>
               </Text>
             </Box>
             <Box>
               <Text p={2}>
-                <Link to="flow">Cash Flow</Link>
+                <NavLink to="flow">Cash Flow</NavLink>
               </Text>
             </Box>
             <Box>
               <Text p={2}>
-                <Link to="accounts">Accounts</Link>
+                <NavLink to="accounts">Accounts</NavLink>
               </Text>
             </Box>
             <Box>
               <Text p={2}>
-                <Link to="import">Import</Link>
+                <NavLink to="import">Import</NavLink>
               </Text>
             </Box>
             <Box>
               <Text p={2}>
-                <Link to="taxes">Taxes</Link>
+                <NavLink to="taxes">Taxes</NavLink>
               </Text>
             </Box>
             <Box>
