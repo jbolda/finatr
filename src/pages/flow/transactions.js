@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
 
@@ -46,11 +48,11 @@ class TransactionsFlow extends React.Component {
                       <Button
                         key={category}
                         m={2}
-                        variant={
+                        sx={{variant:
                           model.state.transactionCategories[category]
-                            ? 'primary'
-                            : 'outline'
-                        }
+                            ? 'buttons.primary'
+                            : 'buttons.outline'
+                        }}
                         onClick={model.filterTransactionsComputed.bind(
                           this,
                           category
@@ -143,7 +145,7 @@ const TransactionTable = ({ data, actions }) =>
           transaction.dailyRate.toFixed(2),
           <Button
             m={0}
-            variant="outline"
+            sx={{ variant: "buttons.outline" }}
             color="blue"
             onClick={() =>
               actions.setTransactionForm(actions.model, 1, transaction.id)
@@ -154,7 +156,7 @@ const TransactionTable = ({ data, actions }) =>
           </Button>,
           <Button
             m={0}
-            variant="outline"
+            sx={{ variant: "buttons.outline" }}
             color="red"
             onClick={actions.deleteTransaction.bind(this, transaction.id)}
             disabled={transaction.fromAccount}
