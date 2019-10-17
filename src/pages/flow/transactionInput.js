@@ -241,7 +241,10 @@ class TransactionInput extends React.Component {
                     setFieldValue={setFieldValue}
                   />
 
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button
+                    sx={{ variant: 'primary' }}
+                    type="submit"
+                    disabled={isSubmitting}>
                     Add Transaction
                   </Button>
                 </form>
