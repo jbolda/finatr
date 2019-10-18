@@ -15,6 +15,12 @@ const A = ({ href, children }) => (
   </a>
 );
 
+const Heart = () => (
+  <span role="img" aria-label="heart symbol">
+    ❤️️️
+  </span>
+);
+
 export default props => {
   return (
     <footer
@@ -28,7 +34,7 @@ export default props => {
       }}
     >
       <Text sx={{ px: 1, color: 'muted' }}>
-        Made with :heart: by{' '}
+        Made with <Heart /> by{' '}
         <A href="https://www.jacobbolda.com">Jacob Bolda</A> and{' '}
         <A href="https://github.com/jbolda/finatr/graphs/contributors">
           all our contributors
@@ -36,9 +42,9 @@ export default props => {
         .
       </Text>
       <Text sx={{ px: 1, color: 'muted' }}>
-        Hosted with :heart: by{' '}
+        Hosted with <Heart /> by{' '}
         <A href="https://www.netlify.com/?ref=www.finatr.com">Netlify</A>{' '}
-        because they :heart: open source.
+        because they <Heart /> open source.
       </Text>
     </footer>
   );
