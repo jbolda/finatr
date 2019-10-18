@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
 import TabView from '../../components/view/tabView';

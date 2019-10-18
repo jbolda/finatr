@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import { map } from 'microstates';
 import { State } from '../../state';

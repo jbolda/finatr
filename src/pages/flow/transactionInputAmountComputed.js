@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
 import { Button } from 'rebass';
 import { Label, Input, Select, Radio } from '@rebass/forms';
