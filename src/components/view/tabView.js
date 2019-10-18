@@ -44,7 +44,11 @@ class TabView extends React.Component {
                     transition: 'all 500ms ease'
                   }}
                 >
-                  <Heading fontSize={[3, 3, 4]}>{title}</Heading>
+                  <Heading
+                    sx={{ fontSize: [3, 3, 4], variant: 'text.heading' }}
+                  >
+                    {title}
+                  </Heading>
                 </Tab>
               ))}
             </TabList>

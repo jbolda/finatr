@@ -16,19 +16,20 @@ const Homepage = () => (
             px: 5
           }}
         >
-          <Heading fontSize={[5, 6, 7]} color="primary">
+          <Heading
+            fontSize={[5, 6, 7]}
+            sx={{ color: 'accent', variant: 'text.heading' }}
+          >
             finatr
           </Heading>
-          <Text fontSize={[3, 4, 5]} color="primary">
+          <Text fontSize={[3, 4, 5]}>
             helping you analyze your future cash flows
           </Text>
         </Box>
         <Flex>
           <Box p={5} width={1 / 2}>
             <aside className="menu">
-              <Text fontSize={[3, 4, 5]} color="primary">
-                Pages
-              </Text>
+              <Text fontSize={[3, 4, 5]}>Pages</Text>
               <ul>
                 <li>
                   <Link to="examples">Examples</Link>
@@ -49,9 +50,7 @@ const Homepage = () => (
             </aside>
           </Box>
           <Box p={5} width={1 / 2}>
-            <Text fontSize={[3, 4, 5]} color="primary">
-              About
-            </Text>
+            <Text fontSize={[3, 4, 5]}>About</Text>
             <div className="content">
               Most apps track your historical information and help you set up a
               budget. Argueably, budgets don't work for everyone. Even if you

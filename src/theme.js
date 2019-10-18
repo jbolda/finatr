@@ -22,10 +22,10 @@ export default {
       dark: {
         text: '#e0dfdf',
         background: '#0c0c0c',
-        primary: '#0cf',
+        primary: '#03647d',
         secondary: '#07c',
-        muted: '#07c',
-        accent: '#07c'
+        muted: '#31025d',
+        accent: '#3ba7bf'
       }
     }
   },
@@ -48,7 +48,7 @@ export default {
     small: '0 0 4px rgba(0, 0, 0, .125)',
     large: '0 0 24px rgba(0, 0, 0, .125)'
   },
-  text: { heading: {} },
+  text: { heading: { color: 'accent' } },
   buttons: {
     primary: {
       color: 'background',
