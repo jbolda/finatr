@@ -1,7 +1,8 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
-import { Box } from 'rebass';
+import { Box, Heading } from 'rebass';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@reach/tabs';
-import '@reach/tabs/styles.css';
 
 class TabView extends React.Component {
   constructor(props) {
@@ -29,15 +30,29 @@ class TabView extends React.Component {
       <Box id={this.props.id} pt={4} pb={4}>
         {!this.props.tabTitles || !this.props.tabContents ? null : (
           <Tabs index={activeTab} onChange={index => this.tabClick(index)}>
-            <TabList>
-              {this.props.tabTitles.map(title => (
-                <Tab key={title}>{title}</Tab>
+            <TabList sx={{ display: 'flex', overflowX: 'auto' }}>
+              {this.props.tabTitles.map((title, index) => (
+                <Tab
+                  key={title}
+                  sx={{
+                    display: 'inline-block',
+                    border: 'none',
+                    background: 'none',
+                    cursor: 'pointer',
+                    borderColor: activeTab === index ? 'primary' : 'muted',
+                    borderBottomStyle: 'solid',
+                    transition: 'all 500ms ease'
+                  }}
+                >
+                  <Heading fontSize={[3, 3, 4]}>{title}</Heading>
+                </Tab>
               ))}
             </TabList>
             <TabPanels>
               {this.props.tabContents.map((content, index) => (
                 <TabPanel
                   key={index}
+                  sx={{ outline: 'none', py: 2 }}
                   data-testid={`${this.props.id}-${this.props.tabTitles[index]
                     .toLowerCase()
                     .replace(' ', '-')}`}

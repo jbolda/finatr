@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
 import { navigate } from '@reach/router';
 import { State } from '../../state';
@@ -46,6 +48,7 @@ const Examples = () => (
               <Heading p={1}>{example.name}</Heading>
               <Text p={1}>{example.content}</Text>
               <Button
+                sx={{ variant: 'buttons.primary' }}
                 onClick={event => loadExample(model, event)}
                 value={example.file}
               >

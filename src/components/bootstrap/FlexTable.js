@@ -1,8 +1,18 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
 import { Flex, Box } from 'rebass';
 
 const HeaderRow = ({ items, columns }) => (
-  <Flex flexWrap="wrap">
+  <Flex
+    flexWrap="wrap"
+    sx={{
+      mx: 0,
+      borderColor: 'muted',
+      borderBottomStyle: 'solid',
+      borderBottomWidth: '2px'
+    }}
+  >
     {items.map(item => (
       <HeaderItem columns={columns || items.count} key={item}>
         {item}
@@ -22,7 +32,15 @@ const HeaderItem = ({ children, columns }) => (
 );
 
 const DataRow = ({ items, columns, itemKey, itemHeaders }) => (
-  <Flex flexWrap="wrap" mx={0}>
+  <Flex
+    flexWrap="wrap"
+    sx={{
+      mx: 0,
+      borderColor: 'muted',
+      borderBottomStyle: 'dashed',
+      borderBottomWidth: '1px'
+    }}
+  >
     {items.map((item, index) => (
       <DataItem
         columns={columns || items.count}

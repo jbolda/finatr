@@ -1,5 +1,6 @@
-import React from 'react';
-import { Link } from '@reach/router';
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
+import { NavLink } from './link';
 
 export default props => {
   return (
@@ -10,12 +11,12 @@ export default props => {
         alignItems: 'center',
         justifyContent: 'center',
         p: 2,
-        variant: 'styles.footer'
+        variant: 'variants.footer'
       }}
     >
-      <Link to="/" sx={{ variant: 'styles.navlink', p: 2 }}>
+      <NavLink to="/" sx={{ variant: 'styles.navlink', p: 2 }}>
         Home
-      </Link>
+      </NavLink>
     </footer>
   );
 };

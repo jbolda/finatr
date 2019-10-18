@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
 
@@ -38,7 +40,10 @@ class AccountFlow extends React.Component {
             tabTitles={['All Accounts', 'Add Account', 'Debt']}
             tabContents={[
               <React.Fragment>
-                <Button onClick={model.toggleAllAccount}>
+                <Button
+                  sx={{ variant: 'buttons.primary' }}
+                  onClick={model.toggleAllAccount}
+                >
                   Toggle All Visibility
                 </Button>
                 <AccountTable
@@ -97,7 +102,7 @@ const AccountTable = ({ data, actions }) =>
         key: account.name,
         data: [
           <Button
-            variant="outline"
+            sx={{ variant: 'buttons.outline' }}
             onClick={actions.toggleAccountVisibility.bind(this, account.name)}
           >
             {account.visible ? `👀` : `🤫`}
@@ -107,7 +112,10 @@ const AccountTable = ({ data, actions }) =>
           `${account.interest.toFixed(2)}%`,
           account.vehicle,
           <Button
-            color="blue"
+            sx={{
+              variant: 'buttons.outline',
+              color: 'blue'
+            }}
             onClick={() =>
               actions.setAccountForm(actions.model, 1, account.name)
             }
@@ -115,7 +123,10 @@ const AccountTable = ({ data, actions }) =>
             M
           </Button>,
           <Button
-            color="red"
+            sx={{
+              variant: 'buttons.outline',
+              color: 'red'
+            }}
             onClick={actions.deleteAccount.bind(this, account.name)}
           >
             <strong>X</strong>
@@ -170,7 +181,10 @@ const FlexDebtTable = ({ itemHeaders, data, actions }) => (
               account.starting.toFixed(2),
               `${account.interest.toFixed(2)}%`,
               <Button
-                color="green"
+                sx={{
+                  variants: 'outline',
+                  color: 'green'
+                }}
                 onClick={
                   actions.model.forms.accountTransactionFormVisible.toggle
                 }
@@ -178,7 +192,10 @@ const FlexDebtTable = ({ itemHeaders, data, actions }) => (
                 +
               </Button>,
               <Button
-                color="blue"
+                sx={{
+                  variants: 'outline',
+                  color: 'blue'
+                }}
                 onClick={() =>
                   actions.setAccountForm(actions.model, 1, account.name)
                 }
@@ -186,7 +203,10 @@ const FlexDebtTable = ({ itemHeaders, data, actions }) => (
                 M
               </Button>,
               <Button
-                color="red"
+                sx={{
+                  variants: 'outline',
+                  color: 'red'
+                }}
                 onClick={() => actions.model.deleteAccount(account.name)}
               >
                 X
@@ -221,7 +241,10 @@ const PaybackTable = ({ data, actions }) => (
         paybackTransaction.cycle,
         paybackTransaction.value,
         <Button
-          color="blue"
+          sx={{
+            variants: 'outline',
+            color: 'blue'
+          }}
           onClick={() => {
             actions.model.modifyAccountTransaction(data.name, index);
           }}
@@ -229,7 +252,10 @@ const PaybackTable = ({ data, actions }) => (
           M
         </Button>,
         <Button
-          color="red"
+          sx={{
+            variants: 'outline',
+            color: 'green'
+          }}
           onClick={() =>
             actions.model.deleteAccountTransaction(data.name, index)
           }

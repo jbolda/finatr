@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
 import { Box, Heading, Button } from 'rebass';
@@ -81,7 +83,11 @@ class AccountInput extends React.Component {
                     </Field>
                   </FieldGroup>
 
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button
+                    sx={{ variant: 'buttons.primary' }}
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
                     Add Account
                   </Button>
                 </form>
