@@ -1,6 +1,19 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import { NavLink } from './link';
+import { Text } from 'rebass';
+
+const A = ({ href, children }) => (
+  <a
+    href={href}
+    sx={{
+      textDecoration: 'none',
+      ':hover': { color: 'muted', textDecoration: 'underline' },
+      variant: 'variants.navLink'
+    }}
+  >
+    {children}
+  </a>
+);
 
 export default props => {
   return (
@@ -14,9 +27,19 @@ export default props => {
         variant: 'variants.footer'
       }}
     >
-      <NavLink to="/" sx={{ variant: 'styles.navlink', p: 2 }}>
-        Home
-      </NavLink>
+      <Text sx={{ px: 1, color: 'muted' }}>
+        Made with :heart: by{' '}
+        <A href="https://www.jacobbolda.com">Jacob Bolda</A> and{' '}
+        <A href="https://github.com/jbolda/finatr/graphs/contributors">
+          all our contributors
+        </A>
+        .
+      </Text>
+      <Text sx={{ px: 1, color: 'muted' }}>
+        Hosted with :heart: by{' '}
+        <A href="https://www.netlify.com/?ref=www.finatr.com">Netlify</A>{' '}
+        because they :heart: open source.
+      </Text>
     </footer>
   );
 };
