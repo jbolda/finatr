@@ -75,7 +75,12 @@ const Chunk = ({ quarter, quarterIncome }) => {
       ) : (
         <Text>No items to display.</Text>
       )}
-      <Button onClick={() => toggle(!expanded)}>Group</Button>
+      <Button
+        sx={{ variant: 'buttons.primary' }}
+        onClick={() => toggle(!expanded)}
+      >
+        Group
+      </Button>
     </Box>
   ) : (
     <Box width={1 / 4}>
@@ -110,7 +115,10 @@ const Chunk = ({ quarter, quarterIncome }) => {
         {quarterIncome.average.pretaxInvestments.toFixed} |{' '}
         {quarterIncome.projected.pretaxInvestments.toFixed}
       </Text>
-      <Button className="button is-white" onClick={() => toggle(!expanded)}>
+      <Button
+        sx={{ variant: 'buttons.primary' }}
+        onClick={() => toggle(!expanded)}
+      >
         Expand
       </Button>
     </Box>

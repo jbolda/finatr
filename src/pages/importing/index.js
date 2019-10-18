@@ -82,7 +82,10 @@ class Importing extends React.Component {
                 <Flex>
                   <Box width={1 / 3}>
                     <Text>Get your current data out:</Text>
-                    <Button onClick={this.handleDownload.bind(this, model)}>
+                    <Button
+                      sx={{ variant: 'buttons.primary' }}
+                      onClick={this.handleDownload.bind(this, model)}
+                    >
                       Download
                     </Button>
                   </Box>
@@ -93,7 +96,9 @@ class Importing extends React.Component {
                       id="my-file-input"
                       onChange={this.handleUpload.bind(this, model)}
                     >
-                      <Button>Select a file!</Button>
+                      <Button sx={{ variant: 'buttons.primary' }}>
+                        Select a file!
+                      </Button>
                     </FileReaderInput>
                   </Box>
                 </Flex>,

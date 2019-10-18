@@ -83,7 +83,11 @@ class AccountInput extends React.Component {
                     </Field>
                   </FieldGroup>
 
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button
+                    sx={{ variant: 'buttons.primary' }}
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
                     Add Account
                   </Button>
                 </form>

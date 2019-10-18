@@ -348,9 +348,10 @@ class AccountTransactionInput extends React.Component {
                     />
 
                     <Button
-                      sx={{ variant: 'primary' }}
+                      sx={{ variant: 'buttons.primary' }}
                       type="submit"
-                      disabled={isSubmitting}>
+                      disabled={isSubmitting}
+                    >
                       Add Transaction
                     </Button>
                   </form>

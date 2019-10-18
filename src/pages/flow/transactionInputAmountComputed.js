@@ -114,7 +114,7 @@ const References = ({
                   </FieldGroup>
                   <Button
                     type="button"
-                    variant="outline"
+                    sx={{ variant: 'buttons.primary' }}
                     mr={1}
                     mb={2}
                     color={'red'}
@@ -127,8 +127,7 @@ const References = ({
             )}
             <Button
               type="button"
-              variant="outline"
-              color={'green'}
+              sx={{ variant: 'buttons.primary', color: 'green' }}
               onClick={() =>
                 arrayHelpers.push({
                   name: '',
@@ -143,9 +142,8 @@ const References = ({
         ) : (
           <Button
             type="button"
-            variant="outline"
+            sx={{ variant: 'buttons.primary', color: 'green' }}
             m={1}
-            color={'green'}
             onClick={() =>
               arrayHelpers.push({
                 name: '',

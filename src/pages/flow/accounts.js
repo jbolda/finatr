@@ -40,7 +40,10 @@ class AccountFlow extends React.Component {
             tabTitles={['All Accounts', 'Add Account', 'Debt']}
             tabContents={[
               <React.Fragment>
-                <Button onClick={model.toggleAllAccount}>
+                <Button
+                  sx={{ variant: 'buttons.primary' }}
+                  onClick={model.toggleAllAccount}
+                >
                   Toggle All Visibility
                 </Button>
                 <AccountTable
@@ -111,7 +114,7 @@ const AccountTable = ({ data, actions }) =>
           <Button
             sx={{
               variant: 'buttons.outline',
-              color: 'blue',
+              color: 'blue'
             }}
             onClick={() =>
               actions.setAccountForm(actions.model, 1, account.name)
@@ -122,7 +125,7 @@ const AccountTable = ({ data, actions }) =>
           <Button
             sx={{
               variant: 'buttons.outline',
-              color: 'red',
+              color: 'red'
             }}
             onClick={actions.deleteAccount.bind(this, account.name)}
           >
@@ -180,7 +183,7 @@ const FlexDebtTable = ({ itemHeaders, data, actions }) => (
               <Button
                 sx={{
                   variants: 'outline',
-                  color: 'green',
+                  color: 'green'
                 }}
                 onClick={
                   actions.model.forms.accountTransactionFormVisible.toggle
@@ -191,7 +194,7 @@ const FlexDebtTable = ({ itemHeaders, data, actions }) => (
               <Button
                 sx={{
                   variants: 'outline',
-                  color: 'blue',
+                  color: 'blue'
                 }}
                 onClick={() =>
                   actions.setAccountForm(actions.model, 1, account.name)
@@ -202,7 +205,7 @@ const FlexDebtTable = ({ itemHeaders, data, actions }) => (
               <Button
                 sx={{
                   variants: 'outline',
-                  color: 'red',
+                  color: 'red'
                 }}
                 onClick={() => actions.model.deleteAccount(account.name)}
               >
@@ -240,7 +243,7 @@ const PaybackTable = ({ data, actions }) => (
         <Button
           sx={{
             variants: 'outline',
-            color: 'blue',
+            color: 'blue'
           }}
           onClick={() => {
             actions.model.modifyAccountTransaction(data.name, index);
@@ -251,7 +254,7 @@ const PaybackTable = ({ data, actions }) => (
         <Button
           sx={{
             variants: 'outline',
-            color: 'green',
+            color: 'green'
           }}
           onClick={() =>
             actions.model.deleteAccountTransaction(data.name, index)

@@ -156,7 +156,11 @@ class YNABInput extends React.Component {
                     </Label>
                   </FieldGroup>
 
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button
+                    sx={{ variant: 'buttons.primary' }}
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
                     Load Accounts
                   </Button>
                 </form>
