@@ -16,6 +16,7 @@
     "@reach/tabs": "0.3.0",
     "@rebass/forms": "4.0.6",
     "@rebass/preset": "4.0.5",
+    "@theme-ui/components": "0.2.45",
     "@theme-ui/style-guide": "0.2.44",
     "big.js": "5.2.2",
     "d3": "5.12.0",
@@ -29,7 +30,6 @@
     "react-dom": "16.10.2",
     "react-file-reader-input": "2.0.0",
     "react-scripts": "3.2.0",
-    "rebass": "4.0.6",
     "theme-ui": "0.2.44",
     "ynab": "1.17.0",
     "yup": "0.27.0"
