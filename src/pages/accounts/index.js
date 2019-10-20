@@ -9,7 +9,7 @@ const AccountInfo = props => (
       model.charts.state.AccountChart.map(account => (
         <Flex key={account.account.name}>
           <Box m={2}>
-            <Heading>{account.account.name}</Heading>
+            <Heading variant="subtle">{account.account.name}</Heading>
             <BarChart data={model.charts.state} account={account} />
           </Box>
         </Flex>

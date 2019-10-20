@@ -73,8 +73,8 @@ class Importing extends React.Component {
         {model => (
           <React.Fragment>
             <Box>
-              <Heading fontSize={[3, 4, 5]}>Importing and Exporting</Heading>
-              <Heading fontSize={[2, 3, 4]}>The data is yours to own.</Heading>
+              <Heading variant="subtle">Importing and Exporting</Heading>
+              <Text>The data is yours to own.</Text>
             </Box>
             <TabView
               activeTab={this.state.activeTab}

@@ -48,7 +48,12 @@ export default {
     small: '0 0 4px rgba(0, 0, 0, .125)',
     large: '0 0 24px rgba(0, 0, 0, .125)'
   },
-  text: { heading: { color: 'accent' } },
+  text: {
+    heading: { fontSize: [5, 6, 7], color: 'accent' },
+    subtitle: { fontSize: [3, 4, 5] },
+    subtle: { fontSize: [3, 4, 5] },
+    section: { fontSize: [3, 4, 5] }
+  },
   buttons: {
     primary: {
       color: 'background',

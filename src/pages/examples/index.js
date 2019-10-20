@@ -1,9 +1,7 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui';
 import React from 'react';
 import { navigate } from '@reach/router';
 import { State } from '../../state';
-import { Flex, Box, Button, Heading, Text } from '@theme-ui/components';
+import { Grid, Box, Button, Heading, Text } from '@theme-ui/components';
 
 const listOfExamples = [
   {
@@ -31,24 +29,26 @@ const Examples = () => (
   <State.Consumer>
     {model => (
       <React.Fragment>
-        <Flex flexWrap="wrap" mx={-2}>
-          <Box px={2} py={2} width={1 / 2}>
-            <Heading p={1}>Examples</Heading>
-            <Text p={1}>
-              The following are various examples that you can test out. They are
-              even valuable as a template to get you jump-started. Find one that
-              seems to match your current situation? Give it a shot and see what
-              it looks like. You can always come back here and try another.
-            </Text>
-          </Box>
-        </Flex>
-        <Flex flexWrap="wrap" mx={-2}>
+        <Box px={2} py={2} sx={{ maxWidth: 512 }}>
+          <Heading p={1} variant="subtle">
+            Examples
+          </Heading>
+          <Text p={1}>
+            The following are various examples that you can test out. They are
+            even valuable as a template to get you jump-started. Find one that
+            seems to match your current situation? Give it a shot and see what
+            it looks like. You can always come back here and try another.
+          </Text>
+        </Box>
+        <Grid width={1 / 4}>
           {listOfExamples.map(example => (
-            <Box key={example.file} px={2} py={2} width={1 / 4}>
-              <Heading p={1}>{example.name}</Heading>
+            <Box key={example.file} px={2} py={2}>
+              <Text p={1} variant="section">
+                {example.name}
+              </Text>
               <Text p={1}>{example.content}</Text>
               <Button
-                sx={{ variant: 'buttons.primary' }}
+                variant="buttons.primary"
                 onClick={event => loadExample(model, event)}
                 value={example.file}
               >
@@ -56,7 +56,7 @@ const Examples = () => (
               </Button>
             </Box>
           ))}
-        </Flex>
+        </Grid>
       </React.Fragment>
     )}
   </State.Consumer>

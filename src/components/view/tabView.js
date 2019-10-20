@@ -45,7 +45,7 @@ class TabView extends React.Component {
                   }}
                 >
                   <Heading
-                    sx={{ fontSize: [3, 3, 4], variant: 'text.heading' }}
+                    sx={{ variant: 'text.heading', fontSize: [3, 3, 4] }}
                   >
                     {title}
                   </Heading>
