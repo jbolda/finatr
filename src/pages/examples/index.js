@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { navigate } from '@reach/router';
 import { State } from '../../state';
-import { Flex, Box, Button, Heading, Text } from 'rebass';
+import { Flex, Box, Button, Heading, Text } from '@theme-ui/components';
 
 const listOfExamples = [
   {

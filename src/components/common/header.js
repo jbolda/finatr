@@ -2,7 +2,7 @@
 import { jsx } from 'theme-ui';
 import { NavLink } from './link';
 import { useColorMode } from 'theme-ui';
-import { Flex, Box, Button, Text } from 'rebass';
+import { Flex, Box, Button, Text } from '@theme-ui/components';
 
 export default props => {
   const [colorMode, setColorMode] = useColorMode();

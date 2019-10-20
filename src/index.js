@@ -7,7 +7,7 @@ import AppModel, { State } from './state';
 
 import { ThemeProvider, ColorMode } from 'theme-ui';
 import theme from './theme.js';
-import { Box, Flex } from 'rebass';
+import { Box, Flex } from '@theme-ui/components';
 
 import Header from './components/common/header';
 import Footer from './components/common/footer';

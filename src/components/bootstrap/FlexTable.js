@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React from 'react';
-import { Flex, Box } from 'rebass';
+import { Flex, Box } from '@theme-ui/components';
 
 const HeaderRow = ({ items, columns }) => (
   <Flex

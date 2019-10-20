@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
 import TabView from '../../components/view/tabView';
-import { Flex, Box, Heading, Text, Button } from 'rebass';
+import { Flex, Box, Heading, Text, Button } from '@theme-ui/components';
 
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';

@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import Link from '../../components/common/link';
 import { State } from '../../state';
-import { Box, Flex, Heading, Text } from 'rebass';
+import { Box, Flex, Heading, Text } from '@theme-ui/components';
 
 const Homepage = () => (
   <State.Consumer>
