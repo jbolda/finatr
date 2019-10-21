@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import { map } from 'microstates';
 import { State } from '../../state';
-import { Flex, Box, Heading, Text, Button } from 'rebass';
+import { Flex, Box, Heading, Text, Button } from '@theme-ui/components';
 import TabView from '../../components/view/tabView';
 import FlexTable from '../../components/bootstrap/FlexTable';
 
@@ -16,8 +16,8 @@ const Taxes = props => {
         <React.Fragment>
           <Flex>
             <Box>
-              <Heading>Taxes</Heading>
-              <Heading>This is still in an alpha state.</Heading>
+              <Heading variant="subtle">Taxes</Heading>
+              <Text>This is still in an alpha state.</Text>
               <Text>We don't have forms to enter data yet.</Text>
               <Text>
                 You can manually fill in data in your data file though.

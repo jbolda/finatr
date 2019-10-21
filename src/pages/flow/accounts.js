@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
 
-import { Button } from 'rebass';
+import { Button } from '@theme-ui/components';
 import TabView from '../../components/view/tabView';
 import FlexTable, {
   HeaderRow,

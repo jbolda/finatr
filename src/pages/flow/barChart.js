@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-import { Box } from 'rebass';
+import { Box } from '@theme-ui/components';
 
 export class BarChart extends PureComponent {
   componentDidMount() {

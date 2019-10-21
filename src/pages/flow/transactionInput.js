@@ -2,7 +2,7 @@
 import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
-import { Box, Heading, Button } from 'rebass';
+import { Box, Heading, Button } from '@theme-ui/components';
 import { Label, Input, Select, Radio } from '@rebass/forms';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';

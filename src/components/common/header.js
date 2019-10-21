@@ -2,21 +2,21 @@
 import { jsx } from 'theme-ui';
 import { NavLink } from './link';
 import { useColorMode } from 'theme-ui';
-import { Flex, Box, Button, Text } from 'rebass';
+import { Flex, Box, Button, Text } from '@theme-ui/components';
 
 export default props => {
   const [colorMode, setColorMode] = useColorMode();
   return (
     <header sx={{ variant: 'variants.header' }}>
-      <Flex px={2} py={1} alignItems="center" flexWrap="wrap">
+      <Flex px={2} py={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
         <Box>
-          <Text fontWeight="bold">
+          <Text sx={{ fontWeight: 'bold' }}>
             <NavLink to="/">finatr</NavLink>
           </Text>
         </Box>
         <Box mx="auto" />
         <Box>
-          <Flex flexWrap="wrap">
+          <Flex sx={{ flexWrap: 'wrap' }}>
             <Box>
               <Text p={2}>
                 <NavLink to="/">Home</NavLink>
@@ -49,7 +49,7 @@ export default props => {
             </Box>
             <Box>
               <Button
-                sx={{ variant: 'buttons.nav' }}
+                variant="buttons.nav"
                 onClick={e => {
                   setColorMode(colorMode === 'light' ? 'dark' : 'light');
                 }}

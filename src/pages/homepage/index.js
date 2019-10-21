@@ -1,9 +1,7 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui';
 import React from 'react';
 import Link from '../../components/common/link';
 import { State } from '../../state';
-import { Box, Flex, Heading, Text } from 'rebass';
+import { Box, Grid, Heading, Text } from '@theme-ui/components';
 
 const Homepage = () => (
   <State.Consumer>
@@ -16,20 +14,15 @@ const Homepage = () => (
             px: 5
           }}
         >
-          <Heading
-            fontSize={[5, 6, 7]}
-            sx={{ color: 'accent', variant: 'text.heading' }}
-          >
-            finatr
-          </Heading>
-          <Text fontSize={[3, 4, 5]}>
+          <Heading variant="text.heading">finatr</Heading>
+          <Heading variant="text.subtitle">
             helping you analyze your future cash flows
-          </Text>
+          </Heading>
         </Box>
-        <Flex>
-          <Box p={5} width={1 / 2}>
+        <Grid columns={[1, 2, 2]} gap={1}>
+          <Box p={1}>
             <aside className="menu">
-              <Text fontSize={[3, 4, 5]}>Pages</Text>
+              <Text variant="section">Pages</Text>
               <ul>
                 <li>
                   <Link to="examples">Examples</Link>
@@ -49,9 +42,9 @@ const Homepage = () => (
               </ul>
             </aside>
           </Box>
-          <Box p={5} width={1 / 2}>
-            <Text fontSize={[3, 4, 5]}>About</Text>
-            <div className="content">
+          <Box p={1}>
+            <Text variant="section">About</Text>
+            <Text>
               Most apps track your historical information and help you set up a
               budget. Argueably, budgets don't work for everyone. Even if you
               maintain a budget, it is still of great value to look to the
@@ -65,9 +58,9 @@ const Homepage = () => (
               returning information regarding these flows such as a daily income
               and daily expenses. This type of information can be built upon
               going forward to forecast considerations like FI(RE).
-            </div>
+            </Text>
           </Box>
-        </Flex>
+        </Grid>
       </React.Fragment>
     )}
   </State.Consumer>

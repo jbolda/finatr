@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text } from 'rebass';
+import { Box, Text } from '@theme-ui/components';
 import { Label } from '@rebass/forms';
 import { ErrorMessage } from 'formik';
 

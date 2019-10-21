@@ -7,7 +7,7 @@ import AppModel, { State } from './state';
 
 import { ThemeProvider, ColorMode } from 'theme-ui';
 import theme from './theme.js';
-import { Box, Flex } from 'rebass';
+import { Box, Flex } from '@theme-ui/components';
 
 import Header from './components/common/header';
 import Footer from './components/common/footer';
@@ -34,11 +34,11 @@ class App extends React.Component {
       <State.Provider value={this.state.model}>
         <ThemeProvider theme={theme}>
           <ColorMode />
-          <Flex flexDirection="column" minHeight="100vh">
+          <Flex sx={{ flexDirection: 'column', minHeight: '100vh' }}>
             <Box p="0" m="0">
               <Header />
             </Box>
-            <Box p="0" my="0" mx="2" flex="1 1 auto">
+            <Box p="0" my="0" mx="2" sx={{ flex: '1 1 auto' }}>
               <Router>
                 <Homepage path="/" />
                 <StyleGuide path="style-guide" />

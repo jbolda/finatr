@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
 import TabView from '../../components/view/tabView';
-import { Flex, Box, Heading, Text, Button } from 'rebass';
+import { Flex, Box, Heading, Text, Button } from '@theme-ui/components';
 
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';
@@ -73,8 +73,8 @@ class Importing extends React.Component {
         {model => (
           <React.Fragment>
             <Box>
-              <Heading fontSize={[3, 4, 5]}>Importing and Exporting</Heading>
-              <Heading fontSize={[2, 3, 4]}>The data is yours to own.</Heading>
+              <Heading variant="subtle">Importing and Exporting</Heading>
+              <Text>The data is yours to own.</Text>
             </Box>
             <TabView
               activeTab={this.state.activeTab}

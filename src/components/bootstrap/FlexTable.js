@@ -1,11 +1,9 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui';
 import React from 'react';
-import { Flex, Box } from 'rebass';
+import { Grid, Box } from '@theme-ui/components';
 
 const HeaderRow = ({ items, columns }) => (
-  <Flex
-    flexWrap="wrap"
+  <Grid
+    columns={[2, columns, columns]}
     sx={{
       mx: 0,
       borderColor: 'muted',
@@ -14,26 +12,25 @@ const HeaderRow = ({ items, columns }) => (
     }}
   >
     {items.map(item => (
-      <HeaderItem columns={columns || items.count} key={item}>
-        {item}
-      </HeaderItem>
+      <HeaderItem key={item}>{item}</HeaderItem>
     ))}
-  </Flex>
+  </Grid>
 );
 
-const HeaderItem = ({ children, columns }) => (
+const HeaderItem = ({ children }) => (
   <Box
     px={0}
-    width={[null, 1 / columns, 1 / columns]}
-    display={['none', 'flex', 'flex']}
+    sx={{
+      display: ['none', 'inline', 'inline']
+    }}
   >
     {children}
   </Box>
 );
 
 const DataRow = ({ items, columns, itemKey, itemHeaders }) => (
-  <Flex
-    flexWrap="wrap"
+  <Grid
+    columns={[2, columns, columns]}
     sx={{
       mx: 0,
       borderColor: 'muted',
@@ -42,25 +39,19 @@ const DataRow = ({ items, columns, itemKey, itemHeaders }) => (
     }}
   >
     {items.map((item, index) => (
-      <DataItem
-        columns={columns || items.count}
-        key={`${itemKey}=${index}`}
-        header={itemHeaders[index]}
-      >
+      <DataItem key={`${itemKey}=${index}`} header={itemHeaders[index]}>
         {item}
       </DataItem>
     ))}
-  </Flex>
+  </Grid>
 );
 
-const DataItem = ({ children, header, columns }) => (
+const DataItem = ({ children, header }) => (
   <React.Fragment>
-    <Box px={0} width={[1 / 2, null, null]} display={['flex', 'none', 'none']}>
+    <Box px={0} sx={{ display: ['inline', 'none', 'none'] }}>
       {header}
     </Box>
-    <Box px={0} width={[1 / 2, 1 / columns, 1 / columns]}>
-      {children}
-    </Box>
+    <Box px={0}>{children}</Box>
   </React.Fragment>
 );
 

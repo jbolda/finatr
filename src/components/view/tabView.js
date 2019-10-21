@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React from 'react';
-import { Box, Heading } from 'rebass';
+import { Box, Heading } from '@theme-ui/components';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@reach/tabs';
 
 class TabView extends React.Component {
@@ -45,7 +45,7 @@ class TabView extends React.Component {
                   }}
                 >
                   <Heading
-                    sx={{ fontSize: [3, 3, 4], variant: 'text.heading' }}
+                    sx={{ variant: 'text.heading', fontSize: [3, 3, 4] }}
                   >
                     {title}
                   </Heading>
