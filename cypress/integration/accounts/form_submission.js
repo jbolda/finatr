@@ -8,16 +8,16 @@ describe('Account Form Tests', () => {
 
   it('tab switches to the form', () => {
     cy.get('#accounts').within(() => {
-      cy.getByText('Add an Account').should('exist');
+      cy.findByText('Add an Account').should('exist');
     });
   });
 
   it('submits simple account', () => {
     cy.get('#accounts').within(() => {
-      cy.getByLabelText('name').type('Test Account Submission');
+      cy.findByLabelText('name').type('Test Account Submission');
       cy.get('form').submit();
 
-      cy.getByTestId('accounts-all-accounts').within(() =>
+      cy.findByTestId('accounts-all-accounts').within(() =>
         cy.queryByText('Test Account Submission').should('exist')
       );
     });
@@ -25,11 +25,11 @@ describe('Account Form Tests', () => {
 
   it('check debt is listed in debt tab after submit', () => {
     cy.get('#accounts').within(() => {
-      cy.getByLabelText('name').type('Test Debt Account');
-      cy.getByLabelText('vehicle').select('Loan');
+      cy.findByLabelText('name').type('Test Debt Account');
+      cy.findByLabelText('vehicle').select('Loan');
       cy.get('form').submit();
 
-      cy.getByTestId('accounts-debt').within(() =>
+      cy.findByTestId('accounts-debt').within(() =>
         cy.queryByText('Test Debt Account').should('exist')
       );
     });

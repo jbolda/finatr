@@ -6,9 +6,9 @@ describe('Transaction Delete Tests', () => {
       .click();
 
     cy.get('#transactions').within(() => {
-      cy.getByLabelText('rtype').select('No Repeating');
-      cy.getByLabelText('value').type('{selectall}55');
-      cy.getByLabelText('description').type('test transaction');
+      cy.findByLabelText('rtype').select('No Repeating');
+      cy.findByLabelText('value').type('{selectall}55');
+      cy.findByLabelText('description').type('test transaction');
       cy.get('form').submit();
     });
   });
@@ -21,7 +21,7 @@ describe('Transaction Delete Tests', () => {
         cy.contains('X').click();
       });
 
-    cy.getByTestId('transactions-all-transactions')
+    cy.findByTestId('transactions-all-transactions')
       .contains('test transaction')
       .should('not.exist');
   });

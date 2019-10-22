@@ -6,15 +6,15 @@ describe('Account Modifications Tests', () => {
       .click();
 
     cy.get('#accounts').within(() => {
-      cy.getByLabelText('starting').type('{selectall}550');
-      cy.getByLabelText('name').type('test account');
+      cy.findByLabelText('starting').type('{selectall}550');
+      cy.findByLabelText('name').type('test account');
       cy.get('form').submit();
 
-      cy.getByTestId('accounts-all-accounts').within(() =>
+      cy.findByTestId('accounts-all-accounts').within(() =>
         cy
-          .getByText('550.00')
+          .findByText('550.00')
           .parent()
-          .within(() => cy.getByText('M').click())
+          .within(() => cy.findByText('M').click())
       );
     });
   });
@@ -25,10 +25,10 @@ describe('Account Modifications Tests', () => {
 
   it('submits modified account', () => {
     cy.get('#accounts').within(() => {
-      cy.getByLabelText('starting').type('{selectall}5996');
+      cy.findByLabelText('starting').type('{selectall}5996');
       cy.get('form').submit();
 
-      cy.getByTestId('accounts-all-accounts').within(() =>
+      cy.findByTestId('accounts-all-accounts').within(() =>
         cy.queryByText('5996.00').should('exist')
       );
     });
@@ -36,12 +36,12 @@ describe('Account Modifications Tests', () => {
 
   it('check debt is listed in debt tab after submit', () => {
     cy.get('#accounts').within(() => {
-      cy.getByLabelText('starting').type('{selectall}577');
-      cy.getByLabelText('vehicle').select('Loan');
+      cy.findByLabelText('starting').type('{selectall}577');
+      cy.findByLabelText('vehicle').select('Loan');
       cy.get('form').submit();
 
-      cy.getByText('Debt').click();
-      cy.getByTestId('accounts-debt').within(() => {
+      cy.findByText('Debt').click();
+      cy.findByTestId('accounts-debt').within(() => {
         cy.queryByText('test account').should('be.visible');
         cy.queryByText('577.00').should('be.visible');
       });

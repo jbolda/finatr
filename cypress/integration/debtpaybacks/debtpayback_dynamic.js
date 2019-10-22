@@ -6,30 +6,30 @@ describe('Debt Payback Form Tests', () => {
       .click();
 
     cy.get('#accounts').within(() => {
-      cy.getByLabelText('name').type('Test Debt Submission');
-      cy.getByLabelText('vehicle').select('Loan');
-      cy.getByLabelText('starting').type('{selectall}20000');
+      cy.findByLabelText('name').type('Test Debt Submission');
+      cy.findByLabelText('vehicle').select('Loan');
+      cy.findByLabelText('starting').type('{selectall}20000');
       cy.get('form').submit();
 
-      cy.getByText('Debt').click();
+      cy.findByText('Debt').click();
     });
   });
 
   it('submits simple debt payback', () => {
-    cy.getByText('+').click();
+    cy.findByText('+').click();
 
-    cy.getByTestId('accounts-debt').within(() => {
-      cy.getByLabelText('debt account').select('Test Debt Submission');
-      cy.getByLabelText('payment account').select('account');
-      cy.getByLabelText('rtype').select('Repeat on a Day of the Week');
-      cy.getByLabelText('start').type('2019-04-28');
-      cy.getByText('after Number of Occurrences').click();
-      cy.getByLabelText('occurrences').type('{selectall}8');
-      cy.getByLabelText('cycle').type('{selectall}1');
-      cy.getByText('Dynamic').click();
-      cy.getByLabelText('reference name').type('{selectall}Special Balance');
-      cy.getByLabelText('reference value').type('{selectall}250');
-      cy.getByLabelText('reference').select('Special Balance');
+    cy.findByTestId('accounts-debt').within(() => {
+      cy.findByLabelText('debt account').select('Test Debt Submission');
+      cy.findByLabelText('payment account').select('account');
+      cy.findByLabelText('rtype').select('Repeat on a Day of the Week');
+      cy.findByLabelText('start').type('2019-04-28');
+      cy.findByText('after Number of Occurrences').click();
+      cy.findByLabelText('occurrences').type('{selectall}8');
+      cy.findByLabelText('cycle').type('{selectall}1');
+      cy.findByText('Dynamic').click();
+      cy.findByLabelText('reference name').type('{selectall}Special Balance');
+      cy.findByLabelText('reference value').type('{selectall}250');
+      cy.findByLabelText('reference').select('Special Balance');
       cy.get('form').submit();
 
       cy.queryByText('0').should('be.visible');
@@ -37,22 +37,22 @@ describe('Debt Payback Form Tests', () => {
   });
 
   it('validates on non-entered references', () => {
-    cy.getByTestId('accounts-debt').within(() => {
-      cy.getByText('+').click();
+    cy.findByTestId('accounts-debt').within(() => {
+      cy.findByText('+').click();
 
-      cy.getByLabelText('debt account').select('Test Debt Submission');
-      cy.getByLabelText('payment account').select('account');
-      cy.getByLabelText('rtype').select('Repeat on a Day of the Week');
-      cy.getByLabelText('start').type('2019-04-28');
-      cy.getByText('after Number of Occurrences').click();
-      cy.getByLabelText('occurrences').type('{selectall}8');
-      cy.getByLabelText('cycle').type('{selectall}1');
-      cy.getByText('Dynamic').click();
-      cy.getByLabelText('reference name').type('{selectall}Special Balance');
-      cy.getByLabelText('reference value').type('{selectall}250');
+      cy.findByLabelText('debt account').select('Test Debt Submission');
+      cy.findByLabelText('payment account').select('account');
+      cy.findByLabelText('rtype').select('Repeat on a Day of the Week');
+      cy.findByLabelText('start').type('2019-04-28');
+      cy.findByText('after Number of Occurrences').click();
+      cy.findByLabelText('occurrences').type('{selectall}8');
+      cy.findByLabelText('cycle').type('{selectall}1');
+      cy.findByText('Dynamic').click();
+      cy.findByLabelText('reference name').type('{selectall}Special Balance');
+      cy.findByLabelText('reference value').type('{selectall}250');
       cy.get('form').submit();
 
-      cy.getByText('reference')
+      cy.findByText('reference')
         .parent()
         .should(refSection => {
           expect(refSection).to.contain('Required');
