@@ -6,34 +6,34 @@ describe('Debt Payback Form Tests', () => {
       .click();
 
     cy.get('#accounts').within(() => {
-      cy.getByLabelText('name').type('Test Debt Submission');
-      cy.getByLabelText('vehicle').select('Loan');
-      cy.getByLabelText('starting').type('{selectall}20000');
+      cy.findByLabelText('name').type('Test Debt Submission');
+      cy.findByLabelText('vehicle').select('Loan');
+      cy.findByLabelText('starting').type('{selectall}20000');
       cy.get('form').submit();
 
-      cy.getByText('Debt').click();
+      cy.findByText('Debt').click();
     });
   });
 
   it('tab switches to the form', () => {
     cy.get('#accounts').within(() => {
-      cy.getByText('+').click();
+      cy.findByText('+').click();
       cy.queryByText('Add Debt Payback').should('be.visible');
     });
   });
 
   it('submits simple debt payback', () => {
-    cy.getByTestId('accounts-debt').within(() => {
-      cy.getByText('+').click();
+    cy.findByTestId('accounts-debt').within(() => {
+      cy.findByText('+').click();
 
-      cy.getByLabelText('debt account').select('Test Debt Submission');
-      cy.getByLabelText('payment account').select('account');
-      cy.getByLabelText('rtype').select('Repeat on a Day of the Week');
-      cy.getByLabelText('value').type('{selectall}250');
-      cy.getByLabelText('start').type('2019-04-28');
-      cy.getByText('after Number of Occurrences').click();
-      cy.getByLabelText('occurrences').type('{selectall}8');
-      cy.getByLabelText('cycle').type('{selectall}1');
+      cy.findByLabelText('debt account').select('Test Debt Submission');
+      cy.findByLabelText('payment account').select('account');
+      cy.findByLabelText('rtype').select('Repeat on a Day of the Week');
+      cy.findByLabelText('value').type('{selectall}250');
+      cy.findByLabelText('start').type('2019-04-28');
+      cy.findByText('after Number of Occurrences').click();
+      cy.findByLabelText('occurrences').type('{selectall}8');
+      cy.findByLabelText('cycle').type('{selectall}1');
       cy.get('form').submit();
 
       cy.queryByText('250').should('be.visible');
