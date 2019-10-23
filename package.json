@@ -13,7 +13,7 @@
     "@mdx-js/react": "1.5.1",
     "@microstates/react": "0.12.0",
     "@reach/router": "1.2.1",
-    "@reach/tabs": "0.3.0",
+    "@reach/tabs": "0.4.0",
     "@rebass/forms": "4.0.6",
     "@rebass/preset": "4.0.5",
     "@theme-ui/components": "0.2.45",
