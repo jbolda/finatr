@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui';
 import React from 'react';
 import { Formik, Field } from 'formik';
 import { State } from '../../state';
@@ -7,18 +5,15 @@ import * as ynab from 'ynab';
 import getDay from 'date-fns/fp/getDay';
 import getDate from 'date-fns/fp/getDate';
 import parse from 'date-fns/parse';
-import { FieldGroup } from '../../components/bootstrap/Form';
-import { Box, Heading, Text, Button } from '@theme-ui/components';
-import { Input, Checkbox, Label } from '@rebass/forms';
 
 class YNABInput extends React.Component {
   render() {
     return (
-      <Box m={2} width={1 / 3}>
-        <Heading fontSize={[3, 3, 4]}>Add All Accounts from YNAB</Heading>
-        <Text fontSize={[1, 1, 2]}>
+      <React.Fragment>
+        <h1 className="title has-text-centered">Add All Accounts from YNAB</h1>
+        <h2 className="subtitle has-text-centered">
           This all happens in your browser and is only exchanged with YNAB.
-        </Text>
+        </h2>
         <State.Consumer>
           {model => (
             <Formik
@@ -104,73 +99,80 @@ class YNABInput extends React.Component {
                 values,
                 errors,
                 touched,
-                handleReset,
+                handleChange,
+                handleBlur,
                 handleSubmit,
                 isSubmitting
               }) => (
-                <form
-                  onSubmit={handleSubmit}
-                  onReset={handleReset}
-                  autoComplete="off"
-                >
-                  <FieldGroup
-                    name="devToken"
-                    prettyName="Developer Token"
-                    errors={errors}
-                    touched={touched}
-                  >
-                    <Field
-                      as={Input}
-                      type="text"
-                      name="devToken"
-                      className="input"
-                    />
-                  </FieldGroup>
-
-                  <FieldGroup
-                    name="budgetId"
-                    prettyName="Budget ID"
-                    errors={errors}
-                    touched={touched}
-                  >
-                    <Field
-                      as={Input}
-                      type="text"
-                      name="budgetId"
-                      className="input"
-                    />
-                  </FieldGroup>
-
-                  <FieldGroup
-                    name="importTransactions"
-                    prettyName=""
-                    errors={errors}
-                    touched={touched}
-                  >
-                    <Label>
-                      <Field
-                        as={Checkbox}
-                        type="checkbox"
-                        name="importTransactions"
-                      />
-                      Import Transactions (Recommended Only Doing This
-                      Initially)
-                    </Label>
-                  </FieldGroup>
-
-                  <Button
-                    sx={{ variant: 'buttons.primary' }}
-                    type="submit"
-                    disabled={isSubmitting}
-                  >
-                    Load Accounts
-                  </Button>
+                <form onSubmit={handleSubmit} autoComplete="off">
+                  <div className="field is-horizontal">
+                    <div className="field-label is-normal">
+                      <label className="label">Developer Token</label>
+                    </div>
+                    <div className="field-body">
+                      <div className="field">
+                        <p className="control">
+                          <Field
+                            type="text"
+                            name="devToken"
+                            className="input"
+                          />
+                        </p>
+                      </div>
+                    </div>
+                    {touched.devToken && errors.devToken && (
+                      <div>{errors.devToken}</div>
+                    )}
+                  </div>
+                  <div className="field is-horizontal">
+                    <div className="field-label is-normal">
+                      <label className="label">Budget ID</label>
+                    </div>
+                    <div className="field-body">
+                      <div className="field">
+                        <p className="control">
+                          <Field
+                            type="text"
+                            name="budgetId"
+                            className="input"
+                          />
+                        </p>
+                      </div>
+                    </div>
+                    {touched.budgetId && errors.budgetId && (
+                      <div>{errors.budgetId}</div>
+                    )}
+                  </div>
+                  <div className="field is-horizontal">
+                    <div className="field-label is-normal">
+                      <label className="checkbox">
+                        <Field type="checkbox" name="importTransactions" />{' '}
+                        Import Transactions Too (Recommend Only Doing This
+                        Initially)
+                      </label>
+                    </div>
+                    {touched.importTransactions &&
+                      errors.importTransactions && (
+                        <div>{errors.importTransactions}</div>
+                      )}
+                  </div>
+                  <div className="field is-grouped is-grouped-centered">
+                    <div className="control">
+                      <button
+                        className="button is-link"
+                        type="submit"
+                        disabled={isSubmitting}
+                      >
+                        Load Accounts
+                      </button>
+                    </div>
+                  </div>
                 </form>
               )}
             />
           )}
         </State.Consumer>
-      </Box>
+      </React.Fragment>
     );
   }
 }

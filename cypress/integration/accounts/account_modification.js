@@ -5,46 +5,63 @@ describe('Account Modifications Tests', () => {
       .contains('Add Account')
       .click();
 
-    cy.get('#accounts').within(() => {
-      cy.findByLabelText('starting').type('{selectall}550');
-      cy.findByLabelText('name').type('test account');
-      cy.get('form').submit();
+    cy.get('form')
+      .contains('starting')
+      .parent()
+      .parent()
+      .find('input')
+      .type('{selectall}550');
 
-      cy.findByTestId('accounts-all-accounts').within(() =>
-        cy
-          .findByText('550.00')
-          .parent()
-          .within(() => cy.findByText('M').click())
-      );
-    });
+    cy.get('form')
+      .contains('name')
+      .parent()
+      .parent()
+      .find('input')
+      .type('test account');
+
+    cy.get('form').submit();
+    cy.get('#accounts')
+      .contains('550.00')
+      .parent()
+      .contains('M')
+      .click();
   });
 
   it('switches back to the form', () => {
-    cy.get('#accounts').within(() => cy.queryByText('Add an Account'));
+    cy.contains('Add an Account');
   });
 
   it('submits modified account', () => {
-    cy.get('#accounts').within(() => {
-      cy.findByLabelText('starting').type('{selectall}5996');
-      cy.get('form').submit();
+    cy.get('form')
+      .contains('starting')
+      .parent()
+      .parent()
+      .find('input')
+      .type('{selectall}5996');
 
-      cy.findByTestId('accounts-all-accounts').within(() =>
-        cy.queryByText('5996.00').should('exist')
-      );
-    });
+    cy.get('form').submit();
+    cy.get('#accounts').contains('5996.00');
   });
 
   it('check debt is listed in debt tab after submit', () => {
-    cy.get('#accounts').within(() => {
-      cy.findByLabelText('starting').type('{selectall}577');
-      cy.findByLabelText('vehicle').select('Loan');
-      cy.get('form').submit();
+    cy.get('form')
+      .contains('starting')
+      .parent()
+      .parent()
+      .find('input')
+      .type('{selectall}577');
 
-      cy.findByText('Debt').click();
-      cy.findByTestId('accounts-debt').within(() => {
-        cy.queryByText('test account').should('be.visible');
-        cy.queryByText('577.00').should('be.visible');
-      });
-    });
+    cy.get('form')
+      .contains('vehicle')
+      .parent()
+      .parent()
+      .find('select')
+      .select('Loan');
+
+    cy.get('form').submit();
+    cy.get('#accounts')
+      .contains('Debt')
+      .click();
+    cy.get('#accounts').contains('test account');
   });
 });

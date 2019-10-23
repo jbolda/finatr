@@ -7,31 +7,40 @@ describe('Account Form Tests', () => {
   });
 
   it('tab switches to the form', () => {
-    cy.get('#accounts').within(() => {
-      cy.findByText('Add an Account').should('exist');
-    });
+    cy.contains('Add an Account');
   });
 
   it('submits simple account', () => {
-    cy.get('#accounts').within(() => {
-      cy.findByLabelText('name').type('Test Account Submission');
-      cy.get('form').submit();
+    cy.get('form')
+      .contains('name')
+      .parent()
+      .parent()
+      .find('input')
+      .type('Test Account Submission');
 
-      cy.findByTestId('accounts-all-accounts').within(() =>
-        cy.queryByText('Test Account Submission').should('exist')
-      );
-    });
+    cy.get('form').submit();
+    cy.get('#accounts').contains('Test Account Submission');
   });
 
   it('check debt is listed in debt tab after submit', () => {
-    cy.get('#accounts').within(() => {
-      cy.findByLabelText('name').type('Test Debt Account');
-      cy.findByLabelText('vehicle').select('Loan');
-      cy.get('form').submit();
+    cy.get('form')
+      .contains('name')
+      .parent()
+      .parent()
+      .find('input')
+      .type('Test Debt Account');
 
-      cy.findByTestId('accounts-debt').within(() =>
-        cy.queryByText('Test Debt Account').should('exist')
-      );
-    });
+    cy.get('form')
+      .contains('vehicle')
+      .parent()
+      .parent()
+      .find('select')
+      .select('Loan');
+
+    cy.get('form').submit();
+    cy.get('#accounts')
+      .contains('Debt')
+      .click();
+    cy.get('#accounts').contains('Test Debt Account');
   });
 });
