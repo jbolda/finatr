@@ -1,41 +1,20 @@
 import React from 'react';
+import { Box, Text } from '@theme-ui/components';
+import { Label } from '@rebass/forms';
 import { ErrorMessage } from 'formik';
 
 export function FieldHorizontal({ children }) {
-  return <div className="field is-horizontal">{children}</div>;
+  return <Box p={1}>{children}</Box>;
 }
 
-export function FieldLabel({ name, children }) {
-  return (
-    <div className="field-label is-normal" name={name}>
-      <label className="label">{children}</label>
-    </div>
-  );
-}
-
-export function FieldBody({ children }) {
-  return (
-    <div className="field-body">
-      <div className="field">{children}</div>
-    </div>
-  );
-}
-
-export function FieldControl({ children }) {
-  return <div className="control">{children}</div>;
-}
-
-export function FieldGroup({ name, prettyName = name, children }) {
+export function FieldGroup({ name, id, prettyName = name, children }) {
   return (
     <FieldHorizontal>
-      <FieldLabel name={name}>{prettyName}</FieldLabel>
-      <FieldBody>
-        <FieldControl>{children}</FieldControl>
-        <ErrorMessage
-          name={name}
-          render={msg => <p className="help is-danger">{msg}</p>}
-        />
-      </FieldBody>
+      <Label htmlFor={id || name}>{prettyName}</Label>
+      {children}
+      <ErrorMessage name={name} render={msg => <Text>{msg}</Text>} />
     </FieldHorizontal>
   );
 }
+
+export { Label };

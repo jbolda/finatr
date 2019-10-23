@@ -1,6 +1,9 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
 import TabView from '../../components/view/tabView';
+import { Flex, Box, Heading, Text, Button } from '@theme-ui/components';
 
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';
@@ -68,55 +71,47 @@ class Importing extends React.Component {
     return (
       <State.Consumer>
         {model => (
-          <section className="section">
-            <h1 className="title">Importing and Exporting</h1>
-            <h2 className="subtitle">The data is yours to own.</h2>
+          <React.Fragment>
+            <Box>
+              <Heading variant="subtle">Importing and Exporting</Heading>
+              <Text>The data is yours to own.</Text>
+            </Box>
             <TabView
               activeTab={this.state.activeTab}
               tabClick={this.tabClick.bind(this)}
               tabTitles={['Manual Upload/Download', 'Import From YNAB']}
               tabContents={[
-                <nav className="level">
-                  <div className="level-left">
-                    <div className="level-item has-text-centered">
-                      <div>
-                        <p className="heading">Get your current</p>
-                        <p className="heading">data out:</p>
-                        <button
-                          className="button is-success"
-                          onClick={this.handleDownload.bind(this, model)}
-                        >
-                          Download
-                        </button>
-                      </div>
-                    </div>
-                    <div className="level-item has-text-centered">
-                      <div>
-                        <p className="heading">Import data from</p>
-                        <p className="heading">your computer:</p>
-                        <FileReaderInput
-                          as="text"
-                          id="my-file-input"
-                          onChange={this.handleUpload.bind(this, model)}
-                        >
-                          <button className="button is-link">
-                            Select a file!
-                          </button>
-                        </FileReaderInput>
-                      </div>
-                    </div>
-                  </div>
-                </nav>,
-                <div className="container is-fluid">
-                  <YNABInput
-                    initialDevToken={model.state.devToken}
-                    initialBudgetId={model.state.budgetId}
-                    addYNAB={this.addYNAB}
-                  />
-                </div>
+                <Flex>
+                  <Box width={1 / 3}>
+                    <Text>Get your current data out:</Text>
+                    <Button
+                      sx={{ variant: 'buttons.primary' }}
+                      onClick={this.handleDownload.bind(this, model)}
+                    >
+                      Download
+                    </Button>
+                  </Box>
+                  <Box width={1 / 3}>
+                    <Text>Import data from your computer:</Text>
+                    <FileReaderInput
+                      as="text"
+                      id="my-file-input"
+                      onChange={this.handleUpload.bind(this, model)}
+                    >
+                      <Button sx={{ variant: 'buttons.primary' }}>
+                        Select a file!
+                      </Button>
+                    </FileReaderInput>
+                  </Box>
+                </Flex>,
+                <YNABInput
+                  initialDevToken={model.state.devToken}
+                  initialBudgetId={model.state.budgetId}
+                  addYNAB={this.addYNAB}
+                />
               ]}
             />
-          </section>
+          </React.Fragment>
         )}
       </State.Consumer>
     );

@@ -9,12 +9,19 @@
     "node": ">=8.10.0"
   },
   "dependencies": {
+    "@emotion/core": "10.0.21",
+    "@mdx-js/react": "1.5.1",
     "@microstates/react": "0.12.0",
     "@reach/router": "1.2.1",
+    "@reach/tabs": "0.3.0",
+    "@rebass/forms": "4.0.6",
+    "@rebass/preset": "4.0.5",
+    "@theme-ui/components": "0.2.45",
+    "@theme-ui/style-guide": "0.2.44",
     "big.js": "5.2.2",
-    "bulma": "0.7.5",
     "d3": "5.12.0",
     "date-fns": "2.6.0",
+    "emotion-theming": "10.0.19",
     "formik": "2.0.1-rc.13",
     "js-file-download": "0.4.8",
     "microstates": "0.15.1",
@@ -23,10 +30,14 @@
     "react-dom": "16.11.0",
     "react-file-reader-input": "2.0.0",
     "react-scripts": "3.2.0",
+    "theme-ui": "0.2.44",
+    "webpack": "4.41.0",
+    "webpack-dev-server": "3.2.1",
     "ynab": "1.17.0",
-    "yup": "^0.27.0"
+    "yup": "0.27.0"
   },
   "devDependencies": {
+    "@testing-library/cypress": "5.0.2",
     "cypress": "3.4.1",
     "prettier": "1.18.2",
     "react-test-renderer": "16.11.0"
