@@ -1,5 +1,9 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
+import { Box, Heading, Button } from '@theme-ui/components';
+import { Input, Select } from '@rebass/forms';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';
@@ -18,12 +22,19 @@ const AccountSchema = Yup.object().shape({
 class AccountInput extends React.Component {
   render() {
     return (
-      <React.Fragment>
-        <h1 className="title has-text-centered">Add an Account</h1>
+      <Box
+        sx={{
+          maxWidth: 512,
+          mx: 'auto',
+          px: 3
+        }}
+      >
+        <Heading>Add an Account</Heading>
         <State.Consumer>
           {model => (
             <Formik
               initialValues={model.forms.accountForm.values}
+              enableReinitialize={true}
               validationSchema={AccountSchema}
               onSubmit={(values, actions) => {
                 model.upsertAccount(values);
@@ -42,45 +53,49 @@ class AccountInput extends React.Component {
               }) => (
                 <form onSubmit={handleSubmit} autoComplete="off">
                   <FieldGroup errors={errors} name="name" touched={touched}>
-                    <Field type="text" name="name" className="input" />
+                    <Field as={Input} type="text" name="name" id="name" />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="starting" touched={touched}>
-                    <Field type="number" name="starting" className="input" />
+                    <Field
+                      as={Input}
+                      type="number"
+                      name="starting"
+                      id="starting"
+                    />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="interest" touched={touched}>
-                    <Field type="number" name="interest" className="input" />
+                    <Field
+                      as={Input}
+                      type="number"
+                      name="interest"
+                      id="interest"
+                    />
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="vehicle" touched={touched}>
-                    <div className="select">
-                      <Field as="select" name="vehicle">
-                        <option value="operating">Operating</option>
-                        <option value="loan">Loan</option>
-                        <option value="credit line">Credit Line</option>
-                        <option value="investment">Investment</option>
-                      </Field>
-                    </div>
+                    <Field as={Select} name="vehicle" id="vehicle">
+                      <option value="operating">Operating</option>
+                      <option value="loan">Loan</option>
+                      <option value="credit line">Credit Line</option>
+                      <option value="investment">Investment</option>
+                    </Field>
                   </FieldGroup>
 
-                  <div className="field is-grouped is-grouped-centered">
-                    <div className="control">
-                      <button
-                        className="button is-link"
-                        type="submit"
-                        disabled={isSubmitting}
-                      >
-                        Add Account
-                      </button>
-                    </div>
-                  </div>
+                  <Button
+                    sx={{ variant: 'buttons.primary' }}
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    Add Account
+                  </Button>
                 </form>
               )}
             />
           )}
         </State.Consumer>
-      </React.Fragment>
+      </Box>
     );
   }
 }
