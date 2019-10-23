@@ -3,6 +3,8 @@
     "config:base"
   ],
   "baseBranches": [
-    "next"
-  ]
+    "next",
+    "css-in-js"
+  ],
+  "prHourlyLimit": 1
 }

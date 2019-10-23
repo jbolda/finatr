@@ -1,5 +1,6 @@
 import { valueOf, create, StringType, DateType } from 'microstates';
 import { Big } from './customTypes.js';
+import parseISO from 'date-fns/fp/parseISO';
 import getQuarter from 'date-fns/fp/getQuarter';
 
 class Allocations {
@@ -130,7 +131,7 @@ class TaxStrategy {
       }, {});
 
       const quarteredGroup = singleGroup.income.reduce((g, income) => {
-        const quarter = getQuarter(income.date);
+        const quarter = getQuarter(parseISO(income.date));
         const quarterText = quarterAsText(quarter);
         g[quarterText].income = [].concat(g[quarterText].income, income);
         return g;
