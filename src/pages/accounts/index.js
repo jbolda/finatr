@@ -1,18 +1,15 @@
 import React from 'react';
 import { State } from '../../state';
 import BarChart from './barChart';
-import { Flex, Box, Heading } from '@theme-ui/components';
 
 const AccountInfo = props => (
   <State.Consumer>
     {model =>
       model.charts.state.AccountChart.map(account => (
-        <Flex key={account.account.name}>
-          <Box m={2}>
-            <Heading variant="subtle">{account.account.name}</Heading>
-            <BarChart data={model.charts.state} account={account} />
-          </Box>
-        </Flex>
+        <section className="section" key={account.account.name}>
+          <h1 className="title">{account.account.name}</h1>
+          <BarChart data={model.charts.state} account={account} />
+        </section>
       ))
     }
   </State.Consumer>
