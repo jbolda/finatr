@@ -19,8 +19,8 @@
     "js-file-download": "0.4.8",
     "microstates": "0.15.1",
     "prop-types": "15.7.2",
-    "react": "16.10.2",
-    "react-dom": "16.10.2",
+    "react": "16.11.0",
+    "react-dom": "16.11.0",
     "react-file-reader-input": "2.0.0",
     "react-scripts": "3.2.0",
     "ynab": "1.17.0",
@@ -29,7 +29,7 @@
   "devDependencies": {
     "cypress": "3.4.1",
     "prettier": "1.18.2",
-    "react-test-renderer": "16.10.2"
+    "react-test-renderer": "16.11.0"
   },
   "scripts": {
     "start": "env BROWSER=none react-scripts start",
