@@ -7,6 +7,7 @@ import { Flex, Box, Heading, Text, Button } from '@theme-ui/components';
 
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';
+import Papa from 'papaparse';
 import YNABInput from './ynabInput.js';
 
 class Importing extends React.Component {
@@ -22,9 +23,21 @@ class Importing extends React.Component {
   }
 
   handleUpload = (model, event, results) => {
-    let result = JSON.parse(results[0][0].target.result);
-    console.log('file upload result', result);
-    model.setUpload(result);
+    const [progressEvent, file] = results[0];
+    if (file.name.endsWith('.json')) {
+      const result = JSON.parse(progressEvent.target.result);
+      console.log('file upload result', result);
+      return model.setUpload(result);
+    } else if (file.name.endsWith('.csv')) {
+      const result = {
+        accounts: Papa.parse(progressEvent.target.result, { header: true }).data
+      };
+      console.log('file upload result', result);
+      return model.setUpload(result);
+    }
+    return console.log(
+      "Invalid filetype, not a json or csv. We didn't do anything with the file you uploaded."
+    );
   };
 
   handleDownload = model => {
