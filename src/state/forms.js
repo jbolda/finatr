@@ -1,4 +1,10 @@
-import { valueOf, StringType, BooleanType, Primitive } from 'microstates';
+import {
+  valueOf,
+  StringType,
+  NumberType,
+  BooleanType,
+  Primitive
+} from 'microstates';
 import { Big, defaults } from './customTypes.js';
 
 class ComputedAmountForm extends Primitive {
@@ -18,7 +24,7 @@ class ComputedAmountForm extends Primitive {
 
 class KeyValue extends Primitive {
   name = StringType;
-  value = Big;
+  value = NumberType;
 }
 
 class TransactionFormPrimitive extends Primitive {
@@ -29,13 +35,13 @@ class TransactionFormPrimitive extends Primitive {
   type = defaults(StringType, 'income');
   start = defaults(StringType, '2019-01-01');
   ending = defaults(StringType, 'never');
-  beginAfterOccurrences = defaults(Big, 0);
+  beginAfterOccurrences = defaults(NumberType, 0);
   end = defaults(StringType, '');
-  occurrences = defaults(Big, 0);
+  occurrences = defaults(NumberType, 0);
   rtype = defaults(StringType, '');
-  cycle = defaults(Big, 0);
+  cycle = defaults(NumberType, 0);
   valueType = defaults(StringType, 'static');
-  value = defaults(Big, 0);
+  value = defaults(NumberType, 0);
   references = { Big };
   referencesArray = [KeyValue];
   computedAmount = ComputedAmountForm;
@@ -77,8 +83,8 @@ class TransactionForm extends TransactionFormPrimitive {
 
 class AccountForm extends Primitive {
   name = defaults(StringType, '');
-  starting = defaults(Big, 0);
-  interest = defaults(Big, 0);
+  starting = defaults(NumberType, 0);
+  interest = defaults(NumberType, 0);
   vehicle = defaults(StringType, 'operating');
 
   get values() {
