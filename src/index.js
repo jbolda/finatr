@@ -16,6 +16,7 @@ import StyleGuide from './pages/styleguide';
 import Examples from './pages/examples';
 import Financial from './pages/flow';
 import Accounts from './pages/accounts';
+import FinancialIndependence from './pages/financialindependence';
 import Importing from './pages/importing';
 import Taxes from './pages/taxes';
 
@@ -45,6 +46,7 @@ class App extends React.Component {
                 <Examples path="examples" />
                 <Financial path="flow" />
                 <Accounts path="accounts" />
+                <FinancialIndependence path="financialindependence" />
                 <Importing path="import" />
                 <Taxes path="taxes" />
               </Router>

@@ -39,6 +39,13 @@ export default props => {
             </Box>
             <Box>
               <Text p={2}>
+                <NavLink to="financialindependence">
+                  Financial Independence
+                </NavLink>
+              </Text>
+            </Box>
+            <Box>
+              <Text p={2}>
                 <NavLink to="import">Import</NavLink>
               </Text>
             </Box>
