@@ -29,7 +29,7 @@ class AccountInput extends React.Component {
           px: 3
         }}
       >
-        <Heading>Add an Account</Heading>
+        <Heading variant="subtle">Add an Account</Heading>
         <State.Consumer>
           {model => (
             <Formik

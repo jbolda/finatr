@@ -80,7 +80,7 @@ class AccountTransactionInput extends React.Component {
                 px: 3
               }}
             >
-              <Heading>Add Debt Payback</Heading>
+              <Heading variant="subtle">Add Debt Payback</Heading>
               <Formik
                 enableReinitialize={true}
                 initialValues={model.forms.accountTransactionForm.values}
@@ -106,7 +106,6 @@ class AccountTransactionInput extends React.Component {
                     autoComplete="off"
                   >
                     <Field
-                      as={Input}
                       display="none"
                       type="text"
                       name="id"

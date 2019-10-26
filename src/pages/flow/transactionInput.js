@@ -52,7 +52,7 @@ class TransactionInput extends React.Component {
           px: 3
         }}
       >
-        <Heading>Add a Transaction</Heading>
+        <Heading variant="subtle">Add a Transaction</Heading>
         <State.Consumer>
           {model => (
             <Formik
@@ -80,7 +80,6 @@ class TransactionInput extends React.Component {
                   autoComplete="off"
                 >
                   <Field
-                    as={Input}
                     name="id"
                     id="id"
                     type="text"
@@ -244,7 +243,8 @@ class TransactionInput extends React.Component {
                   <Button
                     sx={{ variant: 'buttons.primary' }}
                     type="submit"
-                    disabled={isSubmitting}>
+                    disabled={isSubmitting}
+                  >
                     Add Transaction
                   </Button>
                 </form>
