@@ -1,8 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React from 'react';
-import { Button } from '@theme-ui/components';
-import { Label, Input, Select, Radio } from '@rebass/forms';
+import { Button, Label, Input, Select, Radio } from '@theme-ui/components';
 import { Field, FieldArray } from 'formik';
 import { FieldGroup } from '../../components/bootstrap/Form';
 

@@ -8,8 +8,15 @@ import getDay from 'date-fns/fp/getDay';
 import getDate from 'date-fns/fp/getDate';
 import parse from 'date-fns/parse';
 import { FieldGroup } from '../../components/bootstrap/Form';
-import { Box, Heading, Text, Button } from '@theme-ui/components';
-import { Input, Checkbox, Label } from '@rebass/forms';
+import {
+  Box,
+  Heading,
+  Text,
+  Button,
+  Input,
+  Checkbox,
+  Label
+} from '@theme-ui/components';
 
 class YNABInput extends React.Component {
   render() {

@@ -1,8 +1,7 @@
 import React from 'react';
 import { State } from '../../state';
 import BarChart from './barChart';
-import { Grid, Box, Text } from '@theme-ui/components';
-import { Input } from '@rebass/forms';
+import { Grid, Box, Text, Input } from '@theme-ui/components';
 
 import Transactions from './transactions';
 import Accounts from './accounts';
