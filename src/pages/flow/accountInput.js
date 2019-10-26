@@ -42,7 +42,8 @@ class AccountInput extends React.Component {
                 actions.resetForm();
                 this.props.tabClick(0);
               }}
-              render={({
+            >
+              {({
                 values,
                 errors,
                 touched,
@@ -92,7 +93,7 @@ class AccountInput extends React.Component {
                   </Button>
                 </form>
               )}
-            />
+            </Formik>
           )}
         </State.Consumer>
       </Box>
