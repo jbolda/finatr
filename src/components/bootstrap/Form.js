@@ -1,4 +1,5 @@
-import React from 'react';
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import { Box, Text } from '@theme-ui/components';
 import { Label } from '@rebass/forms';
 import { ErrorMessage } from 'formik';
@@ -12,7 +13,10 @@ export function FieldGroup({ name, id, prettyName = name, children }) {
     <FieldHorizontal>
       <Label htmlFor={id || name}>{prettyName}</Label>
       {children}
-      <ErrorMessage name={name} render={msg => <Text>{msg}</Text>} />
+      <ErrorMessage
+        name={name}
+        render={msg => <Text sx={{ color: 'red' }}>{msg}</Text>}
+      />
     </FieldHorizontal>
   );
 }
