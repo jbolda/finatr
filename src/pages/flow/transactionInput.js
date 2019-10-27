@@ -2,8 +2,15 @@
 import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
-import { Box, Heading, Button } from '@theme-ui/components';
-import { Label, Input, Select, Radio } from '@rebass/forms';
+import {
+  Box,
+  Heading,
+  Button,
+  Label,
+  Input,
+  Select,
+  Radio
+} from '@theme-ui/components';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';

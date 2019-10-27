@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import { Box, Text } from '@theme-ui/components';
-import { Label } from '@rebass/forms';
+import { Box, Text, Label } from '@theme-ui/components';
 import { ErrorMessage } from 'formik';
 
 export function FieldHorizontal({ children }) {
