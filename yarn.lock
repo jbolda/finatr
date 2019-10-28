@@ -2335,17 +2335,17 @@
     "@theme-ui/preset-tailwind" "^0.2.42"
     "@theme-ui/preset-tosh" "^0.2.40"
 
-"@theme-ui/style-guide@0.2.44":
-  version "0.2.44"
-  resolved "https://registry.yarnpkg.com/@theme-ui/style-guide/-/style-guide-0.2.44.tgz#0b25c1d1729d762538b1069414ce7365ec252278"
-  integrity sha512-Lp0SiQ8BEd0c1U2Vnt+2qsUbPOtXPzFHVMpeJhkES6ED3zKRMYvrmfgSdG0LUq+tV69bqjjELVorUsEsE+dEhw==
+"@theme-ui/style-guide@0.2.46":
+  version "0.2.46"
+  resolved "https://registry.yarnpkg.com/@theme-ui/style-guide/-/style-guide-0.2.46.tgz#ecccedd2584ad09dad770938cb22538d51591a19"
+  integrity sha512-ezW43IoOYcTcxDoMrDxovpoNTMdhvjMmA83D31U8qHYUFUK40P/PEd9q5DwIdRcq/Olk8qPyk8LEwf53u7oj4A==
   dependencies:
     "@emotion/core" "^10.0.10"
     "@theme-ui/presets" "^0.2.44"
     color "^3.1.2"
     lodash.get "^4.4.2"
     react "^16.8.6"
-    theme-ui "^0.2.44"
+    theme-ui "^0.2.46"
 
 "@types/babel__core@^7.1.0":
   version "7.1.1"
@@ -14668,10 +14668,19 @@ text-table@0.2.0, text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
 
-theme-ui@0.2.44, theme-ui@^0.2.44:
+theme-ui@0.2.44:
   version "0.2.44"
   resolved "https://registry.yarnpkg.com/theme-ui/-/theme-ui-0.2.44.tgz#9f12497f71ac1a17c84958cc8442deea969104c5"
   integrity sha512-YjtS5Ntp8wzTFsGC8rZ9JM7wUfcTxXUp/VpbL+axFTiN0j4jLTpys4XHMxhVL/x0ecgO3UslE/rO7KNzcnBBBA==
+  dependencies:
+    "@emotion/is-prop-valid" "^0.8.1"
+    "@styled-system/css" "^5.0.16"
+    deepmerge "^4.0.0"
+
+theme-ui@^0.2.46:
+  version "0.2.46"
+  resolved "https://registry.yarnpkg.com/theme-ui/-/theme-ui-0.2.46.tgz#efaf5850e7047c3abe848b5bf37a9f53d6271d5d"
+  integrity sha512-/20TAjKBFTwrzm1U+N7+ucs7knim21di0liP/QUEl0DxbEzksPOKFX6ol+zjxHjPUoArg8UqS3bBcHvF0z0UnQ==
   dependencies:
     "@emotion/is-prop-valid" "^0.8.1"
     "@styled-system/css" "^5.0.16"
