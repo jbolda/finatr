@@ -5,5 +5,6 @@
   "baseBranches": [
     "next"
   ],
-  "prHourlyLimit": 1
+  "prHourlyLimit": 1,
+  "labels": ["dependencies"]
 }
