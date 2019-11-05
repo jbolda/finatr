@@ -1,4 +1,6 @@
-import React, { useRef, useEffect } from 'react';
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
+import { useRef, useEffect } from 'react';
 import {
   select as d3_select,
   format as d3_format,
@@ -19,7 +21,10 @@ export const IcicleChart = ({ data }) => {
 
   return (
     <Box>
-      <svg ref={d3Container} height={500} width={500} />
+      <svg
+        ref={d3Container}
+        sx={{ height: [500, 600, 800], width: [500, 800, 1200] }}
+      />
     </Box>
   );
 };
