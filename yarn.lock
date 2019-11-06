@@ -1667,10 +1667,10 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@reach/auto-id@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.5.0.tgz#16fcc44b807a2fe9c6e730d8693ab87155de4066"
-  integrity sha512-d4jHMqvxUDVwgj6mcr46y+B7012Py2A3dGJmQb8ckc3dtvZwh62II6Uku4cwbamkSGvHB7mMj8wuj+uTohiJ9A==
+"@reach/auto-id@^0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.5.3.tgz#f86ed38b04fa464c5d48a8c4ba27f07993e37e6a"
+  integrity sha512-IkWKzMxNUG1xYXYDhkDtwfcslnNAQgUKTch4Vx+whswTGhhoXMjIzIjlxeufIvOvJ3HGWBzaNYdY7OUDTq37AQ==
 
 "@reach/router@1.2.1":
   version "1.2.1"
@@ -1683,12 +1683,12 @@
     react-lifecycles-compat "^3.0.4"
     warning "^3.0.0"
 
-"@reach/tabs@0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@reach/tabs/-/tabs-0.5.0.tgz#8b8bef93f274a5e6d0c96264c9c6aefbe2a13814"
-  integrity sha512-maYyljAwZD+MDWKqay7TO1KiDFsO0DfLxR+nU+MVbr44ftPyM9i2EwhW0pIgIjVUW9IkvEmNRXSJOm4fVOL2Gg==
+"@reach/tabs@0.5.4":
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@reach/tabs/-/tabs-0.5.4.tgz#c0d16f43654df726ae1fa5116be6d529dcd19bb5"
+  integrity sha512-yQkkIZHX88xMmx9H3EuDAONNAPxKq+cW94gaKQh5do4tvg0/fwgsiJjWi8/vzsBNjdPRpiV8evQHGufg/MvdNg==
   dependencies:
-    "@reach/auto-id" "^0.5.0"
+    "@reach/auto-id" "^0.5.3"
     "@reach/utils" "^0.5.0"
     prop-types "^15.7.2"
     warning "^4.0.3"
