@@ -14,7 +14,7 @@
     "@microstates/react": "0.12.0",
     "@reach/router": "1.2.1",
     "@reach/tabs": "0.5.4",
-    "@theme-ui/components": "0.2.46",
+    "@theme-ui/components": "0.2.49",
     "@theme-ui/style-guide": "0.2.46",
     "big.js": "5.2.2",
     "d3": "5.12.0",
