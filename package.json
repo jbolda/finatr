@@ -18,7 +18,7 @@
     "@theme-ui/style-guide": "0.2.49",
     "big.js": "5.2.2",
     "d3": "5.14.2",
-    "date-fns": "2.8.0",
+    "date-fns": "2.8.1",
     "emotion-theming": "10.0.19",
     "formik": "2.0.6",
     "js-file-download": "0.4.8",
