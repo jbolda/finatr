@@ -5,6 +5,8 @@ on: [pull_request]
 jobs:
   test:
     runs-on: ${{ matrix.platform }}
+    env:
+      CI: true
 
     strategy:
       fail-fast: false
@@ -31,8 +33,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: install packages and show matrix input
-      env:
-        CI: true
       run: |
         echo === matrix variables ===
         echo ${{ matrix.platform }}
@@ -42,29 +42,18 @@ jobs:
         ${{ matrix.return-node-version }}
         ${{ matrix.runner }} install
     - name: run tests
-      env:
-        CI: true
       run: ${{ matrix.runner }} run test
-    - name: run build
-      env:
-        CI: true
-      run: ${{ matrix.runner }} run build
     - name: install build host for cypress
-      env:
-        CI: true
       run: npm install -g pushstate-server
-    - name: run cypress (record)
-      env:
-        CI: true
-        CYPRESS_BASE_URL: http://localhost:8080
-        COMMIT_INFO_BRANCH: ${{ github.head_ref }}
-        COMMIT_INFO_REMOTE: https://github.com/${{ github.repository }}.git
-        DEBUG: commit-info,cypress:server:record
-      if: matrix.runner == 'yarn' && matrix.platform == 'ubuntu-latest' && matrix.node-version == '10.x'
-      run: npx start-server-and-test "pushstate-server -d ./build -p 8080" 8080 "${{ matrix.runner }} run cy:run -- --ci-build-id ${{ github.ref }}/${{ github.sha }} --key ${{ secrets.CYPRESS_RECORD_KEY }} --record --parallel --browser electron"
-    - name: run cypress
-      env:
-        CI: true
-        CYPRESS_BASE_URL: http://localhost:8080
-      if: matrix.runner != 'yarn' || matrix.platform != 'ubuntu-latest' || matrix.node-version != '10.x'
-      run: npx start-server-and-test "pushstate-server -d ./build -p 8080" 8080 "${{ matrix.runner }} run cy:run -- --browser ${{ matrix.browser }}"
+    - name: run build
+      run: ${{ matrix.runner }} run build
+      - name: Cypress run
+        uses: cypress-io/github-action@v1
+        with:
+          record: true
+          parallel: true
+          group: ${{ matrix.runner }}
+          start: pushstate-server -d ./build -p 8080
+          wait-on: 'http://localhost:8080'
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
