@@ -43,11 +43,11 @@ jobs:
         ${{ matrix.runner }} install
     - name: run tests
       run: ${{ matrix.runner }} run test
-    - name: install build host for cypress
-      run: npm install -g pushstate-server
     - name: run build
       run: ${{ matrix.runner }} run build
-    - name: Cypress run
+    - name: install build host for cypress
+      run: npm install -g pushstate-server
+    - name: cypress run
       uses: cypress-io/github-action@v1
       with:
         record: true
