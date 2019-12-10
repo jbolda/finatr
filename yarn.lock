@@ -2232,20 +2232,20 @@
     react-lifecycles-compat "^3.0.4"
     warning "^3.0.0"
 
-"@reach/tabs@0.6.2":
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/@reach/tabs/-/tabs-0.6.2.tgz#19846c080906cd2b1e3097cd680b7f6a489565f0"
-  integrity sha512-NgSpPZatSAm2qDeUf2wVwy6e40K03dZwMfoEgYKfxAZ50wkKZQYod2zHLvAuLu3CVR1ulX6KSmRq1TItAVCUsA==
+"@reach/tabs@0.6.4":
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/@reach/tabs/-/tabs-0.6.4.tgz#26d6dd2f8e8ae5d87a7d939b21385e13c04cb09f"
+  integrity sha512-oNL7lZACapx2FCO3StDwb3kkxdD6aL6A8R3TWdECKBZig/2lEluBtqqVotVVkIdgzixT+ZjC9J+Cym4TwxPF6g==
   dependencies:
     "@reach/auto-id" "^0.6.1"
-    "@reach/utils" "^0.6.1"
+    "@reach/utils" "^0.6.4"
     prop-types "^15.7.2"
     warning "^4.0.3"
 
-"@reach/utils@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.6.1.tgz#7345dcd624f92779fb4a0fc4a28ab16d69b53476"
-  integrity sha512-SMGDydSjmvOz3Q4faGGJikdeqHumHmxB1YfYR7XTWrDQxJMod+J7mSkaS12NY4o/uPQ4xOwwL6cXWN+KpFjOQg==
+"@reach/utils@^0.6.4":
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.6.4.tgz#be268e1a7d04f921596b3672888a932c1832074a"
+  integrity sha512-jUWNb1STgR69WGkV4O/N4XOcUvM0u5LP1b9SR6VZsPRazpmzM8HUl3WsBVgMOnSCefZtk+wM4ig2/iYgdElwPw==
 
 "@sheerun/mutationobserver-shim@^0.3.2":
   version "0.3.2"
