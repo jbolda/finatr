@@ -47,13 +47,13 @@ jobs:
       run: npm install -g pushstate-server
     - name: run build
       run: ${{ matrix.runner }} run build
-      - name: Cypress run
-        uses: cypress-io/github-action@v1
-        with:
-          record: true
-          parallel: true
-          group: ${{ matrix.runner }}
-          start: pushstate-server -d ./build -p 8080
-          wait-on: 'http://localhost:8080'
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+    - name: Cypress run
+      uses: cypress-io/github-action@v1
+      with:
+        record: true
+        parallel: true
+        group: ${{ matrix.runner }}
+        start: pushstate-server -d ./build -p 8080
+        wait-on: 'http://localhost:8080'
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
