@@ -1,6 +1,7 @@
 import React from 'react';
 import { navigate } from '@reach/router';
 import { State } from '../../state';
+import { Grid, Box, Button, Heading, Text } from '@theme-ui/components';
 
 const listOfExamples = [
   {
@@ -12,7 +13,7 @@ const listOfExamples = [
     file: 'simple.json'
   },
   {
-    name: 'Incredibly Expensive Rents',
+    name: 'High Housing Expenses',
     content: `
     This example shows what living in San Francisco, Silicon Valley,
     or Washington DC may look like. You get paid well relative to the
@@ -28,47 +29,34 @@ const Examples = () => (
   <State.Consumer>
     {model => (
       <React.Fragment>
-        <section className="section">
-          <div className="columns is-centered">
-            <div className="column is-half">
-              <p className="title">Examples</p>
-              <div className="content">
-                The following are various examples that you can test out. They
-                are even valuable as a template to get you jump-started. Find
-                one that seems to match your current situation? Give it a shot
-                and see what it looks like. You can always come back here and
-                try another.
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="section">
-          <div className="columns is-centered is-multiline">
-            {listOfExamples.map(example => (
-              <div className="column is-one-quarter" key={example.file}>
-                <div className="card">
-                  <header className="card-header">
-                    <p className="card-header-title">{example.name}</p>
-                  </header>
-                  <div className="card-content">
-                    <div className="content">{example.content}</div>
-                  </div>
-                  <footer className="card-footer">
-                    <div className="buttons card-footer-item">
-                      <button
-                        className="button is-fullwidth is-white"
-                        onClick={event => loadExample(model, event)}
-                        value={example.file}
-                      >
-                        Load Example
-                      </button>
-                    </div>
-                  </footer>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <Box px={2} py={2} sx={{ maxWidth: 512 }}>
+          <Heading p={1} variant="subtle">
+            Examples
+          </Heading>
+          <Text p={1}>
+            The following are various examples that you can test out. They are
+            even valuable as a template to get you jump-started. Find one that
+            seems to match your current situation? Give it a shot and see what
+            it looks like. You can always come back here and try another.
+          </Text>
+        </Box>
+        <Grid width={1 / 4}>
+          {listOfExamples.map(example => (
+            <Box key={example.file} px={2} py={2}>
+              <Text p={1} variant="section">
+                {example.name}
+              </Text>
+              <Text p={1}>{example.content}</Text>
+              <Button
+                variant="buttons.primary"
+                onClick={event => loadExample(model, event)}
+                value={example.file}
+              >
+                Load Example
+              </Button>
+            </Box>
+          ))}
+        </Grid>
       </React.Fragment>
     )}
   </State.Consumer>

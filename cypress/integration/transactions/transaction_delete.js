@@ -5,28 +5,12 @@ describe('Transaction Delete Tests', () => {
       .contains('Add Transaction')
       .click();
 
-    cy.get('form')
-      .contains('rtype')
-      .parent()
-      .parent()
-      .find('select')
-      .select('No Repeating');
-
-    cy.get('form')
-      .contains('value')
-      .parent()
-      .parent()
-      .find('input')
-      .type('{selectall}55');
-
-    cy.get('form')
-      .contains('description')
-      .parent()
-      .parent()
-      .find('input')
-      .type('test transaction');
-
-    cy.get('form').submit();
+    cy.get('#transactions').within(() => {
+      cy.findByLabelText('rtype').select('No Repeating');
+      cy.findByLabelText('value').type('{selectall}55');
+      cy.findByLabelText('description').type('test transaction');
+      cy.get('form').submit();
+    });
   });
 
   it('deletes the recently added transaction', () => {
@@ -37,7 +21,7 @@ describe('Transaction Delete Tests', () => {
         cy.contains('X').click();
       });
 
-    cy.get('#transactions')
+    cy.findByTestId('transactions-all-transactions')
       .contains('test transaction')
       .should('not.exist');
   });

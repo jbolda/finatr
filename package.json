@@ -9,27 +9,35 @@
     "node": ">=8.10.0"
   },
   "dependencies": {
+    "@emotion/core": "10.0.22",
+    "@mdx-js/react": "1.5.1",
     "@microstates/react": "0.12.0",
     "@reach/router": "1.2.1",
+    "@reach/tabs": "0.6.4",
+    "@theme-ui/components": "0.2.50",
+    "@theme-ui/style-guide": "0.2.49",
     "big.js": "5.2.2",
-    "bulma": "0.7.5",
-    "d3": "5.12.0",
-    "date-fns": "2.4.1",
-    "formik": "2.0.1-rc.13",
+    "d3": "5.14.2",
+    "date-fns": "2.8.1",
+    "emotion-theming": "10.0.19",
+    "formik": "2.0.7",
     "js-file-download": "0.4.8",
-    "microstates": "0.15.0-alpha.0",
+    "microstates": "0.15.1",
+    "papaparse": "5.1.0",
     "prop-types": "15.7.2",
-    "react": "16.10.2",
-    "react-dom": "16.10.2",
+    "react": "16.12.0",
+    "react-dom": "16.12.0",
     "react-file-reader-input": "2.0.0",
-    "react-scripts": "3.1.2",
-    "ynab": "1.16.0",
-    "yup": "^0.27.0"
+    "react-scripts": "3.3.0",
+    "theme-ui": "0.2.49",
+    "ynab": "1.17.0",
+    "yup": "0.27.0"
   },
   "devDependencies": {
+    "@testing-library/cypress": "5.0.2",
     "cypress": "3.4.1",
-    "prettier": "1.18.2",
-    "react-test-renderer": "16.10.2"
+    "prettier": "1.19.1",
+    "react-test-renderer": "16.12.0"
   },
   "scripts": {
     "start": "env BROWSER=none react-scripts start",

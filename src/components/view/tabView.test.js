@@ -2,20 +2,6 @@ import React from 'react';
 import TabView from './tabView';
 import renderer from 'react-test-renderer';
 
-describe(`computeUrl`, () => {
-  it(`replaces spaces with underscores`, () => {
-    let component = renderer.create(<TabView />);
-    const expected = component.getInstance().computeUrl('some url');
-    expect(expected).toEqual('some_url');
-  });
-
-  it(`lowercases`, () => {
-    let component = renderer.create(<TabView />);
-    const expected = component.getInstance().computeUrl('URL');
-    expect(expected).toEqual('url');
-  });
-});
-
 describe(`tabClick`, () => {
   it(`sets the activeTab`, () => {
     let component = renderer.create(<TabView />).getInstance();
@@ -41,7 +27,7 @@ describe(`initial state`, () => {
 describe(`render`, () => {
   it(`does not render tab contents`, () => {
     const component = renderer.create(<TabView />);
-    const content = component.toJSON()[1].children;
+    const content = component.toJSON().children;
     expect(content).toEqual(null);
   });
 
@@ -51,7 +37,8 @@ describe(`render`, () => {
       tabTitles: ['one']
     };
     const component = renderer.create(<TabView {...props} />);
-    const content = component.toJSON()[1].children[0].children;
+    const content = component.toJSON().children[0].children[1].children[0]
+      .children[0].children;
     expect(content).toEqual(['tab one']);
   });
 });
