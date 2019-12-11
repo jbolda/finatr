@@ -43,6 +43,7 @@ jobs:
     - name: cypress run
       uses: cypress-io/github-action@v1
       with:
+        config-file: cypress-config.json
         record: true
         parallel: true
         group: ${{ matrix.runner }}
