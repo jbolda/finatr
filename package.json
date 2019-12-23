@@ -9,7 +9,7 @@
     "node": ">=8.10.0"
   },
   "dependencies": {
-    "@emotion/core": "10.0.22",
+    "@emotion/core": "10.0.27",
     "@mdx-js/react": "1.5.3",
     "@microstates/react": "0.12.0",
     "@reach/router": "1.2.1",
@@ -19,7 +19,7 @@
     "big.js": "5.2.2",
     "d3": "5.14.2",
     "date-fns": "2.8.1",
-    "emotion-theming": "10.0.19",
+    "emotion-theming": "10.0.27",
     "formik": "2.0.8",
     "js-file-download": "0.4.9",
     "microstates": "0.15.1",
