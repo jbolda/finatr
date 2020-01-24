@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@testing-library/cypress": "5.0.2",
-    "cypress": "3.4.1",
+    "cypress": "3.8.3",
     "prettier": "1.19.1",
     "react-test-renderer": "16.12.0"
   },
