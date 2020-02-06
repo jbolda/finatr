@@ -20,7 +20,7 @@
     "d3": "5.15.0",
     "date-fns": "2.9.0",
     "emotion-theming": "10.0.27",
-    "formik": "2.1.2",
+    "formik": "2.1.4",
     "js-file-download": "0.4.9",
     "microstates": "0.15.1",
     "papaparse": "5.1.0",
