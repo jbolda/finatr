@@ -31,7 +31,7 @@
     "react-scripts": "3.3.0",
     "theme-ui": "0.2.52",
     "ynab": "1.17.0",
-    "yup": "0.28.0"
+    "yup": "0.28.3"
   },
   "devDependencies": {
     "@testing-library/cypress": "5.0.2",
