@@ -13,7 +13,7 @@
     "@mdx-js/react": "1.5.5",
     "@microstates/react": "0.12.0",
     "@reach/router": "1.2.1",
-    "@reach/tabs": "0.6.4",
+    "@reach/tabs": "0.8.6",
     "@theme-ui/components": "0.2.50",
     "@theme-ui/style-guide": "0.2.53",
     "big.js": "5.2.2",
