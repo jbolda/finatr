@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
 import { Box, Heading, Button, Label, Input, Select, Radio } from 'theme-ui';

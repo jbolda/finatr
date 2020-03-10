@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui';
 import { Box, Text, Label } from 'theme-ui';
 import { ErrorMessage } from 'formik';
 
