@@ -5,13 +5,13 @@ jobs:
   chrome:
     runs-on: ubuntu-16.04
     # let's make sure our tests pass on Chrome browser
-    name: E2E on Chrome
     steps:
       - uses: actions/checkout@v2
       - uses: cypress-io/github-action@v1
         with:
           browser: chrome
           record: true
+          start: yarn start
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -28,6 +28,7 @@ jobs:
         with:
           browser: firefox
           record: true
+          start: yarn start
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -41,6 +42,7 @@ jobs:
         with:
           browser: edge
           record: true
+          start: yarn start
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
