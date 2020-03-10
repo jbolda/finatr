@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Link } from 'theme-ui';
+import { Box, Text, Link } from 'theme-ui';
 
 const A = ({ href, children }) => (
   <a
@@ -22,14 +22,13 @@ const Heart = () => (
 
 export default props => {
   return (
-    <footer
+    <Box
+      as="footer"
       sx={{
         display: 'flex',
-        flexWrap: 'wrap',
         alignItems: 'center',
-        justifyContent: 'center',
-        p: 2,
-        variant: 'variants.footer'
+        justifyContent: 'space-evenly',
+        p: 2
       }}
     >
       <Text sx={{ px: 1, color: 'muted' }}>
@@ -47,6 +46,6 @@ export default props => {
           alt="Deploys by Netlify"
         />
       </Link>
-    </footer>
+    </Box>
   );
 };
