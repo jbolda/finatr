@@ -40,6 +40,7 @@
     "start": "env BROWSER=none react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:ci": "CI=true react-scripts test",
     "eject": "react-scripts eject",
     "pretty": "prettier --write \"{src,__{tests,mocks}__}/**/*.js\"",
     "cy": "cypress open",
