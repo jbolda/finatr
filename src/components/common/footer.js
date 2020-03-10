@@ -1,3 +1,4 @@
+import React from 'react';
 import { Text, Link } from 'theme-ui';
 
 const A = ({ href, children }) => (
@@ -39,11 +40,13 @@ export default props => {
         </A>
         .
       </Text>
-      <Text sx={{ px: 1, color: 'muted' }}>
-        Hosted with <Heart /> by{' '}
-        <A href="https://www.netlify.com/?ref=www.finatr.com">Netlify</A>{' '}
-        because they <Heart /> open source.
-      </Text>
+
+      <Link href="https://www.netlify.com">
+        <img
+          src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"
+          alt="Deploys by Netlify"
+        />
+      </Link>
     </footer>
   );
 };
