@@ -1,5 +1,4 @@
-name: Test Application
-
+name: test
 on: [pull_request]
 
 jobs:
@@ -11,7 +10,6 @@ jobs:
       matrix:
         node-version: ['10.x', '12.10.x']
         platform: [ubuntu-latest, macos-latest, windows-latest]
-        runner: [npm, yarn]
         include:
           - platform: ubuntu-latest
             browser: chrome
@@ -24,31 +22,14 @@ jobs:
             return-node-version: ls $RUNNER_TOOL_CACHE/node
 
     steps:
-    - uses: actions/checkout@v1
-      with:
-        fetch-depth: 3
+    - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: install packages
-      env:
-        CI: true
-      run: |
-        echo === matrix variables ===
-        echo ${{ matrix.platform }}
-        echo ${{ matrix.node-version }}
-        echo ${{ matrix.runner }}
-        echo === exact node version ===
-        ${{ matrix.return-node-version }}
-        ${{ matrix.runner }} install
-    - name: run tests
-      env:
-        CI: true
-      run: ${{ matrix.runner }} run test
-    - name: run build
-      env:
-        CI: true
-      run: ${{ matrix.runner }} run build
+    - run: yarn
+    - run: yarn test
+    - run: yarn build
+
     - name: install build host for cypress
       env:
         CI: true
