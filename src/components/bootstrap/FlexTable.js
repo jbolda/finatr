@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Box } from '@theme-ui/components';
+import { Grid, Box } from 'theme-ui';
 
 const HeaderRow = ({ items, columns }) => (
   <Grid

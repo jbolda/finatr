@@ -1,9 +1,7 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import { map } from 'microstates';
 import { State } from '../../state';
-import { Flex, Box, Heading, Text, Button } from '@theme-ui/components';
+import { Flex, Box, Heading, Text, Button } from 'theme-ui';
 import TabView from '../../components/view/tabView';
 import FlexTable from '../../components/bootstrap/FlexTable';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { State } from '../../state';
 import BarChart from './barChart';
-import { Flex, Box, Heading } from '@theme-ui/components';
+import { Flex, Box, Heading } from 'theme-ui';
 
 const AccountInfo = props => (
   <State.Consumer>

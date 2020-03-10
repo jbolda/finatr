@@ -1,7 +1,7 @@
 import React from 'react';
 import { navigate } from '@reach/router';
 import { State } from '../../state';
-import { Grid, Box, Button, Heading, Text } from '@theme-ui/components';
+import { Grid, Box, Button, Heading, Text } from 'theme-ui';
 
 const listOfExamples = [
   {

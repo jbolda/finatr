@@ -1,9 +1,7 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
 
-import { Box, Button } from '@theme-ui/components';
+import { Box, Button } from 'theme-ui';
 import TabView from '../../components/view/tabView';
 import FlexTable from '../../components/bootstrap/FlexTable';
 import TransactionInput from './transactionInput';

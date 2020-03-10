@@ -1,8 +1,6 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
-import { Box, Heading, Button, Input, Select } from '@theme-ui/components';
+import { Box, Heading, Button, Input, Select } from 'theme-ui';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';

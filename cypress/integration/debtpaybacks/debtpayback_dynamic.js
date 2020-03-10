@@ -23,10 +23,10 @@ describe('Debt Payback Form Tests', () => {
       cy.findByLabelText('payment account').select('account');
       cy.findByLabelText('rtype').select('Repeat on a Day of the Week');
       cy.findByLabelText('start').type('2019-04-28');
-      cy.findByText('after Number of Occurrences').click();
+      cy.findByText('after Number of Occurrences').click({ force: true });
       cy.findByLabelText('occurrences').type('{selectall}8');
       cy.findByLabelText('cycle').type('{selectall}1');
-      cy.findByText('Dynamic').click();
+      cy.findByText('Dynamic').click({ force: true });
       cy.findByLabelText('reference name').type('{selectall}Special Balance');
       cy.findByLabelText('reference value').type('{selectall}250');
       cy.findByLabelText('reference').select('Special Balance');
@@ -44,10 +44,10 @@ describe('Debt Payback Form Tests', () => {
       cy.findByLabelText('payment account').select('account');
       cy.findByLabelText('rtype').select('Repeat on a Day of the Week');
       cy.findByLabelText('start').type('2019-04-28');
-      cy.findByText('after Number of Occurrences').click();
+      cy.findByText('after Number of Occurrences').click({ force: true });
       cy.findByLabelText('occurrences').type('{selectall}8');
       cy.findByLabelText('cycle').type('{selectall}1');
-      cy.findByText('Dynamic').click();
+      cy.findByText('Dynamic').click({ force: true });
       cy.findByLabelText('reference name').type('{selectall}Special Balance');
       cy.findByLabelText('reference value').type('{selectall}250');
       cy.get('form').submit();

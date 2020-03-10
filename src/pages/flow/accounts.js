@@ -1,9 +1,7 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
 
-import { Button } from '@theme-ui/components';
+import { Button } from 'theme-ui';
 import TabView from '../../components/view/tabView';
 import FlexTable, {
   HeaderRow,

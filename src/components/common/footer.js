@@ -1,6 +1,5 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui';
-import { Text } from '@theme-ui/components';
+import React from 'react';
+import { Box, Text, Link } from 'theme-ui';
 
 const A = ({ href, children }) => (
   <a
@@ -23,14 +22,13 @@ const Heart = () => (
 
 export default props => {
   return (
-    <footer
+    <Box
+      as="footer"
       sx={{
         display: 'flex',
-        flexWrap: 'wrap',
         alignItems: 'center',
-        justifyContent: 'center',
-        p: 2,
-        variant: 'variants.footer'
+        justifyContent: 'space-evenly',
+        p: 2
       }}
     >
       <Text sx={{ px: 1, color: 'muted' }}>
@@ -41,11 +39,13 @@ export default props => {
         </A>
         .
       </Text>
-      <Text sx={{ px: 1, color: 'muted' }}>
-        Hosted with <Heart /> by{' '}
-        <A href="https://www.netlify.com/?ref=www.finatr.com">Netlify</A>{' '}
-        because they <Heart /> open source.
-      </Text>
-    </footer>
+
+      <Link href="https://www.netlify.com">
+        <img
+          src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"
+          alt="Deploys by Netlify"
+        />
+      </Link>
+    </Box>
   );
 };

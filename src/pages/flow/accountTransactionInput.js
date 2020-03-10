@@ -1,16 +1,6 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
-import {
-  Box,
-  Heading,
-  Button,
-  Label,
-  Input,
-  Select,
-  Radio
-} from '@theme-ui/components';
+import { Box, Heading, Button, Label, Input, Select, Radio } from 'theme-ui';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';
@@ -22,12 +12,9 @@ const ComputedAmountSchema = Yup.object()
     reference: Yup.string()
       .notOneOf(['select'])
       .required('Required'),
-    on: Yup.object().when('operation', {
-      is: operation => operation !== 'none',
-      // eslint-disable-next-line
-      then: ComputedAmountSchema,
-      otherwise: Yup.object().strip()
-    })
+    on: Yup.object().when('operation', (operation, ComputedAmountSchema) =>
+      operation !== 'none' ? ComputedAmountSchema : Yup.object().strip()
+    )
   })
   .required('Required');
 
