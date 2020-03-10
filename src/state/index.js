@@ -255,7 +255,7 @@ class AppModel extends Primitive {
   }
 
   modifyTransaction(id) {
-    return this.forms.transactionForm.set(
+    return this.forms.transactionForm.setForm(
       this.state.transactions.find(element => element.id === id)
     );
   }
@@ -306,7 +306,18 @@ class AppModel extends Primitive {
       rtype: result.rtype,
       cycle: result.cycle,
       occurrences: result.occurrences,
-      value: result.value
+      value: result.value,
+      ...(!!result.referencesArray.length > 0
+        ? {
+            references: result.referencesArray.reduce((ref, keyVal) => {
+              ref[keyVal.name] = keyVal.value;
+              return ref;
+            }, {})
+          }
+        : {}),
+      ...(result.valueType === 'dynamic'
+        ? { computedAmount: result.computedAmount }
+        : {})
     };
 
     if (!payback.id) {
@@ -314,17 +325,15 @@ class AppModel extends Primitive {
     }
 
     account.payback.transactions.push(payback);
-
     nextState[accountIndex] = account;
     let nextSetState = this.accounts.set(nextState);
     return nextSetState.reCalc().forms.accountTransactionForm.id.set('');
   }
 
   modifyAccountTransaction(name, index) {
-    const payback = this.state.accounts.find(element => element.name === name)
-      .payback;
+    const account = this.state.accounts.find(element => element.name === name);
     return this.forms.accountTransactionForm
-      .set(payback.transactions[index])
+      .setForm(account, index)
       .forms.accountTransactionFormVisible.toggle();
   }
 

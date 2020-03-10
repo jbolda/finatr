@@ -1,4 +1,5 @@
 import Big from 'big.js';
+import parseISO from 'date-fns/fp/parseISO';
 import dateMax from 'date-fns/fp/max';
 import dateMin from 'date-fns/fp/min';
 import isWithinInterval from 'date-fns/fp/isWithinInterval';
@@ -17,37 +18,47 @@ import differenceInCalendarYears from 'date-fns/fp/differenceInCalendarYears';
 
 const computeTransactionModifications = (transactions, graphRange) =>
   transactions.reduce((modifications, transaction) => {
-    let transactionInterval = convertRangeToInterval(transaction, graphRange);
-    // early return if end is before start, we will have no modifications
-    if (isBefore(transactionInterval.start)(transactionInterval.end)) return [];
+    try {
+      let transactionInterval = convertRangeToInterval(transaction, graphRange);
 
-    // and if the value is positive, generate the necessary mods
-    return modifications.concat(
-      generateModification(
-        transaction,
-        transactionInterval,
-        transactionInterval.start,
-        [],
-        Big(0),
-        Big(0)
-      )
-    );
+      // and if the value is positive, generate the necessary mods
+      return modifications.concat(
+        generateModification(
+          transaction,
+          transactionInterval,
+          transactionInterval.start,
+          [],
+          Big(0),
+          Big(0)
+        )
+      );
+    } catch (e) {
+      // early return if end is before start, we will have no modifications
+      // we will RangeError if this happens and catch
+      return [];
+    }
   }, []);
 
 export default computeTransactionModifications;
 
-const convertRangeToInterval = (transaction, graphRange) => ({
-  start: dateMax([
+const convertRangeToInterval = (transaction, graphRange) => {
+  const startDate = dateMax([
     graphRange.start,
-    !!transaction && transaction.start ? transaction.start : 0
-  ]),
-  end: dateMin([
+    !!transaction && transaction.start ? parseISO(transaction.start) : 0
+  ]);
+  // the endDate always has to be equal to or after startDate
+  const endDate = dateMin([
     graphRange.end,
     !!transaction && transaction.end
-      ? transaction.end
+      ? parseISO(transaction.end)
       : addDays(365)(new Date())
-  ])
-});
+  ]);
+
+  return {
+    start: startDate,
+    end: endDate
+  };
+};
 
 export { convertRangeToInterval };
 
@@ -172,7 +183,7 @@ const transactionNoReoccur = ({ transaction, seedDate }) => {
   }
 
   return {
-    date: transaction.start,
+    date: parseISO(transaction.start),
     y: transaction.value
   };
 };
@@ -201,14 +212,15 @@ const transactionDailyReoccur = ({ transaction, seedDate, occurrences }) => {
   // yet, we are looking for the first date and we want a date on/after the seedDate.
   // If we have any occurrences, then seedDate will actually be the date of the
   // last occurrences so we add the cycle to that to get the next occurence.
-  const cycle = Big(differenceInCalendarDays(transaction.start)(seedDate))
+  const parsedStartDate = parseISO(transaction.start);
+  const cycle = Big(differenceInCalendarDays(parsedStartDate)(seedDate))
     .div(transaction.cycle)
     .round(0, 3)
     .times(transaction.cycle)
     .plus(occurrences.eq(0) ? 0 : transaction.cycle);
 
   return {
-    date: addDays(cycle)(transaction.start),
+    date: addDays(cycle)(parsedStartDate),
     y: transaction.value
   };
 };
@@ -247,14 +259,15 @@ const transactionDayOfWeekReoccur = ({
   // to the transaction start date that will return a day after the
   // seedDate and that lands on our required day of the week.
 
+  const parsedStartDate = parseISO(transaction.start);
   const seedDay = getDay(seedDate);
-  const startDay = getDay(transaction.start);
+  const startDay = getDay(parsedStartDate);
   const dayAdjust = transaction.cycle.gte(seedDay)
     ? transaction.cycle.minus(seedDay)
     : transaction.cycle.minus(seedDay).plus(7);
 
-  const dayCycles = isBefore(seedDate)(transaction.start)
-    ? Big(differenceInCalendarDays(transaction.start)(seedDate))
+  const dayCycles = isBefore(seedDate)(parsedStartDate)
+    ? Big(differenceInCalendarDays(parsedStartDate)(seedDate))
         .plus(dayAdjust)
         .div(7)
         .round(0, 3)
@@ -264,7 +277,7 @@ const transactionDayOfWeekReoccur = ({
     : transaction.cycle.minus(startDay).plus(7);
 
   return {
-    date: addDays(dayCycles)(transaction.start),
+    date: addDays(dayCycles)(parsedStartDate),
     y: transaction.value
   };
 };
@@ -369,20 +382,21 @@ const transactionSemiannuallyReoccur = ({
   // yet, we are looking for the first date and we want a date on/after the seedDate.
   // If we have any occurrences, then seedDate will actually be the date of the
   // last occurrences so we add 6 to that to get the next occurence.
+  const parsedStartDate = parseISO(transaction.start);
   const monthDifference = Big(
-    differenceInCalendarMonths(transaction.start)(seedDate)
+    differenceInCalendarMonths(parsedStartDate)(seedDate)
   )
     .div(6)
     .round(0, 3)
     .times(6)
     .plus(occurrences.eq(0) ? 0 : 6);
   const afterSeed = isAfter(seedDate);
-  const increment = afterSeed(addMonths(monthDifference)(transaction.start))
+  const increment = afterSeed(addMonths(monthDifference)(parsedStartDate))
     ? 0
     : 6;
 
   return {
-    date: addMonths(monthDifference.plus(increment))(transaction.start),
+    date: addMonths(monthDifference.plus(increment))(parsedStartDate),
     y: transaction.value
   };
 };
@@ -410,14 +424,15 @@ const transactionAnnuallyReoccur = ({ transaction, seedDate, occurrences }) => {
   // the first date and we want a date on/after the seedDate. If we have
   // any occurrences, then seedDate will actually be the date of the
   // last occurrences so we add 1 to that to get the next occurence.
+  const parsedStartDate = parseISO(transaction.start);
   const yearDifference = Big(
-    differenceInCalendarYears(transaction.start)(seedDate)
+    differenceInCalendarYears(parsedStartDate)(seedDate)
   )
     .round(0, 3)
     .plus(occurrences.eq(0) ? 0 : 1);
 
   return {
-    date: addYears(yearDifference)(transaction.start),
+    date: addYears(yearDifference)(parsedStartDate),
     y: transaction.value
   };
 };

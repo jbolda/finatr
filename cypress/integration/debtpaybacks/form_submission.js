@@ -4,87 +4,39 @@ describe('Debt Payback Form Tests', () => {
     cy.get('#accounts')
       .contains('Add Account')
       .click();
-    cy.get('form')
-      .contains('name')
-      .parent()
-      .parent()
-      .find('input')
-      .type('Test Debt Submission');
-    cy.get('form')
-      .contains('vehicle')
-      .parent()
-      .parent()
-      .find('select')
-      .select('Loan');
-    cy.get('form')
-      .contains('starting')
-      .parent()
-      .parent()
-      .find('input')
-      .type('{selectall}20000');
-    cy.get('form').submit();
 
-    cy.get('#accounts')
-      .contains('Debt')
-      .click();
+    cy.get('#accounts').within(() => {
+      cy.findByLabelText('name').type('Test Debt Submission');
+      cy.findByLabelText('vehicle').select('Loan');
+      cy.findByLabelText('starting').type('{selectall}20000');
+      cy.get('form').submit();
+
+      cy.findByText('Debt').click();
+    });
   });
 
   it('tab switches to the form', () => {
-    cy.get('#accounts')
-      .contains('+')
-      .click();
-    cy.contains('Add Debt Payback');
+    cy.get('#accounts').within(() => {
+      cy.findByText('+').click();
+      cy.queryByText('Add Debt Payback').should('be.visible');
+    });
   });
 
   it('submits simple debt payback', () => {
-    cy.get('#accounts')
-      .contains('+')
-      .click();
+    cy.findByTestId('accounts-debt').within(() => {
+      cy.findByText('+').click();
 
-    cy.get('form')
-      .contains('debt account')
-      .parent()
-      .parent()
-      .find('select')
-      .select('Test Debt Submission');
-    cy.get('form')
-      .contains('payment account')
-      .parent()
-      .parent()
-      .find('select')
-      .select('account');
-    cy.get('form')
-      .contains('rtype')
-      .parent()
-      .parent()
-      .find('select')
-      .select('Repeat on a Day of the Week');
-    cy.get('form')
-      .contains('value')
-      .parent()
-      .parent()
-      .find('input')
-      .type('{selectall}250');
-    cy.get('form')
-      .contains('start')
-      .parent()
-      .parent()
-      .find('input')
-      .type('2019-04-28');
-    cy.get('form')
-      .contains('occurrences')
-      .parent()
-      .parent()
-      .find('input')
-      .type('{selectall}8');
-    cy.get('form')
-      .contains('cycle')
-      .parent()
-      .parent()
-      .find('input')
-      .type('{selectall}1');
-    cy.get('form').submit();
+      cy.findByLabelText('debt account').select('Test Debt Submission');
+      cy.findByLabelText('payment account').select('account');
+      cy.findByLabelText('rtype').select('Repeat on a Day of the Week');
+      cy.findByLabelText('value').type('{selectall}250');
+      cy.findByLabelText('start').type('2019-04-28');
+      cy.findByText('after Number of Occurrences').click({ force: true });
+      cy.findByLabelText('occurrences').type('{selectall}8');
+      cy.findByLabelText('cycle').type('{selectall}1');
+      cy.get('form').submit();
 
-    cy.get('#accounts').contains('1 for 250');
+      cy.queryByText('250').should('be.visible');
+    });
   });
 });

@@ -1,6 +1,5 @@
-node_modules/
-node_modules_yarn/
-node_modules_npm/
+node_modules
+build
 
 .vscode
 *.log

@@ -1,8 +1,12 @@
 import React from 'react';
-import { map } from 'microstates';
 import { State } from '../../state';
 
+import { Button } from 'theme-ui';
 import TabView from '../../components/view/tabView';
+import FlexTable, {
+  HeaderRow,
+  DataRow
+} from '../../components/bootstrap/FlexTable';
 import AccountInput from './accountInput';
 import AccountTransactionInput from './accountTransactionInput';
 
@@ -27,54 +31,49 @@ class AccountFlow extends React.Component {
     return (
       <State.Consumer>
         {model => (
-          <section className="section" id="accounts">
-            <TabView
-              activeTab={this.state.activeTab}
-              tabClick={this.tabClick}
-              tabTitles={['All Accounts', 'Add Account', 'Debt']}
-              tabContents={[
-                <React.Fragment>
-                  <button
-                    className="button is-rounded is-small is-info"
-                    onClick={model.toggleAllAccount}
-                  >
-                    Toggle All Visibility
-                  </button>
-                  <AccountTable
-                    data={model.accountsComputed}
-                    actions={{
-                      model: model,
-                      setAccountForm: this.setAccountForm,
-                      deleteAccount: model.deleteAccount,
-                      toggleAccountVisibility: model.toggleAccountVisibility
-                    }}
-                  />
-                </React.Fragment>,
-                <AccountInput tabClick={this.tabClick} />,
-                <React.Fragment>
-                  <div>
-                    <DebtTable
-                      data={model.state.accountsComputed}
-                      actions={{
-                        model: model,
-                        setAccountForm: this.setAccountForm
-                      }}
-                    />
-                  </div>
-                  <div>
-                    {model.state.accountsComputed.filter(
-                      account =>
-                        account.vehicle === 'debt' ||
-                        account.vehicle === 'loan' ||
-                        account.vehicle === 'credit line'
-                    ).length === 0 ? null : (
-                      <AccountTransactionInput tabClick={this.tabClick} />
-                    )}
-                  </div>
-                </React.Fragment>
-              ]}
-            />
-          </section>
+          <TabView
+            id="accounts"
+            activeTab={this.state.activeTab}
+            tabClick={this.tabClick}
+            tabTitles={['All Accounts', 'Add Account', 'Debt']}
+            tabContents={[
+              <React.Fragment>
+                <Button
+                  sx={{ variant: 'buttons.primary' }}
+                  onClick={model.toggleAllAccount}
+                >
+                  Toggle All Visibility
+                </Button>
+                <AccountTable
+                  data={model.state.accountsComputed}
+                  actions={{
+                    model: model,
+                    setAccountForm: this.setAccountForm,
+                    deleteAccount: model.deleteAccount,
+                    toggleAccountVisibility: model.toggleAccountVisibility
+                  }}
+                />
+              </React.Fragment>,
+              <AccountInput tabClick={this.tabClick} />,
+              <React.Fragment>
+                <DebtTable
+                  data={model.state.accountsComputed}
+                  actions={{
+                    model: model,
+                    setAccountForm: this.setAccountForm
+                  }}
+                />
+                {model.state.accountsComputed.filter(
+                  account =>
+                    account.vehicle === 'debt' ||
+                    account.vehicle === 'loan' ||
+                    account.vehicle === 'credit line'
+                ).length === 0 ? null : (
+                  <AccountTransactionInput tabClick={this.tabClick} />
+                )}
+              </React.Fragment>
+            ]}
+          />
         )}
       </State.Consumer>
     );
@@ -87,57 +86,53 @@ const AccountTable = ({ data, actions }) =>
   data.length === 0 || !data ? (
     <div>There are no accounts to show.</div>
   ) : (
-    <table className="table is-striped is-hoverable">
-      <thead>
-        <tr>
-          <th />
-          <th>name</th>
-          <th>
-            <abbr title="starting balance">starting</abbr>
-          </th>
-          <th>interest</th>
-          <th>vehicle</th>
-          <th>Modify</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        {map(data, account => (
-          <tr key={account.name.state}>
-            <td
-              onClick={actions.toggleAccountVisibility.bind(
-                this,
-                account.name.state
-              )}
-            >
-              {account.visible.state ? `👀` : `🤫`}
-            </td>
-            <th>{account.name.state}</th>
-            <td>{account.starting.toFixed}</td>
-            <td>{account.interest.toFixed}%</td>
-            <td>{account.vehicle.state}</td>
-            <td>
-              <button
-                className="button is-rounded is-small is-info"
-                onClick={() =>
-                  actions.setAccountForm(actions.model, 1, account.name.state)
-                }
-              >
-                M
-              </button>
-            </td>
-            <td>
-              <button
-                className="button is-rounded is-small is-danger"
-                onClick={actions.deleteAccount.bind(this, account.name.state)}
-              >
-                <strong>X</strong>
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <FlexTable
+      itemHeaders={[
+        'visible',
+        'name',
+        'starting',
+        'interest',
+        'vehicle',
+        'Modify',
+        'Delete'
+      ]}
+      itemData={data.map(account => ({
+        key: account.name,
+        data: [
+          <Button
+            sx={{ variant: 'buttons.outline' }}
+            onClick={actions.toggleAccountVisibility.bind(this, account.name)}
+          >
+            {account.visible ? `👀` : `🤫`}
+          </Button>,
+          account.name,
+          account.starting.toFixed(2),
+          `${account.interest.toFixed(2)}%`,
+          account.vehicle,
+          <Button
+            sx={{
+              variant: 'buttons.outline',
+              color: 'blue'
+            }}
+            onClick={() =>
+              actions.setAccountForm(actions.model, 1, account.name)
+            }
+          >
+            M
+          </Button>,
+          <Button
+            sx={{
+              variant: 'buttons.outline',
+              color: 'red'
+            }}
+            onClick={actions.deleteAccount.bind(this, account.name)}
+          >
+            <strong>X</strong>
+          </Button>
+        ]
+      }))}
+      actions={actions}
+    />
   );
 
 const DebtTable = ({ data, actions }) =>
@@ -149,7 +144,24 @@ const DebtTable = ({ data, actions }) =>
   ).length === 0 || !data ? (
     <div>There are no debts to show.</div>
   ) : (
-    data
+    <FlexDebtTable
+      itemHeaders={[
+        'account name',
+        'starting',
+        'interest',
+        'Add',
+        'Modify',
+        'Delete'
+      ]}
+      data={data}
+      actions={actions}
+    />
+  );
+
+const FlexDebtTable = ({ itemHeaders, data, actions }) => (
+  <React.Fragment>
+    <HeaderRow columns={itemHeaders.length} items={itemHeaders} />
+    {data
       .filter(
         account =>
           account.vehicle === 'debt' ||
@@ -157,71 +169,99 @@ const DebtTable = ({ data, actions }) =>
           account.vehicle === 'credit line'
       )
       .map(account => (
-        <div className="media box" key={account.name}>
-          <div className="media-content">
-            <div className="content">
-              <p>
-                <strong>{account.name}</strong>{' '}
-                <small>{`$${account.starting} @ ${account.interest}%`}</small>
-              </p>
-            </div>
-            {account.payback ? (
-              <PaybackTable data={account} actions={actions} />
-            ) : null}
-          </div>
-          <div className="media-right">
-            <button
-              className="button is-rounded is-small is-success"
-              onClick={actions.model.forms.accountTransactionFormVisible.toggle}
-            >
-              +
-            </button>
-            <button
-              className="button is-rounded is-small is-info"
-              onClick={() =>
-                actions.setAccountForm(actions.model, 1, account.name)
-              }
-            >
-              M
-            </button>
-            <button
-              className="button is-rounded is-small is-danger"
-              onClick={() => actions.model.deleteAccount(account.name)}
-            >
-              <strong>X</strong>
-            </button>
-          </div>
-        </div>
-      ))
-  );
+        <React.Fragment key={account.name}>
+          <DataRow
+            itemKey={account.name}
+            columns={itemHeaders.length}
+            itemHeaders={itemHeaders}
+            items={[
+              account.name,
+              account.starting.toFixed(2),
+              `${account.interest.toFixed(2)}%`,
+              <Button
+                sx={{
+                  variants: 'outline',
+                  color: 'green'
+                }}
+                onClick={
+                  actions.model.forms.accountTransactionFormVisible.toggle
+                }
+              >
+                +
+              </Button>,
+              <Button
+                sx={{
+                  variants: 'outline',
+                  color: 'blue'
+                }}
+                onClick={() =>
+                  actions.setAccountForm(actions.model, 1, account.name)
+                }
+              >
+                M
+              </Button>,
+              <Button
+                sx={{
+                  variants: 'outline',
+                  color: 'red'
+                }}
+                onClick={() => actions.model.deleteAccount(account.name)}
+              >
+                X
+              </Button>
+            ]}
+          />
+          {account.payback ? (
+            <PaybackTable data={account} actions={actions} />
+          ) : null}
+        </React.Fragment>
+      ))}
+  </React.Fragment>
+);
 
-const PaybackTable = ({ data, actions }) =>
-  data.payback.transactions.map((paybackTransaction, index) => (
-    <div className="media" key={index}>
-      <div className="media-content">
-        <p>
-          <strong>{paybackTransaction.start}</strong>{' '}
-          <small>{`${paybackTransaction.rtype} @ ${paybackTransaction.cycle} for ${paybackTransaction.value}`}</small>
-        </p>
-        <p>{paybackTransaction.description}</p>
-      </div>
-      <div className="media-right">
-        <button
-          className="button is-rounded is-small is-info"
+const PaybackTable = ({ data, actions }) => (
+  <FlexTable
+    itemHeaders={[
+      'description',
+      'start',
+      'rtype',
+      'cycle',
+      'value',
+      'Modify',
+      'Delete'
+    ]}
+    itemData={data.payback.transactions.map((paybackTransaction, index) => ({
+      key: index,
+      data: [
+        paybackTransaction.description,
+        paybackTransaction.start,
+        paybackTransaction.rtype,
+        paybackTransaction.cycle,
+        paybackTransaction.value,
+        <Button
+          sx={{
+            variants: 'outline',
+            color: 'blue'
+          }}
           onClick={() => {
             actions.model.modifyAccountTransaction(data.name, index);
           }}
         >
           M
-        </button>
-        <button
-          className="button is-rounded is-small is-danger"
+        </Button>,
+        <Button
+          sx={{
+            variants: 'outline',
+            color: 'green'
+          }}
           onClick={() =>
             actions.model.deleteAccountTransaction(data.name, index)
           }
         >
-          <strong>X</strong>
-        </button>
-      </div>
-    </div>
-  ));
+          X
+        </Button>
+      ]
+    }))}
+    actions={actions}
+  />
+);

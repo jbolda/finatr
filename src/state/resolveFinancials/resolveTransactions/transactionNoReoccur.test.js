@@ -1,3 +1,4 @@
+import parseISO from 'date-fns/fp/parseISO';
 import startOfDay from 'date-fns/fp/startOfDay';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
 
@@ -16,8 +17,8 @@ describe(`check transactionNoReoccur`, () => {
     value: 150
   };
   let graphRange = {
-    start: startOfDay('2018-01-01'),
-    end: startOfDay('2018-02-01')
+    start: startOfDay(parseISO('2018-01-01')),
+    end: startOfDay(parseISO('2018-02-01'))
   };
   let seedDate = graphRange.start;
   it(`has all the correct properties`, () => {
@@ -29,7 +30,9 @@ describe(`check transactionNoReoccur`, () => {
   it(`returns the same date`, () => {
     let resolvedTestData = transactionNoReoccur({ transaction, seedDate });
     expect(
-      differenceInCalendarDays(transaction.start)(resolvedTestData.date)
+      differenceInCalendarDays(parseISO(transaction.start))(
+        resolvedTestData.date
+      )
     ).toBe(0);
   });
 });
