@@ -1,4 +1,4 @@
-name: e2e
+name: e2e on push
 
 on: [push]
 jobs:
@@ -11,7 +11,6 @@ jobs:
       - uses: cypress-io/github-action@v1
         with:
           browser: chrome
-        with:
           record: true
         env:
           # pass the Dashboard record key as an environment variable
@@ -28,7 +27,6 @@ jobs:
       - uses: cypress-io/github-action@v1
         with:
           browser: firefox
-        with:
           record: true
         env:
           # pass the Dashboard record key as an environment variable
@@ -42,7 +40,6 @@ jobs:
       - uses: cypress-io/github-action@v1
         with:
           browser: edge
-        with:
           record: true
         env:
           # pass the Dashboard record key as an environment variable
