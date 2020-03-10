@@ -19,7 +19,7 @@ describe('Debt Payback Form Tests', () => {
       cy.findByLabelText('rtype').select('No Repeating');
       cy.findByLabelText('value').type('55');
       cy.findByLabelText('start').type('2019-05-28');
-      cy.findByText('after Number of Occurrences').click();
+      cy.findByText('after Number of Occurrences').click({ force: true });
       cy.findByLabelText('occurrences').type('8');
       cy.findByLabelText('cycle').type('1');
       cy.findByTestId('accounts-debt').within(() => cy.get('form').submit());
