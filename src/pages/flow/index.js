@@ -1,7 +1,7 @@
 import React from 'react';
 import { State } from '../../state';
 import BarChart from './barChart';
-import { Box, Input } from '@theme-ui/components';
+import { Box, Input } from 'theme-ui';
 
 import Transactions from './transactions';
 import Accounts from './accounts';

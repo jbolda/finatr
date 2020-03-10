@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import { Text } from '@theme-ui/components';
+import { Text } from 'theme-ui';
 
 const A = ({ href, children }) => (
   <a

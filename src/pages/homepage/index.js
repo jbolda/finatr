@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from '../../components/common/link';
 import { State } from '../../state';
-import { Box, Grid, Heading, Text } from '@theme-ui/components';
+import { Box, Grid, Heading, Text } from 'theme-ui';
 
 const Homepage = () => (
   <State.Consumer>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { State } from '../../state';
-import { Grid, Box, Text } from '@theme-ui/components';
+import { Grid, Box, Text } from 'theme-ui';
 
 class FinancialIndependence extends React.Component {
   render() {

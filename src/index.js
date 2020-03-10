@@ -5,9 +5,9 @@ import { Router } from '@reach/router';
 import { Store, create } from 'microstates';
 import AppModel, { State } from './state';
 
-import { ThemeProvider, ColorMode } from 'theme-ui';
+import { ThemeProvider } from 'theme-ui';
 import theme from './theme.js';
-import { Box, Flex } from '@theme-ui/components';
+import { Box, Flex } from 'theme-ui';
 
 import Header from './components/common/header';
 import Footer from './components/common/footer';
@@ -34,7 +34,6 @@ class App extends React.Component {
     return (
       <State.Provider value={this.state.model}>
         <ThemeProvider theme={theme}>
-          <ColorMode />
           <Flex sx={{ flexDirection: 'column', minHeight: '100vh' }}>
             <Box p="0" m="0">
               <Header />

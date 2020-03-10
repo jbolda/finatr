@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { State } from '../../state';
 import TabView from '../../components/view/tabView';
-import { Flex, Box, Heading, Text, Button } from '@theme-ui/components';
+import { Flex, Box, Heading, Text, Button } from 'theme-ui';
 
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';
@@ -58,7 +58,7 @@ class Importing extends React.Component {
       ...(get(['accounts'], modelState)
         ? { accounts: [...modelState.accounts] }
         : {}),
-      ...({ settings: { startDate: model.charts.graphDates.start } }),
+      ...{ settings: { startDate: model.charts.graphDates.start } },
       ...(get(['taxStrategy', 'incomeReceived'], modelState) &&
       modelState.taxStrategy.incomeReceived.length !== 0
         ? {
