@@ -14,12 +14,9 @@ const ComputedAmountSchema = Yup.object()
     reference: Yup.string()
       .notOneOf(['select'])
       .required('Required'),
-    on: Yup.object().when('operation', {
-      is: operation => operation !== 'none',
-      // eslint-disable-next-line
-      then: ComputedAmountSchema,
-      otherwise: Yup.object().strip()
-    })
+    on: Yup.object().when('operation', (operation, ComputedAmountSchema) =>
+      operation !== 'none' ? ComputedAmountSchema : Yup.object().strip()
+    )
   })
   .required('Required');
 
