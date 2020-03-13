@@ -28,6 +28,11 @@ export default props => {
             </Box>
             <Box>
               <Text p={2}>
+                <NavLink to="budget">Budget</NavLink>
+              </Text>
+            </Box>
+            <Box>
+              <Text p={2}>
                 <NavLink to="flow">Cash Flow</NavLink>
               </Text>
             </Box>

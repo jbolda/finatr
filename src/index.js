@@ -14,6 +14,7 @@ import Footer from './components/common/footer';
 import Homepage from './pages/homepage';
 import StyleGuide from './pages/styleguide';
 import Examples from './pages/examples';
+import Budget from './pages/budget';
 import Financial from './pages/flow';
 import Accounts from './pages/accounts';
 import FinancialIndependence from './pages/financialindependence';
@@ -43,6 +44,7 @@ class App extends React.Component {
                 <Homepage path="/" />
                 <StyleGuide path="style-guide" />
                 <Examples path="examples" />
+                <Budget path="budget" />
                 <Financial path="flow" />
                 <Accounts path="accounts" />
                 <FinancialIndependence path="financialindependence" />
