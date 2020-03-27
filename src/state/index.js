@@ -1,6 +1,10 @@
 import React from 'react';
 import { Primitive, valueOf, ObjectType, ArrayType } from 'microstates';
-import { Transaction, TransactionComputed } from './transactions.js';
+import {
+  Transaction,
+  TransactionComputed,
+  TransactionGroup
+} from './transactions.js';
 import { Account, AccountComputed } from './accounts.js';
 import { Charts } from './charts.js';
 import { Stats } from './stats.js';
@@ -14,6 +18,7 @@ class AppModel extends Primitive {
   forms = Forms;
   transactions = ArrayType.of(Transaction);
   transactionsComputed = ArrayType.of(TransactionComputed);
+  transactionGroup = ArrayType.of(TransactionGroup);
   transactionsSplit = ObjectType;
   transactionCategories = ObjectType;
   accounts = ArrayType.of(Account);
@@ -152,6 +157,10 @@ class AppModel extends Primitive {
           Math.abs(a.value) - Math.abs(b.value) ||
           b.value - a.value
       );
+
+    const group = init.transactionGroup
+      .set([{ groupName: 'paycheck', transactions: transactions }])
+      .transactionGroup.map(group => group.organize());
 
     // returns a microstate with the transactionsComputed set
     return categoriesSet

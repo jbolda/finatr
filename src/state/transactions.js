@@ -1,9 +1,11 @@
 import {
   create,
   relationship,
+  valueOf,
   StringType,
   NumberType,
   BooleanType,
+  ArrayType,
   Primitive
 } from 'microstates';
 import { Big, _Big } from './customTypes.js';
@@ -87,4 +89,24 @@ class TransactionComputed extends Transaction {
   y = Big;
 }
 
-export { Transaction, TransactionComputed };
+class TransactionGroup extends Primitive {
+  groupName = StringType; // category from Transaction
+  description = StringType;
+  budgets = ArrayType.of(StringType);
+  transactions = relationship(({ value, parentValue }) => {
+    return {
+      Type: ArrayType.of(Transaction),
+      value: value.filter(
+        transaction => transaction.category === parentValue.groupName
+      )
+    };
+  });
+
+  organize() {
+    console.log(this);
+    console.log(this.transactions);
+    return this;
+  }
+}
+
+export { Transaction, TransactionComputed, TransactionGroup };
