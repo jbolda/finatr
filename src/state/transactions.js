@@ -9,6 +9,7 @@ import {
   Primitive
 } from 'microstates';
 import { Big, _Big } from './customTypes.js';
+import { determineUnique } from './utils.js';
 
 class AmountComputed extends Primitive {
   operation = StringType;
@@ -48,6 +49,7 @@ class Transaction extends Primitive {
   id = StringType;
   raccount = StringType;
   description = StringType;
+  groups = ArrayType.of(StringType);
   category = StringType;
   type = StringType;
   start = StringType;
@@ -92,19 +94,35 @@ class TransactionComputed extends Transaction {
 class TransactionGroup extends Primitive {
   groupName = StringType; // category from Transaction
   description = StringType;
-  budgets = ArrayType.of(StringType);
+  groups = relationship(({ value, parentValue }) => {
+    console.log(parentValue);
+    return {
+      Type: ArrayType.of(TransactionGroup),
+      value: determineUnique(parentValue).map(group => ({
+        groupName: group,
+        transactions: parentValue.transactions
+      }))
+    };
+  });
   transactions = relationship(({ value, parentValue }) => {
     return {
       Type: ArrayType.of(Transaction),
-      value: value.filter(
-        transaction => transaction.category === parentValue.groupName
-      )
+      value:
+        parentValue.group === 'root'
+          ? value
+          : value.filter(transaction =>
+              transaction.group.includes(parentValue.groupName)
+            )
     };
   });
 
-  organize() {
-    console.log(this);
-    console.log(this.transactions);
+  log() {
+    // not certain why this is not working
+    // nothing logs out from this
+    console.log(this.state);
+    if (this.groupName === 'root') {
+      console.log('TransactionGroup logged', valueOf(this.groups));
+    }
     return this;
   }
 }

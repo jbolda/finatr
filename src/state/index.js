@@ -18,7 +18,7 @@ class AppModel extends Primitive {
   forms = Forms;
   transactions = ArrayType.of(Transaction);
   transactionsComputed = ArrayType.of(TransactionComputed);
-  transactionGroup = ArrayType.of(TransactionGroup);
+  transactionGroup = TransactionGroup;
   transactionsSplit = ObjectType;
   transactionCategories = ObjectType;
   accounts = ArrayType.of(Account);
@@ -43,6 +43,7 @@ class AppModel extends Primitive {
           raccount: `account`,
           description: `seed data`,
           category: `default transaction`,
+          groups: ['typical daily expense'],
           type: `income`,
           start: `2018-11-01`,
           rtype: `day`,
@@ -159,18 +160,18 @@ class AppModel extends Primitive {
       );
 
     const group = init.transactionGroup
-      .set([{ groupName: 'paycheck', transactions: transactions }])
-      .transactionGroup.map(group => group.organize());
-
+      .set({ groupName: 'root', transactions: transactions })
+      .log();
+    console.log(group.transactionGroup);
     // returns a microstate with the transactionsComputed set
     return categoriesSet
-      ? init.transactionsComputed.map(transaction =>
+      ? group.transactionsComputed.map(transaction =>
           transactionCompute({ transaction })
         )
-      : init.transactionsComputed
+      : group.transactionsComputed
           .map(transaction => transactionCompute({ transaction }))
           .transactionCategories.set(
-            init.state.transactionsComputed.reduce(
+            group.state.transactionsComputed.reduce(
               (categories, transaction) => {
                 let next = { ...categories };
                 next[transaction.category] = true;
