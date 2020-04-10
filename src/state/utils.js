@@ -1,7 +1,7 @@
-const determineUnique = ({ transactions }) => {
-  console.log(transactions);
-  return transactions.reduce((uniqueGroups, currentTransaction) => {
+const determineUnique = ({ transactions }) =>
+  transactions.reduce((uniqueGroups, currentTransaction) => {
     let nextUniqueGroups = uniqueGroups;
+    if (!currentTransaction.groups) return uniqueGroups;
     currentTransaction.groups.forEach(group => {
       if (!uniqueGroups.includes(group)) {
         nextUniqueGroups.push(group);
@@ -9,5 +9,4 @@ const determineUnique = ({ transactions }) => {
     });
     return uniqueGroups;
   }, []);
-};
 export { determineUnique };

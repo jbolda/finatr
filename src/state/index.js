@@ -159,19 +159,15 @@ class AppModel extends Primitive {
           b.value - a.value
       );
 
-    const group = init.transactionGroup
-      .set({ groupName: 'root', transactions: transactions })
-      .log();
-    console.log(group.transactionGroup);
     // returns a microstate with the transactionsComputed set
-    return categoriesSet
-      ? group.transactionsComputed.map(transaction =>
+    const computeTransactions = categoriesSet
+      ? init.transactionsComputed.map(transaction =>
           transactionCompute({ transaction })
         )
-      : group.transactionsComputed
+      : init.transactionsComputed
           .map(transaction => transactionCompute({ transaction }))
           .transactionCategories.set(
-            group.state.transactionsComputed.reduce(
+            init.state.transactionsComputed.reduce(
               (categories, transaction) => {
                 let next = { ...categories };
                 next[transaction.category] = true;
@@ -180,6 +176,15 @@ class AppModel extends Primitive {
               {}
             )
           );
+
+    const group = computeTransactions.transactionGroup
+      .set({
+        groupName: 'root',
+        transactions: transactions
+      })
+      .transactionGroup.log();
+
+    return group;
   }
 
   filterTransactionsComputed(category) {

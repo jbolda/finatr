@@ -94,34 +94,25 @@ class TransactionComputed extends Transaction {
 class TransactionGroup extends Primitive {
   groupName = StringType; // category from Transaction
   description = StringType;
-  groups = relationship(({ value, parentValue }) => {
-    console.log(parentValue);
-    return {
-      Type: ArrayType.of(TransactionGroup),
-      value: determineUnique(parentValue).map(group => ({
-        groupName: group,
-        transactions: parentValue.transactions
-      }))
-    };
-  });
-  transactions = relationship(({ value, parentValue }) => {
-    return {
-      Type: ArrayType.of(Transaction),
-      value:
-        parentValue.group === 'root'
-          ? value
-          : value.filter(transaction =>
-              transaction.group.includes(parentValue.groupName)
-            )
-    };
-  });
+  groups = relationship(({ parentValue }) => ({
+    Type: ArrayType.of(TransactionGroup),
+    value: determineUnique(parentValue).map(group => ({
+      groupName: group,
+      transactions: parentValue.transactions.filter(transaction =>
+        transaction.groups.includes(group)
+      )
+    }))
+  }));
+  transactions = ArrayType.of(TransactionComputed);
 
   log() {
     // not certain why this is not working
     // nothing logs out from this
-    console.log(this.state);
-    if (this.groupName === 'root') {
-      console.log('TransactionGroup logged', valueOf(this.groups));
+    if (this.groupName.state === 'root') {
+      for (const group of this.groups) {
+        console.log('TransactionGroup logged', valueOf(group));
+        console.log('TransactionGroup logged', valueOf(group.groups));
+      }
     }
     return this;
   }
