@@ -121,7 +121,7 @@ jobs:
           asset_name: ${{ format('finatr{0}{1}', matrix.ext, matrix.compressed ) }}
           asset_content_type: application/zip
       - name: build tauri app in debug mode
-        run: yarn build --debug
+        run: yarn tauri build --debug
       - name: compress (macos only)
         if: matrix.platform == 'macos-latest'
         working-directory: ${{ format('./src-tauri/target/debug/{0}', matrix.buildFolder ) }}
