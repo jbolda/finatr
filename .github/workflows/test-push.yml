@@ -19,6 +19,7 @@ jobs:
 
   firefox:
     runs-on: ubuntu-latest
+    continue-on-error: true
     container:
       image: cypress/browsers:node12.16.1-chrome80-ff73
       options: --user 1001
@@ -36,6 +37,7 @@ jobs:
 
   edge:
     runs-on: windows-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v2
       - uses: cypress-io/github-action@v1
