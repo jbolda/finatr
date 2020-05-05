@@ -14439,7 +14439,7 @@ tar@^6.0.1:
     mkdirp "^1.0.3"
     yallist "^4.0.0"
 
-tauri@^0.5.2:
+tauri@0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/tauri/-/tauri-0.5.2.tgz#cc7846a462025219030c26104cdcd1980736a4c3"
   integrity sha512-vX4SELmEwHU2AaV5dndbGXNqz1iHj486w+ami++gKOH5gLny9i3vdoz3MmO5aeNuB/PcxZlfExSfB1k0nSnNjQ==
