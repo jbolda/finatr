@@ -4,7 +4,7 @@ on: [push]
 jobs:
   chrome:
     runs-on: ubuntu-16.04
-    # let's make sure our tests pass on Chrome browser
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
       - uses: cypress-io/github-action@v1
@@ -13,13 +13,13 @@ jobs:
           record: true
           start: yarn start
         env:
-          # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   firefox:
     runs-on: ubuntu-latest
     continue-on-error: true
+    timeout-minutes: 30
     container:
       image: cypress/browsers:node12.16.1-chrome80-ff73
       options: --user 1001
@@ -31,13 +31,13 @@ jobs:
           record: true
           start: yarn start
         env:
-          # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   edge:
     runs-on: windows-latest
     continue-on-error: true
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
       - uses: cypress-io/github-action@v1
@@ -46,6 +46,5 @@ jobs:
           record: true
           start: yarn start
         env:
-          # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
