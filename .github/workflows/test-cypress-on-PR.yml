@@ -5,7 +5,7 @@ on: pull_request
 jobs:
   chrome:
     runs-on: ubuntu-16.04
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v2
       - uses: cypress-io/github-action@v1
@@ -21,7 +21,7 @@ jobs:
 
   firefox:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     container:
       image: cypress/browsers:node12.16.1-chrome80-ff73
       options: --user 1001
@@ -34,14 +34,13 @@ jobs:
           group: firefox
           start: yarn start
           wait-on: 'http://localhost:3000'
-          config-file: cypress-config.json
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   edge:
     runs-on: windows-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v2
       - uses: cypress-io/github-action@v1
@@ -51,6 +50,7 @@ jobs:
           group: edge
           start: yarn start
           wait-on: 'http://localhost:3000'
+          config-file: ./cypress.json
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
