@@ -3,3 +3,6 @@ build
 
 .vscode
 *.log
+
+# large generated cypress files from tests
+cypress/videos
