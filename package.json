@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@testing-library/cypress": "5.3.0",
-    "cypress": "4.1.0",
+    "cypress": "4.5.0",
     "prettier": "1.19.1",
     "react-test-renderer": "16.13.0",
     "tauri": "0.5.2"
@@ -41,12 +41,12 @@
     "start": "env BROWSER=none react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test:ci": "CI=true react-scripts test",
     "eject": "react-scripts eject",
     "pretty": "prettier --write \"{src,__{tests,mocks}__}/**/*.js\"",
     "cy": "cypress open",
     "cypress": "cypress",
     "cy:verify": "cypress verify",
+    "cy:info": "cypress info && ls",
     "cy:version": "cypress version",
     "cy:run": "cypress run",
     "cy:run:record": "cypress run --record --parallel"
