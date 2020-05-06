@@ -46,6 +46,7 @@
     "cy": "cypress open",
     "cypress": "cypress",
     "cy:verify": "cypress verify",
+    "cy:info": "cypress info && ls",
     "cy:version": "cypress version",
     "cy:run": "cypress run",
     "cy:run:record": "cypress run --record --parallel"

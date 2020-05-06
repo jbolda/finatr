@@ -32,7 +32,7 @@ jobs:
           browser: firefox
           record: true
           group: firefox
-          build: yarn cypress info # to output the detected browsers
+          build: yarn cy:info # to output the detected browsers
           start: yarn start
           wait-on: 'http://localhost:3000'
         env:
@@ -49,7 +49,7 @@ jobs:
           browser: edge
           record: true
           group: edge
-          build: yarn cypress info && ls # to output the detected browsers
+          build: yarn cy:info # to output the detected browsers
           start: yarn start
           wait-on: 'http://localhost:3000'
           config-file: ./cypress.json
