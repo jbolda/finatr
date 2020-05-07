@@ -19,12 +19,12 @@ describe('Transaction Form Tests', () => {
       cy.get('form').submit();
 
       cy.findByTestId('transactions-all-transactions').within(() =>
-        cy.queryByText('55.00').should('be.visible')
+        cy.findByText('55.00').should('be.visible')
       );
 
       cy.findByTestId('transactions-income').within(() =>
         // all transactions should be visible, so just check existence
-        cy.queryByText('55.00').should('exist')
+        cy.findByText('55.00').should('exist')
       );
     });
   });
@@ -37,7 +37,7 @@ describe('Transaction Form Tests', () => {
 
       cy.findByTestId('transactions-income').within(() =>
         // all transactions should be visible, so just check existence
-        cy.queryByText('55.00').should('exist')
+        cy.findByText('55.00').should('exist')
       );
     });
   });
@@ -51,7 +51,7 @@ describe('Transaction Form Tests', () => {
 
       cy.findByTestId('transactions-expenses').within(() =>
         // all transactions should be visible, so just check existence
-        cy.queryByText('67.00').should('exist')
+        cy.findByText('67.00').should('exist')
       );
     });
   });
@@ -65,7 +65,7 @@ describe('Transaction Form Tests', () => {
 
       cy.findByTestId('transactions-transfers').within(() =>
         // all transactions should be visible, so just check existence
-        cy.queryByText('53.00').should('exist')
+        cy.findByText('53.00').should('exist')
       );
     });
   });

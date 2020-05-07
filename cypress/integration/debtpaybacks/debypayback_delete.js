@@ -32,7 +32,7 @@ describe('Debt Payback Form Tests', () => {
         .parent()
         .within(() => cy.findByText('X').click());
 
-      cy.queryByText('2019-05-28').should('not.exist');
+      cy.findByText('2019-05-28').should('not.exist');
     });
   });
 });

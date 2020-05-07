@@ -32,7 +32,7 @@ describe('Debt Payback Form Tests', () => {
       cy.findByLabelText('reference').select('Special Balance');
       cy.get('form').submit();
 
-      cy.queryByText('0').should('be.visible');
+      cy.findByText('0').should('be.visible');
     });
   });
 

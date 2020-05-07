@@ -18,7 +18,7 @@ describe('Debt Payback Form Tests', () => {
   it('tab switches to the form', () => {
     cy.get('#accounts').within(() => {
       cy.findByText('+').click();
-      cy.queryByText('Add Debt Payback').should('be.visible');
+      cy.findByText('Add Debt Payback').should('be.visible');
     });
   });
 
@@ -36,7 +36,7 @@ describe('Debt Payback Form Tests', () => {
       cy.findByLabelText('cycle').type('{selectall}1');
       cy.get('form').submit();
 
-      cy.queryByText('250').should('be.visible');
+      cy.findByText('250').should('be.visible');
     });
   });
 });

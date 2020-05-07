@@ -32,7 +32,7 @@ describe('Debt Payback Form Tests', () => {
 
   it('modify fills in form', () => {
     cy.findByTestId('accounts-debt').within(() => {
-      cy.queryByLabelText('start').should('have.value', '2019-05-28');
+      cy.findByLabelText('start').should('have.value', '2019-05-28');
     });
   });
 });

@@ -17,10 +17,10 @@ describe('Transaction Delete Tests', () => {
       cy.findByText('55.00')
         .parent()
         .within(() => {
-          cy.queryByText('X').click();
+          cy.findByText('X').click();
         });
 
-      cy.queryByText('test account').should('not.exist');
+      cy.findByText('test account').should('not.exist');
     });
   });
 });
