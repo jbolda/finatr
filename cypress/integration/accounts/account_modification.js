@@ -20,7 +20,7 @@ describe('Account Modifications Tests', () => {
   });
 
   it('switches back to the form', () => {
-    cy.get('#accounts').within(() => cy.queryByText('Add an Account'));
+    cy.get('#accounts').within(() => cy.findByText('Add an Account'));
   });
 
   it('submits modified account', () => {
@@ -29,7 +29,7 @@ describe('Account Modifications Tests', () => {
       cy.get('form').submit();
 
       cy.findByTestId('accounts-all-accounts').within(() =>
-        cy.queryByText('5996.00').should('exist')
+        cy.findByText('5996.00').should('exist')
       );
     });
   });
@@ -42,8 +42,8 @@ describe('Account Modifications Tests', () => {
 
       cy.findByText('Debt').click();
       cy.findByTestId('accounts-debt').within(() => {
-        cy.queryByText('test account').should('be.visible');
-        cy.queryByText('577.00').should('be.visible');
+        cy.findByText('test account').should('be.visible');
+        cy.findByText('577.00').should('be.visible');
       });
     });
   });

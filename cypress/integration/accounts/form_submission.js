@@ -18,7 +18,7 @@ describe('Account Form Tests', () => {
       cy.get('form').submit();
 
       cy.findByTestId('accounts-all-accounts').within(() =>
-        cy.queryByText('Test Account Submission').should('exist')
+        cy.findByText('Test Account Submission').should('exist')
       );
     });
   });
@@ -30,7 +30,7 @@ describe('Account Form Tests', () => {
       cy.get('form').submit();
 
       cy.findByTestId('accounts-debt').within(() =>
-        cy.queryByText('Test Debt Account').should('exist')
+        cy.findByText('Test Debt Account').should('exist')
       );
     });
   });
