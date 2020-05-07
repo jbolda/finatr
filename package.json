@@ -27,7 +27,7 @@
     "react-file-reader-input": "2.0.0",
     "react-scripts": "3.4.1",
     "theme-ui": "0.3.1",
-    "ynab": "1.17.0",
+    "ynab": "1.19.0",
     "yup": "0.28.5"
   },
   "devDependencies": {
