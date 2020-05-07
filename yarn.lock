@@ -8244,10 +8244,10 @@ jest@24.9.0:
     import-local "^2.0.0"
     jest-cli "^24.9.0"
 
-js-file-download@0.4.10:
-  version "0.4.10"
-  resolved "https://registry.yarnpkg.com/js-file-download/-/js-file-download-0.4.10.tgz#016ece060121cabc611b0f95aab64df63ba55071"
-  integrity sha512-kX4J3mEFdiQ1w4YarrO940hpwuEhxcpzL5FZoA3WLR3D+/FPJtu04I7PesC4nJDdrQYM6xeckBiULGUxvxZluQ==
+js-file-download@0.4.12:
+  version "0.4.12"
+  resolved "https://registry.yarnpkg.com/js-file-download/-/js-file-download-0.4.12.tgz#10c70ef362559a5b23cdbdc3bd6f399c3d91d821"
+  integrity sha512-rML+NkoD08p5Dllpjo0ffy4jRHeY6Zsapvr/W86N7E0yuzAO6qa5X9+xog6zQNlH102J7IXljNY2FtS6Lj3ucg==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
