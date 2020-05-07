@@ -200,7 +200,10 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
 
   const stacked = stack(stackComputed);
 
-  const maxHeight = d3.max(stacked.reduce((a, b) => a.concat(b)), d => d[1]);
+  const maxHeight = d3.max(
+    stacked.reduce((a, b) => a.concat(b)),
+    d => d[1]
+  );
 
   return keys.map((key, index) => ({
     ...data[index],
