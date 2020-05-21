@@ -2,8 +2,9 @@
 _helping you analyze your future cash flows_
 
 [![Deploys By Netlify](https://www.netlify.com/img/global/badges/netlify-light.svg)](https://www.netlify.com)
+
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](code-of-conduct.md)
-![Discord](https://img.shields.io/discord/711689469606232184?color=7289da&label=chat%20on%20discord&style=plastic)
+[![Discord](https://img.shields.io/discord/711689469606232184?color=7289da&label=chat%20on%20discord&style=plastic)](https://discord.gg/sPazfrt)
 
 Visit the production site at [www.finatr.com](https://www.finatr.com). Visit the upcoming version of the site at [next.finatr.com](https://next.finatr.com).
 
