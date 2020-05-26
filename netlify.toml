@@ -1,0 +1,9 @@
+[[redirects]]
+  from = "/discord"
+  to = "https://discord.gg/sPazfrt"
+  status = 302
+
+[[redirects]]
+  from = "/github"
+  to = "https://github.com/jbolda/finatr"
+  status = 302
