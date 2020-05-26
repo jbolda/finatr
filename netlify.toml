@@ -2,8 +2,10 @@
   from = "/discord"
   to = "https://discord.gg/sPazfrt"
   status = 302
+  force = true # as SPA redirects everything to root
 
 [[redirects]]
   from = "/github"
   to = "https://github.com/jbolda/finatr"
   status = 302
+  force = true # as SPA redirects everything to root
