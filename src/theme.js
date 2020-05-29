@@ -72,13 +72,23 @@ export default {
       boxShadow: 'inset 0 0 2px'
     }
   },
+  links: {
+    primary: { color: 'accent' },
+    bold: {
+      fontWeight: 'bold'
+    },
+    nav: {
+      color: 'accent',
+      fontWeight: 'bold',
+      textDecoration: 'none',
+      ':hover': { color: 'secondary', textDecoration: 'underline' }
+    }
+  },
   variants: {
     header: {
       bg: 'primary'
     },
-    footer: { bg: 'primary' },
-    link: { color: 'accent' },
-    navLink: { color: 'accent' }
+    footer: { bg: 'primary' }
   },
   styles: {
     root: {
