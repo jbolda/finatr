@@ -46,7 +46,7 @@ const Homepage = () => (
             <Text variant="section">About</Text>
             <Text>
               Most apps track your historical information and help you set up a
-              budget. Argueably, budgets don't work for everyone. Even if you
+              budget. Arguably, budgets don't work for everyone. Even if you
               maintain a budget, it is still of great value to look to the
               future. The first version focuses on the near future checking that
               the inflows and outflows in your accounts are satisfactory.

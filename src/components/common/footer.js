@@ -1,13 +1,12 @@
-import React from 'react';
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import { Box, Text, Link } from 'theme-ui';
 
 const A = ({ href, children }) => (
   <a
     href={href}
     sx={{
-      textDecoration: 'none',
-      ':hover': { color: 'muted', textDecoration: 'underline' },
-      variant: 'variants.navLink'
+      variant: 'links.nav'
     }}
   >
     {children}

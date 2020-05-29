@@ -1,31 +1,20 @@
 import React from 'react';
-import { Link } from '@reach/router';
+import { Link as LinkThemed, NavLink as NavLinkThemed } from 'theme-ui';
+import { Link as LinkNavigation } from '@reach/router';
 
 export default props => {
   return (
-    <Link
-      to={props.to}
-      sx={{
-        variant: 'variants.link'
-      }}
-    >
+    <LinkThemed to={props.to} as={LinkNavigation} variant="links.primary">
       {props.children}
-    </Link>
+    </LinkThemed>
   );
 };
 
 const NavLink = props => {
   return (
-    <Link
-      to={props.to}
-      sx={{
-        textDecoration: 'none',
-        ':hover': { color: 'muted', textDecoration: 'underline' },
-        variant: 'variants.navLink'
-      }}
-    >
+    <NavLinkThemed to={props.to} as={LinkNavigation} variant="links.nav">
       {props.children}
-    </Link>
+    </NavLinkThemed>
   );
 };
 

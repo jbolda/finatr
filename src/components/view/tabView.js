@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
 import { Box, Heading } from 'theme-ui';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@reach/tabs';
