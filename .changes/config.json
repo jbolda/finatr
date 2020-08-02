@@ -1,0 +1,17 @@
+{
+  "gitSiteUrl": "https://github.com/jbolda/finatr",
+  "pkgManagers": {
+    "javascript": {
+      "version": true,
+      "prepublish": ["yarn", "yarn build"],
+      "getPublishedVersion": "git tag v${ pkgFile.version } 2> OUT= || echo ${ pkgFile.version }",
+      "publish": "netlify-cli deploy --dir=build --prod"
+    }
+  },
+  "packages": {
+    "finatr": {
+      "path": "./",
+      "manager": "javascript"
+    }
+  }
+}
