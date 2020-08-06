@@ -6,3 +6,6 @@ build
 
 # large generated cypress files from tests
 cypress/videos
+
+# Local Netlify folder
+.netlify

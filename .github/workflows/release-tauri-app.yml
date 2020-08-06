@@ -3,7 +3,7 @@ name: release-tauri-app
 on:
   push:
     branches:
-      - master
+      - none
     paths:
       - '**/package.json'
 
