@@ -14848,10 +14848,10 @@ yauzl@^2.10.0, yauzl@^2.4.2:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.1.0"
 
-ynab@1.19.0:
-  version "1.19.0"
-  resolved "https://registry.yarnpkg.com/ynab/-/ynab-1.19.0.tgz#b4b9902ddd6f5eb485cc063eb39109872405bb74"
-  integrity sha512-ZUJmu4Ics0hHZf8l0gnF/SIF2vk+lIjzHQrw11wABafNXa5E0U8rBwdINVJxRkR2iH61S74jet6HJ+/ictY+xg==
+ynab@1.20.0:
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/ynab/-/ynab-1.20.0.tgz#65a451b4644c4cbfe250237b364e237eb5ac4af8"
+  integrity sha512-agn2NhLGx/hXKLh5/Y8Ri45DZvyabXJCtJ9jTHOnaocr7XAL0R5jW7ZnKupUI9dIJy3vAXln5i+KDgjQ98ieqA==
   dependencies:
     portable-fetch "^3.0.0"
 
