@@ -6,12 +6,20 @@
       "prepublish": ["yarn", "yarn build"],
       "getPublishedVersion": "git tag v${ pkgFile.version } 2> OUT= || echo ${ pkgFile.version }",
       "publish": "npx netlify-cli deploy --dir=build --prod"
+    },
+    "rust": {
+      "version": true,
+      "publish": false
     }
   },
   "packages": {
     "finatr": {
       "path": "./",
       "manager": "javascript"
+    },
+    "app": {
+      "path": "./",
+      "manager": "rust"
     }
   }
 }
