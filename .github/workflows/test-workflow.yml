@@ -68,15 +68,15 @@ jobs:
         include:
           - platform: ubuntu-latest
             buildFolder: bundle/deb
-            ext: _0.1.0_amd64.deb
+            ext: _0.3.0_amd64.deb
             compressed: ''
           - platform: macos-latest
             buildFolder: bundle/osx
-            ext: .app
+            ext: _0.3.0_x64.app
             compressed: .tgz
           - platform: windows-latest
-            buildFolder: ''
-            ext: .x64.msi
+            buildFolder: bundle/msi
+            ext: _0.3.0_x64.msi
             compressed: ''
 
     steps:
