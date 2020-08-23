@@ -33,7 +33,7 @@ jobs:
       - name: build finatr for tauri app
         run: yarn build
       - run: cargo install tauri-bundler --force
-      - uses: tauri-apps/tauri-action@v0
+      - uses: tauri-apps/tauri-action@test/manual-tauri-build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -43,7 +43,3 @@ jobs:
           releaseBody: "See the assets to download this version and install."
           releaseDraft: true
           prerelease: false
-      - uses: actions/upload-artifact@v2
-        with:
-          name: ${{ matrix.platform }}-target
-          path: src-tauri/target
