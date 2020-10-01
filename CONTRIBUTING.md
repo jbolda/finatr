@@ -31,3 +31,7 @@ Once your Pull Request is successfully merged, feel free to tag yourself using t
 ```
 
 If your Pull Request is merged in and you're not added, please let someone know if you don't want to tag yourself, as we want to recognize everyone for their help.
+
+## Additional Resources
+- https://github.com/firstcontributions/first-contributions
+- https://opensource.guide/
