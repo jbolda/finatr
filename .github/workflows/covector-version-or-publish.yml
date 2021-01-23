@@ -32,7 +32,7 @@ jobs:
           command: 'version-or-publish'
       - name: create pull request
         id: cpr
-        uses: tauri-apps/create-pull-request@v2.8.0
+        uses: tauri-apps/create-pull-request@v2.8.1
         if: steps.covector.outputs.commandRan == 'version'
         with:
           title: "Publish New Versions"
