@@ -25,7 +25,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-file-reader-input": "2.0.0",
-    "react-scripts": "3.4.3",
+    "react-scripts": "4.0.3",
     "theme-ui": "0.3.1",
     "ynab": "1.20.0",
     "yup": "0.29.3"
