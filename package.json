@@ -28,7 +28,7 @@
     "react-scripts": "3.4.3",
     "theme-ui": "0.3.1",
     "ynab": "1.20.0",
-    "yup": "0.29.3"
+    "yup": "0.32.9"
   },
   "devDependencies": {
     "@testing-library/cypress": "7.0.1",
