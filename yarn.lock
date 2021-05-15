@@ -3136,10 +3136,10 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-big.js@6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/big.js/-/big.js-6.0.1.tgz#9e0a2e8b1825ce006cd4a096d6f294738cd5cff6"
-  integrity sha512-o2EROPS1CEOLYNJKDRvmfVxpP9YTQxBSW0nJrpCpBjB5TEg3XYUt+WZHqrOVi/53GcQk8KFfNE08ZLpiD4iA2A==
+big.js@6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/big.js/-/big.js-6.1.1.tgz#63b35b19dc9775c94991ee5db7694880655d5537"
+  integrity sha512-1vObw81a8ylZO5ePrtMay0n018TcftpTA5HFKDaSuiUDBo8biRBtjIobw60OpwuvrGk+FsxKamqN4cnmj/eXdg==
 
 big.js@^5.2.2:
   version "5.2.2"
