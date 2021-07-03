@@ -5,12 +5,12 @@ import { Flex, Box, Heading, Text, Button } from 'theme-ui';
 import TabView from '../../components/view/tabView';
 import FlexTable from '../../components/bootstrap/FlexTable';
 
-const Taxes = props => {
+const Taxes = (props) => {
   const [activeTab, tabClick] = useState(0);
 
   return (
     <State.Consumer>
-      {model => (
+      {(model) => (
         <React.Fragment>
           <Flex>
             <Box>
@@ -38,7 +38,7 @@ export default Taxes;
 
 const Group = ({ model }) =>
   model.taxStrategy.incomeGroup.length !== 0
-    ? map(model.taxStrategy.incomeGroup, group => (
+    ? map(model.taxStrategy.incomeGroup, (group) => (
         <Flex key={group.name.state}>
           <Box width={1}>
             <Heading>{group.name.state}</Heading>
@@ -60,7 +60,7 @@ const Chunk = ({ quarter, quarterIncome }) => {
     <Box width={1}>
       {quarterIncome.income.length !== 0 ? (
         <Flex flexWrap="wrap">
-          {map(quarterIncome.income, income => (
+          {map(quarterIncome.income, (income) => (
             <Box width={[1 / 2, 1 / 3, 1 / 5]} key={income.id.state}>
               <Heading>{income.date.state}</Heading>
               <Text>Gross: {income.gross.toFixed}</Text>
@@ -136,8 +136,8 @@ const Table = ({ model }) => (
       'HSA',
       'Pretax Investments'
     ]}
-    itemData={map(model.taxStrategy.incomeReceived, g =>
-      map(g.income, income => ({
+    itemData={map(model.taxStrategy.incomeReceived, (g) =>
+      map(g.income, (income) => ({
         key: `${g.group.state}::${income.date.state}`,
         data: [
           g.group.state,

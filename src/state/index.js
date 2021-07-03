@@ -124,7 +124,7 @@ class AppModel extends Primitive {
       .set(splitTransactions)
       .charts.calcCharts(
         splitTransactions,
-        accountsComputed.filter(account => account.visible)
+        accountsComputed.filter((account) => account.visible)
       );
 
     return chartsCalced.stats
@@ -145,7 +145,7 @@ class AppModel extends Primitive {
         ...(useTransactions ? useTransactions : []),
         ...(transactionPaybacks ? transactionPaybacks : [])
       ])
-      .transactionsComputed.map(transaction => transaction.computeValue())
+      .transactionsComputed.map((transaction) => transaction.computeValue())
       .transactionsComputed.sort(
         (a, b) =>
           sortList.indexOf(a.type) - sortList.indexOf(b.type) ||
@@ -155,11 +155,11 @@ class AppModel extends Primitive {
 
     // returns a microstate with the transactionsComputed set
     return categoriesSet
-      ? init.transactionsComputed.map(transaction =>
+      ? init.transactionsComputed.map((transaction) =>
           transactionCompute({ transaction })
         )
       : init.transactionsComputed
-          .map(transaction => transactionCompute({ transaction }))
+          .map((transaction) => transactionCompute({ transaction }))
           .transactionCategories.set(
             init.state.transactionsComputed.reduce(
               (categories, transaction) => {
@@ -182,7 +182,7 @@ class AppModel extends Primitive {
       []
     );
     const next = transactions.filter(
-      transaction =>
+      (transaction) =>
         !filterBy.reduce(
           (toFilter, filter) =>
             toFilter || transaction.category === filter ? true : toFilter,
@@ -201,7 +201,7 @@ class AppModel extends Primitive {
     let computeAccounts;
     if (presetAccounts.length === 0) {
       const { accounts } = this.state;
-      computeAccounts = accounts.map(account => {
+      computeAccounts = accounts.map((account) => {
         let computed = account;
         if (computed && computed.visible === undefined) computed.visible = true;
         return computed;
@@ -221,21 +221,23 @@ class AppModel extends Primitive {
   }
 
   toggleAccountVisibility(accountName) {
-    let next = this.accountsComputed.map(account =>
+    let next = this.accountsComputed.map((account) =>
       accountName === account.name.state ? account.visible.toggle() : account
     );
     return this.reCalc(next.state.accountsComputed);
   }
 
   toggleAllAccount() {
-    let next = this.accountsComputed.map(account => account.visible.toggle());
+    let next = this.accountsComputed.map((account) => account.visible.toggle());
     return this.reCalc(next.state.accountsComputed);
   }
 
   transactionUpsert(value) {
     let nextState = this.state.transactions;
     if (value.id && value.id !== '') {
-      let existingTransactionIndex = nextState.map(t => t.id).indexOf(value.id);
+      let existingTransactionIndex = nextState
+        .map((t) => t.id)
+        .indexOf(value.id);
       if (existingTransactionIndex === -1) {
         nextState.push(value);
       } else {
@@ -256,17 +258,17 @@ class AppModel extends Primitive {
 
   modifyTransaction(id) {
     return this.forms.transactionForm.setForm(
-      this.state.transactions.find(element => element.id === id)
+      this.state.transactions.find((element) => element.id === id)
     );
   }
 
   deleteTransaction(id) {
-    return this.transactions.filter(t => t.id.state !== id).reCalc();
+    return this.transactions.filter((t) => t.id.state !== id).reCalc();
   }
 
   upsertAccount(value) {
     let nextState = this.state.accounts;
-    let existingAccountIndex = nextState.map(t => t.name).indexOf(value.name);
+    let existingAccountIndex = nextState.map((t) => t.name).indexOf(value.name);
     if (existingAccountIndex === -1) {
       nextState.push(value);
     } else {
@@ -278,17 +280,19 @@ class AppModel extends Primitive {
 
   modifyAccount(name) {
     return this.forms.accountForm.set(
-      this.state.accountsComputed.find(element => element.name === name)
+      this.state.accountsComputed.find((element) => element.name === name)
     );
   }
 
   deleteAccount(name) {
-    return this.accounts.filter(a => a.name.state !== name).reCalc();
+    return this.accounts.filter((a) => a.name.state !== name).reCalc();
   }
 
   upsertAccountTransaction(result) {
     let nextState = this.state.accounts;
-    const accountIndex = nextState.map(a => a.name).indexOf(result.debtAccount);
+    const accountIndex = nextState
+      .map((a) => a.name)
+      .indexOf(result.debtAccount);
     let account = nextState[accountIndex];
 
     if (!account.payback) {
@@ -331,7 +335,9 @@ class AppModel extends Primitive {
   }
 
   modifyAccountTransaction(name, index) {
-    const account = this.state.accounts.find(element => element.name === name);
+    const account = this.state.accounts.find(
+      (element) => element.name === name
+    );
     return this.forms.accountTransactionForm
       .setForm(account, index)
       .forms.accountTransactionFormVisible.toggle();
@@ -339,7 +345,7 @@ class AppModel extends Primitive {
 
   deleteAccountTransaction(name, index) {
     return this.accounts
-      .map(element => {
+      .map((element) => {
         let next = element;
         if (element.name.state === name) {
           next = element.payback.transactions.set(
@@ -356,10 +362,10 @@ class AppModel extends Primitive {
   addYNAB(tokens, resultantAccounts, resultantTransactions) {
     let nextState = this;
     let indexed = {};
-    resultantAccounts.forEach(resultAccount => {
+    resultantAccounts.forEach((resultAccount) => {
       indexed[resultAccount.name] = resultAccount;
     });
-    nextState.state.accounts.forEach(existingAccount => {
+    nextState.state.accounts.forEach((existingAccount) => {
       // if the existing account doesn't appear in newly added accounts
       if (!indexed[existingAccount.name]) {
         indexed[existingAccount.name] = existingAccount;
@@ -375,7 +381,7 @@ class AppModel extends Primitive {
 
     let nextSetState = this.transactions
       .set([...this.state.transactions, ...resultantTransactions])
-      .accounts.set(Object.keys(indexed).map(key => indexed[key]));
+      .accounts.set(Object.keys(indexed).map((key) => indexed[key]));
 
     return nextSetState.forms.ynabForm.devToken
       .set(tokens.devToken)

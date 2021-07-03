@@ -5,7 +5,7 @@ import { Box, Grid, Heading, Text } from 'theme-ui';
 
 const Homepage = () => (
   <State.Consumer>
-    {model => (
+    {(model) => (
       <React.Fragment>
         <Box
           sx={{

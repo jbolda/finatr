@@ -3,10 +3,27 @@
   "version": "0.3.0",
   "description": "",
   "keywords": [],
-  "main": "src/index.js",
   "license": "AGPL-3.0-or-later",
+  "app": "dist/browser/index.html",
+  "appModern": "dist/browserModern/index.html",
+  "targets": {
+    "app": {
+      "engines": {
+        "browsers": "> 0.25%"
+      }
+    },
+    "appModern": {
+      "engines": {
+        "browsers": "Chrome 70"
+      }
+    }
+  },
+  "browserslist": [
+    "> 0.2%",
+    "not dead"
+  ],
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=16.0.0"
   },
   "dependencies": {
     "@microstates/react": "0.12.0",
@@ -25,24 +42,25 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-file-reader-input": "2.0.0",
-    "react-scripts": "3.4.3",
     "theme-ui": "0.3.1",
     "ynab": "1.20.0",
     "yup": "0.29.3"
   },
   "devDependencies": {
+    "@parcel/reporter-bundle-buddy": "^2.0.0-nightly.1902",
     "@testing-library/cypress": "7.0.1",
     "covector": "0.3.1",
     "cypress": "5.3.0",
+    "parcel": "^2.0.0-beta.3.1",
     "prettier": "2.1.2",
     "react-test-renderer": "16.13.1",
     "tauri": "0.12.0"
   },
   "scripts": {
-    "start": "env BROWSER=none react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "parcel serve ./src/index.html --lazy",
+    "build": "parcel build ./src/index.html",
+    "size-report": "parcel build src/index.html --reporter @parcel/reporter-bundle-buddy",
+    "test": "jest",
     "pretty": "prettier --write \"{src,__{tests,mocks}__}/**/*.js\"",
     "cy": "cypress open",
     "cypress": "cypress",
@@ -52,10 +70,8 @@
     "cy:run": "cypress run",
     "cy:run:record": "cypress run --record --parallel"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "volta": {
+    "node": "16.4.1",
+    "npm": "7.19.1"
+  }
 }
