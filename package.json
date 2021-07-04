@@ -4,8 +4,8 @@
   "description": "",
   "keywords": [],
   "license": "AGPL-3.0-or-later",
-  "app": "dist/browser/index.html",
-  "appModern": "dist/browserModern/index.html",
+  "app": "public/browser/index.html",
+  "appModern": "public/browserModern/index.html",
   "targets": {
     "app": {
       "engines": {
