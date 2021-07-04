@@ -47,10 +47,13 @@
     "yup": "0.29.3"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-react": "^7.14.5",
     "@parcel/reporter-bundle-buddy": "^2.0.0-nightly.1902",
     "@testing-library/cypress": "7.0.1",
     "covector": "0.3.1",
     "cypress": "5.3.0",
+    "jest": "^27.0.6",
     "parcel": "^2.0.0-beta.3.1",
     "prettier": "2.1.2",
     "react-test-renderer": "16.13.1",
