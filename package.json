@@ -4,9 +4,9 @@
   "description": "",
   "keywords": [],
   "license": "AGPL-3.0-or-later",
-  "browser": "public/index.html",
+  "browser": "dist/index.html",
   "browserslist": [
-    "last 2 versions"
+    "Chrome 70"
   ],
   "engines": {
     "node": ">=16.0.0"
