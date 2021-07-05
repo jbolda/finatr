@@ -4,23 +4,9 @@
   "description": "",
   "keywords": [],
   "license": "AGPL-3.0-or-later",
-  "app": "public/browser/index.html",
-  "appModern": "public/browserModern/index.html",
-  "targets": {
-    "app": {
-      "engines": {
-        "browsers": "> 0.25%"
-      }
-    },
-    "appModern": {
-      "engines": {
-        "browsers": "Chrome 70"
-      }
-    }
-  },
+  "browser": "public/index.html",
   "browserslist": [
-    "> 0.2%",
-    "not dead"
+    "last 2 versions"
   ],
   "engines": {
     "node": ">=16.0.0"
