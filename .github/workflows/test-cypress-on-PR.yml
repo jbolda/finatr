@@ -8,7 +8,7 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v2
-      - uses: cypress-io/github-action@v1
+      - uses: cypress-io/github-action@v2
         with:
           browser: chrome
           record: true
@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: echo "skipping this for now due to errors"
       - run: echo "see this issue https://github.com/jbolda/finatr/pull/313/checks?check_run_id=650933290"
-      # - uses: cypress-io/github-action@v1
+      # - uses: cypress-io/github-action@v2
       #   with:
       #     browser: firefox
       #     record: true
@@ -48,7 +48,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: echo "skipping this for now due to errors"
       - run: echo "see this issue https://github.com/jbolda/finatr/pull/313/checks?check_run_id=650933262"
-      # - uses: cypress-io/github-action@v1
+      # - uses: cypress-io/github-action@v2
       #   with:
       #     browser: edge
       #     record: true
