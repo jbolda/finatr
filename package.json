@@ -37,7 +37,7 @@
     "@babel/preset-react": "^7.14.5",
     "@parcel/reporter-bundle-buddy": "^2.0.0-nightly.1902",
     "@testing-library/cypress": "7.0.6",
-    "covector": "0.3.1",
+    "covector": "^0.7.1",
     "cypress": "7.6.0",
     "jest": "^27.0.6",
     "parcel": "^2.0.0-beta.3.1",
