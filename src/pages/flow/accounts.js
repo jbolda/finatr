@@ -30,7 +30,7 @@ class AccountFlow extends React.Component {
   render() {
     return (
       <State.Consumer>
-        {model => (
+        {(model) => (
           <TabView
             id="accounts"
             activeTab={this.state.activeTab}
@@ -64,7 +64,7 @@ class AccountFlow extends React.Component {
                   }}
                 />
                 {model.state.accountsComputed.filter(
-                  account =>
+                  (account) =>
                     account.vehicle === 'debt' ||
                     account.vehicle === 'loan' ||
                     account.vehicle === 'credit line'
@@ -96,7 +96,7 @@ const AccountTable = ({ data, actions }) =>
         'Modify',
         'Delete'
       ]}
-      itemData={data.map(account => ({
+      itemData={data.map((account) => ({
         key: account.name,
         data: [
           <Button
@@ -137,7 +137,7 @@ const AccountTable = ({ data, actions }) =>
 
 const DebtTable = ({ data, actions }) =>
   data.filter(
-    account =>
+    (account) =>
       account.vehicle === 'debt' ||
       account.vehicle === 'loan' ||
       account.vehicle === 'credit line'
@@ -163,12 +163,12 @@ const FlexDebtTable = ({ itemHeaders, data, actions }) => (
     <HeaderRow columns={itemHeaders.length} items={itemHeaders} />
     {data
       .filter(
-        account =>
+        (account) =>
           account.vehicle === 'debt' ||
           account.vehicle === 'loan' ||
           account.vehicle === 'credit line'
       )
-      .map(account => (
+      .map((account) => (
         <React.Fragment key={account.name}>
           <DataRow
             itemKey={account.name}

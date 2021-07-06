@@ -3,6 +3,9 @@ import { navigate } from '@reach/router';
 import { State } from '../../state';
 import { Grid, Box, Button, Heading, Text } from 'theme-ui';
 
+import example_simple from 'url:./simple.json';
+import example_highRents from 'url:./high_rents.json';
+
 const listOfExamples = [
   {
     name: 'Simple Example',
@@ -10,7 +13,7 @@ const listOfExamples = [
     This is a real simple example where you get paid every two weeks.
     Your only expense is paying rent once a month. Wouldn't that be nice!
     `,
-    file: 'simple.json'
+    file: example_simple
   },
   {
     name: 'High Housing Expenses',
@@ -21,13 +24,13 @@ const listOfExamples = [
     You only have one source of income, but a decent salary nonetheless.
     You carry a credit card, and pay your other expenses with that.
     `,
-    file: 'crazy rents.json'
+    file: example_highRents
   }
 ];
 
 const Examples = () => (
   <State.Consumer>
-    {model => (
+    {(model) => (
       <React.Fragment>
         <Box px={2} py={2} sx={{ maxWidth: 512 }}>
           <Heading p={1} variant="subtle">
@@ -41,7 +44,7 @@ const Examples = () => (
           </Text>
         </Box>
         <Grid width={1 / 4}>
-          {listOfExamples.map(example => (
+          {listOfExamples.map((example) => (
             <Box key={example.file} px={2} py={2}>
               <Text p={1} variant="section">
                 {example.name}
@@ -49,7 +52,7 @@ const Examples = () => (
               <Text p={1}>{example.content}</Text>
               <Button
                 variant="buttons.primary"
-                onClick={event => loadExample(model, event)}
+                onClick={(event) => loadExample(model, event)}
                 value={example.file}
               >
                 Load Example
@@ -65,9 +68,9 @@ const Examples = () => (
 export default Examples;
 
 const loadExample = async (model, event) => {
-  const example = await import(`./${event.currentTarget.value}`);
-  const result = example.default;
-  console.log('example loaded', result);
-  model.setUpload(result);
+  const result = await fetch(event.currentTarget.value);
+  const json = await result.json();
+  console.log('example loaded', json);
+  model.setUpload(json);
   navigate(`/flow`);
 };

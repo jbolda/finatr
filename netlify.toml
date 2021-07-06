@@ -1,14 +1,18 @@
-[[redirects]]
-  from = "/discord"
-  to = "https://discord.gg/sPazfrt"
-  status = 302
+[build]
+command = "npm run build"
+publish = "dist"
 
 [[redirects]]
-  from = "/github"
-  to = "https://github.com/jbolda/finatr"
-  status = 302
+from = "/discord"
+status = 302
+to = "https://discord.gg/sPazfrt"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+from = "/github"
+status = 302
+to = "https://github.com/jbolda/finatr"
+
+[[redirects]]
+from = "/*"
+status = 200
+to = "/index.html"
