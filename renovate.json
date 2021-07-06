@@ -1,6 +1,0 @@
-{
-  "extends": ["config:base"],
-  "baseBranches": ["next"],
-  "prHourlyLimit": 1,
-  "labels": ["dependencies"]
-}
