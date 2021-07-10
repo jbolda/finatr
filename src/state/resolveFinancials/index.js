@@ -1,4 +1,6 @@
-import * as d3 from 'd3';
+import { stack } from 'd3-shape';
+import { max } from 'd3-array';
+const d3 = { stack, max };
 import Big from 'big.js';
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval';
 import closestIndexTo from 'date-fns/closestIndexTo';
@@ -100,7 +102,7 @@ const transactionSplitter = ({ transactions, accounts }) => {
   };
 
   if (transactions) {
-    transactions.forEach(d => {
+    transactions.forEach((d) => {
       switch (d.type) {
         case 'income':
           splitTransactions.income.push(d);
@@ -130,7 +132,7 @@ const replaceWithModified = (oldValue, modification) => {
   return newValue;
 };
 
-const applyModifications = allDates => (structure, modification) => {
+const applyModifications = (allDates) => (structure, modification) => {
   let modIndex = closestIndexTo(modification.date, allDates);
   let updatedStructure = structure;
   updatedStructure[modIndex][modification.mutateKey] = replaceWithModified(
@@ -143,9 +145,9 @@ const applyModifications = allDates => (structure, modification) => {
 const buildStack = (data, graphRange) => {
   const allDates = eachDayOfInterval(graphRange);
 
-  const stackStructure = allDates.map(day => {
+  const stackStructure = allDates.map((day) => {
     let obj = { date: day };
-    data.forEach(datum => {
+    data.forEach((datum) => {
       obj[datum.id] = { ...datum };
       obj[datum.id].y = Big(0);
       // obj[datum.id].dailyRate = Big(0);
@@ -173,7 +175,7 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
 
   // we coerce into Big here temporarily
   // eventually we need to except it to already be Big
-  const data = keys.map(key => {
+  const data = keys.map((key) => {
     let dataAccess = dataRaw[key.index];
     let newDatum = { ...dataAccess };
     if (newDatum.value) {
@@ -202,7 +204,7 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
 
   const maxHeight = d3.max(
     stacked.reduce((a, b) => a.concat(b)),
-    d => d[1]
+    (d) => d[1]
   );
 
   return keys.map((key, index) => ({
@@ -220,13 +222,13 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
 // seems real fragile, TODO make the line chart
 // not dependent on the bar chart as decoupling
 // should likely make it less fragile
-const zipTogethor = account => arr =>
+const zipTogethor = (account) => (arr) =>
   arr.reduce((accumlator, transaction) => {
     if (transaction.raccount === account.name) {
       let flatten = transaction.stack
-        .map(e => e[1] - e[0])
+        .map((e) => e[1] - e[0])
         .map(
-          d =>
+          (d) =>
             (account.vehicle === 'credit line' && transaction.type === 'expense'
               ? -1
               : 1) * d
@@ -242,7 +244,7 @@ const zipTogethor = account => arr =>
 const twoSteppedBalance = (starting, accountStack, barChartStack) => {
   // we use this function as the iterator can hit
   // undefined values if income or expense array is empty
-  const extractValue = value => {
+  const extractValue = (value) => {
     if (value === undefined) {
       return 0;
     } else {
@@ -314,7 +316,7 @@ export {
   resolveAccountChart
 };
 
-const future = daysinfuture => {
+const future = (daysinfuture) => {
   return addDays(daysinfuture)(startOfDay(new Date()));
 };
 

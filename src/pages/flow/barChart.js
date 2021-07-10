@@ -1,8 +1,37 @@
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import * as d3 from 'd3';
 import { Box } from 'theme-ui';
+import { select, pointer } from 'd3-selection';
+import { transition } from 'd3-transition';
+import { scaleTime, scaleLinear, scaleOrdinal } from 'd3-scale';
+import { max, min, sum } from 'd3-array';
+import { axisBottom, axisRight } from 'd3-axis';
+import { timeDay } from 'd3-time';
+import { timeFormat } from 'd3-time-format';
+import { easeBounceOut, easeBackOut } from 'd3-ease';
+import { schemeCategory10 } from 'd3-scale-chromatic';
+import { line } from 'd3-shape';
+
+const d3 = {
+  select,
+  transition,
+  max,
+  min,
+  sum,
+  scaleTime,
+  scaleLinear,
+  scaleOrdinal,
+  axisBottom,
+  axisRight,
+  timeDay,
+  timeFormat,
+  easeBounceOut,
+  easeBackOut,
+  schemeCategory10,
+  line,
+  pointer
+};
 
 export class BarChart extends PureComponent {
   componentDidMount() {
@@ -115,7 +144,7 @@ export class BarChart extends PureComponent {
 
     const tooltipComponent = (
       <div className="notification is-primary" id="tooltipLine" style={styles}>
-        {tooltipData.map(line => (
+        {tooltipData.map((line) => (
           <p key={line.data.account.name}>
             {line.data.account.name} ${line.value}
           </p>
@@ -134,7 +163,7 @@ export class BarChart extends PureComponent {
     return (
       <Box>
         <div
-          ref={elem => {
+          ref={(elem) => {
             this.tooltipTarget = elem;
           }}
         />
@@ -213,36 +242,36 @@ BarChart.propTypes = {
 };
 
 let barBuild = {
-  div_width: function() {
+  div_width: function () {
     return 600;
   },
-  daysinfuture: function() {
+  daysinfuture: function () {
     return 365;
   },
-  margin: function() {
+  margin: function () {
     return { top: 10, right: 0, bottom: 20, left: 60 };
   },
-  band: function() {
+  band: function () {
     return this.daysinfuture() * 30;
   },
-  width: function() {
+  width: function () {
     let w =
       this.div_width() - this.margin().left - this.margin().right + this.band();
     return w;
   },
-  height: function() {
+  height: function () {
     return d3.min([this.div_width() * 0.5, 350]);
   },
-  shift: function() {
+  shift: function () {
     return this.width() / this.daysinfuture();
   },
-  xScale: function(props) {
+  xScale: function (props) {
     return d3
       .scaleTime()
       .domain([props.GraphRange.start, props.GraphRange.end])
       .rangeRound([0, this.width() - this.margin().left]);
   },
-  yScale: function(max_domain) {
+  yScale: function (max_domain) {
     return d3
       .scaleLinear()
       .domain([0, max_domain])
@@ -250,7 +279,7 @@ let barBuild = {
   }
 };
 
-barBuild.init = function(height, selector) {
+barBuild.init = function (height, selector) {
   return d3
     .select('.draw-section')
     .append('svg')
@@ -264,7 +293,7 @@ barBuild.init = function(height, selector) {
     .attr('transform', `translate(${this.margin().left},${this.margin().top})`);
 };
 
-barBuild.drawAxis = function(svg, props, max_domain, phase) {
+barBuild.drawAxis = function (svg, props, max_domain, phase) {
   // create axis
   let xAxis = d3
     .axisBottom(this.xScale(props))
@@ -322,11 +351,7 @@ barBuild.drawAxis = function(svg, props, max_domain, phase) {
     // it would show up during and after a transition
     drawnY.select('path').attr('stroke-width', '0');
   } else {
-    let drawnX = svg
-      .select('.xaxis')
-      .transition()
-      .duration(3000)
-      .call(xAxis);
+    let drawnX = svg.select('.xaxis').transition().duration(3000).call(xAxis);
 
     drawnX
       .selectAll('text')
@@ -335,11 +360,7 @@ barBuild.drawAxis = function(svg, props, max_domain, phase) {
       .attr('dy', '-.55em')
       .attr('transform', 'rotate(-90)');
 
-    let drawnY = svg
-      .select('.yaxis')
-      .transition()
-      .duration(3000)
-      .call(yAxis);
+    let drawnY = svg.select('.yaxis').transition().duration(3000).call(yAxis);
 
     drawnY
       .selectAll('.tick:not(:first-of-type) line')
@@ -356,7 +377,7 @@ barBuild.drawAxis = function(svg, props, max_domain, phase) {
   return;
 };
 
-barBuild.initBar = function(svg) {
+barBuild.initBar = function (svg) {
   let blobs = svg
     .append('g')
     .attr('class', 'blobs')
@@ -365,7 +386,7 @@ barBuild.initBar = function(svg) {
   return blobs;
 };
 
-barBuild.drawBar = function(
+barBuild.drawBar = function (
   props,
   blobs,
   append_class,
@@ -385,7 +406,7 @@ barBuild.drawBar = function(
     };
   }
 
-  let colors = function(d) {
+  let colors = function (d) {
     if (d.type === 'income') {
       return ['#a1d99b', '#41ab5d'];
     } else if (d.type === 'expense') {
@@ -397,11 +418,8 @@ barBuild.drawBar = function(
     }
   };
 
-  let color = d =>
-    d3
-      .scaleLinear()
-      .domain([0, massagedData.length])
-      .range(colors(d));
+  let color = (d) =>
+    d3.scaleLinear().domain([0, massagedData.length]).range(colors(d));
 
   // Add a group for each entry
   let groupSelection = blobs
@@ -425,14 +443,14 @@ barBuild.drawBar = function(
     .attr('id', (d, i) => `${i}-${d.id}`)
     .style('fill', (d, i) => color(d)(i))
     .merge(groupSelection)
-    .on('mouseover', function(d, i) {
+    .on('mouseover', function (event, d) {
       tooltip.render(
-        { pageX: d3.event.pageX, pageY: d3.event.pageY },
+        { pageX: event.pageX, pageY: event.pageY },
         d,
         tooltip.target
       );
     })
-    .on('mouseout', function() {
+    .on('mouseout', function () {
       tooltip.unmount(tooltip.target);
     });
 
@@ -446,30 +464,30 @@ barBuild.drawBar = function(
     .duration(3000)
     .ease(d3.easeBounceOut)
     .attr('class', append_class)
-    .attr('x', d => xScale(d.data.date))
+    .attr('x', (d) => xScale(d.data.date))
     .attr('transform', `translate(${widths.translate},${0})`)
-    .attr('y', d => yScale(d[1]))
-    .attr('height', d => d3.max([0, yScale(d[0]) - yScale(d[1])]));
+    .attr('y', (d) => yScale(d[1]))
+    .attr('height', (d) => d3.max([0, yScale(d[0]) - yScale(d[1])]));
 
   rects
     .enter()
     .append('rect')
     .attr('class', append_class)
-    .attr('x', d => xScale(d.data.date))
+    .attr('x', (d) => xScale(d.data.date))
     .attr('transform', `translate(${widths.translate},${0})`)
     .attr('width', widths.bar)
-    .attr('y', d => yScale(d[0]))
+    .attr('y', (d) => yScale(d[0]))
     .transition()
     .delay((d, i) => 800 + i * 150 - (i * i) / 4)
     .duration(3000)
     .ease(d3.easeBounceOut)
-    .attr('y', d => yScale(d[1]))
-    .attr('height', d => d3.max([0, yScale(d[0]) - yScale(d[1])]));
+    .attr('y', (d) => yScale(d[1]))
+    .attr('height', (d) => d3.max([0, yScale(d[0]) - yScale(d[1])]));
 
   rects.exit().remove();
 };
 
-barBuild.initLine = function(svg) {
+barBuild.initLine = function (svg) {
   let tooltipLine = svg
     .append('line')
     .attr('class', 'tooltipLine')
@@ -485,7 +503,7 @@ barBuild.initLine = function(svg) {
   return { lineGroup, tooltipLine };
 };
 
-barBuild.drawLine = function(
+barBuild.drawLine = function (
   props,
   svg,
   lineGroup,
@@ -495,11 +513,7 @@ barBuild.drawLine = function(
   tooltip
 ) {
   if (!data || data.length === 0) {
-    lineGroup
-      .selectAll('path')
-      .data(data)
-      .exit()
-      .remove();
+    lineGroup.selectAll('path').data(data).exit().remove();
     return;
   }
   let linecolors = d3.scaleOrdinal(d3.schemeCategory10);
@@ -510,8 +524,8 @@ barBuild.drawLine = function(
 
   const line = d3
     .line()
-    .x(d => xScale(d.date))
-    .y(d => yScale(d.value));
+    .x((d) => xScale(d.date))
+    .y((d) => yScale(d.value));
 
   let lines = lineGroup.selectAll('path').data(data);
 
@@ -519,7 +533,7 @@ barBuild.drawLine = function(
     .transition()
     .delay((d, i) => 800 + i * 150)
     .duration(3000)
-    .attr('d', d => line(d.values))
+    .attr('d', (d) => line(d.values))
     .attr('stroke', (d, i) => linecolors(i))
     .attr('stroke-width', 2)
     .attr('fill', 'none');
@@ -527,7 +541,7 @@ barBuild.drawLine = function(
   lines
     .enter()
     .append('path')
-    .attr('d', d => line(d.values))
+    .attr('d', (d) => line(d.values))
     .attr('stroke', (d, i) => linecolors(i))
     .attr('stroke-width', 2)
     .attr('fill', 'none');
@@ -535,12 +549,19 @@ barBuild.drawLine = function(
   lines.exit().remove();
 
   svg
-    .on('mousemove', function(d, i, node) {
-      let mouse = d3.mouse(this);
+    .on('mousemove', function (event) {
+      const node = event.srcElement;
+      let mouse = event;
       let positionX = mouse[0] - marginLeft;
-      let lineGroup = Array.from(node[0].firstChild.childNodes[1].childNodes);
+      if (
+        !node?.firstChild?.childNodes ||
+        node.firstChild.childNodes.length === 0
+      )
+        return;
 
-      let linePositions = lineGroup.map(lineNode => {
+      let lineGroup = Array.from(node?.firstChild?.childNodes[1].childNodes);
+
+      let linePositions = lineGroup.map((lineNode) => {
         let beginning = 0;
         let end = lineNode.getTotalLength();
         let target, position;
@@ -570,7 +591,7 @@ barBuild.drawLine = function(
         .attr('y2', max_domain);
 
       let lineVals = linePositions
-        .map(line => {
+        .map((line) => {
           let scaledY = barBuild
             .yScale(max_domain)
             .invert(line.positionY)
@@ -580,12 +601,12 @@ barBuild.drawLine = function(
         .sort((a, b) => b.value - a.value);
 
       tooltip.render(
-        { pageX: d3.event.pageX, pageY: d3.event.pageY },
+        { pageX: event.pageX, pageY: event.pageY },
         lineVals,
         tooltip.target
       );
     })
-    .on('mouseout', function() {
+    .on('mouseout', function () {
       tooltip.unmount(tooltip.target);
     });
 };
