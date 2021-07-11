@@ -116,17 +116,13 @@ export { generateModification };
 
 const hasNotHitNumberOfOccurrences = (transaction, actualOccurrences) =>
   (!!transaction && !transaction.occurrences) ||
-  Big(actualOccurrences)
-    .add(1)
-    .lte(transaction.occurrences);
+  Big(actualOccurrences).add(1).lte(transaction.occurrences);
 
 const checkVisibility = (transaction, potentialOccurrences) =>
   (!!transaction && !transaction.beginAfterOccurrences) ||
-  Big(potentialOccurrences)
-    .add(1)
-    .gt(transaction.beginAfterOccurrences);
+  Big(potentialOccurrences).add(1).gt(transaction.beginAfterOccurrences);
 
-const nextModification = rtype => {
+const nextModification = (rtype) => {
   switch (rtype) {
     case 'none':
       return transactionNoReoccur;

@@ -3,7 +3,7 @@ import { NavLink } from './link';
 import { useColorMode } from 'theme-ui';
 import { Flex, Box, Button, Text } from 'theme-ui';
 
-export default props => {
+export default (props) => {
   const [colorMode, setColorMode] = useColorMode();
   return (
     <header sx={{ variant: 'variants.header' }}>
@@ -56,7 +56,7 @@ export default props => {
             <Box>
               <Button
                 variant="buttons.nav"
-                onClick={e => {
+                onClick={(e) => {
                   setColorMode(colorMode === 'light' ? 'dark' : 'light');
                 }}
               >

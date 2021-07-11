@@ -24,7 +24,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      model: Store(create(AppModel, AppModel), nextState =>
+      model: Store(create(AppModel, AppModel), (nextState) =>
         this.setState({ model: nextState })
       )
     };

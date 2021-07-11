@@ -9,9 +9,7 @@ import TransactionInputAmountComputed from './transactionInputAmountComputed';
 const ComputedAmountSchema = Yup.object()
   .shape({
     operation: Yup.string(),
-    reference: Yup.string()
-      .notOneOf(['select'])
-      .required('Required'),
+    reference: Yup.string().notOneOf(['select']).required('Required'),
     on: Yup.object().when('operation', (operation, ComputedAmountSchema) =>
       operation !== 'none' ? ComputedAmountSchema : Yup.object().strip()
     )
@@ -20,12 +18,8 @@ const ComputedAmountSchema = Yup.object()
 
 const AccountTransactionSchema = Yup.object().shape({
   id: Yup.string(),
-  debtAccount: Yup.string()
-    .notOneOf(['select'])
-    .required('Required'),
-  raccount: Yup.string()
-    .notOneOf(['select'])
-    .required('Required'),
+  debtAccount: Yup.string().notOneOf(['select']).required('Required'),
+  raccount: Yup.string().notOneOf(['select']).required('Required'),
   description: Yup.string(),
   category: Yup.string(),
   start: Yup.date().required('Required'),
@@ -65,7 +59,7 @@ class AccountTransactionInput extends React.Component {
   render() {
     return (
       <State.Consumer>
-        {model =>
+        {(model) =>
           model.forms.accountTransactionFormVisible.state ? (
             <Box
               sx={{
@@ -124,12 +118,12 @@ class AccountTransactionInput extends React.Component {
                         </option>
                         {model.state.accountsComputed
                           .filter(
-                            account =>
+                            (account) =>
                               account.vehicle === 'debt' ||
                               account.vehicle === 'loan' ||
                               account.vehicle === 'credit line'
                           )
-                          .map(account => (
+                          .map((account) => (
                             <option key={account.name} value={account.name}>
                               {account.name}
                             </option>
@@ -148,7 +142,7 @@ class AccountTransactionInput extends React.Component {
                         <option key={'default'} value={'select'} disabled>
                           Select an Option
                         </option>
-                        {model.state.accountsComputed.map(account => (
+                        {model.state.accountsComputed.map((account) => (
                           <option key={account.name} value={account.name}>
                             {account.name}
                           </option>

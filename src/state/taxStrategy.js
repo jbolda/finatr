@@ -17,7 +17,7 @@ class Allocations {
 
   setAll(obj = {}) {
     let next = this;
-    Object.keys(obj).forEach(key => {
+    Object.keys(obj).forEach((key) => {
       next = next[key].set(obj[key]);
     });
     return next;
@@ -25,7 +25,7 @@ class Allocations {
 
   timesAll(value) {
     let next = this;
-    Object.keys(this.state).forEach(key => {
+    Object.keys(this.state).forEach((key) => {
       next = next[key].times(value);
     });
     return next;
@@ -34,7 +34,7 @@ class Allocations {
   averageAll(total, quantity) {
     if (quantity === 0) return this;
     let next = this;
-    Object.keys(this.state).forEach(key => {
+    Object.keys(this.state).forEach((key) => {
       next = next[key].set(total[key])[key].div(quantity);
     });
     return next;
@@ -117,7 +117,7 @@ class TaxStrategy {
 
     const quarters = [1, 2, 3, 4];
 
-    const incomeGroup = incomeReceived.map(singleGroup => {
+    const incomeGroup = incomeReceived.map((singleGroup) => {
       const { group, quantity } = singleGroup;
 
       const initGroup = quarters.reduce((g, q) => {
@@ -146,10 +146,7 @@ class TaxStrategy {
       return { name: group, ...distributed };
     });
 
-    return this.groups
-      .set(groups)
-      .incomeGroup.set(incomeGroup)
-      .addUpIncome();
+    return this.groups.set(groups).incomeGroup.set(incomeGroup).addUpIncome();
   }
 
   addUpIncome() {
@@ -163,7 +160,7 @@ class TaxStrategy {
       'pretaxInvestments'
     ];
 
-    const computedIncomeGroup = this.incomeGroup.map(iG => {
+    const computedIncomeGroup = this.incomeGroup.map((iG) => {
       const { qOne, qTwo, qThree, qFour } = iG.state;
       const quarters = ['qOne', 'qTwo', 'qThree', 'qFour'];
 
@@ -185,8 +182,9 @@ class TaxStrategy {
         const projected = iG[quarterName].projected
           .setAll(average)
           // eslint-disable-next-line
-          [quarterName].projected.timesAll(quarter.quantity)[quarterName]
-          .projected;
+          [quarterName].projected.timesAll(quarter.quantity)[
+          quarterName
+        ].projected;
 
         return { total, average, projected };
       });
@@ -203,7 +201,7 @@ class TaxStrategy {
 
 export { TaxStrategy };
 
-const quarterAsText = q => {
+const quarterAsText = (q) => {
   switch (q) {
     case 1:
       return 'qOne';
@@ -220,7 +218,7 @@ const quarterAsText = q => {
 
 const addUpAllAllocations = (allocations, qKey, fin, income) => {
   let next = {};
-  allocations.forEach(key => {
+  allocations.forEach((key) => {
     next[key] = fin[key].add(income[key])[qKey].total[key];
   });
   return fin.setAll(next)[qKey].total;

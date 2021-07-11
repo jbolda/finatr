@@ -19,7 +19,7 @@ const Heart = () => (
   </span>
 );
 
-export default props => {
+export default (props) => {
   return (
     <Box
       as="footer"

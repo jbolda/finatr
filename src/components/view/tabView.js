@@ -29,7 +29,7 @@ class TabView extends React.Component {
     return (
       <Box id={this.props.id} pt={4} pb={4}>
         {!this.props.tabTitles || !this.props.tabContents ? null : (
-          <Tabs index={activeTab} onChange={index => this.tabClick(index)}>
+          <Tabs index={activeTab} onChange={(index) => this.tabClick(index)}>
             <TabList sx={{ display: 'flex', overflowX: 'auto' }}>
               {this.props.tabTitles.map((title, index) => (
                 <Tab
