@@ -12,7 +12,7 @@ class FinancialFlow extends React.Component {
   render() {
     return (
       <State.Consumer>
-        {model => (
+        {(model) => (
           <React.Fragment>
             <Box mx={1}>
               <BarChart data={model.charts.state} />
@@ -25,7 +25,7 @@ class FinancialFlow extends React.Component {
                   type="date"
                   pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
                   value={model.charts.graphDates.start}
-                  onChange={event =>
+                  onChange={(event) =>
                     model.updateStartDateReCalc(event.target.value)
                   }
                 />

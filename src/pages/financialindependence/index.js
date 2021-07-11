@@ -6,7 +6,7 @@ class FinancialIndependence extends React.Component {
   render() {
     return (
       <State.Consumer>
-        {model => (
+        {(model) => (
           <React.Fragment>
             <Grid mx={5} columns={[1, 5, 5]}>
               <Box>

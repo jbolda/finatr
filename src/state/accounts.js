@@ -17,7 +17,7 @@ class AccountPayback extends Primitive {
     Type: ArrayType.of(TransactionPayback),
     value: !value
       ? value
-      : value.map(t => ({
+      : value.map((t) => ({
           ...t,
           references: {
             ...t.references,

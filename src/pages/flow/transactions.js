@@ -26,7 +26,7 @@ class TransactionsFlow extends React.Component {
   render() {
     return (
       <State.Consumer>
-        {model => (
+        {(model) => (
           <TabView
             id="transactions"
             activeTab={this.state.activeTab}
@@ -42,7 +42,7 @@ class TransactionsFlow extends React.Component {
               <React.Fragment>
                 <div className="buttons">
                   {Object.keys(model.state.transactionCategories).map(
-                    category => (
+                    (category) => (
                       <Button
                         key={category}
                         m={2}
@@ -73,7 +73,7 @@ class TransactionsFlow extends React.Component {
               <TransactionInput tabClick={this.tabClick} />,
               <TransactionTable
                 data={model.state.transactionsComputed.filter(
-                  transaction => transaction.type === 'income'
+                  (transaction) => transaction.type === 'income'
                 )}
                 actions={{
                   model: model,
@@ -83,7 +83,7 @@ class TransactionsFlow extends React.Component {
               />,
               <TransactionTable
                 data={model.state.transactionsComputed.filter(
-                  transaction => transaction.type === 'expense'
+                  (transaction) => transaction.type === 'expense'
                 )}
                 actions={{
                   model: model,
@@ -93,7 +93,7 @@ class TransactionsFlow extends React.Component {
               />,
               <TransactionTable
                 data={model.state.transactionsComputed.filter(
-                  transaction => transaction.type === 'transfer'
+                  (transaction) => transaction.type === 'transfer'
                 )}
                 actions={{
                   model: model,
@@ -129,7 +129,7 @@ const TransactionTable = ({ data, actions }) =>
         'Modify',
         'Delete'
       ]}
-      itemData={data.map(transaction => ({
+      itemData={data.map((transaction) => ({
         key: transaction.id,
         data: [
           transaction.raccount,

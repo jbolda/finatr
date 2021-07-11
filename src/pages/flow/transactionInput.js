@@ -51,7 +51,7 @@ class TransactionInput extends React.Component {
       >
         <Heading variant="subtle">Add a Transaction</Heading>
         <State.Consumer>
-          {model => (
+          {(model) => (
             <Formik
               initialValues={model.forms.transactionForm.values}
               enableReinitialize={true}
@@ -89,7 +89,7 @@ class TransactionInput extends React.Component {
                       <option key={'default'} value={'select'} disabled>
                         Select an Option
                       </option>
-                      {model.state.accountsComputed.map(account => (
+                      {model.state.accountsComputed.map((account) => (
                         <option key={account.name} value={account.name}>
                           {account.name}
                         </option>

@@ -11,7 +11,7 @@ const HeaderRow = ({ items, columns }) => (
       borderBottomWidth: '2px'
     }}
   >
-    {items.map(item => (
+    {items.map((item) => (
       <HeaderItem key={item}>{item}</HeaderItem>
     ))}
   </Grid>
@@ -60,7 +60,7 @@ export { HeaderRow, DataRow };
 const FlexTable = ({ itemHeaders, itemData }) => (
   <React.Fragment>
     <HeaderRow columns={itemHeaders.length} items={itemHeaders} />
-    {itemData.map(items => (
+    {itemData.map((items) => (
       <DataRow
         key={items.key}
         itemKey={items.key}

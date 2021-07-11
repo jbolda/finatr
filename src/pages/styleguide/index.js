@@ -2,7 +2,7 @@ import React from 'react';
 import { Styled } from 'theme-ui';
 import { TypeScale, TypeStyle, ColorPalette } from '@theme-ui/style-guide';
 
-export default props => (
+export default (props) => (
   <React.Fragment>
     <Styled.h1>Style Guide</Styled.h1>
     <ColorPalette />

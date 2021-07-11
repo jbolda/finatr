@@ -81,7 +81,7 @@ const References = ({
 }) => (
   <FieldArray
     name="referencesArray"
-    render={arrayHelpers => (
+    render={(arrayHelpers) => (
       <React.Fragment>
         {values.referencesArray && values.referencesArray.length > 0 ? (
           <React.Fragment>

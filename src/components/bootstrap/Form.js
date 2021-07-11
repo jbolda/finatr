@@ -13,7 +13,7 @@ export function FieldGroup({ name, id, prettyName = name, children }) {
       {children}
       <ErrorMessage
         name={name}
-        render={msg => <Text sx={{ color: 'red' }}>{msg}</Text>}
+        render={(msg) => <Text sx={{ color: 'red' }}>{msg}</Text>}
       />
     </FieldHorizontal>
   );

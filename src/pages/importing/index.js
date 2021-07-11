@@ -38,7 +38,7 @@ class Importing extends React.Component {
     );
   };
 
-  handleDownload = model => {
+  handleDownload = (model) => {
     const modelState = model.state;
     const get = (arrayOfProperties, rootObject) =>
       arrayOfProperties.reduce(
@@ -79,7 +79,7 @@ class Importing extends React.Component {
   render() {
     return (
       <State.Consumer>
-        {model => (
+        {(model) => (
           <React.Fragment>
             <Box>
               <Heading variant="subtle">Importing and Exporting</Heading>

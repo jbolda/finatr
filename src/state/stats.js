@@ -43,7 +43,7 @@ class Stats {
     );
 
     let dailyInvest = BarChartIncome.reduce((accumulator, d) => {
-      let account = accounts.find(acc => acc.name === d.raccount);
+      let account = accounts.find((acc) => acc.name === d.raccount);
 
       if (account && account.vehicle === 'investment') {
         return d.dailyRate.add(accumulator);
@@ -54,7 +54,7 @@ class Stats {
 
     let dailyInvestInterest = BarChartIncome.reduce(
       (accumulator, d) => {
-        let account = accounts.find(acc => acc.name === d.raccount);
+        let account = accounts.find((acc) => acc.name === d.raccount);
 
         if (account && account.vehicle === 'investment') {
           const increaseQuantity = _Big(1).add(accumulator.quantity);
@@ -150,9 +150,7 @@ class Stats {
       .yearsToFUMoneyConsidering.set(
         simpleInterested.eq(0) || FIconst.gte(2)
           ? 999
-          : _Big(2)
-              .minus(FIconst)
-              .div(simpleInterested)
+          : _Big(2).minus(FIconst).div(simpleInterested)
       )
       .percentToFUMoneyConfident.set(
         dailyExpense.eq(0) ? 100 : FIconstpercent.div(3)
@@ -160,49 +158,37 @@ class Stats {
       .yearsToFUMoneyConfident.set(
         simpleInterested.eq(0) || FIconst.gte(3)
           ? 999
-          : _Big(3)
-              .minus(FIconst)
-              .div(simpleInterested)
+          : _Big(3).minus(FIconst).div(simpleInterested)
       )
       .percentToHalfFI.set(dailyExpense.eq(0) ? 100 : FIconstpercent.div(12.5))
       .yearsToHalfFI.set(
         simpleInterested.eq(0) || FIconst.gte(12.5)
           ? 999
-          : _Big(12.5)
-              .minus(FIconst)
-              .div(simpleInterested)
+          : _Big(12.5).minus(FIconst).div(simpleInterested)
       )
       .percentToLeanFI.set(dailyExpense.eq(0) ? 100 : FIconstpercent.div(17.5))
       .yearsToLeanFI.set(
         simpleInterested.eq(0) || FIconst.gte(17.5)
           ? 999
-          : _Big(17.5)
-              .minus(FIconst)
-              .div(simpleInterested)
+          : _Big(17.5).minus(FIconst).div(simpleInterested)
       )
       .percentToFlexFI.set(dailyExpense.eq(0) ? 100 : FIconstpercent.div(20))
       .yearsToFlexFI.set(
         simpleInterested.eq(0) || FIconst.gte(20)
           ? 999
-          : _Big(20)
-              .minus(FIconst)
-              .div(simpleInterested)
+          : _Big(20).minus(FIconst).div(simpleInterested)
       )
       .percentToFINumber.set(dailyExpense.eq(0) ? 100 : FIconstpercent.div(25))
       .yearsToFINumber.set(
         simpleInterested.eq(0) || FIconst.gte(25)
           ? 999
-          : _Big(25)
-              .minus(FIconst)
-              .div(simpleInterested)
+          : _Big(25).minus(FIconst).div(simpleInterested)
       )
       .percentToFatFI.set(dailyExpense.eq(0) ? 100 : FIconstpercent.div(30))
       .yearsToFatFI.set(
         simpleInterested.eq(0) || FIconst.gte(30)
           ? 999
-          : _Big(30)
-              .minus(FIconst)
-              .div(simpleInterested)
+          : _Big(30).minus(FIconst).div(simpleInterested)
       );
   }
 }

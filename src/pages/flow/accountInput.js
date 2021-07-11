@@ -6,9 +6,7 @@ import * as Yup from 'yup';
 import { FieldGroup } from '../../components/bootstrap/Form';
 
 const AccountSchema = Yup.object().shape({
-  name: Yup.string()
-    .min(1)
-    .required('Required'),
+  name: Yup.string().min(1).required('Required'),
   starting: Yup.number().required('Required'),
   interest: Yup.number(),
   vehicle: Yup.mixed()
@@ -28,7 +26,7 @@ class AccountInput extends React.Component {
       >
         <Heading variant="subtle">Add an Account</Heading>
         <State.Consumer>
-          {model => (
+          {(model) => (
             <Formik
               initialValues={model.forms.accountForm.values}
               enableReinitialize={true}

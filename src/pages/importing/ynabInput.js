@@ -17,7 +17,7 @@ class YNABInput extends React.Component {
           This all happens in your browser and is only exchanged with YNAB.
         </Text>
         <State.Consumer>
-          {model => (
+          {(model) => (
             <Formik
               initialValues={{
                 devToken: model.forms.ynabForm.devToken.state,
@@ -29,11 +29,11 @@ class YNABInput extends React.Component {
                 let ynabAPI = new ynab.API(values.devToken);
                 ynabAPI.accounts
                   .getAccounts(values.budgetId)
-                  .then(accountResponse => {
+                  .then((accountResponse) => {
                     console.log('accounts', accountResponse);
                     let ynabAccounts = accountResponse.data.accounts
-                      .filter(account => account.closed === false)
-                      .map(account => {
+                      .filter((account) => account.closed === false)
+                      .map((account) => {
                         return {
                           name: account.name,
                           starting: Math.abs(account.cleared_balance) / 1000,
@@ -45,13 +45,13 @@ class YNABInput extends React.Component {
                     if (values.importTransactions) {
                       ynabAPI.scheduledTransactions
                         .getScheduledTransactions(values.budgetId)
-                        .then(scheduledTransactionResponse => {
+                        .then((scheduledTransactionResponse) => {
                           console.log(
                             'transactions',
                             scheduledTransactionResponse
                           );
                           scheduledTransactionResponse.data.scheduled_transactions.forEach(
-                            transaction => {
+                            (transaction) => {
                               let ynabSanitizedFrequency = consumeYNABRepeat(
                                 transaction,
                                 ynabScheduledTransactions
@@ -91,7 +91,7 @@ class YNABInput extends React.Component {
                       );
                     }
                   })
-                  .catch(error => {
+                  .catch((error) => {
                     console.log(error);
                   });
                 actions.setSubmitting(false);
@@ -174,7 +174,7 @@ class YNABInput extends React.Component {
 
 export default YNABInput;
 
-const consumeYNABType = transaction => {
+const consumeYNABType = (transaction) => {
   if (transaction.transfer_account_id) {
     return 'transfer';
   } else if (transaction.category_name === 'Inflow: To Be Budgeted') {
@@ -237,4 +237,4 @@ const consumeYNABRepeat = (transaction, scheduledArray) => {
   return ynabSanitizedFrequency;
 };
 
-const parseDate = stringDate => parse(stringDate, 'yyyy-MM-dd', new Date());
+const parseDate = (stringDate) => parse(stringDate, 'yyyy-MM-dd', new Date());

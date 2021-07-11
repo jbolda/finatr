@@ -432,9 +432,9 @@ describe(`check resolveData handles credit lines`, () => {
 
 describe('checks modifications', () => {
   let allDates = eachDayOfInterval(graphRange);
-  let stackStructure = allDates.map(day => {
+  let stackStructure = allDates.map((day) => {
     let obj = { date: day };
-    testData2.forEach(datum => {
+    testData2.forEach((datum) => {
       obj[datum.id] = { ...datum };
       obj[datum.id].y = Big(0);
     });
