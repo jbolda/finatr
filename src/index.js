@@ -1,18 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router } from '@reach/router';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import '~src/app.module.css';
+import '@tailwindcss/forms/dist/forms.css';
 
 import { Store, create } from 'microstates';
 import AppModel, { State } from './state';
 
-import { ThemeProvider } from 'theme-ui';
-import theme from './theme.js';
-import { Box, Flex } from 'theme-ui';
-
 import Header from './components/common/header';
 import Footer from './components/common/footer';
 import Homepage from './pages/homepage';
-import StyleGuide from './pages/styleguide';
 import Examples from './pages/examples';
 import Financial from './pages/flow';
 import Accounts from './pages/accounts';
@@ -33,28 +30,26 @@ class App extends React.Component {
   render() {
     return (
       <State.Provider value={this.state.model}>
-        <ThemeProvider theme={theme}>
-          <Flex sx={{ flexDirection: 'column', minHeight: '100vh' }}>
-            <Box p="0" m="0">
-              <Header />
-            </Box>
-            <Box p="0" my="0" mx="2" sx={{ flex: '1 1 auto' }}>
-              <Router>
-                <Homepage path="/" />
-                <StyleGuide path="style-guide" />
-                <Examples path="examples" />
-                <Financial path="flow" />
-                <Accounts path="accounts" />
-                <FinancialIndependence path="financialindependence" />
-                <Importing path="import" />
-                <Taxes path="taxes" />
-              </Router>
-            </Box>
-            <Box p="0" m="0">
-              <Footer />
-            </Box>
-          </Flex>
-        </ThemeProvider>
+        <BrowserRouter>
+          <div className="flex flex-col h-screen">
+            <Header />
+            <div className="flex-grow">
+              <Routes>
+                <Route path="/" element={<Homepage />} />
+                <Route path="examples" element={<Examples />} />
+                <Route path="flow" element={<Financial />} />
+                <Route path="accounts" element={<Accounts />} />
+                <Route
+                  path="financialindependence"
+                  element={<FinancialIndependence />}
+                />
+                <Route path="import" element={<Importing />} />
+                <Route path="taxes" element={<Taxes />} />
+              </Routes>
+            </div>
+            <Footer />
+          </div>
+        </BrowserRouter>
       </State.Provider>
     );
   }
@@ -68,5 +63,4 @@ We set flex-grow=1 for the center div at a minHeight flexbox
 to the bottom of the page.
 */
 
-const rootElement = document.getElementById('root');
-ReactDOM.render(<App />, rootElement);
+ReactDOM.render(<App />, document.getElementById('app'));
