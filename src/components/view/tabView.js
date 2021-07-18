@@ -1,8 +1,17 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui';
 import React from 'react';
-import { Box, Heading } from 'theme-ui';
-import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@reach/tabs';
+import {
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+  useTabsContext
+} from '@reach/tabs';
+// import '@reach/tabs/styles.css';
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ');
+}
 
 class TabView extends React.Component {
   constructor(props) {
@@ -22,41 +31,47 @@ class TabView extends React.Component {
   }
 
   render() {
+    const StyledTab = ({ index, ...props }) => {
+      const { selectedIndex } = useTabsContext();
+
+      return (
+        <Tab
+          className={`${
+            selectedIndex === index
+              ? 'bg-gray-200 text-gray-800'
+              : 'text-gray-600 hover:text-gray-800'
+          } m-1 px-3 py-2 font-medium text-sm rounded-md`}
+          {...props}
+        />
+      );
+    };
+
     let activeTab = this.props.activeTab
       ? this.props.activeTab
       : this.state.activeTab;
 
     return (
-      <Box id={this.props.id} pt={4} pb={4}>
+      <div>
         {!this.props.tabTitles || !this.props.tabContents ? null : (
-          <Tabs index={activeTab} onChange={(index) => this.tabClick(index)}>
-            <TabList sx={{ display: 'flex', overflowX: 'auto' }}>
+          <Tabs
+            index={activeTab}
+            onChange={(index) => this.tabClick(index)}
+            className="overflow-hidden shadow sm:rounded-lg"
+          >
+            <label htmlFor="tabs" className="sr-only">
+              Select a tab
+            </label>
+            <TabList className="flex space-x-4 my-3 transition duration-500 ease-in-out">
               {this.props.tabTitles.map((title, index) => (
-                <Tab
-                  key={title}
-                  sx={{
-                    display: 'inline-block',
-                    border: 'none',
-                    background: 'none',
-                    cursor: 'pointer',
-                    borderColor: activeTab === index ? 'primary' : 'muted',
-                    borderBottomStyle: 'solid',
-                    transition: 'all 500ms ease'
-                  }}
-                >
-                  <Heading
-                    sx={{ variant: 'text.heading', fontSize: [3, 3, 4] }}
-                  >
-                    {title}
-                  </Heading>
-                </Tab>
+                <StyledTab key={title} index={index}>
+                  <h3>{title}</h3>
+                </StyledTab>
               ))}
             </TabList>
-            <TabPanels>
+            <TabPanels className="bg-white px-4 py-5 sm:p-6">
               {this.props.tabContents.map((content, index) => (
                 <TabPanel
                   key={index}
-                  sx={{ outline: 'none', py: 2 }}
                   data-testid={`${this.props.id}-${this.props.tabTitles[index]
                     .toLowerCase()
                     .replace(' ', '-')}`}
@@ -67,7 +82,7 @@ class TabView extends React.Component {
             </TabPanels>
           </Tabs>
         )}
-      </Box>
+      </div>
     );
   }
 }

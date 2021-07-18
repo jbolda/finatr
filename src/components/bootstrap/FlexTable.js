@@ -1,20 +1,18 @@
 import React from 'react';
-import { Grid, Box } from 'theme-ui';
+const Box = ({ children }) => <div>{children}</div>;
 
 const HeaderRow = ({ items, columns }) => (
-  <Grid
-    columns={[2, columns, columns]}
-    sx={{
-      mx: 0,
-      borderColor: 'muted',
-      borderBottomStyle: 'solid',
-      borderBottomWidth: '2px'
-    }}
-  >
+  <tr>
     {items.map((item) => (
-      <HeaderItem key={item}>{item}</HeaderItem>
+      <th
+        scope="col"
+        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        key={item}
+      >
+        {item}
+      </th>
     ))}
-  </Grid>
+  </tr>
 );
 
 const HeaderItem = ({ children }) => (
@@ -29,21 +27,13 @@ const HeaderItem = ({ children }) => (
 );
 
 const DataRow = ({ items, columns, itemKey, itemHeaders }) => (
-  <Grid
-    columns={[2, columns, columns]}
-    sx={{
-      mx: 0,
-      borderColor: 'muted',
-      borderBottomStyle: 'dashed',
-      borderBottomWidth: '1px'
-    }}
-  >
+  <tr key={itemKey}>
     {items.map((item, index) => (
-      <DataItem key={`${itemKey}=${index}`} header={itemHeaders[index]}>
+      <td key={`${itemKey}=${index}`} className="px-6 py-4 whitespace-nowrap">
         {item}
-      </DataItem>
+      </td>
     ))}
-  </Grid>
+  </tr>
 );
 
 const DataItem = ({ children, header }) => (
@@ -58,18 +48,30 @@ const DataItem = ({ children, header }) => (
 export { HeaderRow, DataRow };
 
 const FlexTable = ({ itemHeaders, itemData }) => (
-  <React.Fragment>
-    <HeaderRow columns={itemHeaders.length} items={itemHeaders} />
-    {itemData.map((items) => (
-      <DataRow
-        key={items.key}
-        itemKey={items.key}
-        columns={itemHeaders.length}
-        itemHeaders={itemHeaders}
-        items={items.data}
-      />
-    ))}
-  </React.Fragment>
+  <div className="flex flex-col">
+    <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+        <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <HeaderRow columns={itemHeaders.length} items={itemHeaders} />
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {itemData.map((items) => (
+                <DataRow
+                  key={items.key}
+                  itemKey={items.key}
+                  columns={itemHeaders.length}
+                  itemHeaders={itemHeaders}
+                  items={items.data}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 );
 
 export default FlexTable;

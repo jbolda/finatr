@@ -1,5 +1,7 @@
 import React from 'react';
-import { Box, Text, Label } from 'theme-ui';
+const Box = ({ children }) => <div>{children}</div>;
+const Text = ({ children }) => <div>{children}</div>;
+const Label = ({ children }) => <div>{children}</div>;
 import { ErrorMessage } from 'formik';
 
 export function FieldHorizontal({ children }) {
