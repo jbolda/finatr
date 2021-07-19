@@ -1,5 +1,5 @@
 import React from 'react';
-import TabView from './tabView';
+import TabView from './TabView';
 import renderer from 'react-test-renderer';
 
 describe(`tabClick`, () => {

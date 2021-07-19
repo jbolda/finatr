@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from '~src/components/common/link.js';
 
 const Heart = () => (
   <span role="img" aria-label="heart symbol">
@@ -7,7 +6,7 @@ const Heart = () => (
   </span>
 );
 
-export default (props) => {
+export const Footer = (props) => {
   return (
     <footer className="bg-gray-50">
       <div className="max-w-7xl mx-auto py-12 px-4 overflow-hidden sm:px-6 lg:px-8">

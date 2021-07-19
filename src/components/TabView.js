@@ -7,13 +7,8 @@ import {
   TabPanel,
   useTabsContext
 } from '@reach/tabs';
-// import '@reach/tabs/styles.css';
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
-
-class TabView extends React.Component {
+export class TabView extends React.Component {
   constructor(props) {
     super(props);
     this.state = { activeTab: null };
@@ -86,5 +81,3 @@ class TabView extends React.Component {
     );
   }
 }
-
-export default TabView;
