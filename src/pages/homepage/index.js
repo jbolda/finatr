@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
-import { State } from '../../state';
+import React from 'react';
+import { State } from '~src/state';
 
 const Homepage = () => (
   <State.Consumer>

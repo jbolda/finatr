@@ -7,8 +7,8 @@ import '@tailwindcss/forms/dist/forms.css';
 import { Store, create } from 'microstates';
 import AppModel, { State } from './state';
 
-import Header from './elements/Header';
-import Footer from './elements/Footer';
+import { Header } from './elements/Header';
+import { Footer } from './elements/Footer';
 
 import Homepage from './pages/homepage';
 import Examples from './pages/examples';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { State } from '../../state';
+import { State } from '~src/state';
 import BarChart from './barChart';
 
 const AccountInfo = (props) => (

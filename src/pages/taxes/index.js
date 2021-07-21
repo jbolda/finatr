@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { map } from 'microstates';
-import { State } from '../../state';
-import { Flex, Box, Heading, Text, Button } from 'theme-ui';
-import TabView from '../../components/view/tabView';
-import FlexTable from '../../components/bootstrap/FlexTable';
+import { State } from '~src/state';
+
+const Flex = ({ children }) => <div>{children}</div>;
+const Box = ({ children }) => <div>{children}</div>;
+const Heading = ({ children }) => <div>{children}</div>;
+const Text = ({ children }) => <div>{children}</div>;
+const Button = ({ children }) => <div>{children}</div>;
+import { TabView } from '~src/components/TabView';
+import { FlexTable } from '~src/components/FlexTable';
 
 const Taxes = (props) => {
   const [activeTab, tabClick] = useState(0);

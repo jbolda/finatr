@@ -1,12 +1,19 @@
 import React from 'react';
 import { Formik, Field } from 'formik';
-import { State } from '../../state';
+import { State } from '~src/state';
 import * as ynab from 'ynab';
 import getDay from 'date-fns/fp/getDay';
 import getDate from 'date-fns/fp/getDate';
 import parse from 'date-fns/parse';
-import { FieldGroup } from '../../components/bootstrap/Form';
-import { Box, Heading, Text, Button, Input, Checkbox, Label } from 'theme-ui';
+import { FieldGroup } from '../../components/Form';
+
+const Box = ({ children }) => <div>{children}</div>;
+const Heading = ({ children }) => <div>{children}</div>;
+const Text = ({ children }) => <div>{children}</div>;
+const Button = ({ children }) => <div>{children}</div>;
+const Label = ({ children }) => <div>{children}</div>;
+const Input = ({ children }) => <input>{children}</input>;
+const Checkbox = () => <input></input>;
 
 class YNABInput extends React.Component {
   render() {

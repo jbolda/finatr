@@ -1,24 +1,47 @@
 import React from 'react';
-const Box = ({ children }) => <div>{children}</div>;
-const Text = ({ children }) => <div>{children}</div>;
-const Label = ({ children }) => <div>{children}</div>;
 import { ErrorMessage } from 'formik';
+import { ExclamationCircleIcon } from '@heroicons/react/solid';
 
-export function FieldHorizontal({ children }) {
-  return <Box p={1}>{children}</Box>;
-}
-
-export function FieldGroup({ name, id, prettyName = name, children }) {
+export const FieldGroup = ({
+  name,
+  id,
+  prettyName = name,
+  children,
+  errors,
+  touched
+}) => {
   return (
-    <FieldHorizontal>
-      <Label htmlFor={id || name}>{prettyName}</Label>
-      {children}
+    <div className="mt-2">
+      <Label id={id} name={name} prettyName={prettyName} />
+      <div className="mt-1 relative rounded-md shadow-sm">
+        {children}
+        {errors?.hasOwnProperty(name) && touched?.hasOwnProperty(name) ? ( // errors[name] && touched?.name ? (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <ExclamationCircleIcon
+              className="h-5 w-5 text-red-500"
+              aria-hidden="true"
+            />
+          </div>
+        ) : null}
+      </div>
       <ErrorMessage
         name={name}
-        render={(msg) => <Text sx={{ color: 'red' }}>{msg}</Text>}
+        render={(msg) => <p className="mt-2 text-sm text-red-600">{msg}</p>}
       />
-    </FieldHorizontal>
+    </div>
   );
-}
+};
 
-export { Label };
+export const Label = ({ id, name = id, prettyName, children }) =>
+  children ? (
+    <div className="p-2">
+      {children}
+      <label htmlFor={name} className="text-sm font-medium text-gray-700 p-1">
+        {prettyName}
+      </label>
+    </div>
+  ) : (
+    <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+      {prettyName}
+    </label>
+  );

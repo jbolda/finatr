@@ -1,7 +1,11 @@
 import React from 'react';
-import { State } from '../../state';
-import TabView from '../../components/view/tabView';
-import { Flex, Box, Heading, Text, Button } from 'theme-ui';
+import { State } from '~src/state';
+import { TabView } from '~src/components/TabView';
+const Flex = ({ children }) => <div>{children}</div>;
+const Box = ({ children }) => <div>{children}</div>;
+const Heading = ({ children }) => <div>{children}</div>;
+const Text = ({ children }) => <div>{children}</div>;
+const Button = ({ children }) => <div>{children}</div>;
 
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';
