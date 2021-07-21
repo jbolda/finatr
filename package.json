@@ -4,7 +4,6 @@
   "description": "",
   "keywords": [],
   "license": "AGPL-3.0-or-later",
-  "browser": "dist/index.js",
   "browserslist": [
     "Chrome 70"
   ],
@@ -16,6 +15,7 @@
     "@heroicons/react": "^1.0.2",
     "@microstates/react": "0.12.0",
     "@reach/tabs": "0.15.2",
+    "@tailwindcss/forms": "^0.3.3",
     "big.js": "6.1.1",
     "d3-array": "^3.0.1",
     "d3-axis": "^3.0.0",
@@ -46,13 +46,12 @@
     "@babel/preset-env": "^7.14.7",
     "@babel/preset-react": "^7.14.5",
     "@parcel/reporter-bundle-buddy": "^2.0.0-nightly.1902",
-    "@tailwindcss/forms": "^0.3.3",
     "@testing-library/cypress": "7.0.6",
     "autoprefixer": "^10.3.0",
     "covector": "^0.7.2",
     "cypress": "7.6.0",
     "jest": "^27.0.6",
-    "parcel": "^2.0.0-nightly.767",
+    "parcel": "^2.0.0-nightly.776",
     "postcss": "^8.3.5",
     "prettier": "^2.3.2",
     "react-test-renderer": "16.13.1",
@@ -74,7 +73,7 @@
     "cy:run:record": "cypress run --record --parallel"
   },
   "volta": {
-    "node": "16.4.1",
-    "npm": "7.19.1"
+    "node": "16.5.0",
+    "npm": "7.20.0"
   }
 }
