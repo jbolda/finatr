@@ -1,9 +1,13 @@
 import React from 'react';
-import { State } from '../../state';
-import { Box, Heading, Button, Label, Input, Select, Radio } from 'theme-ui';
+import { State } from '~src/state';
+
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import { FieldGroup } from '../../components/bootstrap/Form';
+import { FieldGroup, Label } from '~src/components/Form';
+import { Button } from '~src/elements/Button';
+import { Input } from '~src/elements/Input';
+import { Select } from '~src/elements/Select';
+
 import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
 const TransactionSchema = Yup.object().shape({
@@ -42,14 +46,8 @@ const TransactionSchema = Yup.object().shape({
 class TransactionInput extends React.Component {
   render() {
     return (
-      <Box
-        sx={{
-          maxWidth: 512,
-          mx: 'auto',
-          px: 3
-        }}
-      >
-        <Heading variant="subtle">Add a Transaction</Heading>
+      <>
+        <h2>Add a Transaction</h2>
         <State.Consumer>
           {(model) => (
             <Formik
@@ -142,31 +140,32 @@ class TransactionInput extends React.Component {
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="ending" touched={touched}>
-                    <Label>
+                    <Label name="ending" prettyName="never">
                       <Field
-                        as={Radio}
+                        as={Input}
                         type="radio"
                         name="ending"
                         id="ending"
                         checked={values.ending === 'never'}
                         onChange={() => setFieldValue('ending', 'never')}
                       />
-                      never
                     </Label>
-                    <Label>
+                    <Label name="ending" prettyName="at Date">
                       <Field
-                        as={Radio}
+                        as={Input}
                         type="radio"
                         name="ending"
                         id="ending"
                         checked={values.ending === 'at Date'}
                         onChange={() => setFieldValue('ending', 'at Date')}
                       />
-                      at Date
                     </Label>
-                    <Label>
+                    <Label
+                      name="ending"
+                      prettyName="after Number of Occurrences"
+                    >
                       <Field
-                        as={Radio}
+                        as={Input}
                         type="radio"
                         name="ending"
                         id="ending"
@@ -177,32 +176,31 @@ class TransactionInput extends React.Component {
                           setFieldValue('ending', 'after Number of Occurrences')
                         }
                       />
-                      after Number of Occurrences
                     </Label>
-                    {values.ending === 'after Number of Occurrences' ? (
-                      <FieldGroup
-                        errors={errors}
-                        name="occurrences"
-                        touched={touched}
-                      >
-                        <Field
-                          as={Input}
-                          name="occurrences"
-                          id="occurrences"
-                          type="number"
-                        />
-                      </FieldGroup>
-                    ) : values.ending === 'at Date' ? (
-                      <FieldGroup
-                        errors={errors}
-                        name="end"
-                        prettyName="At This Day"
-                        touched={touched}
-                      >
-                        <Field as={Input} name="end" id="end" type="date" />
-                      </FieldGroup>
-                    ) : null}
                   </FieldGroup>
+                  {values.ending === 'after Number of Occurrences' ? (
+                    <FieldGroup
+                      errors={errors}
+                      name="occurrences"
+                      touched={touched}
+                    >
+                      <Field
+                        as={Input}
+                        name="occurrences"
+                        id="occurrences"
+                        type="number"
+                      />
+                    </FieldGroup>
+                  ) : values.ending === 'at Date' ? (
+                    <FieldGroup
+                      errors={errors}
+                      name="end"
+                      prettyName="At This Day"
+                      touched={touched}
+                    >
+                      <Field as={Input} name="end" id="end" type="date" />
+                    </FieldGroup>
+                  ) : null}
 
                   <FieldGroup errors={errors} name="rtype" touched={touched}>
                     <Field as={Select} name="rtype" id="rtype">
@@ -238,19 +236,17 @@ class TransactionInput extends React.Component {
                     setFieldValue={setFieldValue}
                   />
 
-                  <Button
-                    sx={{ variant: 'buttons.primary' }}
-                    type="submit"
-                    disabled={isSubmitting}
-                  >
-                    Add Transaction
-                  </Button>
+                  <div className="mt-4">
+                    <Button type="submit" disabled={isSubmitting}>
+                      Add Transaction
+                    </Button>
+                  </div>
                 </form>
               )}
             </Formik>
           )}
         </State.Consumer>
-      </Box>
+      </>
     );
   }
 }
