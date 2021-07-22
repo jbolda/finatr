@@ -46,7 +46,7 @@ export class TabView extends React.Component {
       : this.state.activeTab;
 
     return (
-      <div>
+      <div id={this.props.id}>
         {!this.props.tabTitles || !this.props.tabContents ? null : (
           <Tabs
             index={activeTab}
