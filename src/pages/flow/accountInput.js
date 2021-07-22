@@ -1,9 +1,13 @@
 import React from 'react';
-import { State } from '../../state';
-import { Box, Heading, Button, Input, Select } from 'theme-ui';
+import { State } from '~src/state';
+
+import { Input } from '~src/elements/Input';
+import { Select } from '~src/elements/Select';
+import { Button } from '~src/elements/Button';
+
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import { FieldGroup } from '../../components/bootstrap/Form';
+import { FieldGroup } from '../../components/Form';
 
 const AccountSchema = Yup.object().shape({
   name: Yup.string().min(1).required('Required'),
@@ -17,14 +21,8 @@ const AccountSchema = Yup.object().shape({
 class AccountInput extends React.Component {
   render() {
     return (
-      <Box
-        sx={{
-          maxWidth: 512,
-          mx: 'auto',
-          px: 3
-        }}
-      >
-        <Heading variant="subtle">Add an Account</Heading>
+      <div>
+        <h4 variant="subtle">Add an Account</h4>
         <State.Consumer>
           {(model) => (
             <Formik
@@ -79,19 +77,17 @@ class AccountInput extends React.Component {
                     </Field>
                   </FieldGroup>
 
-                  <Button
-                    sx={{ variant: 'buttons.primary' }}
-                    type="submit"
-                    disabled={isSubmitting}
-                  >
-                    Add Account
-                  </Button>
+                  <div className="mt-4">
+                    <Button type="submit" disabled={isSubmitting}>
+                      Add Account
+                    </Button>
+                  </div>
                 </form>
               )}
             </Formik>
           )}
         </State.Consumer>
-      </Box>
+      </div>
     );
   }
 }

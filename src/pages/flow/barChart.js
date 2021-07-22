@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { Box } from 'theme-ui';
 import { select, pointer } from 'd3-selection';
 import { transition } from 'd3-transition';
 import { scaleTime, scaleLinear, scaleOrdinal } from 'd3-scale';
@@ -161,14 +160,14 @@ export class BarChart extends PureComponent {
 
   render() {
     return (
-      <Box>
+      <div>
         <div
           ref={(elem) => {
             this.tooltipTarget = elem;
           }}
         />
         <div className="draw-section" style={{ overflow: 'auto' }} />
-      </Box>
+      </div>
     );
   }
 }

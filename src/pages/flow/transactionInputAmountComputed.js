@@ -1,7 +1,9 @@
 import React from 'react';
-import { Button, Label, Input, Select, Radio } from 'theme-ui';
 import { Field, FieldArray } from 'formik';
-import { FieldGroup } from '../../components/bootstrap/Form';
+import { FieldGroup, Label } from '~src/components/Form';
+import { Button } from '~src/elements/Button';
+import { Input } from '~src/elements/Input';
+import { Select } from '~src/elements/Select';
 
 const TransactionInputAmountComputed = ({
   errors,
@@ -13,7 +15,7 @@ const TransactionInputAmountComputed = ({
   <FieldGroup name="valueType" prettyName="amount" id={`${prefixID}valueType`}>
     <Label>
       <Field
-        as={Radio}
+        as={Input}
         type="radio"
         name="valueType"
         id={`${prefixID}valueType`}
@@ -24,7 +26,7 @@ const TransactionInputAmountComputed = ({
     </Label>
     <Label>
       <Field
-        as={Radio}
+        as={Input}
         type="radio"
         name="valueType"
         id={`${prefixID}valueType`}
@@ -151,7 +153,7 @@ const References = ({
               })
             }
           >
-            {/* show this when user has removed all friends from the list */}+
+            +
           </Button>
         )}
       </React.Fragment>
@@ -253,7 +255,7 @@ const Operation = ({
   <React.Fragment>
     <Label>
       <Field
-        as={Radio}
+        as={Input}
         name={`computedAmount${'.on'.repeat(level)}.operation`}
         id={`${prefixID}computedAmount${'.on'.repeat(level)}.operation`}
         checked={retrieveNested('operation', values, level) === operationType}

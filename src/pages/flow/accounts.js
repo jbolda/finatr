@@ -1,12 +1,10 @@
 import React from 'react';
-import { State } from '../../state';
+import { State } from '~src/state';
 
-import { Button } from 'theme-ui';
-import TabView from '../../components/view/tabView';
-import FlexTable, {
-  HeaderRow,
-  DataRow
-} from '../../components/bootstrap/FlexTable';
+import { Button } from '~src/elements/Button';
+
+import { TabView } from '~src/components/TabView';
+import { FlexTable } from '~src/components/FlexTable';
 import AccountInput from './accountInput';
 import AccountTransactionInput from './accountTransactionInput';
 
@@ -38,10 +36,7 @@ class AccountFlow extends React.Component {
             tabTitles={['All Accounts', 'Add Account', 'Debt']}
             tabContents={[
               <React.Fragment>
-                <Button
-                  sx={{ variant: 'buttons.primary' }}
-                  onClick={model.toggleAllAccount}
-                >
+                <Button onClick={model.toggleAllAccount}>
                   Toggle All Visibility
                 </Button>
                 <AccountTable

@@ -1,9 +1,11 @@
 import React from 'react';
-import { State } from '../../state';
-import { Box, Heading, Button, Label, Input, Select, Radio } from 'theme-ui';
+import { State } from '~src/state';
+
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import { FieldGroup } from '../../components/bootstrap/Form';
+import { FieldGroup, Label } from '../../components/Form';
+import { Input } from '~src/elements/Input';
+import { Select } from '~src/elements/Select';
 import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
 const ComputedAmountSchema = Yup.object()
@@ -61,14 +63,8 @@ class AccountTransactionInput extends React.Component {
       <State.Consumer>
         {(model) =>
           model.forms.accountTransactionFormVisible.state ? (
-            <Box
-              sx={{
-                maxWidth: 512,
-                mx: 'auto',
-                px: 3
-              }}
-            >
-              <Heading variant="subtle">Add Debt Payback</Heading>
+            <div>
+              <h3>Add Debt Payback</h3>
               <Formik
                 enableReinitialize={true}
                 initialValues={model.forms.accountTransactionForm.values}
@@ -210,7 +206,7 @@ class AccountTransactionInput extends React.Component {
                     >
                       <Label>
                         <Field
-                          as={Radio}
+                          as={Input}
                           type="radio"
                           name="ending"
                           id="debt-ending"
@@ -221,7 +217,7 @@ class AccountTransactionInput extends React.Component {
                       </Label>
                       <Label>
                         <Field
-                          as={Radio}
+                          as={Input}
                           type="radio"
                           name="ending"
                           id="debt-ending"
@@ -232,7 +228,7 @@ class AccountTransactionInput extends React.Component {
                       </Label>
                       <Label>
                         <Field
-                          as={Radio}
+                          as={Input}
                           type="radio"
                           name="ending"
                           id="debt-ending"
@@ -334,17 +330,19 @@ class AccountTransactionInput extends React.Component {
                       prefixID={'debt-'}
                     />
 
-                    <Button
-                      sx={{ variant: 'buttons.primary' }}
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      Add Transaction
-                    </Button>
+                    <div className="mt-3">
+                      <Button
+                        sx={{ variant: 'buttons.primary' }}
+                        type="submit"
+                        disabled={isSubmitting}
+                      >
+                        Add Transaction
+                      </Button>
+                    </div>
                   </form>
                 )}
               />
-            </Box>
+            </div>
           ) : null
         }
       </State.Consumer>
