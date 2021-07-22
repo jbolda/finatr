@@ -2,13 +2,9 @@ import React, { useState } from 'react';
 import { map } from 'microstates';
 import { State } from '~src/state';
 
-const Flex = ({ children }) => <div>{children}</div>;
-const Box = ({ children }) => <div>{children}</div>;
-const Heading = ({ children }) => <div>{children}</div>;
-const Text = ({ children }) => <div>{children}</div>;
-const Button = ({ children }) => <div>{children}</div>;
 import { TabView } from '~src/components/TabView';
 import { FlexTable } from '~src/components/FlexTable';
+import { Button } from '~src/elements/Button';
 
 const Taxes = (props) => {
   const [activeTab, tabClick] = useState(0);
@@ -17,16 +13,12 @@ const Taxes = (props) => {
     <State.Consumer>
       {(model) => (
         <React.Fragment>
-          <Flex>
-            <Box>
-              <Heading variant="subtle">Taxes</Heading>
-              <Text>This is still in an alpha state.</Text>
-              <Text>We don't have forms to enter data yet.</Text>
-              <Text>
-                You can manually fill in data in your data file though.
-              </Text>
-            </Box>
-          </Flex>
+          <div>
+            <h1>Taxes</h1>
+            <p>This is still in an alpha state.</p>
+            <p>We don't have forms to enter data yet.</p>
+            <p>You can manually fill in data in your data file though.</p>
+          </div>
           <TabView
             activeTab={activeTab}
             tabClick={tabClick}
@@ -44,17 +36,15 @@ export default Taxes;
 const Group = ({ model }) =>
   model.taxStrategy.incomeGroup.length !== 0
     ? map(model.taxStrategy.incomeGroup, (group) => (
-        <Flex key={group.name.state}>
-          <Box width={1}>
-            <Heading>{group.name.state}</Heading>
-            <Flex flexWrap="wrap">
-              <Chunk quarter="quarter one" quarterIncome={group.qOne} />
-              <Chunk quarter="quarter two" quarterIncome={group.qTwo} />
-              <Chunk quarter="quarter three" quarterIncome={group.qThree} />
-              <Chunk quarter="quarter four" quarterIncome={group.qFour} />
-            </Flex>
-          </Box>
-        </Flex>
+        <div>
+          <h2>{group.name.state}</h2>
+          <div>
+            <Chunk quarter="quarter one" quarterIncome={group.qOne} />
+            <Chunk quarter="quarter two" quarterIncome={group.qTwo} />
+            <Chunk quarter="quarter three" quarterIncome={group.qThree} />
+            <Chunk quarter="quarter four" quarterIncome={group.qFour} />
+          </div>
+        </div>
       ))
     : null;
 
@@ -62,23 +52,23 @@ const Chunk = ({ quarter, quarterIncome }) => {
   const [expanded, toggle] = useState(false);
 
   return expanded ? (
-    <Box width={1}>
+    <div>
       {quarterIncome.income.length !== 0 ? (
-        <Flex flexWrap="wrap">
+        <div>
           {map(quarterIncome.income, (income) => (
-            <Box width={[1 / 2, 1 / 3, 1 / 5]} key={income.id.state}>
-              <Heading>{income.date.state}</Heading>
-              <Text>Gross: {income.gross.toFixed}</Text>
-              <Text>Federal: {income.federalTax.toFixed}</Text>
-              <Text>State: {income.stateTax.toFixed}</Text>
-              <Text>Social Security: {income.socialSecurity.toFixed}</Text>
-              <Text>HSA: {income.hsa.toFixed}</Text>
-              <Text>Pretax: {income.pretaxInvestments.toFixed}</Text>
-            </Box>
+            <div key={income.id.state}>
+              <h2>{income.date.state}</h2>
+              <p>Gross: {income.gross.toFixed}</p>
+              <p>Federal: {income.federalTax.toFixed}</p>
+              <p>State: {income.stateTax.toFixed}</p>
+              <p>Social Security: {income.socialSecurity.toFixed}</p>
+              <p>HSA: {income.hsa.toFixed}</p>
+              <p>Pretax: {income.pretaxInvestments.toFixed}</p>
+            </div>
           ))}
-        </Flex>
+        </div>
       ) : (
-        <Text>No items to display.</Text>
+        <p>No items to display.</p>
       )}
       <Button
         sx={{ variant: 'buttons.primary' }}
@@ -86,47 +76,47 @@ const Chunk = ({ quarter, quarterIncome }) => {
       >
         Group
       </Button>
-    </Box>
+    </div>
   ) : (
-    <Box width={1 / 4}>
-      <Heading>{quarter}</Heading>
-      <Text>
+    <div>
+      <h2>{quarter}</h2>
+      <p>
         Gross: {quarterIncome.total.gross.toFixed} |{' '}
         {quarterIncome.average.gross.toFixed} |{' '}
         {quarterIncome.projected.gross.toFixed}
-      </Text>
-      <Text>
+      </p>
+      <p>
         Federal: {quarterIncome.total.federalTax.toFixed} |{' '}
         {quarterIncome.average.federalTax.toFixed} |{' '}
         {quarterIncome.projected.federalTax.toFixed}
-      </Text>
-      <Text>
+      </p>
+      <p>
         State: {quarterIncome.total.stateTax.toFixed} |{' '}
         {quarterIncome.average.stateTax.toFixed} |{' '}
         {quarterIncome.projected.stateTax.toFixed}
-      </Text>
-      <Text>
+      </p>
+      <p>
         Social Security: {quarterIncome.total.socialSecurity.toFixed} |{' '}
         {quarterIncome.average.socialSecurity.toFixed} |{' '}
         {quarterIncome.projected.socialSecurity.toFixed}
-      </Text>
-      <Text>
+      </p>
+      <p>
         HSA: {quarterIncome.total.hsa.toFixed} |{' '}
         {quarterIncome.average.hsa.toFixed} |{' '}
         {quarterIncome.projected.hsa.toFixed}
-      </Text>
-      <Text>
+      </p>
+      <p>
         Pretax: {quarterIncome.total.pretaxInvestments.toFixed} |{' '}
         {quarterIncome.average.pretaxInvestments.toFixed} |{' '}
         {quarterIncome.projected.pretaxInvestments.toFixed}
-      </Text>
+      </p>
       <Button
         sx={{ variant: 'buttons.primary' }}
         onClick={() => toggle(!expanded)}
       >
         Expand
       </Button>
-    </Box>
+    </div>
   );
 };
 

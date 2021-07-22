@@ -1,8 +1,5 @@
 import React from 'react';
 import { State } from '~src/state';
-const Grid = ({ children }) => <div>{children}</div>;
-const Box = ({ children }) => <div>{children}</div>;
-const Text = ({ children }) => <div>{children}</div>;
 
 class FinancialIndependence extends React.Component {
   render() {
@@ -10,100 +7,90 @@ class FinancialIndependence extends React.Component {
       <State.Consumer>
         {(model) => (
           <React.Fragment>
-            <Grid mx={5} columns={[1, 5, 5]}>
-              <Box>
-                <Text p={1}>Daily Income</Text>
-                <Text p={1}>${model.stats.dailyIncome.toFixed}</Text>
-              </Box>
-              <Box>
-                <Text p={1}>Daily Expenses</Text>
-                <Text p={1}>${model.stats.dailyExpense.toFixed}</Text>
-              </Box>
-              <Box>
-                <Text p={1}>Savings Rate</Text>
-                <Text p={1}>{model.stats.savingsRate.toFixed}%</Text>
-              </Box>
-              <Box>
-                <Text p={1}>Expense Multiple</Text>
-                <Text p={1}>{model.stats.expenseMultiple.toFixed}x</Text>
-                <Text p={1}>
+            <div>
+              <div>
+                <p>Daily Income</p>
+                <p>${model.stats.dailyIncome.toFixed}</p>
+              </div>
+              <div>
+                <p>Daily Expenses</p>
+                <p>${model.stats.dailyExpense.toFixed}</p>
+              </div>
+              <div>
+                <p>Savings Rate</p>
+                <p>{model.stats.savingsRate.toFixed}%</p>
+              </div>
+              <div>
+                <p>Expense Multiple</p>
+                <p>{model.stats.expenseMultiple.toFixed}x</p>
+                <p>
                   +{model.stats.expenseMultipleIncreasePerYear.toFixed}
                   x/year
-                </Text>
-              </Box>
-              <Box>
-                <Text p={1}>% to FI (25x)</Text>
-                <Text p={1}>{model.stats.percentToFINumber.toFixed}%</Text>
+                </p>
+              </div>
+              <div>
+                <p>% to FI (25x)</p>
+                <p>{model.stats.percentToFINumber.toFixed}%</p>
                 {model.stats.yearsToFINumber.toFixed === '999.00' ? null : (
-                  <Text p={1}>{model.stats.yearsToFINumber.toFixed}y</Text>
+                  <p>{model.stats.yearsToFINumber.toFixed}y</p>
                 )}
-              </Box>
-            </Grid>
-            <Grid mx={5} columns={[1, 8, 8]}>
-              <Box>
-                <Text p={1}>% to +net worth</Text>
-                <Text p={1}>
-                  {model.stats.percentToPositiveNetWorth.toFixed}%
-                </Text>
-              </Box>
-              <Box>
-                <Text p={1}>% to FU Money (2x)</Text>
-                <Text p={1}>
-                  {model.stats.percentToFUMoneyConsidering.toFixed}%
-                </Text>
+              </div>
+            </div>
+            <div>
+              <div>
+                <p>% to +net worth</p>
+                <p>{model.stats.percentToPositiveNetWorth.toFixed}%</p>
+              </div>
+              <div>
+                <p>% to FU Money (2x)</p>
+                <p>{model.stats.percentToFUMoneyConsidering.toFixed}%</p>
                 {model.stats.yearsToFUMoneyConsidering.toFixed ===
                 '999.00' ? null : (
-                  <Text p={1}>
-                    {model.stats.yearsToFUMoneyConsidering.toFixed}y
-                  </Text>
+                  <p>{model.stats.yearsToFUMoneyConsidering.toFixed}y</p>
                 )}
-              </Box>
-              <Box>
-                <Text p={1}>% to FU Money (3x)</Text>
-                <Text p={1}>
-                  {model.stats.percentToFUMoneyConfident.toFixed}%
-                </Text>
+              </div>
+              <div>
+                <p>% to FU Money (3x)</p>
+                <p>{model.stats.percentToFUMoneyConfident.toFixed}%</p>
                 {model.stats.yearsToFUMoneyConfident.toFixed ===
                 '999.00' ? null : (
-                  <Text p={1}>
-                    {model.stats.yearsToFUMoneyConfident.toFixed}y
-                  </Text>
+                  <p>{model.stats.yearsToFUMoneyConfident.toFixed}y</p>
                 )}
-              </Box>
-              <Box>
-                <Text p={1}>% to first FI milestone</Text>
-                <Text p={1}>($100,000 Net Worth)</Text>
-                <Text p={1}>{model.stats.percentToFirstFI.toFixed}%</Text>
-              </Box>
-              <Box>
-                <Text p={1}>% to half FI (12.5x)</Text>
-                <Text p={1}>{model.stats.percentToHalfFI.toFixed}%</Text>
+              </div>
+              <div>
+                <p>% to first FI milestone</p>
+                <p>($100,000 Net Worth)</p>
+                <p>{model.stats.percentToFirstFI.toFixed}%</p>
+              </div>
+              <div>
+                <p>% to half FI (12.5x)</p>
+                <p>{model.stats.percentToHalfFI.toFixed}%</p>
                 {model.stats.yearsToHalfFI.toFixed === '999.00' ? null : (
-                  <Text p={1}>{model.stats.yearsToHalfFI.toFixed}y</Text>
+                  <p>{model.stats.yearsToHalfFI.toFixed}y</p>
                 )}
-              </Box>
-              <Box>
-                <Text p={1}>% to lean FI (17.5x)</Text>
-                <Text p={1}>{model.stats.percentToLeanFI.toFixed}%</Text>
+              </div>
+              <div>
+                <p>% to lean FI (17.5x)</p>
+                <p>{model.stats.percentToLeanFI.toFixed}%</p>
                 {model.stats.yearsToLeanFI.toFixed === '999.00' ? null : (
-                  <Text p={1}>{model.stats.yearsToLeanFI.toFixed}y</Text>
+                  <p>{model.stats.yearsToLeanFI.toFixed}y</p>
                 )}
-              </Box>
-              <Box>
-                <Text p={1}>% to flex FI (20x)</Text>
-                <Text p={1}>{model.stats.percentToFlexFI.toFixed}%</Text>
+              </div>
+              <div>
+                <p>% to flex FI (20x)</p>
+                <p>{model.stats.percentToFlexFI.toFixed}%</p>
                 {model.stats.yearsToFlexFI.toFixed === '999.00' ? null : (
-                  <Text p={1}>{model.stats.yearsToFlexFI.toFixed}y</Text>
+                  <p>{model.stats.yearsToFlexFI.toFixed}y</p>
                 )}
-              </Box>
-              <Box>
-                <Text p={1}>% to fat FI (30x)</Text>
-                <Text p={1}>{model.stats.percentToFatFI.toFixed}%</Text>
+              </div>
+              <div>
+                <p>% to fat FI (30x)</p>
+                <p>{model.stats.percentToFatFI.toFixed}%</p>
                 {model.stats.yearsToFatFI.toFixed === '999.00' ? null : (
-                  <Text p={1}>{model.stats.yearsToFatFI.toFixed}y</Text>
+                  <p>{model.stats.yearsToFatFI.toFixed}y</p>
                 )}
-              </Box>
-            </Grid>
+              </div>
+            </div>
           </React.Fragment>
         )}
       </State.Consumer>
