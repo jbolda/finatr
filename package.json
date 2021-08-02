@@ -42,7 +42,7 @@
     "yup": "0.32.9"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-env": "^7.14.9",
     "@babel/preset-react": "^7.14.5",
     "@parcel/reporter-bundle-buddy": "^2.0.0-nightly.1902",
     "@testing-library/cypress": "7.0.6",
