@@ -146,7 +146,8 @@ const DebtTable = ({ data, actions }) =>
         'interest',
         'Add',
         'Modify',
-        'Delete'
+        'Delete',
+        'Payback'
       ]}
       data={data}
       actions={actions}
@@ -154,64 +155,56 @@ const DebtTable = ({ data, actions }) =>
   );
 
 const FlexDebtTable = ({ itemHeaders, data, actions }) => (
-  <React.Fragment>
-    <HeaderRow columns={itemHeaders.length} items={itemHeaders} />
-    {data
+  <FlexTable
+    itemHeaders={itemHeaders}
+    itemData={data
       .filter(
         (account) =>
           account.vehicle === 'debt' ||
           account.vehicle === 'loan' ||
           account.vehicle === 'credit line'
       )
-      .map((account) => (
-        <React.Fragment key={account.name}>
-          <DataRow
-            itemKey={account.name}
-            columns={itemHeaders.length}
-            itemHeaders={itemHeaders}
-            items={[
-              account.name,
-              account.starting.toFixed(2),
-              `${account.interest.toFixed(2)}%`,
-              <Button
-                sx={{
-                  variants: 'outline',
-                  color: 'green'
-                }}
-                onClick={
-                  actions.model.forms.accountTransactionFormVisible.toggle
-                }
-              >
-                +
-              </Button>,
-              <Button
-                sx={{
-                  variants: 'outline',
-                  color: 'blue'
-                }}
-                onClick={() =>
-                  actions.setAccountForm(actions.model, 1, account.name)
-                }
-              >
-                M
-              </Button>,
-              <Button
-                sx={{
-                  variants: 'outline',
-                  color: 'red'
-                }}
-                onClick={() => actions.model.deleteAccount(account.name)}
-              >
-                X
-              </Button>
-            ]}
-          />
-          {account.payback ? (
+      .map((account) => ({
+        key: account.name,
+        data: [
+          account.name,
+          account.starting.toFixed(2),
+          `${account.interest.toFixed(2)}%`,
+          <Button
+            sx={{
+              variants: 'outline',
+              color: 'green'
+            }}
+            onClick={actions.model.forms.accountTransactionFormVisible.toggle}
+          >
+            +
+          </Button>,
+          <Button
+            sx={{
+              variants: 'outline',
+              color: 'blue'
+            }}
+            onClick={() =>
+              actions.setAccountForm(actions.model, 1, account.name)
+            }
+          >
+            M
+          </Button>,
+          <Button
+            sx={{
+              variants: 'outline',
+              color: 'red'
+            }}
+            onClick={() => actions.model.deleteAccount(account.name)}
+          >
+            X
+          </Button>,
+          account.payback ? (
             <PaybackTable data={account} actions={actions} />
-          ) : null}
-        </React.Fragment>
-      ))}
-  </React.Fragment>
+          ) : null
+        ]
+      }))}
+  />
 );
 
 const PaybackTable = ({ data, actions }) => (
