@@ -21,18 +21,17 @@ const TransactionSchema = Yup.object().shape({
   start: Yup.date().required('Required'),
   end: Yup.date(),
   occurrences: Yup.number(),
-  rtype: Yup.mixed()
-    .oneOf([
-      'none',
-      'day',
-      'day of week',
-      'day of month',
-      'bimonthly',
-      'quarterly',
-      'semiannually',
-      'annually'
-    ])
-    .required('Required'),
+  rtype: Yup.mixed().oneOf([
+    'none',
+    'day',
+    'day of week',
+    'day of month',
+    'bimonthly',
+    'quarterly',
+    'semiannually',
+    'annually'
+  ]),
+  // .required('Required'),
   cycle: Yup.number().required('Required'),
   value: Yup.number(),
   computedAmount: Yup.object().shape({
