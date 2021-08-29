@@ -12,20 +12,30 @@ const Taxes = (props) => {
   return (
     <State.Consumer>
       {(model) => (
-        <React.Fragment>
-          <div>
-            <h1>Taxes</h1>
-            <p>This is still in an alpha state.</p>
-            <p>We don't have forms to enter data yet.</p>
-            <p>You can manually fill in data in your data file though.</p>
+        <div className="bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
+          <div className="relative max-w-lg mx-auto divide-y-2 divide-gray-200 lg:max-w-7xl">
+            <div className="pb-6">
+              <h1 className="text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl">
+                Taxes
+              </h1>
+              <p className="text-xl text-gray-500">
+                This is still in an alpha state.
+              </p>
+              <p className="text-xl text-gray-500">
+                We don't have forms to enter data yet.
+              </p>
+              <p className="text-xl text-gray-500">
+                You can manually fill in data in your data file though.
+              </p>
+            </div>
+            <TabView
+              activeTab={activeTab}
+              tabClick={tabClick}
+              tabTitles={['Group', 'Table']}
+              tabContents={[<Group model={model} />, <Table model={model} />]}
+            />
           </div>
-          <TabView
-            activeTab={activeTab}
-            tabClick={tabClick}
-            tabTitles={['Group', 'Table']}
-            tabContents={[<Group model={model} />, <Table model={model} />]}
-          />
-        </React.Fragment>
+        </div>
       )}
     </State.Consumer>
   );
@@ -37,7 +47,9 @@ const Group = ({ model }) =>
   model.taxStrategy.incomeGroup.length !== 0
     ? map(model.taxStrategy.incomeGroup, (group) => (
         <div>
-          <h2>{group.name.state}</h2>
+          <h2 className="py-1 text-md tracking-tight font-extrabold text-gray-900 sm:text-4xl">
+            {group.name.state}
+          </h2>
           <div>
             <Chunk quarter="quarter one" quarterIncome={group.qOne} />
             <Chunk quarter="quarter two" quarterIncome={group.qTwo} />
@@ -48,6 +60,10 @@ const Group = ({ model }) =>
       ))
     : null;
 
+const ListText = ({ children }) => (
+  <p className="text-md text-gray-500">{children}</p>
+);
+
 const Chunk = ({ quarter, quarterIncome }) => {
   const [expanded, toggle] = useState(false);
 
@@ -56,60 +72,61 @@ const Chunk = ({ quarter, quarterIncome }) => {
       {quarterIncome.income.length !== 0 ? (
         <div>
           {map(quarterIncome.income, (income) => (
-            <div key={income.id.state}>
-              <h2>{income.date.state}</h2>
-              <p>Gross: {income.gross.toFixed}</p>
-              <p>Federal: {income.federalTax.toFixed}</p>
-              <p>State: {income.stateTax.toFixed}</p>
-              <p>Social Security: {income.socialSecurity.toFixed}</p>
-              <p>HSA: {income.hsa.toFixed}</p>
-              <p>Pretax: {income.pretaxInvestments.toFixed}</p>
+            <div className="my-3" key={income.id.state}>
+              <h3 className="py-1 text-md tracking-tight font-extrabold text-gray-900 sm:text-4xl">
+                {income.date.state}
+              </h3>
+              <ListText>Gross: {income.gross.toFixed}</ListText>
+              <ListText>Federal: {income.federalTax.toFixed}</ListText>
+              <ListText>State: {income.stateTax.toFixed}</ListText>
+              <ListText>
+                Social Security: {income.socialSecurity.toFixed}
+              </ListText>
+              <ListText>HSA: {income.hsa.toFixed}</ListText>
+              <ListText>Pretax: {income.pretaxInvestments.toFixed}</ListText>
             </div>
           ))}
         </div>
       ) : (
-        <p>No items to display.</p>
+        <ListText>No items to display.</ListText>
       )}
-      <Button
-        sx={{ variant: 'buttons.primary' }}
-        onClick={() => toggle(!expanded)}
-      >
-        Group
-      </Button>
+      <Button onClick={() => toggle(!expanded)}>Group</Button>
     </div>
   ) : (
-    <div>
-      <h2>{quarter}</h2>
-      <p>
+    <div className="my-3">
+      <h3 className="py-1 text-md tracking-tight font-extrabold text-gray-900 sm:text-4xl">
+        {quarter}
+      </h3>
+      <ListText>
         Gross: {quarterIncome.total.gross.toFixed} |{' '}
         {quarterIncome.average.gross.toFixed} |{' '}
         {quarterIncome.projected.gross.toFixed}
-      </p>
-      <p>
+      </ListText>
+      <ListText>
         Federal: {quarterIncome.total.federalTax.toFixed} |{' '}
         {quarterIncome.average.federalTax.toFixed} |{' '}
         {quarterIncome.projected.federalTax.toFixed}
-      </p>
-      <p>
+      </ListText>
+      <ListText>
         State: {quarterIncome.total.stateTax.toFixed} |{' '}
         {quarterIncome.average.stateTax.toFixed} |{' '}
         {quarterIncome.projected.stateTax.toFixed}
-      </p>
-      <p>
+      </ListText>
+      <ListText>
         Social Security: {quarterIncome.total.socialSecurity.toFixed} |{' '}
         {quarterIncome.average.socialSecurity.toFixed} |{' '}
         {quarterIncome.projected.socialSecurity.toFixed}
-      </p>
-      <p>
+      </ListText>
+      <ListText>
         HSA: {quarterIncome.total.hsa.toFixed} |{' '}
         {quarterIncome.average.hsa.toFixed} |{' '}
         {quarterIncome.projected.hsa.toFixed}
-      </p>
-      <p>
+      </ListText>
+      <ListText>
         Pretax: {quarterIncome.total.pretaxInvestments.toFixed} |{' '}
         {quarterIncome.average.pretaxInvestments.toFixed} |{' '}
         {quarterIncome.projected.pretaxInvestments.toFixed}
-      </p>
+      </ListText>
       <Button
         sx={{ variant: 'buttons.primary' }}
         onClick={() => toggle(!expanded)}
