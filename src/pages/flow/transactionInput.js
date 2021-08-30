@@ -2,7 +2,7 @@ import React from 'react';
 import { State } from '~src/state';
 
 import { Formik, Field } from 'formik';
-import * as Yup from 'yup';
+import * as yup from 'yup';
 import { FieldGroup, Label } from '~src/components/Form';
 import { Button } from '~src/elements/Button';
 import { Input } from '~src/elements/Input';
@@ -10,35 +10,38 @@ import { Select } from '~src/elements/Select';
 
 import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
-const TransactionSchema = Yup.object().shape({
-  id: Yup.string(),
-  raccount: Yup.string().required('Required'),
-  description: Yup.string(),
-  category: Yup.string(),
-  type: Yup.mixed()
+const TransactionSchema = yup.object().shape({
+  id: yup.string(),
+  raccount: yup.string().required('Required'),
+  description: yup.string(),
+  category: yup.string(),
+  type: yup
+    .mixed()
     .oneOf(['income', 'expense', 'transfer'])
     .required('Required'),
-  start: Yup.date().required('Required'),
-  end: Yup.date(),
-  occurrences: Yup.number(),
-  rtype: Yup.mixed().oneOf([
-    'none',
-    'day',
-    'day of week',
-    'day of month',
-    'bimonthly',
-    'quarterly',
-    'semiannually',
-    'annually'
-  ]),
-  // .required('Required'),
-  cycle: Yup.number().required('Required'),
-  value: Yup.number(),
-  computedAmount: Yup.object().shape({
-    operation: Yup.string(),
-    reference: Yup.mixed().notOneOf(['select']),
-    references: Yup.object(),
-    on: Yup.object()
+  start: yup.date().required('Required'),
+  end: yup.date(),
+  occurrences: yup.number(),
+  rtype: yup
+    .mixed()
+    .oneOf([
+      'none',
+      'day',
+      'day of week',
+      'day of month',
+      'bimonthly',
+      'quarterly',
+      'semiannually',
+      'annually'
+    ])
+    .required('Required'),
+  cycle: yup.number().required('Required'),
+  value: yup.number(),
+  computedAmount: yup.object().shape({
+    operation: yup.string(),
+    reference: yup.mixed().notOneOf(['select']),
+    references: yup.object(),
+    on: yup.object()
   })
 });
 

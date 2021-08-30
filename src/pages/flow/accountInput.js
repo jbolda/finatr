@@ -6,14 +6,15 @@ import { Select } from '~src/elements/Select';
 import { Button } from '~src/elements/Button';
 
 import { Formik, Field } from 'formik';
-import * as Yup from 'yup';
+import * as yup from 'yup';
 import { FieldGroup } from '../../components/Form';
 
-const AccountSchema = Yup.object().shape({
-  name: Yup.string().min(1).required('Required'),
-  starting: Yup.number().required('Required'),
-  interest: Yup.number(),
-  vehicle: Yup.mixed()
+const AccountSchema = yup.object().shape({
+  name: yup.string().min(1).required('Required'),
+  starting: yup.number().required('Required'),
+  interest: yup.number(),
+  vehicle: yup
+    .mixed()
     .oneOf(['operating', 'loan', 'credit line', 'investment'])
     .required('Required')
 });

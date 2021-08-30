@@ -2,30 +2,34 @@ import React from 'react';
 import { State } from '~src/state';
 
 import { Formik, Field } from 'formik';
-import * as Yup from 'yup';
+import * as yup from 'yup';
 import { FieldGroup, Label } from '../../components/Form';
 import { Input } from '~src/elements/Input';
 import { Select } from '~src/elements/Select';
 import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
-const ComputedAmountSchema = Yup.object()
+const ComputedAmountSchema = yup
+  .object()
   .shape({
-    operation: Yup.string(),
-    reference: Yup.string().notOneOf(['select']).required('Required'),
-    on: Yup.object().when('operation', (operation, ComputedAmountSchema) =>
-      operation !== 'none' ? ComputedAmountSchema : Yup.object().strip()
-    )
+    operation: yup.string(),
+    reference: yup.string().notOneOf(['select']).required('Required'),
+    on: yup
+      .object()
+      .when('operation', (operation, ComputedAmountSchema) =>
+        operation !== 'none' ? ComputedAmountSchema : yupobject().strip()
+      )
   })
   .required('Required');
 
-const AccountTransactionSchema = Yup.object().shape({
-  id: Yup.string(),
-  debtAccount: Yup.string().notOneOf(['select']).required('Required'),
-  raccount: Yup.string().notOneOf(['select']).required('Required'),
-  description: Yup.string(),
-  category: Yup.string(),
-  start: Yup.date().required('Required'),
-  rtype: Yup.string()
+const AccountTransactionSchema = yup.object().shape({
+  id: yup.string(),
+  debtAccount: yup.string().notOneOf(['select']).required('Required'),
+  raccount: yup.string().notOneOf(['select']).required('Required'),
+  description: yup.string(),
+  category: yup.string(),
+  start: yup.date().required('Required'),
+  rtype: yup
+    .string()
     .oneOf([
       'none',
       'day',
@@ -37,18 +41,18 @@ const AccountTransactionSchema = Yup.object().shape({
       'annually'
     ])
     .required('Required'),
-  occurrences: Yup.number(),
-  cycle: Yup.number().required('Required'),
-  value: Yup.number().when('valueType', {
+  occurrences: yup.number(),
+  cycle: yup.number().required('Required'),
+  value: yup.number().when('valueType', {
     is: 'static',
-    then: Yup.number().required('Required'),
-    otherwise: Yup.number()
+    then: yup.number().required('Required'),
+    otherwise: yup.number()
   }),
-  valueType: Yup.string().required(),
-  computedAmount: Yup.object().when('valueType', {
+  valueType: yup.string().required(),
+  computedAmount: yup.object().when('valueType', {
     is: 'dynamic',
     then: ComputedAmountSchema,
-    otherwise: Yup.object().strip()
+    otherwise: yup.object().strip()
   })
 });
 
