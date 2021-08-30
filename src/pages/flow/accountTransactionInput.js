@@ -94,7 +94,7 @@ class AccountTransactionInput extends React.Component {
                       type="text"
                       name="id"
                       id="debt-id"
-                      sx={{ display: 'none' }}
+                      className="hidden"
                     />
 
                     <FieldGroup

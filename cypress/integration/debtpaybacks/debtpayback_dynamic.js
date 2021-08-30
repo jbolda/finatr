@@ -1,9 +1,7 @@
 describe('Debt Payback Form Tests', () => {
   beforeEach(() => {
     cy.visit('/flow');
-    cy.get('#accounts')
-      .contains('Add Account')
-      .click();
+    cy.get('#accounts').contains('Add Account').click();
 
     cy.get('#accounts').within(() => {
       cy.findByLabelText('name').type('Test Debt Submission');
@@ -21,7 +19,7 @@ describe('Debt Payback Form Tests', () => {
     cy.findByTestId('accounts-debt').within(() => {
       cy.findByLabelText('debt account').select('Test Debt Submission');
       cy.findByLabelText('payment account').select('account');
-      cy.findByLabelText('rtype').select('Repeat on a Day of the Week');
+      cy.findByLabelText('repeat type').select('Repeat on a Day of the Week');
       cy.findByLabelText('start').type('2019-04-28');
       cy.findByText('after Number of Occurrences').click({ force: true });
       cy.findByLabelText('occurrences').type('{selectall}8');
@@ -42,7 +40,7 @@ describe('Debt Payback Form Tests', () => {
 
       cy.findByLabelText('debt account').select('Test Debt Submission');
       cy.findByLabelText('payment account').select('account');
-      cy.findByLabelText('rtype').select('Repeat on a Day of the Week');
+      cy.findByLabelText('repeat type').select('Repeat on a Day of the Week');
       cy.findByLabelText('start').type('2019-04-28');
       cy.findByText('after Number of Occurrences').click({ force: true });
       cy.findByLabelText('occurrences').type('{selectall}8');
@@ -54,7 +52,7 @@ describe('Debt Payback Form Tests', () => {
 
       cy.findByText('reference')
         .parent()
-        .should(refSection => {
+        .should((refSection) => {
           expect(refSection).to.contain('Required');
         });
     });

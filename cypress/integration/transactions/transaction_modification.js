@@ -1,12 +1,10 @@
 describe('Transaction Modifications Tests', () => {
   beforeEach(() => {
     cy.visit('/flow');
-    cy.get('#transactions')
-      .contains('Add Transaction')
-      .click();
+    cy.get('#transactions').contains('Add Transaction').click();
 
     cy.get('#transactions').within(() => {
-      cy.findByLabelText('rtype').select('No Repeating');
+      cy.findByLabelText('repeat type').select('No Repeating');
       cy.findByLabelText('value').type('{selectall}55');
       cy.findByLabelText('description').type('test transaction');
       cy.get('form').submit();

@@ -74,12 +74,7 @@ class TransactionInput extends React.Component {
                   onSubmit={handleSubmit}
                   autoComplete="off"
                 >
-                  <Field
-                    name="id"
-                    id="id"
-                    type="text"
-                    sx={{ display: 'none' }}
-                  />
+                  <Field name="id" id="id" type="text" className="hidden" />
 
                   <FieldGroup errors={errors} name="raccount" touched={touched}>
                     <Field as={Select} name="raccount" id="raccount">
@@ -201,7 +196,12 @@ class TransactionInput extends React.Component {
                     </FieldGroup>
                   ) : null}
 
-                  <FieldGroup errors={errors} name="rtype" touched={touched}>
+                  <FieldGroup
+                    errors={errors}
+                    name="rtype"
+                    prettyName="repeat type"
+                    touched={touched}
+                  >
                     <Field as={Select} name="rtype" id="rtype">
                       <option value="none">No Repeating</option>
                       <option value="day">Repeat Daily (or Every X Day)</option>
