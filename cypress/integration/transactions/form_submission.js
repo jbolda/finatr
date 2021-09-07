@@ -47,6 +47,7 @@ describe('Transaction Form Tests', () => {
       cy.findByLabelText('type').select('Expense');
       cy.get('form').submit();
 
+      cy.findByText('Expenses').click();
       cy.findByTestId('transactions-expenses').within(() =>
         // all transactions should be visible, so just check existence
         cy.findByText('67.00').should('exist')
@@ -61,6 +62,7 @@ describe('Transaction Form Tests', () => {
       cy.findByLabelText('type').select('Transfer');
       cy.get('form').submit();
 
+      cy.findByText('Transfers').click();
       cy.findByTestId('transactions-transfers').within(() =>
         // all transactions should be visible, so just check existence
         cy.findByText('53.00').should('exist')

@@ -81,7 +81,7 @@ class TransactionInput extends React.Component {
 
                   <FieldGroup errors={errors} name="raccount" touched={touched}>
                     <Field as={Select} name="raccount" id="raccount">
-                      <option key={'default'} value={'select'} disabled>
+                      <option key={'default'} value={''} disabled>
                         Select an Option
                       </option>
                       {model.state.accountsComputed.map((account) => (
