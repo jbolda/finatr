@@ -4,7 +4,7 @@ import { ExclamationCircleIcon } from '@heroicons/react/solid';
 
 export const FieldGroup = ({
   name,
-  id,
+  id = name,
   prettyName = name,
   children,
   errors,
@@ -12,7 +12,7 @@ export const FieldGroup = ({
 }) => {
   return (
     <div className="mt-2">
-      <Label id={id} name={name} prettyName={prettyName} />
+      <Label id={id} prettyName={prettyName} />
       <div className="mt-1 relative rounded-md shadow-sm">
         {children}
         {errors?.hasOwnProperty(name) && touched?.hasOwnProperty(name) ? ( // errors[name] && touched?.name ? (
@@ -32,16 +32,16 @@ export const FieldGroup = ({
   );
 };
 
-export const Label = ({ id, name = id, prettyName, children }) =>
+export const Label = ({ id, prettyName, children }) =>
   children ? (
     <div className="p-2">
       {children}
-      <label htmlFor={name} className="text-sm font-medium text-gray-700 p-1">
+      <label htmlFor={id} className="text-sm font-medium text-gray-700 p-1">
         {prettyName}
       </label>
     </div>
   ) : (
-    <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+    <label htmlFor={id} className="block text-sm font-medium text-gray-700">
       {prettyName}
     </label>
   );

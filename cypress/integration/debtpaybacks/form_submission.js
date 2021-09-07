@@ -29,7 +29,7 @@ describe('Debt Payback Form Tests', () => {
       cy.findByLabelText('repeat type').select('Repeat on a Day of the Week');
       cy.findByLabelText('value').type('{selectall}250');
       cy.findByLabelText('start').type('2019-04-28');
-      cy.findByText('after Number of Occurrences').click({ force: true });
+      cy.findByLabelText('after Number of Occurrences').check();
       cy.findByLabelText('occurrences').type('{selectall}8');
       cy.findByLabelText('cycle').type('{selectall}1');
       cy.get('form').submit();

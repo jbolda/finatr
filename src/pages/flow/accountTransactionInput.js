@@ -4,6 +4,7 @@ import { State } from '~src/state';
 import { Formik, Field } from 'formik';
 import * as yup from 'yup';
 import { FieldGroup, Label } from '../../components/Form';
+import { Button } from '~src/elements/Button';
 import { Input } from '~src/elements/Input';
 import { Select } from '~src/elements/Select';
 import TransactionInputAmountComputed from './transactionInputAmountComputed';
@@ -16,7 +17,7 @@ const ComputedAmountSchema = yup
     on: yup
       .object()
       .when('operation', (operation, ComputedAmountSchema) =>
-        operation !== 'none' ? ComputedAmountSchema : yupobject().strip()
+        operation !== 'none' ? ComputedAmountSchema : yup.object().strip()
       )
   })
   .required('Required');
@@ -68,7 +69,7 @@ class AccountTransactionInput extends React.Component {
         {(model) =>
           model.forms.accountTransactionFormVisible.state ? (
             <div>
-              <h3>Add Debt Payback</h3>
+              <h3 className="text-1xl font-semibold py-5">Add Debt Payback</h3>
               <Formik
                 enableReinitialize={true}
                 initialValues={model.forms.accountTransactionForm.values}
@@ -204,38 +205,42 @@ class AccountTransactionInput extends React.Component {
 
                     <FieldGroup
                       errors={errors}
-                      name="ending"
-                      id="debt-ending"
+                      name="debt-ending"
+                      prettyName="ending"
                       touched={touched}
                     >
-                      <Label>
+                      <Label id="debt-ending-never" prettyName="never">
                         <Field
                           as={Input}
                           type="radio"
                           name="ending"
-                          id="debt-ending"
+                          id="debt-ending-never"
+                          value="never"
                           checked={values.ending === 'never'}
                           onChange={() => setFieldValue('ending', 'never')}
                         />
-                        never
                       </Label>
-                      <Label>
+                      <Label id="debt-ending-date" prettyName="at Date">
                         <Field
                           as={Input}
                           type="radio"
                           name="ending"
-                          id="debt-ending"
+                          id="debt-ending-date"
+                          value="at Date"
                           checked={values.ending === 'at Date'}
                           onChange={() => setFieldValue('ending', 'at Date')}
                         />
-                        at Date
                       </Label>
-                      <Label>
+                      <Label
+                        id="debt-ending-after"
+                        prettyName="after Number of Occurrences"
+                      >
                         <Field
                           as={Input}
                           type="radio"
                           name="ending"
-                          id="debt-ending"
+                          id="debt-ending-after"
+                          value="after Number of Occurrences"
                           checked={
                             values.ending === 'after Number of Occurrences'
                           }
@@ -246,7 +251,6 @@ class AccountTransactionInput extends React.Component {
                             )
                           }
                         />
-                        after Number of Occurrences
                       </Label>
                       {values.ending === 'after Number of Occurrences' ? (
                         <FieldGroup
@@ -283,6 +287,7 @@ class AccountTransactionInput extends React.Component {
                     <FieldGroup
                       errors={errors}
                       name="rtype"
+                      prettyName="repeat type"
                       id="debt-rtype"
                       touched={touched}
                     >

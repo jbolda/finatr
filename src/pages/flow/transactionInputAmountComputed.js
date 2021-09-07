@@ -13,23 +13,22 @@ const TransactionInputAmountComputed = ({
   prefixID = ''
 }) => (
   <FieldGroup name="valueType" prettyName="amount" id={`${prefixID}valueType`}>
-    <Label>
+    <Label id={`${prefixID}valueType-static`} prettyName="Static">
       <Field
         as={Input}
         type="radio"
         name="valueType"
-        id={`${prefixID}valueType`}
+        id={`${prefixID}valueType-static`}
         checked={values.valueType === 'static'}
         onChange={() => setFieldValue('valueType', 'static')}
       />
-      Static
     </Label>
-    <Label>
+    <Label id={`${prefixID}valueType-dynamic`} prettyName="Dynamic">
       <Field
         as={Input}
         type="radio"
         name="valueType"
-        id={`${prefixID}valueType`}
+        id={`${prefixID}valueType-dynamic`}
         checked={values.valueType === 'dynamic'}
         onChange={() => {
           setFieldValue('computedAmount.reference', '');
@@ -43,7 +42,6 @@ const TransactionInputAmountComputed = ({
           setFieldValue('value', 0);
         }}
       />
-      Dynamic
     </Label>
     {values.valueType === 'static' ? (
       <FieldGroup
