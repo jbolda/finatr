@@ -24,6 +24,7 @@ describe('Debt Payback Form Tests', () => {
 
       cy.findByText('55')
         .parent()
+        .parent()
         .within(() => cy.findByText('M').click());
     });
   });

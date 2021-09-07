@@ -52,6 +52,7 @@ describe('Debt Payback Form Tests', () => {
 
       cy.findByText('reference')
         .parent()
+        .parent()
         .should((refSection) => {
           expect(refSection).to.contain('Required');
         });

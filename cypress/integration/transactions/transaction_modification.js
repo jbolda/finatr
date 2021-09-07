@@ -12,6 +12,7 @@ describe('Transaction Modifications Tests', () => {
       cy.findByTestId('transactions-all-transactions')
         .contains('55.00')
         .parent()
+        .parent()
         .within(() => cy.findByText('M').click());
     });
   });

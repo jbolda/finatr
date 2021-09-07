@@ -15,6 +15,7 @@ describe('Transaction Delete Tests', () => {
     cy.get('#transactions')
       .contains('test transaction')
       .parent()
+      .parent()
       .within(() => {
         cy.contains('X').click();
       });

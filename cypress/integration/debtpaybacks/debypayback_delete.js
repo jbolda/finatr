@@ -28,6 +28,7 @@ describe('Debt Payback Form Tests', () => {
     cy.findByTestId('accounts-debt').within(() => {
       cy.findByText('2019-05-28')
         .parent()
+        .parent()
         .within(() => cy.findByText('X').click());
 
       cy.findByText('2019-05-28').should('not.exist');
