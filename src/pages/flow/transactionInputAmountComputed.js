@@ -4,6 +4,7 @@ import { FieldGroup, Label } from '~src/components/Form';
 import { Button } from '~src/elements/Button';
 import { Input } from '~src/elements/Input';
 import { Select } from '~src/elements/Select';
+import { Radio } from '~src/elements/Radio';
 
 const TransactionInputAmountComputed = ({
   errors,
@@ -15,7 +16,7 @@ const TransactionInputAmountComputed = ({
   <FieldGroup name="valueType" prettyName="amount" id={`${prefixID}valueType`}>
     <Label id={`${prefixID}valueType-static`} prettyName="Static">
       <Field
-        as={Input}
+        as={Radio}
         type="radio"
         name="valueType"
         id={`${prefixID}valueType-static`}
@@ -25,7 +26,7 @@ const TransactionInputAmountComputed = ({
     </Label>
     <Label id={`${prefixID}valueType-dynamic`} prettyName="Dynamic">
       <Field
-        as={Input}
+        as={Radio}
         type="radio"
         name="valueType"
         id={`${prefixID}valueType-dynamic`}

@@ -7,6 +7,7 @@ import { FieldGroup, Label } from '../../components/Form';
 import { Button } from '~src/elements/Button';
 import { Input } from '~src/elements/Input';
 import { Select } from '~src/elements/Select';
+import { Radio } from '~src/elements/Radio';
 import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
 const ComputedAmountSchema = yup
@@ -211,7 +212,7 @@ class AccountTransactionInput extends React.Component {
                     >
                       <Label id="debt-ending-never" prettyName="never">
                         <Field
-                          as={Input}
+                          as={Radio}
                           type="radio"
                           name="ending"
                           id="debt-ending-never"
@@ -222,7 +223,7 @@ class AccountTransactionInput extends React.Component {
                       </Label>
                       <Label id="debt-ending-date" prettyName="at Date">
                         <Field
-                          as={Input}
+                          as={Radio}
                           type="radio"
                           name="ending"
                           id="debt-ending-date"
@@ -236,7 +237,7 @@ class AccountTransactionInput extends React.Component {
                         prettyName="after Number of Occurrences"
                       >
                         <Field
-                          as={Input}
+                          as={Radio}
                           type="radio"
                           name="ending"
                           id="debt-ending-after"

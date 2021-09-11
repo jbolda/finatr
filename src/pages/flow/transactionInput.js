@@ -7,6 +7,7 @@ import { FieldGroup, Label } from '~src/components/Form';
 import { Button } from '~src/elements/Button';
 import { Input } from '~src/elements/Input';
 import { Select } from '~src/elements/Select';
+import { Radio } from '~src/elements/Radio';
 
 import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
@@ -139,7 +140,7 @@ class TransactionInput extends React.Component {
                   <FieldGroup errors={errors} name="ending" touched={touched}>
                     <Label name="ending" prettyName="never">
                       <Field
-                        as={Input}
+                        as={Radio}
                         type="radio"
                         name="ending"
                         id="ending"
@@ -149,7 +150,7 @@ class TransactionInput extends React.Component {
                     </Label>
                     <Label name="ending" prettyName="at Date">
                       <Field
-                        as={Input}
+                        as={Radio}
                         type="radio"
                         name="ending"
                         id="ending"
@@ -162,7 +163,7 @@ class TransactionInput extends React.Component {
                       prettyName="after Number of Occurrences"
                     >
                       <Field
-                        as={Input}
+                        as={Radio}
                         type="radio"
                         name="ending"
                         id="ending"

@@ -1,8 +1,9 @@
 import React from 'react';
 
-export const Input = ({ ...rest }) => (
+export const Input = ({ type = 'text', ...rest }) => (
   <input
-    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+    type={type}
+    className="block w-full py-2 text-base shadow-sm border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
     {...rest}
   />
 );

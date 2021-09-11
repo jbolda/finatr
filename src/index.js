@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import '~src/app.module.css';
-import '@tailwindcss/forms/dist/forms.css';
 
 import { Store, create } from 'microstates';
 import AppModel, { State } from './state';
