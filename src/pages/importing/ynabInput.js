@@ -1,21 +1,21 @@
 import React from 'react';
 import { Formik, Field } from 'formik';
-import { State } from '../../state';
+import { State } from '~src/state';
 import * as ynab from 'ynab';
 import getDay from 'date-fns/fp/getDay';
 import getDate from 'date-fns/fp/getDate';
 import parse from 'date-fns/parse';
-import { FieldGroup } from '../../components/bootstrap/Form';
-import { Box, Heading, Text, Button, Input, Checkbox, Label } from 'theme-ui';
+import { FieldGroup, Label } from '~src/components/Form';
+
+import { Button } from '~src/elements/Button';
+import { Input } from '~src/elements/Input';
 
 class YNABInput extends React.Component {
   render() {
     return (
-      <Box m={2} width={1 / 3}>
-        <Heading fontSize={[3, 3, 4]}>Add All Accounts from YNAB</Heading>
-        <Text fontSize={[1, 1, 2]}>
-          This all happens in your browser and is only exchanged with YNAB.
-        </Text>
+      <div>
+        <h1>Add All Accounts from YNAB</h1>
+        <p>This all happens in your browser and is only exchanged with YNAB.</p>
         <State.Consumer>
           {(model) => (
             <Formik
@@ -146,7 +146,7 @@ class YNABInput extends React.Component {
                   >
                     <Label>
                       <Field
-                        as={Checkbox}
+                        as={Input}
                         type="checkbox"
                         name="importTransactions"
                       />
@@ -167,7 +167,7 @@ class YNABInput extends React.Component {
             />
           )}
         </State.Consumer>
-      </Box>
+      </div>
     );
   }
 }

@@ -1,7 +1,9 @@
 import React from 'react';
-import { State } from '../../state';
-import TabView from '../../components/view/tabView';
-import { Flex, Box, Heading, Text, Button } from 'theme-ui';
+import { State } from '~src/state';
+import { TabView } from '~src/components/TabView';
+const Flex = ({ children }) => <div>{children}</div>;
+const Box = ({ children }) => <div>{children}</div>;
+import { Button } from '~src/elements/Button';
 
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';
@@ -80,47 +82,52 @@ class Importing extends React.Component {
     return (
       <State.Consumer>
         {(model) => (
-          <React.Fragment>
-            <Box>
-              <Heading variant="subtle">Importing and Exporting</Heading>
-              <Text>The data is yours to own.</Text>
-            </Box>
-            <TabView
-              activeTab={this.state.activeTab}
-              tabClick={this.tabClick.bind(this)}
-              tabTitles={['Manual Upload/Download', 'Import From YNAB']}
-              tabContents={[
-                <Flex>
-                  <Box width={1 / 3}>
-                    <Text>Get your current data out:</Text>
-                    <Button
-                      sx={{ variant: 'buttons.primary' }}
-                      onClick={this.handleDownload.bind(this, model)}
-                    >
-                      Download
-                    </Button>
-                  </Box>
-                  <Box width={1 / 3}>
-                    <Text>Import data from your computer:</Text>
-                    <FileReaderInput
-                      as="text"
-                      id="my-file-input"
-                      onChange={this.handleUpload.bind(this, model)}
-                    >
-                      <Button sx={{ variant: 'buttons.primary' }}>
-                        Select a file!
+          <div className="bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
+            <div className="relative max-w-lg mx-auto divide-y-2 divide-gray-200 lg:max-w-7xl">
+              <div className="pb-6">
+                <h2 className="text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl">
+                  Importing and Exporting
+                </h2>
+                <p className="text-xl text-gray-500">
+                  The data is yours to own.
+                </p>
+              </div>
+              <TabView
+                activeTab={this.state.activeTab}
+                tabClick={this.tabClick.bind(this)}
+                tabTitles={['Manual Upload/Download', 'Import From YNAB']}
+                tabContents={[
+                  <div>
+                    <div>
+                      <p className="my-3 text-base text-gray-500">
+                        Get your current data out
+                      </p>
+                      <Button onClick={this.handleDownload.bind(this, model)}>
+                        Download
                       </Button>
-                    </FileReaderInput>
-                  </Box>
-                </Flex>,
-                <YNABInput
-                  initialDevToken={model.state.devToken}
-                  initialBudgetId={model.state.budgetId}
-                  addYNAB={this.addYNAB}
-                />
-              ]}
-            />
-          </React.Fragment>
+                    </div>
+                    <div>
+                      <p className="my-3 text-base text-gray-500">
+                        Import data from your computer
+                      </p>
+                      <FileReaderInput
+                        as="text"
+                        id="my-file-input"
+                        onChange={this.handleUpload.bind(this, model)}
+                      >
+                        <Button>Select a file!</Button>
+                      </FileReaderInput>
+                    </div>
+                  </div>,
+                  <YNABInput
+                    initialDevToken={model.state.devToken}
+                    initialBudgetId={model.state.budgetId}
+                    addYNAB={this.addYNAB}
+                  />
+                ]}
+              />
+            </div>
+          </div>
         )}
       </State.Consumer>
     );

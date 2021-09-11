@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { map } from 'microstates';
-import { State } from '../../state';
-import { Flex, Box, Heading, Text, Button } from 'theme-ui';
-import TabView from '../../components/view/tabView';
-import FlexTable from '../../components/bootstrap/FlexTable';
+import { State } from '~src/state';
+
+import { TabView } from '~src/components/TabView';
+import { FlexTable } from '~src/components/FlexTable';
+import { Button } from '~src/elements/Button';
 
 const Taxes = (props) => {
   const [activeTab, tabClick] = useState(0);
@@ -11,24 +12,30 @@ const Taxes = (props) => {
   return (
     <State.Consumer>
       {(model) => (
-        <React.Fragment>
-          <Flex>
-            <Box>
-              <Heading variant="subtle">Taxes</Heading>
-              <Text>This is still in an alpha state.</Text>
-              <Text>We don't have forms to enter data yet.</Text>
-              <Text>
+        <div className="bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
+          <div className="relative max-w-lg mx-auto divide-y-2 divide-gray-200 lg:max-w-7xl">
+            <div className="pb-6">
+              <h1 className="text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl">
+                Taxes
+              </h1>
+              <p className="text-xl text-gray-500">
+                This is still in an alpha state.
+              </p>
+              <p className="text-xl text-gray-500">
+                We don't have forms to enter data yet.
+              </p>
+              <p className="text-xl text-gray-500">
                 You can manually fill in data in your data file though.
-              </Text>
-            </Box>
-          </Flex>
-          <TabView
-            activeTab={activeTab}
-            tabClick={tabClick}
-            tabTitles={['Group', 'Table']}
-            tabContents={[<Group model={model} />, <Table model={model} />]}
-          />
-        </React.Fragment>
+              </p>
+            </div>
+            <TabView
+              activeTab={activeTab}
+              tabClick={tabClick}
+              tabTitles={['Group', 'Table']}
+              tabContents={[<Group model={model} />, <Table model={model} />]}
+            />
+          </div>
+        </div>
       )}
     </State.Consumer>
   );
@@ -39,89 +46,94 @@ export default Taxes;
 const Group = ({ model }) =>
   model.taxStrategy.incomeGroup.length !== 0
     ? map(model.taxStrategy.incomeGroup, (group) => (
-        <Flex key={group.name.state}>
-          <Box width={1}>
-            <Heading>{group.name.state}</Heading>
-            <Flex flexWrap="wrap">
-              <Chunk quarter="quarter one" quarterIncome={group.qOne} />
-              <Chunk quarter="quarter two" quarterIncome={group.qTwo} />
-              <Chunk quarter="quarter three" quarterIncome={group.qThree} />
-              <Chunk quarter="quarter four" quarterIncome={group.qFour} />
-            </Flex>
-          </Box>
-        </Flex>
+        <div>
+          <h2 className="py-1 text-md tracking-tight font-extrabold text-gray-900 sm:text-4xl">
+            {group.name.state}
+          </h2>
+          <div>
+            <Chunk quarter="quarter one" quarterIncome={group.qOne} />
+            <Chunk quarter="quarter two" quarterIncome={group.qTwo} />
+            <Chunk quarter="quarter three" quarterIncome={group.qThree} />
+            <Chunk quarter="quarter four" quarterIncome={group.qFour} />
+          </div>
+        </div>
       ))
     : null;
+
+const ListText = ({ children }) => (
+  <p className="text-md text-gray-500">{children}</p>
+);
 
 const Chunk = ({ quarter, quarterIncome }) => {
   const [expanded, toggle] = useState(false);
 
   return expanded ? (
-    <Box width={1}>
+    <div>
       {quarterIncome.income.length !== 0 ? (
-        <Flex flexWrap="wrap">
+        <div>
           {map(quarterIncome.income, (income) => (
-            <Box width={[1 / 2, 1 / 3, 1 / 5]} key={income.id.state}>
-              <Heading>{income.date.state}</Heading>
-              <Text>Gross: {income.gross.toFixed}</Text>
-              <Text>Federal: {income.federalTax.toFixed}</Text>
-              <Text>State: {income.stateTax.toFixed}</Text>
-              <Text>Social Security: {income.socialSecurity.toFixed}</Text>
-              <Text>HSA: {income.hsa.toFixed}</Text>
-              <Text>Pretax: {income.pretaxInvestments.toFixed}</Text>
-            </Box>
+            <div className="my-3" key={income.id.state}>
+              <h3 className="py-1 text-md tracking-tight font-extrabold text-gray-900 sm:text-4xl">
+                {income.date.state}
+              </h3>
+              <ListText>Gross: {income.gross.toFixed}</ListText>
+              <ListText>Federal: {income.federalTax.toFixed}</ListText>
+              <ListText>State: {income.stateTax.toFixed}</ListText>
+              <ListText>
+                Social Security: {income.socialSecurity.toFixed}
+              </ListText>
+              <ListText>HSA: {income.hsa.toFixed}</ListText>
+              <ListText>Pretax: {income.pretaxInvestments.toFixed}</ListText>
+            </div>
           ))}
-        </Flex>
+        </div>
       ) : (
-        <Text>No items to display.</Text>
+        <ListText>No items to display.</ListText>
       )}
-      <Button
-        sx={{ variant: 'buttons.primary' }}
-        onClick={() => toggle(!expanded)}
-      >
-        Group
-      </Button>
-    </Box>
+      <Button onClick={() => toggle(!expanded)}>Group</Button>
+    </div>
   ) : (
-    <Box width={1 / 4}>
-      <Heading>{quarter}</Heading>
-      <Text>
+    <div className="my-3">
+      <h3 className="py-1 text-md tracking-tight font-extrabold text-gray-900 sm:text-4xl">
+        {quarter}
+      </h3>
+      <ListText>
         Gross: {quarterIncome.total.gross.toFixed} |{' '}
         {quarterIncome.average.gross.toFixed} |{' '}
         {quarterIncome.projected.gross.toFixed}
-      </Text>
-      <Text>
+      </ListText>
+      <ListText>
         Federal: {quarterIncome.total.federalTax.toFixed} |{' '}
         {quarterIncome.average.federalTax.toFixed} |{' '}
         {quarterIncome.projected.federalTax.toFixed}
-      </Text>
-      <Text>
+      </ListText>
+      <ListText>
         State: {quarterIncome.total.stateTax.toFixed} |{' '}
         {quarterIncome.average.stateTax.toFixed} |{' '}
         {quarterIncome.projected.stateTax.toFixed}
-      </Text>
-      <Text>
+      </ListText>
+      <ListText>
         Social Security: {quarterIncome.total.socialSecurity.toFixed} |{' '}
         {quarterIncome.average.socialSecurity.toFixed} |{' '}
         {quarterIncome.projected.socialSecurity.toFixed}
-      </Text>
-      <Text>
+      </ListText>
+      <ListText>
         HSA: {quarterIncome.total.hsa.toFixed} |{' '}
         {quarterIncome.average.hsa.toFixed} |{' '}
         {quarterIncome.projected.hsa.toFixed}
-      </Text>
-      <Text>
+      </ListText>
+      <ListText>
         Pretax: {quarterIncome.total.pretaxInvestments.toFixed} |{' '}
         {quarterIncome.average.pretaxInvestments.toFixed} |{' '}
         {quarterIncome.projected.pretaxInvestments.toFixed}
-      </Text>
+      </ListText>
       <Button
         sx={{ variant: 'buttons.primary' }}
         onClick={() => toggle(!expanded)}
       >
         Expand
       </Button>
-    </Box>
+    </div>
   );
 };
 

@@ -38,7 +38,7 @@ class TransactionFormPrimitive extends Primitive {
   beginAfterOccurrences = defaults(NumberType, 0);
   end = defaults(StringType, '');
   occurrences = defaults(NumberType, 0);
-  rtype = defaults(StringType, '');
+  rtype = defaults(StringType, 'none');
   cycle = defaults(NumberType, 0);
   valueType = defaults(StringType, 'static');
   value = defaults(NumberType, 0);

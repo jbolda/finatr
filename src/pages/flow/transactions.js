@@ -1,9 +1,9 @@
 import React from 'react';
-import { State } from '../../state';
+import { State } from '~src/state';
 
-import { Box, Button } from 'theme-ui';
-import TabView from '../../components/view/tabView';
-import FlexTable from '../../components/bootstrap/FlexTable';
+import { TabView } from '~src/components/TabView';
+import { FlexTable } from '~src/components/FlexTable';
+import { Button } from '~src/elements/Button';
 import TransactionInput from './transactionInput';
 
 class TransactionsFlow extends React.Component {
@@ -40,24 +40,19 @@ class TransactionsFlow extends React.Component {
             ]}
             tabContents={[
               <React.Fragment>
-                <div className="buttons">
+                <div className="buttons py-2">
                   {Object.keys(model.state.transactionCategories).map(
                     (category) => (
-                      <Button
+                      <button
                         key={category}
-                        m={2}
-                        sx={{
-                          variant: model.state.transactionCategories[category]
-                            ? 'buttons.primary'
-                            : 'buttons.outline'
-                        }}
+                        className="inline-flex items-center px-2 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
                         onClick={model.filterTransactionsComputed.bind(
                           this,
                           category
                         )}
                       >
                         {category}
-                      </Button>
+                      </button>
                     )
                   )}
                 </div>
@@ -113,7 +108,7 @@ export default TransactionsFlow;
 
 const TransactionTable = ({ data, actions }) =>
   data.length === 0 || !data ? (
-    <Box m={2}>There are no transactions to show.</Box>
+    <div>There are no transactions to show.</div>
   ) : (
     <FlexTable
       itemHeaders={[

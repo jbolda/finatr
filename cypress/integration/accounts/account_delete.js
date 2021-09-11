@@ -1,9 +1,7 @@
 describe('Transaction Delete Tests', () => {
   beforeEach(() => {
     cy.visit('/flow');
-    cy.get('#accounts')
-      .contains('Add Account')
-      .click();
+    cy.get('#accounts').contains('Add Account').click();
 
     cy.get('#accounts').within(() => {
       cy.findByLabelText('starting').type('{selectall}55');
@@ -15,6 +13,7 @@ describe('Transaction Delete Tests', () => {
   it('deletes the recently added account', () => {
     cy.get('#accounts').within(() => {
       cy.findByText('55.00')
+        .parent()
         .parent()
         .within(() => {
           cy.findByText('X').click();

@@ -1,9 +1,7 @@
 describe('Debt Payback Form Tests', () => {
   beforeEach(() => {
     cy.visit('/flow');
-    cy.get('#accounts')
-      .contains('Add Account')
-      .click();
+    cy.get('#accounts').contains('Add Account').click();
 
     cy.get('#accounts').within(() => {
       cy.findByLabelText('name').type('Test Debt Submission');
@@ -16,7 +14,7 @@ describe('Debt Payback Form Tests', () => {
 
       cy.findByLabelText('debt account').select('Test Debt Submission');
       cy.findByLabelText('payment account').select('account');
-      cy.findByLabelText('rtype').select('No Repeating');
+      cy.findByLabelText('repeat type').select('No Repeating');
       cy.findByLabelText('value').type('55');
       cy.findByLabelText('start').type('2019-05-28');
       cy.findByText('after Number of Occurrences').click({ force: true });
@@ -25,6 +23,7 @@ describe('Debt Payback Form Tests', () => {
       cy.findByTestId('accounts-debt').within(() => cy.get('form').submit());
 
       cy.findByText('55')
+        .parent()
         .parent()
         .within(() => cy.findByText('M').click());
     });

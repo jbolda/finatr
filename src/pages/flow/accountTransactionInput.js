@@ -1,29 +1,37 @@
 import React from 'react';
-import { State } from '../../state';
-import { Box, Heading, Button, Label, Input, Select, Radio } from 'theme-ui';
+import { State } from '~src/state';
+
 import { Formik, Field } from 'formik';
-import * as Yup from 'yup';
-import { FieldGroup } from '../../components/bootstrap/Form';
+import * as yup from 'yup';
+import { FieldGroup, Label } from '../../components/Form';
+import { Button } from '~src/elements/Button';
+import { Input } from '~src/elements/Input';
+import { Select } from '~src/elements/Select';
+import { Radio } from '~src/elements/Radio';
 import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
-const ComputedAmountSchema = Yup.object()
+const ComputedAmountSchema = yup
+  .object()
   .shape({
-    operation: Yup.string(),
-    reference: Yup.string().notOneOf(['select']).required('Required'),
-    on: Yup.object().when('operation', (operation, ComputedAmountSchema) =>
-      operation !== 'none' ? ComputedAmountSchema : Yup.object().strip()
-    )
+    operation: yup.string(),
+    reference: yup.string().notOneOf(['select']).required('Required'),
+    on: yup
+      .object()
+      .when('operation', (operation, ComputedAmountSchema) =>
+        operation !== 'none' ? ComputedAmountSchema : yup.object().strip()
+      )
   })
   .required('Required');
 
-const AccountTransactionSchema = Yup.object().shape({
-  id: Yup.string(),
-  debtAccount: Yup.string().notOneOf(['select']).required('Required'),
-  raccount: Yup.string().notOneOf(['select']).required('Required'),
-  description: Yup.string(),
-  category: Yup.string(),
-  start: Yup.date().required('Required'),
-  rtype: Yup.string()
+const AccountTransactionSchema = yup.object().shape({
+  id: yup.string(),
+  debtAccount: yup.string().notOneOf(['select']).required('Required'),
+  raccount: yup.string().notOneOf(['select']).required('Required'),
+  description: yup.string(),
+  category: yup.string(),
+  start: yup.date().required('Required'),
+  rtype: yup
+    .string()
     .oneOf([
       'none',
       'day',
@@ -35,18 +43,18 @@ const AccountTransactionSchema = Yup.object().shape({
       'annually'
     ])
     .required('Required'),
-  occurrences: Yup.number(),
-  cycle: Yup.number().required('Required'),
-  value: Yup.number().when('valueType', {
+  occurrences: yup.number(),
+  cycle: yup.number().required('Required'),
+  value: yup.number().when('valueType', {
     is: 'static',
-    then: Yup.number().required('Required'),
-    otherwise: Yup.number()
+    then: yup.number().required('Required'),
+    otherwise: yup.number()
   }),
-  valueType: Yup.string().required(),
-  computedAmount: Yup.object().when('valueType', {
+  valueType: yup.string().required(),
+  computedAmount: yup.object().when('valueType', {
     is: 'dynamic',
     then: ComputedAmountSchema,
-    otherwise: Yup.object().strip()
+    otherwise: yup.object().strip()
   })
 });
 
@@ -61,14 +69,8 @@ class AccountTransactionInput extends React.Component {
       <State.Consumer>
         {(model) =>
           model.forms.accountTransactionFormVisible.state ? (
-            <Box
-              sx={{
-                maxWidth: 512,
-                mx: 'auto',
-                px: 3
-              }}
-            >
-              <Heading variant="subtle">Add Debt Payback</Heading>
+            <div>
+              <h3 className="text-1xl font-semibold py-5">Add Debt Payback</h3>
               <Formik
                 enableReinitialize={true}
                 initialValues={model.forms.accountTransactionForm.values}
@@ -98,7 +100,7 @@ class AccountTransactionInput extends React.Component {
                       type="text"
                       name="id"
                       id="debt-id"
-                      sx={{ display: 'none' }}
+                      className="hidden"
                     />
 
                     <FieldGroup
@@ -204,38 +206,42 @@ class AccountTransactionInput extends React.Component {
 
                     <FieldGroup
                       errors={errors}
-                      name="ending"
-                      id="debt-ending"
+                      name="debt-ending"
+                      prettyName="ending"
                       touched={touched}
                     >
-                      <Label>
+                      <Label id="debt-ending-never" prettyName="never">
                         <Field
                           as={Radio}
                           type="radio"
                           name="ending"
-                          id="debt-ending"
+                          id="debt-ending-never"
+                          value="never"
                           checked={values.ending === 'never'}
                           onChange={() => setFieldValue('ending', 'never')}
                         />
-                        never
                       </Label>
-                      <Label>
+                      <Label id="debt-ending-date" prettyName="at Date">
                         <Field
                           as={Radio}
                           type="radio"
                           name="ending"
-                          id="debt-ending"
+                          id="debt-ending-date"
+                          value="at Date"
                           checked={values.ending === 'at Date'}
                           onChange={() => setFieldValue('ending', 'at Date')}
                         />
-                        at Date
                       </Label>
-                      <Label>
+                      <Label
+                        id="debt-ending-after"
+                        prettyName="after Number of Occurrences"
+                      >
                         <Field
                           as={Radio}
                           type="radio"
                           name="ending"
-                          id="debt-ending"
+                          id="debt-ending-after"
+                          value="after Number of Occurrences"
                           checked={
                             values.ending === 'after Number of Occurrences'
                           }
@@ -246,7 +252,6 @@ class AccountTransactionInput extends React.Component {
                             )
                           }
                         />
-                        after Number of Occurrences
                       </Label>
                       {values.ending === 'after Number of Occurrences' ? (
                         <FieldGroup
@@ -283,6 +288,7 @@ class AccountTransactionInput extends React.Component {
                     <FieldGroup
                       errors={errors}
                       name="rtype"
+                      prettyName="repeat type"
                       id="debt-rtype"
                       touched={touched}
                     >
@@ -334,17 +340,19 @@ class AccountTransactionInput extends React.Component {
                       prefixID={'debt-'}
                     />
 
-                    <Button
-                      sx={{ variant: 'buttons.primary' }}
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      Add Transaction
-                    </Button>
+                    <div className="mt-3">
+                      <Button
+                        sx={{ variant: 'buttons.primary' }}
+                        type="submit"
+                        disabled={isSubmitting}
+                      >
+                        Add Transaction
+                      </Button>
+                    </div>
                   </form>
                 )}
               />
-            </Box>
+            </div>
           ) : null
         }
       </State.Consumer>

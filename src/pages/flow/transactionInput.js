@@ -1,23 +1,30 @@
 import React from 'react';
-import { State } from '../../state';
-import { Box, Heading, Button, Label, Input, Select, Radio } from 'theme-ui';
+import { State } from '~src/state';
+
 import { Formik, Field } from 'formik';
-import * as Yup from 'yup';
-import { FieldGroup } from '../../components/bootstrap/Form';
+import * as yup from 'yup';
+import { FieldGroup, Label } from '~src/components/Form';
+import { Button } from '~src/elements/Button';
+import { Input } from '~src/elements/Input';
+import { Select } from '~src/elements/Select';
+import { Radio } from '~src/elements/Radio';
+
 import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
-const TransactionSchema = Yup.object().shape({
-  id: Yup.string(),
-  raccount: Yup.string().required('Required'),
-  description: Yup.string(),
-  category: Yup.string(),
-  type: Yup.mixed()
+const TransactionSchema = yup.object().shape({
+  id: yup.string(),
+  raccount: yup.string().required('Required'),
+  description: yup.string(),
+  category: yup.string(),
+  type: yup
+    .mixed()
     .oneOf(['income', 'expense', 'transfer'])
     .required('Required'),
-  start: Yup.date().required('Required'),
-  end: Yup.date(),
-  occurrences: Yup.number(),
-  rtype: Yup.mixed()
+  start: yup.date().required('Required'),
+  end: yup.date(),
+  occurrences: yup.number(),
+  rtype: yup
+    .mixed()
     .oneOf([
       'none',
       'day',
@@ -29,27 +36,21 @@ const TransactionSchema = Yup.object().shape({
       'annually'
     ])
     .required('Required'),
-  cycle: Yup.number().required('Required'),
-  value: Yup.number(),
-  computedAmount: Yup.object().shape({
-    operation: Yup.string(),
-    reference: Yup.mixed().notOneOf(['select']),
-    references: Yup.object(),
-    on: Yup.object()
+  cycle: yup.number().required('Required'),
+  value: yup.number(),
+  computedAmount: yup.object().shape({
+    operation: yup.string(),
+    reference: yup.mixed().notOneOf(['select']),
+    references: yup.object(),
+    on: yup.object()
   })
 });
 
 class TransactionInput extends React.Component {
   render() {
     return (
-      <Box
-        sx={{
-          maxWidth: 512,
-          mx: 'auto',
-          px: 3
-        }}
-      >
-        <Heading variant="subtle">Add a Transaction</Heading>
+      <>
+        <h2>Add a Transaction</h2>
         <State.Consumer>
           {(model) => (
             <Formik
@@ -77,16 +78,11 @@ class TransactionInput extends React.Component {
                   onSubmit={handleSubmit}
                   autoComplete="off"
                 >
-                  <Field
-                    name="id"
-                    id="id"
-                    type="text"
-                    sx={{ display: 'none' }}
-                  />
+                  <Field name="id" id="id" type="text" className="hidden" />
 
                   <FieldGroup errors={errors} name="raccount" touched={touched}>
                     <Field as={Select} name="raccount" id="raccount">
-                      <option key={'default'} value={'select'} disabled>
+                      <option key={'default'} value={''} disabled>
                         Select an Option
                       </option>
                       {model.state.accountsComputed.map((account) => (
@@ -142,7 +138,7 @@ class TransactionInput extends React.Component {
                   </FieldGroup>
 
                   <FieldGroup errors={errors} name="ending" touched={touched}>
-                    <Label>
+                    <Label name="ending" prettyName="never">
                       <Field
                         as={Radio}
                         type="radio"
@@ -151,9 +147,8 @@ class TransactionInput extends React.Component {
                         checked={values.ending === 'never'}
                         onChange={() => setFieldValue('ending', 'never')}
                       />
-                      never
                     </Label>
-                    <Label>
+                    <Label name="ending" prettyName="at Date">
                       <Field
                         as={Radio}
                         type="radio"
@@ -162,9 +157,11 @@ class TransactionInput extends React.Component {
                         checked={values.ending === 'at Date'}
                         onChange={() => setFieldValue('ending', 'at Date')}
                       />
-                      at Date
                     </Label>
-                    <Label>
+                    <Label
+                      name="ending"
+                      prettyName="after Number of Occurrences"
+                    >
                       <Field
                         as={Radio}
                         type="radio"
@@ -177,34 +174,38 @@ class TransactionInput extends React.Component {
                           setFieldValue('ending', 'after Number of Occurrences')
                         }
                       />
-                      after Number of Occurrences
                     </Label>
-                    {values.ending === 'after Number of Occurrences' ? (
-                      <FieldGroup
-                        errors={errors}
-                        name="occurrences"
-                        touched={touched}
-                      >
-                        <Field
-                          as={Input}
-                          name="occurrences"
-                          id="occurrences"
-                          type="number"
-                        />
-                      </FieldGroup>
-                    ) : values.ending === 'at Date' ? (
-                      <FieldGroup
-                        errors={errors}
-                        name="end"
-                        prettyName="At This Day"
-                        touched={touched}
-                      >
-                        <Field as={Input} name="end" id="end" type="date" />
-                      </FieldGroup>
-                    ) : null}
                   </FieldGroup>
+                  {values.ending === 'after Number of Occurrences' ? (
+                    <FieldGroup
+                      errors={errors}
+                      name="occurrences"
+                      touched={touched}
+                    >
+                      <Field
+                        as={Input}
+                        name="occurrences"
+                        id="occurrences"
+                        type="number"
+                      />
+                    </FieldGroup>
+                  ) : values.ending === 'at Date' ? (
+                    <FieldGroup
+                      errors={errors}
+                      name="end"
+                      prettyName="At This Day"
+                      touched={touched}
+                    >
+                      <Field as={Input} name="end" id="end" type="date" />
+                    </FieldGroup>
+                  ) : null}
 
-                  <FieldGroup errors={errors} name="rtype" touched={touched}>
+                  <FieldGroup
+                    errors={errors}
+                    name="rtype"
+                    prettyName="repeat type"
+                    touched={touched}
+                  >
                     <Field as={Select} name="rtype" id="rtype">
                       <option value="none">No Repeating</option>
                       <option value="day">Repeat Daily (or Every X Day)</option>
@@ -238,19 +239,17 @@ class TransactionInput extends React.Component {
                     setFieldValue={setFieldValue}
                   />
 
-                  <Button
-                    sx={{ variant: 'buttons.primary' }}
-                    type="submit"
-                    disabled={isSubmitting}
-                  >
-                    Add Transaction
-                  </Button>
+                  <div className="mt-4">
+                    <Button type="submit" disabled={isSubmitting}>
+                      Add Transaction
+                    </Button>
+                  </div>
                 </form>
               )}
             </Formik>
           )}
         </State.Consumer>
-      </Box>
+      </>
     );
   }
 }

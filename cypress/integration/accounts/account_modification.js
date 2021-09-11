@@ -1,9 +1,7 @@
 describe('Account Modifications Tests', () => {
   beforeEach(() => {
     cy.visit('/flow');
-    cy.get('#accounts')
-      .contains('Add Account')
-      .click();
+    cy.get('#accounts').contains('Add Account').click();
 
     cy.get('#accounts').within(() => {
       cy.findByLabelText('starting').type('{selectall}550');
@@ -13,6 +11,7 @@ describe('Account Modifications Tests', () => {
       cy.findByTestId('accounts-all-accounts').within(() =>
         cy
           .findByText('550.00')
+          .parent()
           .parent()
           .within(() => cy.findByText('M').click())
       );
