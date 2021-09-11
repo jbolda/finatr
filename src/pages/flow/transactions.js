@@ -1,7 +1,7 @@
 import React from 'react';
 import { State } from '~src/state';
 
-import { TabView } from '~src/components/Tabview';
+import { TabView } from '~src/components/TabView';
 import { FlexTable } from '~src/components/FlexTable';
 import { Button } from '~src/elements/Button';
 import TransactionInput from './transactionInput';

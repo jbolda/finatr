@@ -1,5 +1,5 @@
 import React from 'react';
-import TabView from './TabView';
+import { TabView } from './TabView';
 import renderer from 'react-test-renderer';
 
 describe(`tabClick`, () => {
@@ -28,7 +28,7 @@ describe(`render`, () => {
   it(`does not render tab contents`, () => {
     const component = renderer.create(<TabView />);
     const content = component.toJSON();
-    expect(content[1].children).toEqual(null);
+    expect(content.children).toEqual(null);
   });
 
   it('renders tab contents', () => {
@@ -39,7 +39,7 @@ describe(`render`, () => {
     const component = renderer.create(<TabView {...props} />);
     const content = component.toJSON();
     expect(
-      content[1].children[0].children[2].children[1].children[0].children
+      content.children[0].children[2].children[0].children[0].children
     ).toEqual(['tab one']);
   });
 });
