@@ -1,26 +1,24 @@
 [package]
-name = "finatr"
-version = "0.3.0"
-description = "An OSS finance app"
-authors = [ "Jacob Bolda" ]
+name = "app"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["you"]
 license = ""
 repository = ""
-default-run = "finatr"
+default-run = "app"
 edition = "2018"
 build = "src/build.rs"
 
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "1.0.0-beta.4" }
+
 [dependencies]
 serde_json = "1.0"
-serde = { version = "1.0", features = [ "derive" ] }
-tauri = { version = "0.9", features = [ "all-api" ] }
-
-[target."cfg(windows)".build-dependencies]
-winres = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.0.0-beta.8", features = ["shell-open", "updater"] }
 
 [features]
-embedded-server = [ "tauri/embedded-server" ]
-no-server = [ "tauri/no-server" ]
-
-[[bin]]
-name = "finatr"
-path = "src/main.rs"
+default = [ "custom-protocol" ]
+custom-protocol = [ "tauri/custom-protocol" ]

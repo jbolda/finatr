@@ -1,19 +1,19 @@
 {
+  "package": {
+    "productName": "finatr",
+    "version": "0.1.0"
+  },
   "build": {
-    "distDir": "../build",
-    "devPath": "http://localhost:3000",
+    "distDir": "../dist",
+    "devPath": "http://localhost:1234",
     "beforeDevCommand": "",
     "beforeBuildCommand": ""
   },
-  "ctx": {},
   "tauri": {
-    "embeddedServer": {
-      "active": true
-    },
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.dev",
+      "identifier": "com.finatr.app",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -31,28 +31,46 @@
         "depends": [],
         "useBootstrapper": false
       },
-      "osx": {
+      "macOS": {
         "frameworks": [],
         "minimumSystemVersion": "",
-        "useBootstrapper": false
+        "useBootstrapper": false,
+        "exceptionDomain": "",
+        "signingIdentity": null,
+        "entitlements": null
       },
-      "exceptionDomain": ""
+      "windows": {
+        "certificateThumbprint": null,
+        "digestAlgorithm": "sha256",
+        "timestampUrl": ""
+      }
+    },
+    "updater": {
+      "active": true,
+      "pubkey": "",
+      "endpoints": [
+        "https://update.tauri.app/jbolda/finatr/{{target}}/{{current_version}}"
+      ]
     },
     "allowlist": {
-      "all": true
+      "all": false,
+      "shell": {
+        "open": true
+      }
     },
-    "window": {
-      "title": "finatr",
-      "width": 800,
-      "height": 600,
-      "resizable": true,
-      "fullscreen": false
-    },
+    "windows": [
+      {
+        "title": "finatr",
+        "width": 800,
+        "height": 600,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": true,
+        "transparent": true
+      }
+    ],
     "security": {
-      "csp": "default-src blob: data: filesystem: ws: http: https: 'unsafe-eval' 'unsafe-inline'"
-    },
-    "inliner": {
-      "active": true
+      "csp": "default-src https: tauri: 'self'"
     }
   }
 }
