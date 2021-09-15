@@ -1,25 +1,18 @@
 {
   "gitSiteUrl": "https://github.com/jbolda/finatr",
-  "pkgManagers": {
-    "javascript": {
-      "version": true,
-      "prepublish": ["yarn", "yarn build"],
-      "getPublishedVersion": "git tag v${ pkgFile.version } 2> OUT= || echo ${ pkgFile.version }",
-      "publish": "npx netlify-cli deploy --dir=build --prod"
-    },
-    "rust": {
-      "version": true,
-      "publish": false
-    }
-  },
   "packages": {
     "finatr": {
       "path": "./",
-      "manager": "javascript"
+      "version": true,
+      "prepublish": ["yarn", "yarn build"],
+      "getPublishedVersion": "git rev-list finatr-v${ pkgFile.version } --max-count=1 --pretty 2>/dev/null || echo finatr-v${ pkgFile.version }",
+      "publish": "npx netlify-cli deploy --dir=build --prod"
     },
     "app": {
       "path": "./",
-      "manager": "rust"
+      "version": true,
+      "getPublishedVersion": "git rev-list app-v${ pkgFile.version } --max-count=1 --pretty 2>/dev/null || echo app-v${ pkgFile.version }",
+      "dependencies": ["finatr"]
     }
   }
 }
