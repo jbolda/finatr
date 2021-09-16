@@ -5,35 +5,37 @@ on:
       - next
 
 jobs:
-  version-or-publish:
+  version-or-release:
     runs-on: ubuntu-latest
     outputs:
-      change: ${{ steps.covector.outputs.change }}
-      commandRan: ${{ steps.covector.outputs.commandRan }}
-      successfulPublish: ${{ steps.covector.outputs.successfulPublish }}
+      willPublish: ${{ steps.covector.outputs.willPublish-app }}
+      version: ${{ steps.covector.outputs.version-app }}
 
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: volta-cli/action@v1
-      - name: git config
-        run: |
-          git config --global user.name "${{ github.event.pusher.name }}"
-          git config --global user.email "${{ github.event.pusher.email }}"
-      - name: covector version-or-publish
+      - name: covector status
         uses: jbolda/covector/packages/action@covector-v0
         id: covector
         with:
+          command: 'status'
+      - name: git config
+        if: ${{ steps.covector.outputs.status != 'No changes.' }}
+        run: |
+          git config --global user.name "${{ github.event.pusher.name }}"
+          git config --global user.email "${{ github.event.pusher.email }}"
+      - name: covector version
+        uses: jbolda/covector/packages/action@covector-v0
+        if: ${{ steps.covector.outputs.status != 'No changes.' }}
+        with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          command: 'version-or-publish'
-      - name: sync lockfile
-        if: steps.covector.outputs.commandRan == 'version'
-        run: npm install
-      - name: create pull request
+          command: 'version'
+          createRelease: true
+      - name: Create Pull Request With Versions Bumped
         id: cpr
         uses: peter-evans/create-pull-request@v3
-        if: steps.covector.outputs.commandRan == 'version'
+        if: ${{ steps.covector.outputs.status != 'No changes.' }}
         with:
           title: 'Publish New Versions'
           commit-message: 'publish new versions'
@@ -43,7 +45,8 @@ jobs:
 
   create-and-upload-assets:
     runs-on: ${{ matrix.platform }}
-    if: needs.version-or-publish.outputs.successfulPublish == 'true'
+    needs: [version-or-release]
+    if: needs.version-or-release.outputs.willPublish
     timeout-minutes: 30
 
     strategy:
@@ -53,10 +56,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12
+      - uses: volta-cli/action@v1
       - name: install rust stable
         uses: actions-rs/toolchain@v1
         with:
@@ -67,17 +67,36 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y webkit2gtk-4.0
-      - run: yarn
+      - run: npm install
       - name: build finatr for tauri app
-        run: yarn build
-      - run: cargo install tauri-bundler --force
+        run: npm run build
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
+          releaseName: 'App v__VERSION__'
+          releaseBody: 'See the assets to download this version and install. See https://www.finatr.com to access the web version.\n'
           includeDebug: true
-          tagName: finatr-v__VERSION__
-          releaseName: 'Release finatr app v__VERSION__'
-          releaseBody: 'See the assets to download this version of the app and install. See https://www.finatr.com to access the web version.'
           releaseDraft: true
-          prerelease: false
+
+  publish:
+    needs: [version-or-release, create-and-upload-assets]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # required for use of git history
+      - name: git config
+        run: |
+          git config --global user.name "${{ github.event.pusher.name }}"
+          git config --global user.email "${{ github.event.pusher.email }}"
+      - name: covector publish
+        uses: jbolda/covector/packages/action@covector-v0
+        id: covector
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          command: 'publish'
+          createRelease: true
