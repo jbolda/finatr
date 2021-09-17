@@ -17,17 +17,18 @@ jobs:
           fetch-depth: 0
       - name: covector status
         uses: jbolda/covector/packages/action@covector-v0
-        id: covector
+        id: covector-status
         with:
           command: 'status'
       - name: git config
-        if: ${{ steps.covector.outputs.status != 'No changes.' }}
+        if: ${{ steps.covector-status.outputs.status != 'No changes.' }}
         run: |
           git config --global user.name "${{ github.event.pusher.name }}"
           git config --global user.email "${{ github.event.pusher.email }}"
       - name: covector version
         uses: jbolda/covector/packages/action@covector-v0
-        if: ${{ steps.covector.outputs.status != 'No changes.' }}
+        id: covector-version
+        if: ${{ steps.covector-status.outputs.status != 'No changes.' }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           command: 'version'
@@ -35,13 +36,13 @@ jobs:
       - name: Create Pull Request With Versions Bumped
         id: cpr
         uses: peter-evans/create-pull-request@v3
-        if: ${{ steps.covector.outputs.status != 'No changes.' }}
+        if: ${{ steps.covector-status.outputs.status != 'No changes.' }}
         with:
           title: 'Publish New Versions'
           commit-message: 'publish new versions'
           labels: 'version updates'
           branch: 'release'
-          body: ${{ steps.covector.outputs.change }}
+          body: ${{ steps.covector-version.outputs.change }}
 
   create-and-upload-assets:
     runs-on: ${{ matrix.platform }}
