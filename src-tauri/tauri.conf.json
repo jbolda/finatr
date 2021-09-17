@@ -47,7 +47,6 @@
     },
     "updater": {
       "active": true,
-      "pubkey": "",
       "endpoints": [
         "https://update.tauri.app/jbolda/finatr/{{target}}/{{current_version}}"
       ]
