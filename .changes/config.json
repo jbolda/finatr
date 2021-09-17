@@ -1,18 +1,18 @@
 {
   "gitSiteUrl": "https://github.com/jbolda/finatr",
   "packages": {
-    "finatr": {
-      "path": "./",
+    "web": {
+      "path": "./package.json",
       "version": true,
       "prepublish": ["yarn", "yarn build"],
-      "getPublishedVersion": "git rev-list finatr-v${ pkgFile.version } --max-count=1 --pretty 2>/dev/null || echo finatr-v${ pkgFile.version }",
+      "getPublishedVersion": "git log v${ pkgFile.version } -1 --pretty=%Cgreen${ pkgFile.version } || echo \"not published yet\"",
       "publish": "npx netlify-cli deploy --dir=build --prod"
     },
     "app": {
-      "path": "./",
+      "path": "./src-tauri/Cargo.toml",
       "version": true,
-      "getPublishedVersion": "git rev-list app-v${ pkgFile.version } --max-count=1 --pretty 2>/dev/null || echo app-v${ pkgFile.version }",
-      "dependencies": ["finatr"]
+      "getPublishedVersion": "git log v${ pkgFile.version } -1 --pretty=%Cgreen${ pkgFile.version } || echo \"not published yet\"",
+      "dependencies": ["web"]
     }
   }
 }
