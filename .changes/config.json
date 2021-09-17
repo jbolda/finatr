@@ -6,7 +6,7 @@
       "version": true,
       "prepublish": ["npm install", "npm run build"],
       "getPublishedVersion": "git log v${ pkgFile.version } -1 --pretty=%Cgreen${ pkgFile.version } || echo \"not published yet\"",
-      "publish": "npx netlify-cli deploy --dir=build --prod"
+      "publish": "npx netlify-cli deploy --dir=dist --prod"
     },
     "app": {
       "path": "./src-tauri/Cargo.toml",
