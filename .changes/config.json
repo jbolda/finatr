@@ -4,7 +4,7 @@
     "web": {
       "path": "./package.json",
       "version": true,
-      "prepublish": ["npm", "npm run build"],
+      "prepublish": ["npm install", "npm run build"],
       "getPublishedVersion": "git log v${ pkgFile.version } -1 --pretty=%Cgreen${ pkgFile.version } || echo \"not published yet\"",
       "publish": "npx netlify-cli deploy --dir=build --prod"
     },
