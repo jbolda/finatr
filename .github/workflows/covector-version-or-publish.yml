@@ -8,8 +8,8 @@ jobs:
   version-or-release:
     runs-on: ubuntu-latest
     outputs:
-      willPublish: ${{ steps.covector.outputs.willPublish-app }}
-      version: ${{ steps.covector.outputs.version-app }}
+      willPublish: ${{ steps.covector-status.outputs.willPublish-app }}
+      version: ${{ steps.covector-status.outputs.version-app }}
 
     steps:
       - uses: actions/checkout@v2
