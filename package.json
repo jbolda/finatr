@@ -71,7 +71,8 @@
     "cy:version": "cypress version",
     "cy:run": "cypress run",
     "cy:run:record": "cypress run --record --parallel",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "covector": "covector"
   },
   "volta": {
     "node": "16.5.0",
