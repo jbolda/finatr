@@ -12,6 +12,7 @@
       "path": "./src-tauri/Cargo.toml",
       "version": true,
       "getPublishedVersion": "git log v${ pkgFile.version } -1 --pretty=%Cgreen${ pkgFile.version } || echo \"not published yet\"",
+      "publish": "echo \"build assets uploaded to release\"",
       "dependencies": ["web"]
     }
   }
