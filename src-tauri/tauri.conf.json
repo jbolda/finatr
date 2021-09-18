@@ -1,7 +1,6 @@
 {
   "package": {
-    "productName": "finatr",
-    "version": "0.1.0"
+    "productName": "finatr"
   },
   "build": {
     "distDir": "../dist",
