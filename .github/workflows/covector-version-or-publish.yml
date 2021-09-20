@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - next
+  pull_request:
 
 jobs:
   version-or-release:
@@ -94,13 +95,13 @@ jobs:
           git config --global user.name "${{ github.event.pusher.name }}"
           git config --global user.email "${{ github.event.pusher.email }}"
       - name: covector publish
-        uses: jbolda/covector/packages/action@covector-v0
+        uses: jbolda/covector/packages/action@action-debug-outputs
         id: covector
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           command: 'publish'
           createRelease: true
       - name: dump covector output
