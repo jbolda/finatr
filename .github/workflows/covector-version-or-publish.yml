@@ -99,11 +99,7 @@ jobs:
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           command: 'publish'
           createRelease: true
-      - name: dump covector output
-        env:
-          COVECTOR_CONTEXT: ${{ toJson(steps.covector) }}
-        run: echo "$COVECTOR_CONTEXT"
