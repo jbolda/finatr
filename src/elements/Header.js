@@ -9,6 +9,7 @@ const navigation = [
   { name: 'Examples', to: 'examples' },
   { name: 'Cash Flow', to: 'flow' },
   { name: 'Accounts (Cash Flow Breakdown)', to: 'accounts' },
+  { name: 'Planning', to: 'planning' },
   { name: 'Import (Bring Data In, Take It Out)', to: 'import' },
   { name: 'Taxes (in alpha)', to: 'taxes' }
 ];

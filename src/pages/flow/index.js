@@ -1,8 +1,6 @@
 import React from 'react';
 import { State } from '~src/state';
 import BarChart from './barChart';
-import IcicleChart from './icicleChart';
-import { Box, Input } from '@theme-ui/components';
 
 import Transactions from './transactions';
 import Accounts from './accounts';
@@ -36,7 +34,6 @@ class FinancialFlow extends React.Component {
             <Transactions />
             <Divider text="Accounts" />
             <Accounts />
-            <IcicleChart data={model.state.transactionsComputed} />
           </div>
         )}
       </State.Consumer>

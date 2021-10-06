@@ -13,6 +13,7 @@ import Homepage from './pages/homepage';
 import Examples from './pages/examples';
 import Financial from './pages/flow';
 import Accounts from './pages/accounts';
+import Planning from './pages/planning';
 import FinancialIndependence from './pages/financialindependence';
 import Importing from './pages/importing';
 import Taxes from './pages/taxes';
@@ -39,6 +40,7 @@ class App extends React.Component {
                 <Route path="examples" element={<Examples />} />
                 <Route path="flow" element={<Financial />} />
                 <Route path="accounts" element={<Accounts />} />
+                <Route path="planning" element={<Planning />} />
                 <Route
                   path="financialindependence"
                   element={<FinancialIndependence />}
