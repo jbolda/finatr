@@ -4,6 +4,7 @@
     "web": {
       "path": "./package.json",
       "version": true,
+      "postversion": "npm install",
       "prepublish": ["npm install", "npm run build"],
       "getPublishedVersion": "git log v${ pkgFile.version } -1 --pretty=%Cgreen${ pkgFile.version } || echo \"not published yet\"",
       "publish": [
@@ -14,6 +15,7 @@
     "app": {
       "path": "./src-tauri/Cargo.toml",
       "version": true,
+      "postversion": "cargo check",
       "getPublishedVersion": "git log v${ pkgFile.version } -1 --pretty=%Cgreen${ pkgFile.version } || echo \"not published yet\"",
       "publish": "echo \"build assets have already been uploaded to release\"",
       "dependencies": ["web"]
