@@ -75,7 +75,7 @@
     "covector": "covector"
   },
   "volta": {
-    "node": "16.5.0",
-    "npm": "7.20.0"
+    "node": "16.11.0",
+    "npm": "8.0.0"
   }
 }

@@ -8,6 +8,7 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v2
+      - uses: volta-cli/action@v1
       - uses: cypress-io/github-action@v2
         with:
           browser: chrome
@@ -46,6 +47,7 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v2
+      - uses: volta-cli/action@v1
       - run: echo "skipping this for now due to errors"
       - run: echo "see this issue https://github.com/jbolda/finatr/pull/313/checks?check_run_id=650933262"
       # - uses: cypress-io/github-action@v2
