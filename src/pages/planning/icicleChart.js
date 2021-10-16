@@ -24,9 +24,10 @@ export const IcicleChart = ({ data }) => {
   }, [data]);
 
   return (
-    <div className="m-5 p-3">
+    <div class="object-none object-center m-5 p-3">
       <svg
         ref={d3Container}
+        class="m-auto"
         /* sx={{ height: [500, 600, 800], width: [500, 800, 1200] }}  */
       />
     </div>
@@ -36,15 +37,15 @@ export const IcicleChart = ({ data }) => {
 export default IcicleChart;
 
 const draw = (svgRef, data) => {
-  let size = '500px';
+  let size = '300px';
   if (window) {
     if (window.innerWidth > 1400) {
-      size = '1200px';
+      size = '600px';
     } else if (window.innerWidth > 1000) {
-      size = '800px';
+      size = '500px';
     }
   }
-  svgRef.current.style.width = size;
+  svgRef.current.style.width = `${parseInt(size) * 1.5}px`;
   svgRef.current.style.height = size;
   const height = parseInt(svgRef.current.style.height);
   const width = parseInt(svgRef.current.style.width) / 4;

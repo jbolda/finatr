@@ -2,9 +2,6 @@ import React from 'react';
 import { State } from '~src/state';
 import BarChart from './barChart';
 
-import Transactions from './transactions';
-import Accounts from './accounts';
-
 import { Input } from '~src/elements/Input';
 
 class FinancialFlow extends React.Component {
@@ -30,10 +27,6 @@ class FinancialFlow extends React.Component {
                 />
               </div>
             </div>
-            <Divider text="Transactions" />
-            <Transactions />
-            <Divider text="Accounts" />
-            <Accounts />
           </div>
         )}
       </State.Consumer>
@@ -42,18 +35,3 @@ class FinancialFlow extends React.Component {
 }
 
 export default FinancialFlow;
-
-const Divider = ({ text }) => {
-  return (
-    <div className="relative my-8">
-      <div className="absolute inset-0 flex items-center" aria-hidden="true">
-        <div className="w-full border-t border-gray-300" />
-      </div>
-      <div className="relative flex justify-center">
-        <span className="px-3 bg-gray-50 text-lg font-medium text-gray-900">
-          {text}
-        </span>
-      </div>
-    </div>
-  );
-};
