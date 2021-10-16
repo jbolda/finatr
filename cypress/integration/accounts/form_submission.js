@@ -1,9 +1,7 @@
 describe('Account Form Tests', () => {
   beforeEach(() => {
-    cy.visit('/flow');
-    cy.get('#accounts')
-      .contains('Add Account')
-      .click();
+    cy.visit('/planning');
+    cy.get('#accounts').contains('Add Account').click();
   });
 
   it('tab switches to the form', () => {

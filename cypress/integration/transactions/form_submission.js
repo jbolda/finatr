@@ -1,6 +1,6 @@
 describe('Transaction Form Tests', () => {
   beforeEach(() => {
-    cy.visit('/flow');
+    cy.visit('/planning');
     cy.get('#transactions').contains('Add Transaction').click();
   });
 

@@ -1,6 +1,6 @@
 describe('Transaction Modifications Tests', () => {
   beforeEach(() => {
-    cy.visit('/flow');
+    cy.visit('/planning');
     cy.get('#transactions').contains('Add Transaction').click();
 
     cy.get('#transactions').within(() => {

@@ -64,6 +64,7 @@ export const Footer = (props) => {
 const navigation = {
   main: [
     { name: 'Home', to: '' },
+    { name: 'Planning', to: 'planning' },
     { name: 'Cash Flow', to: 'flow' },
     { name: 'Import', to: 'import' }
   ],

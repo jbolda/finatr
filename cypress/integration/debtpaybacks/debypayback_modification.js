@@ -1,6 +1,6 @@
 describe('Debt Payback Form Tests', () => {
   beforeEach(() => {
-    cy.visit('/flow');
+    cy.visit('/planning');
     cy.get('#accounts').contains('Add Account').click();
 
     cy.get('#accounts').within(() => {

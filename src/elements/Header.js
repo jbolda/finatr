@@ -7,9 +7,10 @@ import { Disclosure } from '@headlessui/react';
 const navigation = [
   { name: 'Home', to: '/', end: true },
   { name: 'Examples', to: 'examples' },
+  { name: 'Import/Export', to: 'import' },
+  { name: 'Planning', to: 'planning' },
   { name: 'Cash Flow', to: 'flow' },
-  { name: 'Accounts (Cash Flow Breakdown)', to: 'accounts' },
-  { name: 'Import (Bring Data In, Take It Out)', to: 'import' },
+  { name: 'Account Breakdowns', to: 'accounts' },
   { name: 'Taxes (in alpha)', to: 'taxes' }
 ];
 
