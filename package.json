@@ -52,7 +52,7 @@
     "covector": "^0.7.3",
     "cypress": "7.6.0",
     "jest": "^27.2.4",
-    "parcel": "^2.0.0-rc.0",
+    "parcel": "^2.0.1",
     "postcss": "^8.3.6",
     "prettier": "^2.4.1",
     "react-test-renderer": "16.13.1",
