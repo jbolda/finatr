@@ -53,7 +53,7 @@
     "cypress": "7.6.0",
     "jest": "^27.2.4",
     "parcel": "^2.0.1",
-    "postcss": "^8.3.6",
+    "postcss": "^8.3.11",
     "prettier": "^2.4.1",
     "react-test-renderer": "16.13.1",
     "tailwindcss": "^2.2.16"
