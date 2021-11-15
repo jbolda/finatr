@@ -1,20 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { select } from 'd3-selection';
-import { transition } from 'd3-transition';
-import { format } from 'd3-format';
-import { scaleLinear, scaleOrdinal } from 'd3-scale';
-import { schemeCategory10 } from 'd3-scale-chromatic';
-import { group } from 'd3-array';
-
-const d3 = {
-  select,
-  transition,
-  format,
-  scaleLinear,
-  scaleOrdinal,
-  schemeCategory10,
-  group
-};
+import * as d3 from 'd3';
 
 export const IcicleChart = ({ data }) => {
   const d3Container = useRef(null);
@@ -85,7 +70,7 @@ const draw = (svgRef, data) => {
     ...(!!grouped.expense ? Object.keys(grouped.expense.values) : [])
   ];
 
-  const color = d3.scaleOrdinal(schemeCategory10).domain(uniqueCategories);
+  const color = d3.scaleOrdinal(d3.schemeCategory10).domain(uniqueCategories);
 
   const svg = d3.select(svgRef.current);
 

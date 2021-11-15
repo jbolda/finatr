@@ -1,36 +1,7 @@
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { select, pointer } from 'd3-selection';
-import { transition } from 'd3-transition';
-import { scaleTime, scaleLinear, scaleOrdinal } from 'd3-scale';
-import { max, min, sum } from 'd3-array';
-import { axisBottom, axisRight } from 'd3-axis';
-import { timeDay } from 'd3-time';
-import { timeFormat } from 'd3-time-format';
-import { easeBounceOut, easeBackOut } from 'd3-ease';
-import { schemeCategory10 } from 'd3-scale-chromatic';
-import { line } from 'd3-shape';
-
-const d3 = {
-  select,
-  transition,
-  max,
-  min,
-  sum,
-  scaleTime,
-  scaleLinear,
-  scaleOrdinal,
-  axisBottom,
-  axisRight,
-  timeDay,
-  timeFormat,
-  easeBounceOut,
-  easeBackOut,
-  schemeCategory10,
-  line,
-  pointer
-};
+import * as d3 from 'd3';
 
 export class BarChart extends PureComponent {
   componentDidMount() {
