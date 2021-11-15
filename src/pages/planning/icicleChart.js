@@ -1,11 +1,10 @@
 import React, { useRef, useEffect } from 'react';
-import * as d3 from 'd3';
 
 export const IcicleChart = ({ data }) => {
   const d3Container = useRef(null);
 
-  useEffect(() => {
-    if (!!data && d3Container.current) draw(d3Container, data);
+  useEffect(async () => {
+    if (!!data && d3Container.current) await draw(d3Container, data);
   }, [data]);
 
   return (
@@ -21,7 +20,9 @@ export const IcicleChart = ({ data }) => {
 
 export default IcicleChart;
 
-const draw = (svgRef, data) => {
+const draw = async (svgRef, data) => {
+  const d3 = await import('d3');
+
   let size = '300px';
   if (window) {
     if (window.innerWidth > 1400) {
