@@ -102,7 +102,7 @@ const draw = async (svgRef, data) => {
   cell
     .enter()
     .append('rect')
-    // .transition()
+    .transition()
     .attr('width', width)
     .attr('height', (d) => scale(Number(d.dailyRate)))
     .attr('fill-opacity', 0.6)

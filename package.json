@@ -32,8 +32,8 @@
     "yup": "0.32.9"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.15.6",
-    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-react": "^7.16.0",
     "@tauri-apps/cli": "1.0.0-beta.10",
     "@testing-library/cypress": "7.0.6",
     "autoprefixer": "^10.3.7",
@@ -49,6 +49,7 @@
   "scripts": {
     "start": "parcel serve ./src/index.html --lazy",
     "build": "parcel build ./src/index.html",
+    "watch": "parcel watch ./src/index.html",
     "size-report": "parcel build src/index.html --reporter @parcel/reporter-bundle-buddy",
     "test": "jest",
     "pretty": "prettier --write \"{src,__{tests,mocks}__}/**/*.js\"",

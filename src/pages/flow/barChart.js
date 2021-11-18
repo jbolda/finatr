@@ -401,7 +401,7 @@ barBuild.drawBar = function (
   groupSelection.exit().remove();
 
   groupSelection
-    // .transition()
+    .transition()
     .attr('class', append_class)
     .attr('id', (d, i) => `${i}-${d.id}`)
     .style('fill', (d, i) => color(d)(i));
@@ -429,10 +429,10 @@ barBuild.drawBar = function (
   let yScale = barBuild.yScale(max_domain);
 
   rects
-    // .transition()
-    // .delay((d, i) => 800 + i * 150 - (i * i) / 4)
-    // .duration(3000)
-    // .ease(d3.easeBounceOut)
+    .transition()
+    .delay((d, i) => 800 + i * 150 - (i * i) / 4)
+    .duration(3000)
+    .ease(d3.easeBounceOut)
     .attr('class', append_class)
     .attr('x', (d) => xScale(d.data.date))
     .attr('transform', `translate(${widths.translate},${0})`)
@@ -447,10 +447,10 @@ barBuild.drawBar = function (
     .attr('transform', `translate(${widths.translate},${0})`)
     .attr('width', widths.bar)
     .attr('y', (d) => yScale(d[0]))
-    // .transition()
-    // .delay((d, i) => 800 + i * 150 - (i * i) / 4)
-    // .duration(3000)
-    // .ease(d3.easeBounceOut)
+    .transition()
+    .delay((d, i) => 800 + i * 150 - (i * i) / 4)
+    .duration(3000)
+    .ease(d3.easeBounceOut)
     .attr('y', (d) => yScale(d[1]))
     .attr('height', (d) => d3.max([0, yScale(d[0]) - yScale(d[1])]));
 
@@ -500,9 +500,9 @@ barBuild.drawLine = function (
   let lines = lineGroup.selectAll('path').data(data);
 
   lines
-    // .transition()
-    // .delay((d, i) => 800 + i * 150)
-    // .duration(3000)
+    .transition()
+    .delay((d, i) => 800 + i * 150)
+    .duration(3000)
     .attr('d', (d) => line(d.values))
     .attr('stroke', (d, i) => linecolors(i))
     .attr('stroke-width', 2)
