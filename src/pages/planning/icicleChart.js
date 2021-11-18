@@ -1,26 +1,10 @@
 import React, { useRef, useEffect } from 'react';
-import { select } from 'd3-selection';
-import { transition } from 'd3-transition';
-import { format } from 'd3-format';
-import { scaleLinear, scaleOrdinal } from 'd3-scale';
-import { schemeCategory10 } from 'd3-scale-chromatic';
-import { group } from 'd3-array';
-
-const d3 = {
-  select,
-  transition,
-  format,
-  scaleLinear,
-  scaleOrdinal,
-  schemeCategory10,
-  group
-};
 
 export const IcicleChart = ({ data }) => {
   const d3Container = useRef(null);
 
-  useEffect(() => {
-    if (!!data && d3Container.current) draw(d3Container, data);
+  useEffect(async () => {
+    if (!!data && d3Container.current) await draw(d3Container, data);
   }, [data]);
 
   return (
@@ -36,7 +20,9 @@ export const IcicleChart = ({ data }) => {
 
 export default IcicleChart;
 
-const draw = (svgRef, data) => {
+const draw = async (svgRef, data) => {
+  const d3 = await import('d3');
+
   let size = '300px';
   if (window) {
     if (window.innerWidth > 1400) {
@@ -85,7 +71,7 @@ const draw = (svgRef, data) => {
     ...(!!grouped.expense ? Object.keys(grouped.expense.values) : [])
   ];
 
-  const color = d3.scaleOrdinal(schemeCategory10).domain(uniqueCategories);
+  const color = d3.scaleOrdinal(d3.schemeCategory10).domain(uniqueCategories);
 
   const svg = d3.select(svgRef.current);
 
@@ -116,7 +102,7 @@ const draw = (svgRef, data) => {
   cell
     .enter()
     .append('rect')
-    .transition()
+    // .transition()
     .attr('width', width)
     .attr('height', (d) => scale(Number(d.dailyRate)))
     .attr('fill-opacity', 0.6)
