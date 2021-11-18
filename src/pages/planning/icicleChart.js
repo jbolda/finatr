@@ -99,9 +99,9 @@ const draw = async (svgRef, data) => {
 
   groupCategoryEnter.exit().remove();
 
-  const rectAppend = cell.enter().append('rect');
-
-  rectAppend
+  cell
+    .enter()
+    .append('rect')
     .transition()
     .attr('width', width)
     .attr('height', (d) => scale(Number(d.dailyRate)))
