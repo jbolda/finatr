@@ -29,7 +29,7 @@
     "react-file-reader-input": "2.0.0",
     "react-router-dom": "^6.0.2",
     "ynab": "1.25.0",
-    "yup": "0.32.9"
+    "yup": "0.32.11"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.4",
