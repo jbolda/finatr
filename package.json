@@ -19,7 +19,7 @@
     "d3": "^7.1.1",
     "date-fns": "2.23.0",
     "formik": "2.2.9",
-    "history": "^5.0.1",
+    "history": "^5.2.0",
     "js-file-download": "0.4.12",
     "microstates": "0.15.1",
     "papaparse": "5.3.1",
