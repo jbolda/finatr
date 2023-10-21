@@ -4,15 +4,11 @@
   "description": "",
   "keywords": [],
   "license": "Apache-2.0",
-  "browserslist": "> 5%, not IE 11",
-  "engines": {
-    "node": ">=16.0.0"
-  },
+  "browserslist": "> 0.5%, last 2 versions, not dead",
   "dependencies": {
     "@headlessui/react": "^1.4.2",
     "@heroicons/react": "^1.0.5",
     "@microstates/react": "0.12.0",
-    "@reach/tabs": "0.15.2",
     "@tailwindcss/forms": "^0.3.4",
     "@tauri-apps/api": "1.0.0-beta.8",
     "big.js": "6.1.1",
@@ -25,29 +21,50 @@
     "papaparse": "5.3.1",
     "prop-types": "15.7.2",
     "react": "17.0.2",
+    "react-aria": "^3.28.0",
+    "react-aria-components": "^1.0.0-beta.0",
     "react-dom": "17.0.2",
     "react-file-reader-input": "2.0.0",
     "react-router-dom": "^6.0.2",
     "ynab": "1.25.0",
-    "yup": "0.32.11"
+    "yup": "1.2.0"
+  },
+  "overrides": {
+    "@microstates/react": {
+      "react": "17.0.2",
+      "microstates": "0.15.1"
+    },
+    "react-file-reader-input": {
+      "react": "17.0.2",
+      "react-dom": "17.0.2"
+    },
+    "@headlessui/react": {
+      "react": "17.0.2"
+    },
+    "react-test-renderer": {
+      "react": "17.0.2"
+    }
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.16.0",
     "@tauri-apps/cli": "1.0.0-beta.10",
     "@testing-library/cypress": "7.0.6",
-    "autoprefixer": "^10.4.0",
-    "covector": "^0.7.3",
+    "@testing-library/react": "12.1.5",
+    "@testing-library/jest-dom": "5.17.0",
+    "covector": "^0.10.0",
     "cypress": "7.6.0",
     "jest": "^27.5.1",
-    "parcel": "^2.0.1",
-    "postcss": "^8.4.6",
+    "parcel": "^2.9.3",
+    "postcss": "^8.4.29",
     "prettier": "^2.5.1",
-    "react-test-renderer": "16.13.1",
+    "process": "^0.11.10",
+    "punycode": "^1.4.1",
+    "querystring-es3": "^0.2.1",
     "tailwindcss": "^2.2.19"
   },
   "scripts": {
-    "start": "parcel serve ./src/index.html --lazy",
+    "start": "parcel serve ./src/index.html",
     "build": "parcel build ./src/index.html",
     "watch": "parcel watch ./src/index.html",
     "size-report": "parcel build src/index.html --reporter @parcel/reporter-bundle-buddy",
@@ -61,10 +78,11 @@
     "cy:run": "cypress run",
     "cy:run:record": "cypress run --record --parallel",
     "tauri": "tauri",
-    "covector": "covector"
+    "covector": "covector",
+    "postinstall": "rimraf .parcel-cache dist"
   },
   "volta": {
-    "node": "16.11.0",
-    "npm": "8.0.0"
+    "node": "20.6.1",
+    "npm": "10.1.0"
   }
 }

@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel,
-  useTabsContext
-} from '@reach/tabs';
+import { Tabs, TabList, Tab, TabPanel } from 'react-aria-components';
 
 export class TabView extends React.Component {
   constructor(props) {
@@ -26,13 +19,11 @@ export class TabView extends React.Component {
   }
 
   render() {
-    const StyledTab = ({ index, ...props }) => {
-      const { selectedIndex } = useTabsContext();
-
+    const StyledTab = ({ index, activeTab, ...props }) => {
       return (
         <Tab
           className={`${
-            selectedIndex === index
+            activeTab === index
               ? 'bg-gray-200 text-gray-800'
               : 'text-gray-600 hover:text-gray-800'
           } m-1 px-3 py-2 font-medium text-sm rounded-md`}
@@ -49,32 +40,34 @@ export class TabView extends React.Component {
       <div id={this.props.id}>
         {!this.props.tabTitles || !this.props.tabContents ? null : (
           <Tabs
-            index={activeTab}
-            onChange={(index) => this.tabClick(index)}
             className="overflow-hidden shadow sm:rounded-lg"
+            selectedKey={activeTab}
+            onSelectionChange={(index) => this.tabClick(index)}
           >
-            <label htmlFor="tabs" className="sr-only">
-              Select a tab
-            </label>
             <TabList className="flex space-x-4 my-3 transition duration-500 ease-in-out">
               {this.props.tabTitles.map((title, index) => (
-                <StyledTab key={title} index={index}>
+                <StyledTab
+                  key={index}
+                  id={index}
+                  index={index}
+                  activeTab={activeTab}
+                >
                   <h3>{title}</h3>
                 </StyledTab>
               ))}
             </TabList>
-            <TabPanels className="bg-white px-4 py-5 sm:p-6">
-              {this.props.tabContents.map((content, index) => (
-                <TabPanel
-                  key={index}
-                  data-testid={`${this.props.id}-${this.props.tabTitles[index]
-                    .toLowerCase()
-                    .replace(' ', '-')}`}
-                >
-                  {content}
-                </TabPanel>
-              ))}
-            </TabPanels>
+            {this.props.tabContents.map((content, index) => (
+              <TabPanel
+                key={index}
+                id={index}
+                data-testid={`${this.props.id}-${this.props.tabTitles[index]
+                  .toLowerCase()
+                  .replace(' ', '-')}`}
+                className="bg-white px-4 py-5 sm:p-6"
+              >
+                {content}
+              </TabPanel>
+            ))}
           </Tabs>
         )}
       </div>

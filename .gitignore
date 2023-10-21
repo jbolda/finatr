@@ -1,3 +1,7 @@
+# system
+.DS_Store
+
+# javascript
 node_modules
 .parcel-cache
 dist

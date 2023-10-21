@@ -27,9 +27,10 @@ describe('Account Form Tests', () => {
       cy.findByLabelText('vehicle').select('Loan');
       cy.get('form').submit();
 
-      cy.findByTestId('accounts-debt').within(() =>
-        cy.findByText('Test Debt Account').should('exist')
-      );
+      cy.findByText('Debt').click();
+      cy.findByTestId('accounts-debt').within(() => {
+        cy.findByText('Test Debt Account').should('exist');
+      });
     });
   });
 });

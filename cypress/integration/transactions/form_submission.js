@@ -20,6 +20,7 @@ describe('Transaction Form Tests', () => {
         cy.findByText('55.00').should('be.visible')
       );
 
+      cy.findByText('Income').click();
       cy.findByTestId('transactions-income').within(() =>
         // all transactions should be visible, so just check existence
         cy.findByText('55.00').should('exist')
@@ -33,6 +34,7 @@ describe('Transaction Form Tests', () => {
       cy.findByLabelText('value').type('55');
       cy.get('form').submit();
 
+      cy.findByText('Income').click();
       cy.findByTestId('transactions-income').within(() =>
         // all transactions should be visible, so just check existence
         cy.findByText('55.00').should('exist')

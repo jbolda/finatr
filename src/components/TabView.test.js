@@ -1,45 +1,32 @@
-import React from 'react';
-import { TabView } from './TabView';
-import renderer from 'react-test-renderer';
+/**
+ * @jest-environment jsdom
+ */
 
-describe(`tabClick`, () => {
-  it(`sets the activeTab`, () => {
-    let component = renderer.create(<TabView />).getInstance();
-    component.tabClick(0);
-    expect(component.state.activeTab).toEqual(0);
-  });
-});
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { TabView } from './TabView';
+
+const defaultProps = {
+  tabContents: [<div>tab one</div>],
+  tabTitles: ['one']
+};
 
 describe(`initial state`, () => {
   it(`has activeTab=null when there aren't any tabTitles`, () => {
-    let component = renderer.create(<TabView />).getInstance();
-    expect(component.state.activeTab).toEqual(null);
-  });
-
-  it('has activeTab=0 when there are tabTitles', () => {
-    let component = renderer
-      .create(<TabView tabTitles={['some title']} />)
-      .getInstance();
-    expect(component.state.activeTab).toEqual(0);
+    render(<TabView />);
+    expect(screen.queryByRole('tabpanel')).toEqual(null);
   });
 });
 
 describe(`render`, () => {
   it(`does not render tab contents`, () => {
-    const component = renderer.create(<TabView />);
-    const content = component.toJSON();
-    expect(content.children).toEqual(null);
+    render(<TabView />);
+    expect(screen.queryByRole('tabpanel')).toBe(null);
   });
 
   it('renders tab contents', () => {
-    const props = {
-      tabContents: [<div>tab one</div>],
-      tabTitles: ['one']
-    };
-    const component = renderer.create(<TabView {...props} />);
-    const content = component.toJSON();
-    expect(
-      content.children[0].children[2].children[0].children[0].children
-    ).toEqual(['tab one']);
+    render(<TabView {...defaultProps} />);
+    expect(screen.getByText('tab one')).toBeVisible();
   });
 });
