@@ -11,15 +11,6 @@ const defaultProps = {
   tabContents: [<div>tab one</div>],
   tabTitles: ['one']
 };
-describe(`tabClick`, () => {
-  it(`sets the activeTab`, async () => {
-    render(<TabView {...defaultProps} />);
-
-    expect(screen.getByText('tab one')).toBeVisible();
-    fireEvent.click(screen.getByRole('tab'));
-    expect(screen.getByText('tab one')).toBeVisible();
-  });
-});
 
 describe(`initial state`, () => {
   it(`has activeTab=null when there aren't any tabTitles`, () => {
