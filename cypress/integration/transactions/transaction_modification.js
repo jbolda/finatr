@@ -9,7 +9,6 @@ describe('Transaction Modifications Tests', () => {
       cy.findByLabelText('description').type('test transaction');
       cy.get('form').submit();
 
-      cy.contains('Income').click();
       cy.findByTestId('transactions-all-transactions')
         .contains('55.00')
         .parent()
