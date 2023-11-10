@@ -46,8 +46,8 @@
     }
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.16.4",
-    "@babel/preset-react": "^7.16.0",
+    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-react": "^7.23.3",
     "@tauri-apps/cli": "1.0.0-beta.10",
     "@testing-library/cypress": "7.0.6",
     "@testing-library/react": "12.1.5",
