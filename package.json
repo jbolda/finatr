@@ -61,7 +61,8 @@
     "process": "^0.11.10",
     "punycode": "^1.4.1",
     "querystring-es3": "^0.2.1",
-    "tailwindcss": "^2.2.19"
+    "tailwindcss": "^2.2.19",
+    "url": "^0.11.3"
   },
   "scripts": {
     "start": "parcel serve ./src/index.html",
