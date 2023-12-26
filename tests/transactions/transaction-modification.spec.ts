@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+import { getRowWith } from '../helpers/tableHelpers';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/planning');
@@ -9,10 +10,7 @@ test.beforeEach(async ({ page }) => {
   await page.getByLabel('description').fill('test transaction');
   await page.keyboard.press('Enter');
 
-  const row = page
-    .locator('div#transactions')
-    .locator('table')
-    .locator('tr', { hasText: 'test transaction' });
+  const row = getRowWith(page, 'transactions', 'test transaction');
   const modifyButton = row
     .locator('td', { hasText: 'Modify: ' })
     .getByRole('button', { name: 'M' });

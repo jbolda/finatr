@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { getRowWith } from '../helpers/tableHelpers';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/planning');
@@ -11,14 +12,10 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('deletes the recently added transaction', async ({ page }) => {
-  const row = page
-    .locator('div#transactions')
-    .locator('table')
-    .locator('tr', { hasText: 'test transaction' });
+  const row = getRowWith(page, 'transactions', 'test transaction');
   const deleteButton = row
     .locator('td', { hasText: 'Delete: ' })
     .getByRole('button', { name: 'X' });
-  // .getByText('X');
   await deleteButton.click();
 
   await expect(
