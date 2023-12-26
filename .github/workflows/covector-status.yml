@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: volta-cli/action@v4
@@ -14,5 +14,6 @@ jobs:
         uses: jbolda/covector/packages/action@main
         id: covector
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           command: 'status'
           comment: true
