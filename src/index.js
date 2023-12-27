@@ -13,8 +13,8 @@ import Examples from './pages/examples';
 const Financial = React.lazy(() => import('./pages/flow'));
 const Accounts = React.lazy(() => import('./pages/accounts'));
 const Planning = React.lazy(() => import('./pages/planning'));
-const FinancialIndependence = React.lazy(() =>
-  import('./pages/financialindependence')
+const FinancialIndependence = React.lazy(
+  () => import('./pages/financialindependence')
 );
 const Importing = React.lazy(() => import('./pages/importing'));
 const Taxes = React.lazy(() => import('./pages/taxes'));
