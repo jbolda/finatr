@@ -2,21 +2,20 @@
 name = "app"
 version = "0.2.1"
 description = "A Tauri App"
-authors = [ "you" ]
+authors = ["you"]
 license = ""
 repository = ""
-default-run = "app"
-edition = "2018"
-build = "src/build.rs"
+edition = "2021"
 
 [build-dependencies]
-tauri-build = { version = "1.0.0-beta.4" }
+tauri-build = { version = "1.5", features = [] }
 
 [dependencies]
 serde_json = "1.0"
-serde = { version = "1.0", features = [ "derive" ] }
-tauri = { version = "1.0.0-beta.8", features = [ "shell-open", "updater" ] }
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.5", features = ["shell-open"] }
 
 [features]
-default = [ "custom-protocol" ]
-custom-protocol = [ "tauri/custom-protocol" ]
+# this feature is used for production builds or when `devPath` points to the filesystem
+# DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]
