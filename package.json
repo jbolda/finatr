@@ -55,7 +55,7 @@
     "@types/node": "^20.10.5",
     "covector": "^0.10.0",
     "jest": "^27.5.1",
-    "parcel": "^2.9.3",
+    "parcel": "^2.10.3",
     "postcss": "^8.4.29",
     "prettier": "^2.5.1",
     "process": "^0.11.10",
