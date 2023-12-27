@@ -11,6 +11,7 @@
     "watch": "parcel watch ./src/index.html",
     "size-report": "parcel build src/index.html --reporter @parcel/reporter-bundle-buddy",
     "test": "jest",
+    "test-ct": "playwright test -c playwright-ct.config.ts",
     "pretty": "prettier --write \"{src,__{tests,mocks}__}/**/*.js\"",
     "playwright": "playwright",
     "tauri": "tauri",
@@ -59,6 +60,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.16.0",
+    "@playwright/experimental-ct-react17": "^1.40.1",
     "@playwright/test": "^1.40.1",
     "@tauri-apps/cli": "1.5.9",
     "@testing-library/jest-dom": "5.17.0",
