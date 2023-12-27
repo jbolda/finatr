@@ -17,7 +17,7 @@
     "covector": "covector"
   },
   "dependencies": {
-    "@headlessui/react": "^1.4.2",
+    "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^1.0.6",
     "@microstates/react": "0.12.0",
     "@tailwindcss/forms": "^0.3.4",
