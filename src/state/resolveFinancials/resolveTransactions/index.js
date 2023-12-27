@@ -269,8 +269,8 @@ const transactionDayOfWeekReoccur = ({
         .round(0, 3)
         .times(7)
     : transaction.cycle.gte(startDay)
-    ? transaction.cycle.minus(startDay)
-    : transaction.cycle.minus(startDay).plus(7);
+      ? transaction.cycle.minus(startDay)
+      : transaction.cycle.minus(startDay).plus(7);
 
   return {
     date: addDays(dayCycles)(parsedStartDate),
