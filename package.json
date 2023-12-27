@@ -5,12 +5,24 @@
   "keywords": [],
   "license": "Apache-2.0",
   "browserslist": "> 0.5%, last 2 versions, not dead",
+  "scripts": {
+    "start": "parcel serve ./src/index.html",
+    "build": "parcel build ./src/index.html",
+    "watch": "parcel watch ./src/index.html",
+    "size-report": "parcel build src/index.html --reporter @parcel/reporter-bundle-buddy",
+    "test": "jest",
+    "pretty": "prettier --write \"{src,__{tests,mocks}__}/**/*.js\"",
+    "playwright": "playwright",
+    "tauri": "tauri",
+    "covector": "covector",
+    "postinstall": "rimraf .parcel-cache dist"
+  },
   "dependencies": {
     "@headlessui/react": "^1.4.2",
     "@heroicons/react": "^1.0.6",
     "@microstates/react": "0.12.0",
     "@tailwindcss/forms": "^0.3.4",
-    "@tauri-apps/api": "1.0.0-beta.8",
+    "@tauri-apps/api": "1.5.3",
     "big.js": "6.1.1",
     "d3": "^7.1.1",
     "date-fns": "2.23.0",
@@ -26,6 +38,7 @@
     "react-dom": "17.0.2",
     "react-file-reader-input": "2.0.0",
     "react-router-dom": "^6.0.2",
+    "rimraf": "^5.0.5",
     "ynab": "1.25.0",
     "yup": "1.2.0"
   },
@@ -49,7 +62,7 @@
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.16.0",
     "@playwright/test": "^1.40.1",
-    "@tauri-apps/cli": "1.0.0-beta.10",
+    "@tauri-apps/cli": "1.5.9",
     "@testing-library/jest-dom": "5.17.0",
     "@testing-library/react": "12.1.5",
     "@types/node": "^20.10.5",
@@ -63,18 +76,6 @@
     "querystring-es3": "^0.2.1",
     "tailwindcss": "^2.2.19",
     "url": "^0.11.3"
-  },
-  "scripts": {
-    "start": "parcel serve ./src/index.html",
-    "build": "parcel build ./src/index.html",
-    "watch": "parcel watch ./src/index.html",
-    "size-report": "parcel build src/index.html --reporter @parcel/reporter-bundle-buddy",
-    "test": "jest",
-    "pretty": "prettier --write \"{src,__{tests,mocks}__}/**/*.js\"",
-    "playwright": "playwright",
-    "tauri": "tauri",
-    "covector": "covector",
-    "postinstall": "rimraf .parcel-cache dist"
   },
   "volta": {
     "node": "20.6.1",

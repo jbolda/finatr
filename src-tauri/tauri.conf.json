@@ -5,8 +5,8 @@
   "build": {
     "distDir": "../dist",
     "devPath": "http://localhost:1234",
-    "beforeDevCommand": "",
-    "beforeBuildCommand": ""
+    "beforeDevCommand": "npm run start",
+    "beforeBuildCommand": "npm run build"
   },
   "tauri": {
     "bundle": {
@@ -27,13 +27,11 @@
       "shortDescription": "",
       "longDescription": "",
       "deb": {
-        "depends": [],
-        "useBootstrapper": false
+        "depends": []
       },
       "macOS": {
         "frameworks": [],
         "minimumSystemVersion": "",
-        "useBootstrapper": false,
         "exceptionDomain": "",
         "signingIdentity": null,
         "entitlements": null
@@ -45,7 +43,7 @@
       }
     },
     "updater": {
-      "active": true,
+      "active": false,
       "endpoints": [
         "https://update.tauri.app/jbolda/finatr/{{target}}/{{current_version}}"
       ]
