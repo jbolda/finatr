@@ -1,7 +1,6 @@
+import { test, expect } from '@playwright/experimental-ct-react17';
 import { create } from 'microstates';
 import { TaxStrategy } from './taxStrategy.js';
-
-import Big from 'big.js';
 
 const testData = {
   incomeReceived: [
@@ -77,18 +76,18 @@ const testData = {
 
 const model = create(TaxStrategy, testData).reCalc();
 
-describe(`check taxStrategy state creation`, () => {
-  it(`has the correct top level properties`, () => {
+test.describe(`check taxStrategy state creation`, () => {
+  test(`has the correct top level properties`, () => {
     expect(model.state).toHaveProperty('incomeReceived');
     expect(model.state).toHaveProperty('incomeGroup');
     expect(model.state).toHaveProperty('groups');
   });
 
-  it(`has the right groups`, () => {
+  test(`has the right groups`, () => {
     expect(model.state.groups).toEqual(['Paycheck One', 'Paycheck Two']);
   });
 
-  it(`has the correct IncomeGroup properties`, () => {
+  test(`has the correct IncomeGroup properties`, () => {
     expect(model.state.incomeGroup[0]).toHaveProperty('name', 'Paycheck One');
     expect(model.state.incomeGroup[0]).toHaveProperty('qOne');
     expect(model.state.incomeGroup[0]).toHaveProperty('qTwo');
@@ -102,7 +101,7 @@ describe(`check taxStrategy state creation`, () => {
     expect(model.state.incomeGroup[1]).toHaveProperty('qFour');
   });
 
-  it(`has the correct Quarter properties`, () => {
+  test(`has the correct Quarter properties`, () => {
     // push incomeGroup into an array without
     // destroying the underlying Microstate
     // if we would use model.state so we can access
@@ -156,7 +155,7 @@ describe(`check taxStrategy state creation`, () => {
     expect(income[1].qFour.projected).toBeDefined();
   });
 
-  it(`has the correct total gross values`, () => {
+  test(`has the correct total gross values`, () => {
     // push incomeGroup into an array without
     // destroying the underlying Microstate
     // if we would use model.state so we can access
@@ -180,7 +179,7 @@ describe(`check taxStrategy state creation`, () => {
     expect(income[1].qFour.total.gross.toFixed).toBe('0.00');
   });
 
-  it(`has the correct average gross values`, () => {
+  test(`has the correct average gross values`, () => {
     // push incomeGroup into an array without
     // destroying the underlying Microstate
     // if we would use model.state so we can access
@@ -204,7 +203,7 @@ describe(`check taxStrategy state creation`, () => {
     expect(income[1].qFour.average.gross.toFixed).toBe('0.00');
   });
 
-  it(`has the correct projected gross values`, () => {
+  test(`has the correct projected gross values`, () => {
     // push incomeGroup into an array without
     // destroying the underlying Microstate
     // if we would use model.state so we can access

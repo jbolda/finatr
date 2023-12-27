@@ -1,3 +1,4 @@
+import { test, expect } from '@playwright/experimental-ct-react17';
 import Big from 'big.js';
 import parseISO from 'date-fns/fp/parseISO';
 import startOfDay from 'date-fns/fp/startOfDay';
@@ -8,7 +9,7 @@ import getMonth from 'date-fns/fp/getMonth';
 import { transactionDailyReoccur } from './index.js';
 import { convertRangeToInterval } from './index.js';
 
-describe(`check transactionDailyReoccur`, () => {
+test.describe(`check transactionDailyReoccur`, () => {
   const transaction = {
     id: `oasidjas1`,
     raccount: `account`,
@@ -27,7 +28,7 @@ describe(`check transactionDailyReoccur`, () => {
   let interval = convertRangeToInterval(transaction, graphRange);
   let seedDate = interval.start;
 
-  it(`has all the correct properties`, () => {
+  test(`has all the correct properties`, () => {
     let resolvedTestData = transactionDailyReoccur({
       transaction,
       seedDate,
@@ -37,7 +38,7 @@ describe(`check transactionDailyReoccur`, () => {
     expect(resolvedTestData).toHaveProperty('y');
   });
 
-  it(`returns the correct first date`, () => {
+  test(`returns the correct first date`, () => {
     let resolvedTestData = transactionDailyReoccur({
       transaction,
       seedDate,
@@ -48,7 +49,7 @@ describe(`check transactionDailyReoccur`, () => {
     expect(getDate(resolvedTestData.date)).toBe(22);
   });
 
-  it(`returns a cycle of 1`, () => {
+  test(`returns a cycle of 1`, () => {
     let testData = { ...transaction, cycle: Big(1) };
     // difference should be 1 + 21 days between the start of the graph range
     // and when the first transaction is produced
@@ -74,7 +75,7 @@ describe(`check transactionDailyReoccur`, () => {
     ).toBe(1);
   });
 
-  it(`returns a cycle of 3`, () => {
+  test(`returns a cycle of 3`, () => {
     let testData = { ...transaction, cycle: Big(3) };
     // difference should be 3 + 21 days between the start of the graph range
     // and when the first transaction is produced
@@ -100,7 +101,7 @@ describe(`check transactionDailyReoccur`, () => {
     ).toBe(3);
   });
 
-  it(`returns a cycle of 5`, () => {
+  test(`returns a cycle of 5`, () => {
     let testData = { ...transaction, cycle: Big(5) };
     // difference should be 5 + 21 days between the start of the graph range
     // and when the first transaction is produced
@@ -126,7 +127,7 @@ describe(`check transactionDailyReoccur`, () => {
     ).toBe(5);
   });
 
-  it(`returns a cycle of 14`, () => {
+  test(`returns a cycle of 14`, () => {
     let testData = { ...transaction, cycle: Big(14) };
     // difference should be 14 + 21 days between the start of the graph range
     // and when the first transaction is produced

@@ -1,11 +1,12 @@
+import { test, expect } from '@playwright/experimental-ct-react17';
 import Big from 'big.js';
 import parseISO from 'date-fns/fp/parseISO';
 import startOfDay from 'date-fns/fp/startOfDay';
 
 import { transactionQuarterlyReoccur } from './index.js';
 
-describe('transactionQuarterlyReoccur', () => {
-  it('has the next date', () => {
+test.describe('transactionQuarterlyReoccur', () => {
+  test('has the next date', () => {
     const transaction = { value: Big(10), cycle: Big(1) };
     const seedDate = startOfDay(parseISO('2018-02-01'));
     const next = transactionQuarterlyReoccur({
@@ -15,7 +16,7 @@ describe('transactionQuarterlyReoccur', () => {
     expect(next.date).toEqual(startOfDay(parseISO('2018-05-01')));
   });
 
-  it('throws when transaction.cycle=null', () => {
+  test('throws when transaction.cycle=null', () => {
     const transaction = { value: Big(10) };
     const seedDate = startOfDay(parseISO('2018-02-01'));
     expect(() => {
@@ -26,7 +27,7 @@ describe('transactionQuarterlyReoccur', () => {
     }).toThrow();
   });
 
-  it('has a value', () => {
+  test('has a value', () => {
     const transaction = { value: Big(10), cycle: Big(1) };
     const seedDate = startOfDay(parseISO('2018-01-01'));
     const next = transactionQuarterlyReoccur({
@@ -36,7 +37,7 @@ describe('transactionQuarterlyReoccur', () => {
     expect(Number(next.y)).toEqual(10);
   });
 
-  it('throws on missing value', () => {
+  test('throws on missing value', () => {
     const seedDate = startOfDay(parseISO('2018-01-01'));
     expect(() => {
       transactionQuarterlyReoccur({
@@ -46,14 +47,14 @@ describe('transactionQuarterlyReoccur', () => {
     }).toThrow();
   });
 
-  it('fails if transaction is null', () => {
+  test('fails if transaction is null', () => {
     const seedDate = startOfDay(parseISO('2018-01-01'));
     expect(() => {
       transactionQuarterlyReoccur({ transaction: null, seedDate });
     }).toThrow();
   });
 
-  it('fails if prevDate is null', () => {
+  test('fails if prevDate is null', () => {
     const transaction = { value: Big(182.5), cycle: Big(1) };
     expect(() => {
       generateModification({ transaction, prevDate: null });

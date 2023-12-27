@@ -1,10 +1,11 @@
+import { test, expect } from '@playwright/experimental-ct-react17';
 import parseISO from 'date-fns/fp/parseISO';
 import startOfDay from 'date-fns/fp/startOfDay';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
 
 import { transactionNoReoccur } from './index.js';
 
-describe(`check transactionNoReoccur`, () => {
+test.describe(`check transactionNoReoccur`, () => {
   const transaction = {
     id: `oasidjas1`,
     raccount: `account`,
@@ -21,13 +22,14 @@ describe(`check transactionNoReoccur`, () => {
     end: startOfDay(parseISO('2018-02-01'))
   };
   let seedDate = graphRange.start;
-  it(`has all the correct properties`, () => {
+
+  test(`has all the correct properties`, () => {
     let resolvedTestData = transactionNoReoccur({ transaction, seedDate });
     expect(resolvedTestData).toHaveProperty('date');
     expect(resolvedTestData).toHaveProperty('y');
   });
 
-  it(`returns the same date`, () => {
+  test(`returns the same date`, () => {
     let resolvedTestData = transactionNoReoccur({ transaction, seedDate });
     expect(
       differenceInCalendarDays(parseISO(transaction.start))(
