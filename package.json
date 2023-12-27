@@ -48,12 +48,12 @@
   "devDependencies": {
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.16.0",
+    "@playwright/test": "^1.40.1",
     "@tauri-apps/cli": "1.0.0-beta.10",
-    "@testing-library/cypress": "7.0.6",
-    "@testing-library/react": "12.1.5",
     "@testing-library/jest-dom": "5.17.0",
+    "@testing-library/react": "12.1.5",
+    "@types/node": "^20.10.5",
     "covector": "^0.10.0",
-    "cypress": "7.6.0",
     "jest": "^27.5.1",
     "parcel": "^2.9.3",
     "postcss": "^8.4.29",
@@ -61,7 +61,8 @@
     "process": "^0.11.10",
     "punycode": "^1.4.1",
     "querystring-es3": "^0.2.1",
-    "tailwindcss": "^2.2.19"
+    "tailwindcss": "^2.2.19",
+    "url": "^0.11.3"
   },
   "scripts": {
     "start": "parcel serve ./src/index.html",
@@ -70,13 +71,7 @@
     "size-report": "parcel build src/index.html --reporter @parcel/reporter-bundle-buddy",
     "test": "jest",
     "pretty": "prettier --write \"{src,__{tests,mocks}__}/**/*.js\"",
-    "cy": "cypress open",
-    "cypress": "cypress",
-    "cy:verify": "cypress verify",
-    "cy:info": "cypress info && ls",
-    "cy:version": "cypress version",
-    "cy:run": "cypress run",
-    "cy:run:record": "cypress run --record --parallel",
+    "playwright": "playwright",
     "tauri": "tauri",
     "covector": "covector",
     "postinstall": "rimraf .parcel-cache dist"

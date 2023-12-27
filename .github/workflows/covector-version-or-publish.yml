@@ -1,8 +1,7 @@
 name: covector version or publish
 on:
   push:
-    branches:
-      - next
+    branches: [next]
 
 jobs:
   version-or-release:
@@ -12,10 +11,10 @@ jobs:
       version: ${{ steps.covector-status.outputs.version-app }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: volta-cli/action@v1
+      - uses: volta-cli/action@v4
       - name: covector status
         uses: jbolda/covector/packages/action@covector-v0
         id: covector-status

@@ -9,8 +9,11 @@ dist
 .vscode
 *.log
 
-# large generated cypress files from tests
-cypress/videos
-
 # Local Netlify folder
 .netlify
+
+# test assets
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
