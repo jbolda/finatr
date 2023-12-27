@@ -37,7 +37,7 @@
     "react-dom": "17.0.2",
     "react-file-reader-input": "2.0.0",
     "react-router-dom": "^6.0.2",
-    "ynab": "1.25.0",
+    "ynab": "2.2.0",
     "yup": "1.2.0"
   },
   "overrides": {
