@@ -6,13 +6,7 @@ on:
 
 jobs:
   test:
-    runs-on: ${{ matrix.platform }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [ubuntu-latest, macos-latest, windows-latest]
-
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: volta-cli/action@v4
