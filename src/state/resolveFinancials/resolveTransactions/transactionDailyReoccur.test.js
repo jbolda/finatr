@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/experimental-ct-react17';
 import Big from 'big.js';
-import parseISO from 'date-fns/fp/parseISO';
-import startOfDay from 'date-fns/fp/startOfDay';
-import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
-import getDate from 'date-fns/fp/getDate';
-import getMonth from 'date-fns/fp/getMonth';
+import parseISO from 'date-fns/fp/parseISO/index.js';
+import startOfDay from 'date-fns/fp/startOfDay/index.js';
+import differenceInCalendarDays from 'date-fns/fp/differenceInDays/index.js';
+import getDate from 'date-fns/fp/getDate/index.js';
+import getMonth from 'date-fns/fp/getMonth/index.js';
 
 import { transactionDailyReoccur } from './index.js';
 import { convertRangeToInterval } from './index.js';

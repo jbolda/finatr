@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/experimental-ct-react17';
 import Big from 'big.js';
-import parseISO from 'date-fns/fp/parseISO';
-import startOfDay from 'date-fns/fp/startOfDay';
-import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
+import parseISO from 'date-fns/fp/parseISO/index.js';
+import startOfDay from 'date-fns/fp/startOfDay/index.js';
+import differenceInCalendarDays from 'date-fns/fp/differenceInDays/index.js';
 
 import computeTransactionModifications, {
   transactionDayOfMonthReoccur,

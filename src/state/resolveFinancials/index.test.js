@@ -8,10 +8,10 @@ import {
 } from './index.js';
 import computeTransactionModifications from './resolveTransactions';
 import Big from 'big.js';
-import parseISO from 'date-fns/fp/parseISO';
-import startOfDay from 'date-fns/fp/startOfDay';
-import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval';
-import format from 'date-fns/fp/format';
+import parseISO from 'date-fns/fp/parseISO/index.js';
+import startOfDay from 'date-fns/fp/startOfDay/index.js';
+import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
+import format from 'date-fns/fp/format/index.js';
 
 import { testData, testData2 } from './index.testdata.js';
 

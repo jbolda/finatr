@@ -1,7 +1,7 @@
 import { create } from 'microstates';
-import AppModel from './../state';
-import parseISO from 'date-fns/fp/parseISO';
-import startOfDay from 'date-fns/fp/startOfDay';
+import AppModel from '.';
+import parseISO from 'date-fns/fp/parseISO/index.js';
+import startOfDay from 'date-fns/fp/startOfDay/index.js';
 
 import { testData } from './resolveFinancials/index.testdata.js';
 

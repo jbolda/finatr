@@ -4,6 +4,7 @@
   "description": "",
   "keywords": [],
   "license": "Apache-2.0",
+  "type": "module",
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "start": "parcel serve ./src/index.html",
@@ -24,7 +25,7 @@
     "@tailwindcss/forms": "^0.3.4",
     "@tauri-apps/api": "1.5.3",
     "big.js": "6.1.1",
-    "d3": "^7.1.1",
+    "d3": "^7.8.5",
     "date-fns": "2.23.0",
     "formik": "2.2.9",
     "history": "^5.0.1",

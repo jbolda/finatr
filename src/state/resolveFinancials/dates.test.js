@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/experimental-ct-react17';
-import isWithinInterval from 'date-fns/fp/isWithinInterval';
+import isWithinInterval from 'date-fns/fp/isWithinInterval/index.js';
 
 test.describe(`testing interval functions`, () => {
   const testInterval = {

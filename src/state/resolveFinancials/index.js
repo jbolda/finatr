@@ -1,11 +1,9 @@
-import { stack } from 'd3-shape';
-import { max } from 'd3-array';
-const d3 = { stack, max };
+import { max as d3max, stack as d3stack } from 'd3';
 import Big from 'big.js';
-import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval';
-import closestIndexTo from 'date-fns/closestIndexTo';
-import addDays from 'date-fns/fp/addDays';
-import startOfDay from 'date-fns/fp/startOfDay';
+import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
+import closestIndexTo from 'date-fns/closestIndexTo/index.js';
+import addDays from 'date-fns/fp/addDays/index.js';
+import startOfDay from 'date-fns/fp/startOfDay/index.js';
 
 import computeTransactionModifications from './resolveTransactions';
 
@@ -195,14 +193,13 @@ const resolveBarChart = (dataRaw, { graphRange }) => {
 
   const stackComputed = buildStack(data, graphRange);
 
-  const stack = d3
-    .stack()
+  const stack = d3stack()
     .value((d, key) => d[key.value].y)
     .keys(keys);
 
   const stacked = stack(stackComputed);
 
-  const maxHeight = d3.max(
+  const maxHeight = d3max(
     stacked.reduce((a, b) => a.concat(b)),
     (d) => d[1]
   );
