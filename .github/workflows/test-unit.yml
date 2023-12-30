@@ -17,6 +17,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: volta-cli/action@v4
       - run: npm ci
+      - name: Install Playwright Browsers
+        run: npm run playwright install --with-deps -c playwright-ct.config.ts
       - run: npm run test-ct
       - uses: actions/upload-artifact@v4
         if: always()
