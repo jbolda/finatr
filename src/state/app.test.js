@@ -1,5 +1,6 @@
+import { test, expect } from '@playwright/experimental-ct-react17';
 import { create } from 'microstates';
-import AppModel from '.';
+import AppModel from './../state';
 import parseISO from 'date-fns/fp/parseISO/index.js';
 import startOfDay from 'date-fns/fp/startOfDay/index.js';
 
@@ -12,8 +13,8 @@ let graphRange = {
 testData.charts = {};
 testData.charts.GraphRange = graphRange;
 
-describe(`transaction array changes`, () => {
-  it(`has the correct length when an item is deleted`, () => {
+test.describe(`transaction array changes`, () => {
+  test(`has the correct length when an item is deleted`, () => {
     let resolvedTestData = create(AppModel, testData).reCalc();
     expect(resolvedTestData.transactionsComputed).toHaveLength(11);
     const modTestData = resolvedTestData.deleteTransaction(`oasidjas1`);
@@ -21,8 +22,8 @@ describe(`transaction array changes`, () => {
   });
 });
 
-describe(`computed transaction amounts return correctly`, () => {
-  it(`computes from a single reference on transaction`, () => {
+test.describe(`computed transaction amounts return correctly`, () => {
+  test(`computes from a single reference on transaction`, () => {
     let computatedTest = create(AppModel, {
       transactions: [
         {
@@ -49,7 +50,7 @@ describe(`computed transaction amounts return correctly`, () => {
     }
   });
 
-  it(`computes from a nested reference on transaction`, () => {
+  test(`computes from a nested reference on transaction`, () => {
     let computatedTest = create(AppModel, {
       transactions: [
         {
@@ -78,7 +79,7 @@ describe(`computed transaction amounts return correctly`, () => {
     }
   });
 
-  it(`computes from a deeply nested reference on transaction`, () => {
+  test(`computes from a deeply nested reference on transaction`, () => {
     let computatedTest = create(AppModel, {
       transactions: [
         {
@@ -119,7 +120,7 @@ describe(`computed transaction amounts return correctly`, () => {
     }
   });
 
-  it(`computes from a single reference on accounts`, () => {
+  test(`computes from a single reference on accounts`, () => {
     let computatedTest = create(AppModel, {
       accounts: [
         {
@@ -158,7 +159,7 @@ describe(`computed transaction amounts return correctly`, () => {
     }
   });
 
-  it(`computes from a nested reference on accounts`, () => {
+  test(`computes from a nested reference on accounts`, () => {
     let computatedTest = create(AppModel, {
       accounts: [
         {
@@ -199,7 +200,7 @@ describe(`computed transaction amounts return correctly`, () => {
     }
   });
 
-  it(`computes from a deeply nested reference on accounts`, () => {
+  test(`computes from a deeply nested reference on accounts`, () => {
     let computatedTest = create(AppModel, {
       accounts: [
         {
@@ -253,7 +254,7 @@ describe(`computed transaction amounts return correctly`, () => {
     }
   });
 
-  it(`computes the starting reference on accounts`, () => {
+  test(`computes the starting reference on accounts`, () => {
     let computatedTest = create(AppModel, {
       accounts: [
         {
@@ -295,7 +296,7 @@ describe(`computed transaction amounts return correctly`, () => {
     }
   });
 
-  it(`copies down the references from payback`, () => {
+  test(`copies down the references from payback`, () => {
     let computatedTest = create(AppModel, {
       accounts: [
         {

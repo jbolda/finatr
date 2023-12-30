@@ -1,7 +1,8 @@
+import { test, expect } from '@playwright/experimental-ct-react17';
 import { resolveBarChart } from './index.js';
 import Big from 'big.js';
-import parseISO from 'date-fns/fp/parseISO';
-import startOfDay from 'date-fns/fp/startOfDay';
+import parseISO from 'date-fns/fp/parseISO/index.js';
+import startOfDay from 'date-fns/fp/startOfDay/index.js';
 
 const testData = {
   transactions: [
@@ -20,8 +21,8 @@ const testData = {
   ]
 };
 
-describe(`check resolveBarChart`, () => {
-  it(`has all the correct original properties`, () => {
+test.describe(`check resolveBarChart`, () => {
+  test(`has all the correct original properties`, () => {
     let graphRange = {
       start: startOfDay(parseISO('2018-01-01')),
       end: startOfDay(parseISO('2019-01-01'))
@@ -41,7 +42,7 @@ describe(`check resolveBarChart`, () => {
     expect(resolvedTestData[0]).toHaveProperty('dailyRate', Big(50));
   });
 
-  it(`has the new properties`, () => {
+  test(`has the new properties`, () => {
     let graphRange = {
       start: startOfDay(parseISO('2018-01-01')),
       end: startOfDay(parseISO('2018-02-01'))
