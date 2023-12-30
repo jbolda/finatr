@@ -1,10 +1,11 @@
-import parseISO from 'date-fns/fp/parseISO';
-import startOfDay from 'date-fns/fp/startOfDay';
+import { test, expect } from '@playwright/experimental-ct-react17';
+import parseISO from 'date-fns/fp/parseISO/index.js';
+import startOfDay from 'date-fns/fp/startOfDay/index.js';
 
 import { convertRangeToInterval } from './index.js';
 
-describe(`check convertRangeToInterval`, () => {
-  it(`returns range start shifted forward`, () => {
+test.describe(`check convertRangeToInterval`, () => {
+  test(`returns range start shifted forward`, () => {
     const transaction = { start: `2018-03-22` };
     let graphRange = {
       start: startOfDay(parseISO('2018-01-01')),
@@ -15,7 +16,7 @@ describe(`check convertRangeToInterval`, () => {
     expect(interval.end).toEqual(startOfDay(parseISO('2018-06-01')));
   });
 
-  it(`returns range start before`, () => {
+  test(`returns range start before`, () => {
     const transaction = { start: `2017-08-01` };
     let graphRange = {
       start: startOfDay(parseISO('2018-01-15')),
@@ -26,7 +27,7 @@ describe(`check convertRangeToInterval`, () => {
     expect(interval.end).toEqual(startOfDay(parseISO('2018-06-01')));
   });
 
-  it(`returns range end shifted back`, () => {
+  test(`returns range end shifted back`, () => {
     const transaction = { start: `2018-03-22`, end: '2018-05-02' };
     let graphRange = {
       start: startOfDay(parseISO('2018-01-01')),
@@ -37,7 +38,7 @@ describe(`check convertRangeToInterval`, () => {
     expect(interval.end).toEqual(startOfDay(parseISO('2018-05-02')));
   });
 
-  it(`returns range end after`, () => {
+  test(`returns range end after`, () => {
     const transaction = { start: `2017-08-22`, end: '2018-08-02' };
     let graphRange = {
       start: startOfDay(parseISO('2018-01-15')),

@@ -1,7 +1,12 @@
-import { valueOf, create, StringType, DateType } from 'microstates';
+import {
+  valueOf,
+  create,
+  StringType
+  // DateType
+} from 'microstates';
 import { Big } from './customTypes.js';
-import parseISO from 'date-fns/fp/parseISO';
-import getQuarter from 'date-fns/fp/getQuarter';
+import parseISO from 'date-fns/fp/parseISO/index.js';
+import getQuarter from 'date-fns/fp/getQuarter/index.js';
 
 class Allocations {
   gross = create(Big, 0);
@@ -43,7 +48,7 @@ class Allocations {
 
 class Income extends Allocations {
   id = StringType;
-  date = DateType;
+  date = StringType; // DateType;
 }
 
 class IncomeList {

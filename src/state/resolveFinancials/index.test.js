@@ -1,3 +1,4 @@
+import { test, expect } from '@playwright/experimental-ct-react17';
 import { create } from 'microstates';
 import AppModel from './../../state';
 import {
@@ -8,10 +9,10 @@ import {
 } from './index.js';
 import computeTransactionModifications from './resolveTransactions';
 import Big from 'big.js';
-import parseISO from 'date-fns/fp/parseISO';
-import startOfDay from 'date-fns/fp/startOfDay';
-import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval';
-import format from 'date-fns/fp/format';
+import parseISO from 'date-fns/fp/parseISO/index.js';
+import startOfDay from 'date-fns/fp/startOfDay/index.js';
+import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
+import format from 'date-fns/fp/format/index.js';
 
 import { testData, testData2 } from './index.testdata.js';
 
@@ -26,17 +27,17 @@ testData.charts.GraphRange = graphRange;
 
 let resolvedTestData = create(AppModel, testData).reCalc();
 
-describe(`check state creation`, () => {
-  it(`returns the correct number of transactions`, () => {
+test.describe(`check state creation`, () => {
+  test(`returns the correct number of transactions`, () => {
     expect(resolvedTestData.state.transactions).toHaveLength(7);
   });
-  it(`returns the correct number of accounts`, () => {
+  test(`returns the correct number of accounts`, () => {
     expect(resolvedTestData.state.accounts).toHaveLength(3);
   });
-  it(`returns the correct number of BarChartIncome`, () => {
+  test(`returns the correct number of BarChartIncome`, () => {
     expect(resolvedTestData.charts.state.BarChartIncome).toHaveLength(6);
   });
-  it(`has the correct BarChartIncome structure`, () => {
+  test(`has the correct BarChartIncome structure`, () => {
     expect(resolvedTestData.charts.state.BarChartIncome).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -52,31 +53,31 @@ describe(`check state creation`, () => {
       ])
     );
   });
-  it(`returns the correct number of BarChartExpense`, () => {
+  test(`returns the correct number of BarChartExpense`, () => {
     expect(resolvedTestData.charts.state.BarChartExpense).toHaveLength(5);
   });
-  it(`calcs the correct BarChartMax`, () => {
+  test(`calcs the correct BarChartMax`, () => {
     expect(resolvedTestData.charts.BarChartMax.toNumber).toBe(510);
   });
-  it(`calcs the correct LineChartMax`, () => {
+  test(`calcs the correct LineChartMax`, () => {
     expect(resolvedTestData.charts.LineChartMax.toNumber).toBe(49680);
   });
-  it(`calcs the correct dailyIncome`, () => {
+  test(`calcs the correct dailyIncome`, () => {
     expect(resolvedTestData.stats.dailyIncome.toNumber).toBe(163);
   });
-  it(`calcs the correct dailyExpense`, () => {
+  test(`calcs the correct dailyExpense`, () => {
     expect(resolvedTestData.stats.dailyExpense.toNumber).toBe(270);
   });
   // savings daily of 120 / income daily of 163 = 0.7362
-  it(`calcs the correct savingsRate`, () => {
+  test(`calcs the correct savingsRate`, () => {
     expect(resolvedTestData.stats.savingsRate.toNumber).toBeCloseTo(73.62);
   });
-  it(`calcs the correct FINumber`, () => {
+  test(`calcs the correct FINumber`, () => {
     expect(resolvedTestData.stats.percentToFINumber.toNumber).toBeCloseTo(
       1.218
     );
   });
-  it(`handles invalid interval on single transaction`, () => {
+  test(`handles invalid interval on single transaction`, () => {
     let testData1 = {
       accounts: testData.accounts,
       transactions: [
@@ -100,7 +101,7 @@ describe(`check state creation`, () => {
     expect(resolvedTestData1.charts.state.BarChartIncome.length).toBe(1);
   });
 
-  it(`handles invalid interval on single transaction of many`, () => {
+  test(`handles invalid interval on single transaction of many`, () => {
     let testData1 = {
       accounts: testData.accounts,
       transactions: [
@@ -126,8 +127,8 @@ describe(`check state creation`, () => {
   });
 });
 
-describe(`check integrated transaction reoccurence`, () => {
-  it(`returns the correct number of daily reoccurrences`, () => {
+test.describe(`check integrated transaction reoccurence`, () => {
+  test(`returns the correct number of daily reoccurrences`, () => {
     let singleTransaction = resolvedTestData.transactions
       .set([
         {
@@ -167,7 +168,7 @@ describe(`check integrated transaction reoccurence`, () => {
     expect(singleTransaction.charts.state.LineChartMax).toEqual(15600);
   });
 
-  it(`returns the correct number of day of week reoccurrences`, () => {
+  test(`returns the correct number of day of week reoccurrences`, () => {
     const singleTransaction = resolvedTestData.transactions
       .set([
         {
@@ -217,7 +218,7 @@ describe(`check integrated transaction reoccurence`, () => {
     ).toEqual(800);
   });
 
-  it(`returns the correct number of semiannual reoccurrences`, () => {
+  test(`returns the correct number of semiannual reoccurrences`, () => {
     let singleTransaction = resolvedTestData.transactions
       .set([
         {
@@ -263,7 +264,7 @@ describe(`check integrated transaction reoccurence`, () => {
     ).toEqual(0);
   });
 
-  it(`returns the correct number of annual reoccurrences`, () => {
+  test(`returns the correct number of annual reoccurrences`, () => {
     const singleTransaction = resolvedTestData.transactions
       .set([
         {
@@ -316,8 +317,8 @@ describe(`check integrated transaction reoccurence`, () => {
   });
 });
 
-describe(`check resolveData handles paybacks`, () => {
-  it(`has the correct BarChartExpense structure`, () => {
+test.describe(`check resolveData handles paybacks`, () => {
+  test(`has the correct BarChartExpense structure`, () => {
     expect(resolvedTestData.charts.state.BarChartExpense).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -335,7 +336,7 @@ describe(`check resolveData handles paybacks`, () => {
     );
   });
 
-  it(`ends with the correct balance`, () => {
+  test(`ends with the correct balance`, () => {
     let revisedTestData = testData;
     revisedTestData.transactions = [];
     let resolvedTestData = create(AppModel, revisedTestData).reCalc();
@@ -359,7 +360,7 @@ describe(`check resolveData handles paybacks`, () => {
   });
 });
 
-describe(`check resolveData handles credit lines`, () => {
+test.describe(`check resolveData handles credit lines`, () => {
   let singleTestData = {
     transactions: [
       {
@@ -414,7 +415,7 @@ describe(`check resolveData handles credit lines`, () => {
   };
   let resolvedTestData = create(AppModel, singleTestData).reCalc();
 
-  it(`ends with the correct balance`, () => {
+  test(`ends with the correct balance`, () => {
     // that is 163 days between start and end (plus 1 for the end day)
     // payback is ~$100 a day, where the expense is $1000 every 14
     // on the balance of $30000, we should be paying down ~$400 every 14 days
@@ -430,7 +431,7 @@ describe(`check resolveData handles credit lines`, () => {
   });
 });
 
-describe('checks modifications', () => {
+test.describe('checks modifications', () => {
   let allDates = eachDayOfInterval(graphRange);
   let stackStructure = allDates.map((day) => {
     let obj = { date: day };
@@ -446,20 +447,20 @@ describe('checks modifications', () => {
   let modOneApplied = applyModifications(allDates)(stackStructure, testMods[0]);
   let stackComputed = buildStack(testData2, graphRange);
 
-  it('provides correct modification array', () => {
+  test('provides correct modification array', () => {
     expect(formatDate(testMods[0].date)).toBe('2018-03-22 240000');
     expect(testMods[0].mutateKey).toBe('test-data-2');
     expect(testMods[0].y.toFixed(0)).toBe('150');
   });
 
-  it('correctly applies a modification', () => {
+  test('correctly applies a modification', () => {
     expect(formatDate(modOneApplied[21].date)).toBe('2018-03-22 240000');
     expect(modOneApplied[21]['test-data-2'].id).toBe('test-data-2');
     expect(modOneApplied[21]['test-data-2'].value.toFixed(0)).toBe('150');
     expect(modOneApplied[21]['test-data-2'].y.toFixed(0)).toBe('150');
   });
 
-  it('provides correctly modified date array', () => {
+  test('provides correctly modified date array', () => {
     expect(stackComputed).toHaveLength(185);
 
     expect(formatDate(stackComputed[24].date)).toBe('2018-03-25 240000');
@@ -469,8 +470,8 @@ describe('checks modifications', () => {
   });
 });
 
-describe('check AccountChart', () => {
-  it('outputs an empty array if values is empty', () => {
+test.describe('check AccountChart', () => {
+  test('outputs an empty array if values is empty', () => {
     let accounts = [{ name: 'test1' }, { name: 'test2' }];
     let incomeRaw = [
       { raccount: 'test1', start: '2018-03-01', value: Big(10) }

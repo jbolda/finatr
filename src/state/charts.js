@@ -13,10 +13,10 @@ import {
   resolveBarChart,
   resolveAccountChart
 } from './resolveFinancials';
-import format from 'date-fns/fp/format';
-import parseISO from 'date-fns/fp/parseISO';
-import startOfDay from 'date-fns/fp/startOfDay';
-import addDays from 'date-fns/fp/addDays';
+import format from 'date-fns/fp/format/index.js';
+import parseISO from 'date-fns/fp/parseISO/index.js';
+import startOfDay from 'date-fns/fp/startOfDay/index.js';
+import addDays from 'date-fns/fp/addDays/index.js';
 const addYear = addDays(365);
 
 class BarChart extends TransactionComputed {

@@ -2,9 +2,9 @@ import React from 'react';
 import { Formik, Field } from 'formik';
 import { State } from '~src/state';
 import * as ynab from 'ynab';
-import getDay from 'date-fns/fp/getDay';
-import getDate from 'date-fns/fp/getDate';
-import parse from 'date-fns/parse';
+import getDay from 'date-fns/fp/getDay/index.js';
+import getDate from 'date-fns/fp/getDate/index.js';
+import parse from 'date-fns/parse/index.js';
 import { FieldGroup, Label } from '~src/components/Form';
 
 import { Button } from '~src/elements/Button';

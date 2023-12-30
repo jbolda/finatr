@@ -1,14 +1,15 @@
+import { test, expect } from '@playwright/experimental-ct-react17';
 import Big from 'big.js';
-import parseISO from 'date-fns/fp/parseISO';
-import startOfDay from 'date-fns/fp/startOfDay';
-import differenceInCalendarDays from 'date-fns/fp/differenceInDays';
+import parseISO from 'date-fns/fp/parseISO/index.js';
+import startOfDay from 'date-fns/fp/startOfDay/index.js';
+import differenceInCalendarDays from 'date-fns/fp/differenceInDays/index.js';
 
 import computeTransactionModifications, {
   transactionDayOfMonthReoccur,
   generateModification
 } from './index.js';
 
-describe(`check transactionDayOfMonthReoccur`, () => {
+test.describe(`check transactionDayOfMonthReoccur`, () => {
   const transaction = {
     id: `check transactionDayOfMonthReoccur`,
     raccount: `account`,
@@ -26,7 +27,8 @@ describe(`check transactionDayOfMonthReoccur`, () => {
   };
   let seedDate = graphRange.start;
   let occurrences = Big(0);
-  it(`has all the correct properties`, () => {
+
+  test(`has all the correct properties`, () => {
     let resolvedTestData = transactionDayOfMonthReoccur({
       transaction,
       seedDate,
@@ -36,7 +38,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     expect(resolvedTestData).toHaveProperty('y');
   });
 
-  it(`returns a cycle for 1st of next month`, () => {
+  test(`returns a cycle for 1st of next month`, () => {
     let testData = { ...transaction, cycle: 1 };
     let resolvedTestData = transactionDayOfMonthReoccur({
       transaction: testData,
@@ -48,7 +50,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     ).toBe(16);
   });
 
-  it(`returns a cycle for the 18th of current month`, () => {
+  test(`returns a cycle for the 18th of current month`, () => {
     let testData = { ...transaction, cycle: Big(18) };
     let resolvedTestData = transactionDayOfMonthReoccur({
       transaction: testData,
@@ -58,7 +60,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     expect(differenceInCalendarDays(seedDate)(resolvedTestData.date)).toBe(2);
   });
 
-  it(`returns a cycle for the 15th of next month`, () => {
+  test(`returns a cycle for the 15th of next month`, () => {
     let testData = { ...transaction, cycle: 15 };
     let resolvedTestData = transactionDayOfMonthReoccur({
       transaction: testData,
@@ -68,7 +70,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     expect(differenceInCalendarDays(seedDate)(resolvedTestData.date)).toBe(30);
   });
 
-  it(`returns a cycle for the current day`, () => {
+  test(`returns a cycle for the current day`, () => {
     let testData = { ...transaction, cycle: 16 };
     let resolvedTestData = transactionDayOfMonthReoccur({
       transaction: testData,
@@ -78,7 +80,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     expect(differenceInCalendarDays(seedDate)(resolvedTestData.date)).toBe(0);
   });
 
-  it(`returns progressive cycle with correct dates`, () => {
+  test(`returns progressive cycle with correct dates`, () => {
     let testData = { ...transaction, cycle: 16 };
     let resolvedTestData1 = transactionDayOfMonthReoccur({
       transaction: testData,
@@ -122,7 +124,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     ).toBe(120);
   });
 
-  it(`returns correct number of modifications for range`, () => {
+  test(`returns correct number of modifications for range`, () => {
     let testData = { ...transaction, start: graphRange.start, cycle: 17 };
     let resolvedTestData = generateModification(
       testData,
@@ -135,7 +137,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     expect(resolvedTestData).toHaveLength(3);
   });
 
-  it(`returns correct number of modifications if start and cycle are the same`, () => {
+  test(`returns correct number of modifications if start and cycle are the same`, () => {
     let testData = {
       id: 'the-id',
       raccount: 'checking',
@@ -168,7 +170,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     expect(resolvedTestData2).toHaveLength(7);
   });
 
-  it(`returns correct number of modifications based on generated occurrences`, () => {
+  test(`returns correct number of modifications based on generated occurrences`, () => {
     let testData1 = {
       ...transaction,
       id: `${transaction.id} genOc`,
@@ -203,7 +205,7 @@ describe(`check transactionDayOfMonthReoccur`, () => {
     expect(resolvedTestData2).toHaveLength(2);
   });
 
-  it(`returns correct number of modifications based on visible occurrences`, () => {
+  test(`returns correct number of modifications based on visible occurrences`, () => {
     let testData1 = {
       ...transaction,
       start: graphRange.start,
