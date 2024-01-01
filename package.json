@@ -19,10 +19,10 @@
     "covector": "covector"
   },
   "dependencies": {
-    "@headlessui/react": "^1.4.2",
+    "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^1.0.6",
     "@microstates/react": "0.12.0",
-    "@tailwindcss/forms": "^0.3.4",
+    "@tailwindcss/forms": "^0.5.7",
     "@tauri-apps/api": "1.5.3",
     "big.js": "6.1.1",
     "d3": "^7.8.5",
@@ -34,11 +34,12 @@
     "papaparse": "5.3.1",
     "prop-types": "15.7.2",
     "react": "17.0.2",
-    "react-aria": "^3.28.0",
-    "react-aria-components": "^1.0.0-beta.0",
+    "react-aria": "^3.31.0",
+    "react-aria-components": "^1.0.0",
     "react-dom": "17.0.2",
     "react-file-reader-input": "2.0.0",
     "react-router-dom": "^6.21.1",
+    "tailwindcss-react-aria-components": "^1.0.0",
     "ynab": "2.2.0",
     "yup": "1.2.0"
   },
@@ -67,12 +68,12 @@
     "@types/node": "^20.10.5",
     "covector": "^0.10.2",
     "parcel": "^2.10.3",
-    "postcss": "^8.4.29",
+    "postcss": "^8.4.32",
     "prettier": "^3.1.1",
     "process": "^0.11.10",
     "punycode": "^1.4.1",
     "querystring-es3": "^0.2.1",
-    "tailwindcss": "^2.2.19",
+    "tailwindcss": "^3.4.0",
     "url": "^0.11.3"
   },
   "volta": {

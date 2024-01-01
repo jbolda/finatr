@@ -1,7 +1,6 @@
 module.exports = {
-  purge: ['./src/*.html', './src/**/*.{js,jsx,ts,tsx}'],
+  content: ['./src/**/*.{html,js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {},
-  variants: {},
   plugins: [require('@tailwindcss/forms')]
 };
