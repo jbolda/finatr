@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { navigateTo } from '../helpers/navigate';
 
 const addGenericTransaction = async (
   page: Page,
@@ -19,7 +20,7 @@ const addGenericTransaction = async (
 };
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/planning');
+  await navigateTo(page, 'Planning');
   await page.getByText('Add Transaction').click();
 });
 
