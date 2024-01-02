@@ -8,10 +8,10 @@ export const IcicleChart = ({ data }) => {
   }, [data]);
 
   return (
-    <div class="object-none object-center m-5 p-3">
+    <div className="object-none object-center m-5 p-3">
       <svg
         ref={d3Container}
-        class="m-auto"
+        className="m-auto"
         /* sx={{ height: [500, 600, 800], width: [500, 800, 1200] }}  */
       />
     </div>
