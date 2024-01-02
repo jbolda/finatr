@@ -9,7 +9,6 @@
   "scripts": {
     "start": "parcel serve ./src/index.html",
     "build": "parcel build ./src/index.html",
-    "watch": "parcel watch ./src/index.html",
     "size-report": "parcel build src/index.html --reporter @parcel/reporter-bundle-buddy",
     "test-ct": "playwright test -c playwright-ct.config.ts",
     "test-e2e": "playwright test",
