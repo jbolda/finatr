@@ -16,7 +16,7 @@ const addGenericTransaction = async (
       await pageAction;
     }
   }
-  expect(page.getByText(value)).toBeVisible();
+  await expect(page.getByText(value)).toBeVisible();
 };
 
 test.beforeEach(async ({ page }) => {
@@ -24,13 +24,13 @@ test.beforeEach(async ({ page }) => {
   await page.getByText('Add Transaction').click();
 });
 
-test('tab switches to the form', async ({ page }) => {
+test('tab switches to the form', async ({ page }, testInfo) => {
   const addButton = page.getByRole('tab').getByText('Add Transaction');
   await addButton.click();
-  expect(addButton).toBeAttached();
+  await expect(addButton).toBeAttached();
 });
 
-test('submits simple transaction', async ({ page }) => {
+test('submits simple transaction', async ({ page }, testInfo) => {
   await addGenericTransaction(page);
 });
 
@@ -39,7 +39,7 @@ test('check income is listed in income tab after submit', async ({ page }) => {
 
   await page.getByRole('tab').getByText('Income').click();
   // all transactions should be visible, so just check existence
-  expect(page.getByText('55.00')).toBeVisible();
+  await expect(page.getByText('55.00')).toBeVisible();
 });
 
 test('check expense is listed in expense tab after submit', async ({
@@ -54,7 +54,7 @@ test('check expense is listed in expense tab after submit', async ({
 
   await page.getByRole('tab').getByText('Expenses').click();
   // all transactions should be visible, so just check existence
-  expect(page.getByText('67.00')).toBeVisible();
+  await expect(page.getByText('67.00')).toBeVisible();
 });
 
 test('check transfer is listed in transfer tab after submit', async ({
@@ -69,5 +69,5 @@ test('check transfer is listed in transfer tab after submit', async ({
 
   await page.getByRole('tab').getByText('Transfers').click();
   // all transactions should be visible, so just check existence
-  expect(page.getByText('53.00')).toBeVisible();
+  await expect(page.getByText('53.00')).toBeVisible();
 });
