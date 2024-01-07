@@ -67,7 +67,7 @@
     "@types/node": "^20.10.6",
     "covector": "^0.10.2",
     "parcel": "^2.11.0",
-    "postcss": "^8.4.32",
+    "postcss": "^8.4.33",
     "prettier": "^3.1.1",
     "process": "^0.11.10",
     "punycode": "^1.4.1",
