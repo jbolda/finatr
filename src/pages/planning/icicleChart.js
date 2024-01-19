@@ -1,19 +1,16 @@
 import React, { useRef, useEffect } from 'react';
+import * as d3 from 'd3';
 
 export const IcicleChart = ({ data }) => {
   const d3Container = useRef(null);
 
-  useEffect(async () => {
-    if (!!data && d3Container.current) await draw(d3Container, data);
+  useEffect(() => {
+    if (!!data && d3Container.current) draw(d3Container, data);
   }, [data]);
 
   return (
     <div className="object-none object-center m-5 p-3">
-      <svg
-        ref={d3Container}
-        className="m-auto"
-        /* sx={{ height: [500, 600, 800], width: [500, 800, 1200] }}  */
-      />
+      <svg ref={d3Container} className="m-auto" />
     </div>
   );
 };
@@ -21,8 +18,6 @@ export const IcicleChart = ({ data }) => {
 export default IcicleChart;
 
 const draw = async (svgRef, data) => {
-  const d3 = await import('d3');
-
   let size = '300px';
   if (window) {
     if (window.innerWidth > 1400) {
@@ -56,12 +51,13 @@ const draw = async (svgRef, data) => {
     },
     { income: 0, expense: 0, transactions: [] }
   );
+
   const scale = d3
     .scaleLinear()
     .domain([0, Math.max(dataStack.income, dataStack.expense)])
     .range([0, height]);
 
-  const grouped = d3.group(
+  const grouped = d3.groups(
     dataStack.transactions,
     (d) => d.type,
     (d) => d.category
@@ -75,34 +71,38 @@ const draw = async (svgRef, data) => {
 
   const svg = d3.select(svgRef.current);
 
-  const groupType = svg.selectAll('g').data(grouped);
-
-  const groupCategoryEnter = groupType
-    .enter()
-    .append('g')
+  const groupType = svg
+    .selectAll('g')
+    .data(grouped, (d) => d)
+    .join(
+      (enter) => enter.append('g'),
+      (update) => update,
+      (exit) => exit.remove()
+    )
     .attr('id', (d) => `type-${d[0]}`)
     .attr(
       'transform',
       (d) => `translate(${d[0] === 'income' ? 0 : width * 2},0)`
-    )
+    );
+
+  const groupCategory = groupType
     .selectAll('g')
-    .data((d) => d[1]);
+    .data((d) => d[1])
+    .join(
+      (enter) => enter.append('g'),
+      (update) => update,
+      (exit) => exit.remove()
+    )
+    .attr('id', (d) => `type-${d[0].replace(/ /g, '-')}`);
 
-  groupType.exit().remove();
-
-  const cell = groupCategoryEnter
-    .enter()
-    .append('g')
-    .attr('id', (d) => `category-${d[0]}`)
+  const cell = groupCategory
     .selectAll('rect')
-    .data((d) => d[1]);
-
-  groupCategoryEnter.exit().remove();
-
-  cell
-    .enter()
-    .append('rect')
-    // .transition()
+    .data((d) => d[1])
+    .join(
+      (enter) => enter.append('rect').transition(),
+      (update) => update,
+      (exit) => exit.remove()
+    )
     .attr('width', width)
     .attr('height', (d) => scale(Number(d.dailyRate)))
     .attr('fill-opacity', 0.6)
@@ -115,18 +115,23 @@ const draw = async (svgRef, data) => {
         )})`
     );
 
-  const text = cell
-    .enter()
-    .append('text')
+  const text = groupCategory
+    .selectAll('text')
+    .data((d) => d[1])
+    .join(
+      (enter) => {
+        const tnode = enter.append('text');
+        tnode.append('tspan').text((d) => d.description);
+        tnode.append('tspan').text((d) => ` ${format(d.value)}`);
+        return tnode;
+      },
+      (update) => update,
+      (exit) => exit.remove()
+    )
     .style('user-select', 'none')
     .attr('pointer-events', 'none')
     .attr('x', (d) => (d.type === 'income' ? 0 : width))
     .attr('y', (d) => scale(Number(d.dailyRateRelative) + Number(d.dailyRate)));
-
-  text.append('tspan').text((d) => d.description);
-  text.append('tspan').text((d) => ` ${format(d.value)}`);
-
-  cell.exit().remove();
 
   return svg.node();
 };
