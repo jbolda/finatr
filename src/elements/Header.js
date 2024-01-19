@@ -11,10 +11,11 @@ const navigation = [
   { name: 'Planning', to: 'planning' },
   { name: 'Cash Flow', to: 'flow' },
   { name: 'Account Breakdowns', to: 'accounts' },
-  { name: 'Taxes (in alpha)', to: 'taxes' }
+  { name: 'Taxes (in alpha)', to: 'taxes' },
+  { name: 'Settings', to: 'settings' }
 ];
 
-export const Header = () => {
+export const Header = ({ settings }) => {
   return (
     <Disclosure
       as="nav"
@@ -40,23 +41,25 @@ export const Header = () => {
                     />
                   </div> */}
                 <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-                  {navigation.map((item) => (
-                    <NavLink
-                      key={item.to}
-                      to={item.to}
-                      className={({ isActive, isPending, isTransitioning }) =>
-                        [
-                          'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium',
-                          isActive
-                            ? 'border-indigo-500 text-gray-900'
-                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                        ].join(' ')
-                      }
-                      end={item.end}
-                    >
-                      {item.name}
-                    </NavLink>
-                  ))}
+                  {navigation
+                    .filter((item) => settings[item.to] !== false)
+                    .map((item) => (
+                      <NavLink
+                        key={item.to}
+                        to={item.to}
+                        className={({ isActive, isPending, isTransitioning }) =>
+                          [
+                            'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium',
+                            isActive
+                              ? 'border-indigo-500 text-gray-900'
+                              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                          ].join(' ')
+                        }
+                        end={item.end}
+                      >
+                        {item.name}
+                      </NavLink>
+                    ))}
                 </div>
               </div>
               <div className="-mr-2 flex items-center sm:hidden">
