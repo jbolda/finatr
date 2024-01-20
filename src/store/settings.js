@@ -10,6 +10,13 @@ thunks.use(thunks.routes());
 export const changeSetting = thunks.create('setting', function* (ctx, next) {
   yield* next();
 
-  console.log(schema);
-  //   yield* update(schema.users.);
+  console.log(schema, ctx);
+  yield* schema.settings.update(
+    schema.settings.set((state) => ({
+      ...state,
+      [ctx.payload.option]: ctx.payload.value
+    }))
+  );
 });
+
+export const settingsThunk = thunks;

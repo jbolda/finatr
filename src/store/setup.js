@@ -7,6 +7,7 @@ import {
   createPersistor,
   persistStoreMdw
 } from 'starfx/store';
+import { settingsThunk } from './settings';
 
 export function setupStore({ logs = true, initialState = {} }) {
   const persistor = createPersistor({
@@ -44,10 +45,11 @@ export function setupStore({ logs = true, initialState = {} }) {
       }
     });
   }
+  tsks.push(settingsThunk.bootup);
 
   store.run(function* () {
     yield* persistor.rehydrate();
-    yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID }));
+    // yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID }));
     const group = yield* parallel(tsks);
     yield* group;
   });
