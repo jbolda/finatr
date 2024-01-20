@@ -9,8 +9,9 @@ const defaultSettings = {
   taxes: false
 };
 
-export const schema = createSchema({
-  settings: slice.obj(defaultSettings)
+const [schema, initialState] = createSchema({
+  settings: slice.obj(defaultSettings),
+  loaders: slice.loader()
 });
 
-export const db = schema.db;
+export { schema, initialState };

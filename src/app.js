@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
 import { useSelector } from 'starfx/react';
-import { db } from './store';
 import { Store, create } from 'microstates';
 import AppModel, { State } from './state';
 
@@ -52,7 +51,7 @@ const FeatureFlag = ({ flag, children }) => {
 };
 
 const App = (props) => {
-  const settings = useSelector(db.settings.select);
+  const settings = useSelector((state) => state.settings);
 
   return (
     <State.Provider value={props.model}>
