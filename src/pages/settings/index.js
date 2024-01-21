@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 import { changeSetting } from '~/src/store/settings.js';
+import { Switch } from 'react-aria-components';
 
 const Settings = (props) => {
   const settings = useSelector((state) => state.settings);
@@ -24,33 +25,44 @@ const Settings = (props) => {
 
 const SettingsToggle = ({ settings }) => {
   const dispatch = useDispatch();
-  const settingsList = Object.keys(settings);
+  const settingsList = ['all'].concat(Object.keys(settings));
+  const allValue = Object.keys(settings).reduce((finalValue, setting) => {
+    if (settings[setting] && finalValue) return true;
+    return false;
+  }, true);
 
   return (
     <>
-      {settingsList.map((setting) => (
-        <label
-          key={setting}
-          className="relative inline-flex items-center cursor-pointer"
-        >
-          <input
-            type="checkbox"
-            value={settings[setting]}
-            className="sr-only peer"
-            // TODO this dispatch doesn't seem to fire off the event
-            //  likely that the thunk isn't actually wired up
-            onClick={() =>
-              dispatch(
-                changeSetting({ option: setting, value: !settings[setting] })
-              )
+      {settingsList.map((setting) => {
+        const value = settings[setting] ?? allValue;
+        return (
+          <Switch
+            key={setting}
+            className={
+              'group flex gap-2 items-center text-gray-800 disabled:text-gray-300 dark:text-zinc-200 dark:disabled:text-zinc-600 forced-colors:disabled:text-[GrayText] text-sm transition'
             }
-          />
-          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-          <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+            onChange={() =>
+              dispatch(changeSetting({ key: setting, value: !value }))
+            }
+            isSelected={value}
+          >
+            <div
+              className={`${
+                value
+                  ? 'bg-gray-700 dark:bg-zinc-300 forced-colors:!bg-[Highlight] group-pressed:bg-gray-800 dark:group-pressed:bg-zinc-200'
+                  : 'bg-gray-400 dark:bg-zinc-400 group-pressed:bg-gray-500 dark:group-pressed:bg-zinc-300'
+              } flex h-4 w-7 px-px items-center shrink-0 cursor-default rounded-full transition duration-200 ease-in-out shadow-inner border border-transparent`}
+            >
+              <span
+                className={`${
+                  value ? 'translate-x-[100%]' : 'translate-x-0'
+                } h-3 w-3 transform rounded-full bg-white dark:bg-zinc-900 outline outline-1 -outline-offset-1 outline-transparent shadow transition duration-200 ease-in-out`}
+              />
+            </div>
             {setting}
-          </span>
-        </label>
-      ))}
+          </Switch>
+        );
+      })}
     </>
   );
 };

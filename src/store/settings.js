@@ -1,4 +1,5 @@
 import { createThunks, mdw } from 'starfx';
+import { select } from 'starfx/store';
 import { schema } from './schema';
 
 const thunks = createThunks();
@@ -8,15 +9,21 @@ thunks.use(mdw.err);
 thunks.use(thunks.routes());
 
 export const changeSetting = thunks.create('setting', function* (ctx, next) {
+  if (ctx.payload.key === 'all') {
+    const settings = yield* select(schema.settings.select);
+    const newSettings = Object.keys(settings).reduce(
+      (finalSettings, setting) => {
+        finalSettings[setting] = ctx.payload.value;
+        return finalSettings;
+      },
+      {}
+    );
+    yield* schema.update(schema.settings.set(newSettings));
+  } else {
+    yield* schema.update(schema.settings.update(ctx.payload));
+  }
   yield* next();
-
-  console.log(schema, ctx);
-  yield* schema.settings.update(
-    schema.settings.set((state) => ({
-      ...state,
-      [ctx.payload.option]: ctx.payload.value
-    }))
-  );
 });
 
 export const settingsThunk = thunks;
+``;
