@@ -4,7 +4,6 @@
   "description": "",
   "keywords": [],
   "license": "Apache-2.0",
-  "type": "module",
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "start": "parcel serve ./src/index.html",

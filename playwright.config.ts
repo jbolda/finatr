@@ -69,9 +69,15 @@ export default defineConfig({
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
   ],
-  webServer: {
-    command: 'npm run start',
-    url: 'http://127.0.0.1:1234',
-    reuseExistingServer: !process.env.CI
-  }
+  webServer: !process.env.CI
+    ? {
+        command: 'npm run start',
+        url: 'http://127.0.0.1:1234',
+        reuseExistingServer: true
+      }
+    : {
+        command: 'netlify serve',
+        url: 'http://127.0.0.1:8888',
+        reuseExistingServer: false
+      }
 });
