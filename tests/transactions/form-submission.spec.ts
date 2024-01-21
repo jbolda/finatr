@@ -4,7 +4,7 @@ import { navigateTo } from '../helpers/navigate';
 const addGenericTransaction = async (
   page: Page,
   { value, extraActions }: { value: string; extraActions: Promise<any>[] } = {
-    value: '55',
+    value: '55.00',
     extraActions: []
   }
 ) => {
@@ -46,7 +46,7 @@ test('check expense is listed in expense tab after submit', async ({
   page
 }) => {
   await addGenericTransaction(page, {
-    value: '67',
+    value: '67.00',
     extraActions: [
       page.getByLabel('type', { exact: true }).selectOption('Expense')
     ]

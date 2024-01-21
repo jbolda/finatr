@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
 export class BarChart extends PureComponent {
@@ -145,71 +145,71 @@ export class BarChart extends PureComponent {
 
 export default BarChart;
 
-BarChart.propTypes = {
-  data: PropTypes.shape({
-    transactions: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        raccount: PropTypes.string.isRequired,
-        category: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['income', 'expense', 'transfer']).isRequired,
-        start: PropTypes.string.isRequired,
-        rtype: PropTypes.string.isRequired,
-        cycle: PropTypes.number,
-        value: PropTypes.number.isRequired
-      })
-    ).isRequired,
-    BarChartIncome: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        raccount: PropTypes.string.isRequired,
-        category: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['income', 'transfer']).isRequired,
-        start: PropTypes.string.isRequired,
-        rtype: PropTypes.string.isRequired,
-        cycle: PropTypes.object,
-        value: PropTypes.object.isRequired,
-        stack: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired))
-          .isRequired
-      })
-    ).isRequired,
-    BarChartExpense: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        raccount: PropTypes.string.isRequired,
-        category: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['expense', 'transfer']).isRequired,
-        start: PropTypes.string.isRequired,
-        rtype: PropTypes.string.isRequired,
-        cycle: PropTypes.object,
-        value: PropTypes.object.isRequired,
-        stack: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired))
-          .isRequired
-      })
-    ).isRequired,
-    accounts: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string,
-        starting: PropTypes.number,
-        interest: PropTypes.number.isRequired,
-        vehicle: PropTypes.oneOf(['operating', 'debt', 'investment']).isRequired
-      })
-    ),
-    AccountChart: PropTypes.arrayOf(
-      PropTypes.shape({
-        account: PropTypes.string.isRequired,
-        values: PropTypes.arrayOf(
-          PropTypes.shape({
-            date: PropTypes.instanceOf(Date).isRequired,
-            value: PropTypes.number.isRequired
-          })
-        ),
-        interest: PropTypes.number.isRequired,
-        vehicle: PropTypes.oneOf(['operating', 'debt', 'investment']).isRequired
-      })
-    ).isRequired
-  })
-};
+// BarChart.propTypes = {
+//   data: PropTypes.shape({
+//     transactions: PropTypes.arrayOf(
+//       PropTypes.shape({
+//         id: PropTypes.string.isRequired,
+//         raccount: PropTypes.string.isRequired,
+//         category: PropTypes.string.isRequired,
+//         type: PropTypes.oneOf(['income', 'expense', 'transfer']).isRequired,
+//         start: PropTypes.string.isRequired,
+//         rtype: PropTypes.string.isRequired,
+//         cycle: PropTypes.number,
+//         value: PropTypes.number.isRequired
+//       })
+//     ).isRequired,
+//     BarChartIncome: PropTypes.arrayOf(
+//       PropTypes.shape({
+//         id: PropTypes.string.isRequired,
+//         raccount: PropTypes.string.isRequired,
+//         category: PropTypes.string.isRequired,
+//         type: PropTypes.oneOf(['income', 'transfer']).isRequired,
+//         start: PropTypes.string.isRequired,
+//         rtype: PropTypes.string.isRequired,
+//         cycle: PropTypes.object,
+//         value: PropTypes.object.isRequired,
+//         stack: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired))
+//           .isRequired
+//       })
+//     ).isRequired,
+//     BarChartExpense: PropTypes.arrayOf(
+//       PropTypes.shape({
+//         id: PropTypes.string.isRequired,
+//         raccount: PropTypes.string.isRequired,
+//         category: PropTypes.string.isRequired,
+//         type: PropTypes.oneOf(['expense', 'transfer']).isRequired,
+//         start: PropTypes.string.isRequired,
+//         rtype: PropTypes.string.isRequired,
+//         cycle: PropTypes.object,
+//         value: PropTypes.object.isRequired,
+//         stack: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired))
+//           .isRequired
+//       })
+//     ).isRequired,
+//     accounts: PropTypes.arrayOf(
+//       PropTypes.shape({
+//         name: PropTypes.string,
+//         starting: PropTypes.number,
+//         interest: PropTypes.number.isRequired,
+//         vehicle: PropTypes.oneOf(['operating', 'debt', 'investment']).isRequired
+//       })
+//     ),
+//     AccountChart: PropTypes.arrayOf(
+//       PropTypes.shape({
+//         account: PropTypes.string.isRequired,
+//         values: PropTypes.arrayOf(
+//           PropTypes.shape({
+//             date: PropTypes.instanceOf(Date).isRequired,
+//             value: PropTypes.number.isRequired
+//           })
+//         ),
+//         interest: PropTypes.number.isRequired,
+//         vehicle: PropTypes.oneOf(['operating', 'debt', 'investment']).isRequired
+//       })
+//     ).isRequired
+//   })
+// };
 
 let barBuild = {
   div_width: function () {
