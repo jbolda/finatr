@@ -58,7 +58,7 @@
     "@playwright/experimental-ct-react17": "^1.40.1",
     "@playwright/test": "^1.40.1",
     "@tauri-apps/cli": "1.5.9",
-    "@types/node": "^20.10.6",
+    "@types/node": "^20.10.8",
     "covector": "^0.10.2",
     "parcel": "^2.11.0",
     "postcss": "^8.4.32",
