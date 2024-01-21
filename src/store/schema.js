@@ -10,8 +10,7 @@ const defaultSettings = {
 };
 
 const [schema, initialState] = createSchema({
-  settings: slice.obj(defaultSettings),
-  loaders: slice.loader()
+  settings: slice.obj(defaultSettings)
 });
 
 export { schema, initialState };

@@ -49,7 +49,6 @@ export function setupStore({ logs = true, initialState = {} }) {
 
   store.run(function* () {
     yield* persistor.rehydrate();
-    // yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID }));
     const group = yield* parallel(tsks);
     yield* group;
   });
