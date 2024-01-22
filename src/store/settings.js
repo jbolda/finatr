@@ -26,4 +26,3 @@ export const changeSetting = thunks.create('setting', function* (ctx, next) {
 });
 
 export const settingsThunk = thunks;
-``;

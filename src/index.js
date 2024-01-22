@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'starfx/react';
+import { schema } from './store/schema.js';
 import { setupStore } from './store/setup.js';
 import App from './app.js';
 
@@ -14,7 +15,7 @@ function init() {
 
   ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-      <Provider store={store}>
+      <Provider schema={schema} store={store}>
         <App />
       </Provider>
     </React.StrictMode>
