@@ -26,7 +26,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'http://127.0.0.1:1234',
+    baseURL: `http://127.0.0.1:${!process.env.CI ? '1234' : '8888'}`,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure',
@@ -69,9 +69,15 @@ export default defineConfig({
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
   ],
-  webServer: {
-    command: 'npm run start',
-    url: 'http://127.0.0.1:1234',
-    reuseExistingServer: !process.env.CI
-  }
+  webServer: !process.env.CI
+    ? {
+        command: 'npm run start',
+        url: 'http://127.0.0.1:1234',
+        reuseExistingServer: true
+      }
+    : {
+        command: 'netlify serve',
+        url: 'http://127.0.0.1:8888',
+        reuseExistingServer: false
+      }
 });
