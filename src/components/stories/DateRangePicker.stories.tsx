@@ -1,21 +1,7 @@
-import type { Meta } from '@storybook/react';
 import React from 'react';
 import { Form } from 'react-aria-components';
-import { Button } from '../Button';
+import { Button } from '../../elements/Button.tsx';
 import { DateRangePicker } from '../DateRangePicker';
-
-const meta: Meta<typeof DateRangePicker> = {
-  component: DateRangePicker,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs'],
-  args: {
-    label: 'Trip dates'
-  }
-};
-
-export default meta;
 
 export const Example = (args: any) => <DateRangePicker {...args} />;
 

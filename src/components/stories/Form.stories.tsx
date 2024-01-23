@@ -1,19 +1,8 @@
-import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Button } from '../Button';
-import { DateField } from '../DateField';
+import { Button } from '../../elements/Button.tsx';
+import { DateField } from '../../elements/DateField.tsx';
 import { Form } from '../Form';
-import { TextField } from '../TextField';
-
-const meta: Meta<typeof Form> = {
-  component: Form,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs']
-};
-
-export default meta;
+import { TextField } from '../../elements/TextField.tsx';
 
 export const Example = (args: any) => (
   <Form {...args}>

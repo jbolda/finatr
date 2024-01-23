@@ -1,4 +1,4 @@
-import { Checkbox } from '../Checkbox';
+import { Checkbox } from '../Checkbox.tsx';
 
 export default {
   title: 'Checkbox',

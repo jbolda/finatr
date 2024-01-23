@@ -10,7 +10,7 @@ import { Button } from './Button';
 import { Calendar } from './Calendar';
 import { DateInput } from './DateField';
 import { Dialog } from './Dialog';
-import { Description, FieldError, FieldGroup, Label } from './Field';
+import { Description, FieldError, FieldGroup, Label } from '../elements/Field';
 import { Popover } from './Popover';
 import { composeTailwindRenderProps } from './utils';
 

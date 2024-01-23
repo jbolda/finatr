@@ -4,7 +4,7 @@ import {
   Meter as AriaMeter,
   MeterProps as AriaMeterProps
 } from 'react-aria-components';
-import { Label } from './Field';
+import { Label } from '../elements/Field';
 import { composeTailwindRenderProps } from './utils';
 
 export interface MeterProps extends AriaMeterProps {

@@ -1,17 +1,6 @@
-import type { Meta } from '@storybook/react';
 import React, { useMemo, useState } from 'react';
 import { TableBody } from 'react-aria-components';
-import { Cell, Column, Row, Table, TableHeader } from '../Table';
-
-const meta: Meta<typeof Table> = {
-  component: Table,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs']
-};
-
-export default meta;
+import { Cell, Column, Row, Table, TableHeader } from '../Table.tsx';
 
 let rows = [
   { id: 1, name: 'Games', date: '6/7/2020', type: 'File folder' },

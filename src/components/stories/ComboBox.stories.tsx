@@ -1,21 +1,7 @@
-import type { Meta } from '@storybook/react';
 import React from 'react';
 import { Form } from 'react-aria-components';
-import { Button } from '../Button';
-import { ComboBox, ComboBoxItem, ComboBoxSection } from '../ComboBox';
-
-const meta: Meta<typeof ComboBox> = {
-  component: ComboBox,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs'],
-  args: {
-    label: 'Ice cream flavor'
-  }
-};
-
-export default meta;
+import { Button } from '../../elements/Button.tsx';
+import { ComboBox, ComboBoxItem, ComboBoxSection } from '../ComboBox.tsx';
 
 export const Example = (args: any) => (
   <ComboBox {...args}>

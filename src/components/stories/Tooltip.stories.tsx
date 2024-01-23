@@ -1,19 +1,8 @@
-import type { Meta } from '@storybook/react';
 import { PrinterIcon, SaveIcon } from 'lucide-react';
 import React from 'react';
 import { TooltipTrigger } from 'react-aria-components';
-import { Button } from '../Button';
-import { Tooltip } from '../Tooltip';
-
-const meta: Meta<typeof Tooltip> = {
-  component: Tooltip,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs']
-};
-
-export default meta;
+import { Button } from '../../elements/Button.tsx';
+import { Tooltip } from '../Tooltip.tsx';
 
 export const Example = (args: any) => (
   <div className="flex gap-2">

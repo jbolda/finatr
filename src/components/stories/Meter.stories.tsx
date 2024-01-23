@@ -1,16 +1,5 @@
-import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meter } from '../Meter';
-
-const meta: Meta<typeof Meter> = {
-  component: Meter,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs']
-};
-
-export default meta;
+import { Meter } from '../Meter.tsx';
 
 export const Example = (args: any) => <Meter {...args} />;
 

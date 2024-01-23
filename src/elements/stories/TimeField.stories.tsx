@@ -1,21 +1,7 @@
-import type { Meta } from '@storybook/react';
 import React from 'react';
 import { Form } from 'react-aria-components';
-import { Button } from '../Button';
-import { TimeField } from '../TimeField';
-
-const meta: Meta<typeof TimeField> = {
-  component: TimeField,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs'],
-  args: {
-    label: 'Event time'
-  }
-};
-
-export default meta;
+import { Button } from '../Button.tsx';
+import { TimeField } from '../TimeField.tsx';
 
 export const Example = (args: any) => <TimeField {...args} />;
 

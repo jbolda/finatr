@@ -1,21 +1,7 @@
-import type { Meta } from '@storybook/react';
 import React from 'react';
 import { Form } from 'react-aria-components';
-import { Button } from '../Button';
-import { Select, SelectItem, SelectSection } from '../Select';
-
-const meta: Meta<typeof Select> = {
-  component: Select,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs'],
-  args: {
-    label: 'Ice cream flavor'
-  }
-};
-
-export default meta;
+import { Button } from '../Button.tsx';
+import { Select, SelectItem, SelectSection } from '../Select.tsx';
 
 export const Example = (args: any) => (
   <Select {...args}>

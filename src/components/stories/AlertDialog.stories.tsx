@@ -1,19 +1,8 @@
-import type { Meta } from '@storybook/react';
 import React from 'react';
 import { DialogTrigger } from 'react-aria-components';
-import { AlertDialog } from '../AlertDialog';
-import { Button } from '../Button';
-import { Modal } from '../Modal';
-
-const meta: Meta<typeof AlertDialog> = {
-  component: AlertDialog,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs']
-};
-
-export default meta;
+import { AlertDialog } from '../AlertDialog.tsx';
+import { Button } from '../../elements/Button.tsx';
+import { Modal } from '../Modal.tsx';
 
 export const Example = (args: any) => (
   <DialogTrigger>

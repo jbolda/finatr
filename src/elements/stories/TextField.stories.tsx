@@ -1,21 +1,7 @@
-import type { Meta } from '@storybook/react';
 import React from 'react';
 import { Form } from 'react-aria-components';
-import { Button } from '../Button';
-import { TextField } from '../TextField';
-
-const meta: Meta<typeof TextField> = {
-  component: TextField,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs'],
-  args: {
-    label: 'Name'
-  }
-};
-
-export default meta;
+import { Button } from '../Button.tsx';
+import { TextField } from '../TextField.tsx';
 
 export const Example = (args: any) => <TextField {...args} />;
 

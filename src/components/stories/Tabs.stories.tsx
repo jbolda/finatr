@@ -1,16 +1,5 @@
-import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Tab, TabList, TabPanel, Tabs } from '../Tabs';
-
-const meta: Meta<typeof Tabs> = {
-  component: Tabs,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs']
-};
-
-export default meta;
+import { Tab, TabList, TabPanel, Tabs } from '../Tabs.tsx';
 
 export const Example = (args: any) => (
   <Tabs {...args}>

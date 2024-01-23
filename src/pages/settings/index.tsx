@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
-import { changeSetting } from '~/src/store/settings.js';
-import { Switch } from '~src/components/Switch.tsx';
+import { changeSetting } from '~/src/store/settings.ts';
+import { Switch } from '~src/elements/Switch.tsx';
 
 const Settings = (props) => {
   const settings = useSelector((state) => state.settings);

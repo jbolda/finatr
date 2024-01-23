@@ -1,16 +1,5 @@
-import type { Meta } from '@storybook/react';
 import React from 'react';
-import { ListBox, ListBoxItem } from '../ListBox';
-
-const meta: Meta<typeof ListBox> = {
-  component: ListBox,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs']
-};
-
-export default meta;
+import { ListBox, ListBoxItem } from '../ListBox.tsx';
 
 export const Example = (args: any) => (
   <ListBox aria-label="Ice cream flavor" {...args}>

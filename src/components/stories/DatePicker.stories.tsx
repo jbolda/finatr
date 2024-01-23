@@ -1,21 +1,7 @@
-import type { Meta } from '@storybook/react';
 import React from 'react';
 import { Form } from 'react-aria-components';
-import { Button } from '../Button';
-import { DatePicker } from '../DatePicker';
-
-const meta: Meta<typeof DatePicker> = {
-  component: DatePicker,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs'],
-  args: {
-    label: 'Event date'
-  }
-};
-
-export default meta;
+import { Button } from '../../elements/Button.tsx';
+import { DatePicker } from '../DatePicker.tsx';
 
 export const Example = (args: any) => <DatePicker {...args} />;
 

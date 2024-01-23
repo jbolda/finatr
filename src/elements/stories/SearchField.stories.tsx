@@ -1,21 +1,7 @@
-import type { Meta } from '@storybook/react';
 import React from 'react';
 import { Form } from 'react-aria-components';
-import { Button } from '../Button';
-import { SearchField } from '../SearchField';
-
-const meta: Meta<typeof SearchField> = {
-  component: SearchField,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs'],
-  args: {
-    label: 'Search'
-  }
-};
-
-export default meta;
+import { Button } from '../Button.tsx';
+import { SearchField } from '../SearchField.tsx';
 
 export const Example = (args: any) => <SearchField {...args} />;
 

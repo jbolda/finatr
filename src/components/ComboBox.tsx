@@ -7,11 +7,21 @@ import {
   ListBoxItemProps,
   ValidationResult
 } from 'react-aria-components';
-import { Button } from './Button';
-import { Description, FieldError, FieldGroup, Input, Label } from './Field';
-import { DropdownItem, DropdownSection, DropdownSectionProps } from './ListBox';
-import { Popover } from './Popover';
-import { composeTailwindRenderProps } from './utils';
+import { Button } from '../elements/Button.tsx';
+import {
+  Description,
+  FieldError,
+  FieldGroup,
+  Input,
+  Label
+} from '../elements/Field.tsx';
+import {
+  DropdownItem,
+  DropdownSection,
+  DropdownSectionProps
+} from './ListBox.tsx';
+import { Popover } from './Popover.tsx';
+import { composeTailwindRenderProps } from '../elements/utils.ts';
 
 export interface ComboBoxProps<T extends object>
   extends Omit<AriaComboBoxProps<T>, 'children'> {

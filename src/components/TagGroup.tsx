@@ -13,7 +13,7 @@ import {
 } from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
 import { tv } from 'tailwind-variants';
-import { Description, Label } from './Field';
+import { Description, Label } from '../elements/Field';
 import { focusRing } from './utils';
 
 const colors = {

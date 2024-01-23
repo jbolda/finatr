@@ -1,23 +1,11 @@
 import { BoldIcon, ItalicIcon, UnderlineIcon } from 'lucide-react';
 import React from 'react';
 import { Group } from 'react-aria-components';
-import { Button } from '../Button';
-import { Checkbox } from '../Checkbox';
-import { Separator } from '../Separator';
-import { ToggleButton } from '../ToggleButton';
-import { Toolbar } from '../Toolbar';
-
-import type { Meta } from '@storybook/react';
-
-const meta: Meta<typeof Toolbar> = {
-  component: Toolbar,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs']
-};
-
-export default meta;
+import { Button } from '../../elements/Button.tsx';
+import { Checkbox } from '../../elements/Checkbox.tsx';
+import { Separator } from '../Separator.tsx';
+import { ToggleButton } from '../../elements/ToggleButton.tsx';
+import { Toolbar } from '../Toolbar.tsx';
 
 export const Example = (args: any) => (
   <Toolbar aria-label="Text formatting" {...args}>

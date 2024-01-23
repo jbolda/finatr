@@ -9,7 +9,7 @@ import {
 import { Button } from './Button';
 import { DateInput } from './DateField';
 import { Dialog } from './Dialog';
-import { Description, FieldError, FieldGroup, Label } from './Field';
+import { Description, FieldError, FieldGroup, Label } from '../elements/Field';
 import { Popover } from './Popover';
 import { RangeCalendar } from './RangeCalendar';
 import { composeTailwindRenderProps } from './utils';

@@ -1,19 +1,8 @@
-import type { Meta } from '@storybook/react';
 import { MoreHorizontal } from 'lucide-react';
 import React from 'react';
 import { MenuTrigger } from 'react-aria-components';
-import { Button } from '../Button';
-import { Menu, MenuItem, MenuSection, MenuSeparator } from '../Menu';
-
-const meta: Meta<typeof Menu> = {
-  component: Menu,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs']
-};
-
-export default meta;
+import { Button } from '../../elements/Button.tsx';
+import { Menu, MenuItem, MenuSection, MenuSeparator } from '../Menu.tsx';
 
 export const Example = (args: any) => (
   <MenuTrigger>

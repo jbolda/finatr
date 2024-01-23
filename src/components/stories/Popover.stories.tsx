@@ -1,23 +1,9 @@
-import type { Meta } from '@storybook/react';
 import { HelpCircle } from 'lucide-react';
 import React from 'react';
 import { DialogTrigger, Heading } from 'react-aria-components';
-import { Button } from '../Button';
-import { Dialog } from '../Dialog';
-import { Popover } from '../Popover';
-
-const meta: Meta<typeof Popover> = {
-  component: Popover,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs'],
-  args: {
-    showArrow: true
-  }
-};
-
-export default meta;
+import { Button } from '../../elements/Button.tsx';
+import { Dialog } from '../Dialog.tsx';
+import { Popover } from '../Popover.tsx';
 
 export const Example = (args: any) => (
   <DialogTrigger>

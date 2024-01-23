@@ -7,7 +7,7 @@ import {
   ValidationResult
 } from 'react-aria-components';
 import { tv } from 'tailwind-variants';
-import { Description, FieldError, Label } from './Field';
+import { Description, FieldError, Label } from '../elements/Field';
 import { composeTailwindRenderProps, focusRing } from './utils';
 
 export interface RadioGroupProps extends Omit<RACRadioGroupProps, 'children'> {

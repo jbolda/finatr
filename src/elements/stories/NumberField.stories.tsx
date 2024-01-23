@@ -1,21 +1,7 @@
-import type { Meta } from '@storybook/react';
 import React from 'react';
 import { Form } from 'react-aria-components';
-import { Button } from '../Button';
-import { NumberField } from '../NumberField';
-
-const meta: Meta<typeof NumberField> = {
-  component: NumberField,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs'],
-  args: {
-    label: 'Cookies'
-  }
-};
-
-export default meta;
+import { Button } from '../Button.tsx';
+import { NumberField } from '../NumberField.tsx';
 
 export const Example = (args: any) => <NumberField {...args} />;
 

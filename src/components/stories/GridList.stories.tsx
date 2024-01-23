@@ -1,16 +1,5 @@
-import type { Meta } from '@storybook/react';
-import { GridList, GridListItem } from '../GridList';
+import { GridList, GridListItem } from '../GridList.tsx';
 import React from 'react';
-
-const meta: Meta<typeof GridList> = {
-  component: GridList,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs']
-};
-
-export default meta;
 
 export const Example = (args: any) => (
   <GridList aria-label="Ice cream flavors" {...args}>

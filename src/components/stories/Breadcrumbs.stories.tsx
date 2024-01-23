@@ -1,17 +1,5 @@
 import React from 'react';
-import { Breadcrumb, Breadcrumbs } from '../Breadcrumbs';
-
-import type { Meta } from '@storybook/react';
-
-const meta: Meta<typeof Breadcrumbs> = {
-  component: Breadcrumbs,
-  parameters: {
-    layout: 'centered'
-  },
-  tags: ['autodocs']
-};
-
-export default meta;
+import { Breadcrumb, Breadcrumbs } from '../Breadcrumbs.tsx';
 
 export const Example = (args: any) => (
   <Breadcrumbs {...args}>
