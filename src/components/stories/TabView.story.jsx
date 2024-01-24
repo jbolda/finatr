@@ -1,5 +1,5 @@
 import React from 'react';
-import { TabView } from '../TabView.tsx';
+import { TabView } from '../TabView.jsx';
 
 export const TabViewContentTest = ({ tabTitles, tabContentStrings }) => {
   const tabContents = tabContentStrings.map((tabContent) => (

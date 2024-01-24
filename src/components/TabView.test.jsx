@@ -1,7 +1,7 @@
 import React from 'react';
 import { test, expect } from '@playwright/experimental-ct-react17';
-import { TabView } from './TabView';
-import { TabViewContentTest } from './stories/TabView.story.tsx';
+import { TabView } from './TabView.jsx';
+import { TabViewContentTest } from './stories/TabView.story.jsx';
 
 test(`has activeTab=null when there aren't any tabTitles`, async ({
   mount
