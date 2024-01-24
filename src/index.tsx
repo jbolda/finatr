@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'starfx/react';
-import { schema } from './store/schema.js';
-import { setupStore } from './store/setup.js';
-import App from './app.js';
+import { schema } from './store/schema.ts';
+import { setupStore } from './store/setup.ts';
+import App from './app.tsx';
 
 init();
 

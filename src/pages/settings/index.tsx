@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
-import { changeSetting } from '~/src/store/settings.js';
-import { Switch } from 'react-aria-components';
+import { changeSetting } from '~/src/store/settings.ts';
+import { Switch } from '~src/elements/Switch.tsx';
 
 const Settings = (props) => {
   const settings = useSelector((state) => state.settings);
@@ -46,19 +46,6 @@ const SettingsToggle = ({ settings }) => {
             }
             isSelected={value}
           >
-            <div
-              className={`${
-                value
-                  ? 'bg-gray-700 dark:bg-zinc-300 forced-colors:!bg-[Highlight] group-pressed:bg-gray-800 dark:group-pressed:bg-zinc-200'
-                  : 'bg-gray-400 dark:bg-zinc-400 group-pressed:bg-gray-500 dark:group-pressed:bg-zinc-300'
-              } flex h-4 w-7 px-px items-center shrink-0 cursor-default rounded-full transition duration-200 ease-in-out shadow-inner border border-transparent`}
-            >
-              <span
-                className={`${
-                  value ? 'translate-x-[100%]' : 'translate-x-0'
-                } h-3 w-3 transform rounded-full bg-white dark:bg-zinc-900 outline outline-1 -outline-offset-1 outline-transparent shadow transition duration-200 ease-in-out`}
-              />
-            </div>
             {setting}
           </Switch>
         );
