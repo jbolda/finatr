@@ -1,5 +1,26 @@
 # Changelog
 
+## \[0.5.0]
+
+- [`b7babe6`](https://github.com/jbolda/finatr/commit/b7babe63fd78adaf7129643500f286c1e787de3e)([#652](https://github.com/jbolda/finatr/pull/652)) Update parcel 2.9.3 → 2.10.3 (minor)
+- [`2ea024c`](https://github.com/jbolda/finatr/commit/2ea024cc1c81823d6691600840bf95688e3e3838)([#660](https://github.com/jbolda/finatr/pull/660)) Update react-router-dom 6.0.2 → 6.21.1 (minor)
+- [`a08c3e8`](https://github.com/jbolda/finatr/commit/a08c3e8634db5cdb046632245a99cd56baaab1db)([#669](https://github.com/jbolda/finatr/pull/669)) bumped ynab to v2
+- [`8ea59e8`](https://github.com/jbolda/finatr/commit/8ea59e83c38bb515e5338572bdc277015ea7283e)([#670](https://github.com/jbolda/finatr/pull/670)) Switch web build to ESM based. This improves compatibility with the component testing, and hopefully the greater ecosystem as other libraries began to move over.
+- [`b7a2334`](https://github.com/jbolda/finatr/commit/b7a23340ab67a8a7397520f2bbf7ea1dfc73709f)([#673](https://github.com/jbolda/finatr/pull/673)) Upgrade to react-aria v1, tailwind v3 and bump other component libs.
+- [`a361456`](https://github.com/jbolda/finatr/commit/a361456620ae8cbd360a553189bb0e0f2d3b9717)([#674](https://github.com/jbolda/finatr/pull/674)) Update parcel 2.10.3 → 2.11.0 (minor)
+- [`e7ad8fb`](https://github.com/jbolda/finatr/commit/e7ad8fb0361ddb98fc9b8267a29e116e5085f61d)([#691](https://github.com/jbolda/finatr/pull/691)) Include `react-aria` tailwind starter kit for a whole host of components to use. We swapped out the `Switch` component, but all others are currently unused.
+- [`00d277b`](https://github.com/jbolda/finatr/commit/00d277b87f9964f1e6ab71b82d09c8af14e88f5f)([#473](https://github.com/jbolda/finatr/pull/473)) Update @headlessui/react to 1.4.2.
+- [`2950a37`](https://github.com/jbolda/finatr/commit/2950a3766fabd4f3b253864c8e9f528d324c92fc)([#241](https://github.com/jbolda/finatr/pull/241)) We have pulled out the planning into a new route separate from the cash flow analysis. The planning page will help someone build up something that could serve as a budget, but with more granularity and time elements related to it. It is currently a snapshot of today, but we can expand it to multiple snapshots that lead into the future. Building up and refining leads one into the cash flow analysis more gradually rather than dumping someone into what is likely considered more advanced concepts.
+- [`b689287`](https://github.com/jbolda/finatr/commit/b689287d46795f4c40f3cb16b0b0d90dd7914662)([#471](https://github.com/jbolda/finatr/pull/471)) Lazy load routes and code split through it. This let's us ship smaller chunks based on the routes that you visit.
+- [`cbc785f`](https://github.com/jbolda/finatr/commit/cbc785f85a2713b3c7ce34c0440f45e943908ff1)([#451](https://github.com/jbolda/finatr/pull/451)) Change license to Apache2. This had previously been an option in the discussions. While AGPL is appropriate here, those historically pushing it do not act in ways with which we would like to associate. Generally there is less concern around those looking to commit code under this license as well.
+- [`6e9d934`](https://github.com/jbolda/finatr/commit/6e9d934df9cedc30b2b091b41ba7bd2553909734)([#462](https://github.com/jbolda/finatr/pull/462)) Upgrade parcel to v2.0.0.
+- [`25235de`](https://github.com/jbolda/finatr/commit/25235dec97ebba3956758f600c953b0b412597a8)([#470](https://github.com/jbolda/finatr/pull/470)) Upgrade parcel to v2.0.1.
+- [`4d9e530`](https://github.com/jbolda/finatr/commit/4d9e530d1cd1323b38fd0ee9bb1f2de781c3e76c)([#685](https://github.com/jbolda/finatr/pull/685)) Upgrade postcss to 8.3.11.
+- [`a7329c2`](https://github.com/jbolda/finatr/commit/a7329c2dfbf255502e93b7b60c7d3b08b3f597f3)([#644](https://github.com/jbolda/finatr/pull/644)) Convert to react-aria instead of @reach/ui as it is no longer actively maintained.
+- [`4c35c2f`](https://github.com/jbolda/finatr/commit/4c35c2f8f8c95463eb6c536128183e4a43f4d54c)([#686](https://github.com/jbolda/finatr/pull/686)) Implement starfx as a wrapper to incrementally replace existing state. This new state management will better enable parallel and async tasks which will improve client side calculation percevied performance.
+- [`b7d04d6`](https://github.com/jbolda/finatr/commit/b7d04d6f41e18b2e820907e49f4485072ad42ce2)([#468](https://github.com/jbolda/finatr/pull/468)) Upgrade tailwindcss to `2.2.19`.
+- [`4d9e530`](https://github.com/jbolda/finatr/commit/4d9e530d1cd1323b38fd0ee9bb1f2de781c3e76c)([#685](https://github.com/jbolda/finatr/pull/685)) Upgrade @tailwindcss/forms to `0.3.4`.
+
 ## \[0.4.1]
 
 - Update autoprefixer to 10.3.7.
