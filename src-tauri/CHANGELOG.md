@@ -1,5 +1,15 @@
 # Changelog
 
+## \[0.3.0]
+
+- [`cbc785f`](https://github.com/jbolda/finatr/commit/cbc785f85a2713b3c7ce34c0440f45e943908ff1)([#451](https://github.com/jbolda/finatr/pull/451)) Change license to Apache2. This had previously been an option in the discussions. While AGPL is appropriate here, those historically pushing it do not act in ways with which we would like to associate. Generally there is less concern around those looking to commit code under this license as well.
+- [`a7329c2`](https://github.com/jbolda/finatr/commit/a7329c2dfbf255502e93b7b60c7d3b08b3f597f3)([#644](https://github.com/jbolda/finatr/pull/644)) Convert to react-aria instead of @reach/ui as it is no longer actively maintained.
+- [`e6b0a29`](https://github.com/jbolda/finatr/commit/e6b0a2996c8ef134744c21f2156f8d90f646a8ca)([#665](https://github.com/jbolda/finatr/pull/665)) Upgrade Tauri to v1 stable.
+
+### Dependencies
+
+- Upgraded to `web@0.5.0`
+
 ## \[0.2.1]
 
 - Update autoprefixer to 10.3.7.
