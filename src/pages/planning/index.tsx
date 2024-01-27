@@ -1,11 +1,16 @@
 import React from 'react';
 import { State } from '~src/state';
-import IcicleChart from './icicleChart';
+import { schema } from '../../store/schema';
+import { useSelector } from 'starfx/react';
 
+import IcicleChart from './icicleChart';
 import Transactions from './transactions';
 import Accounts from './accounts';
 
 const Planning = (props) => {
+  const transactions = useSelector(schema.transactions.selectTableAsList);
+  const accounts = useSelector(schema.accounts.selectTableAsList);
+  console.log({ transactions, accounts });
   return (
     <State.Consumer>
       {(model) => (
@@ -15,9 +20,9 @@ const Planning = (props) => {
             <IcicleChart data={model.state.transactionsComputed} />
           </div>
           <Divider text="Transactions" />
-          <Transactions />
+          <Transactions transactions={transactions} />
           <Divider text="Accounts" />
-          <Accounts />
+          <Accounts accounts={accounts} />
         </div>
       )}
     </State.Consumer>

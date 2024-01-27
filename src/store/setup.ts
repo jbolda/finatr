@@ -1,4 +1,3 @@
-import { initialState as schemaInitialState } from './schema';
 import { LogContext, each, log, parallel, take } from 'starfx';
 import {
   PERSIST_LOADER_ID,
@@ -7,7 +6,8 @@ import {
   createPersistor,
   persistStoreMdw
 } from 'starfx/store';
-import { settingsThunk } from './settings';
+import { initialState as schemaInitialState } from './schema.ts';
+import { thunks, tasks } from './thunks/index.ts';
 
 export function setupStore({ logs = true, initialState = {} }) {
   const persistor = createPersistor({
@@ -45,7 +45,7 @@ export function setupStore({ logs = true, initialState = {} }) {
       }
     });
   }
-  tsks.push(settingsThunk.bootup);
+  tsks.push(...thunks, ...tasks);
 
   store.run(function* () {
     yield* persistor.rehydrate();
