@@ -1,7 +1,6 @@
 import { create, Store } from 'microstates';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
-import { Provider, useSelector } from 'starfx/react';
 
 import { Footer } from './elements/Footer';
 import { Header } from './elements/Header';
@@ -10,7 +9,6 @@ import Homepage from './pages/homepage';
 import AppModel, { State } from './state';
 import { useFxSelector } from './store/hook';
 import { AppState } from './store/schema';
-import { schema } from './store/schema.ts';
 
 const Settings = React.lazy(() => import('./pages/settings'));
 const Financial = React.lazy(() => import('./pages/flow'));
