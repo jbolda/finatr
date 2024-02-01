@@ -1,9 +1,7 @@
 import { thunks as settingsThunk } from './settings.ts';
-import {
-  thunks as transactionsThunk,
-  tasks as transactionTasks
-} from './transactions.ts';
+import { thunks as transactionsThunk } from './transactions.ts';
 import { thunks as accountsThunk } from './accounts.ts';
+import { tasks as chartTasks } from './chartData.ts';
 
 export const thunks = [
   settingsThunk.bootup,
@@ -11,4 +9,4 @@ export const thunks = [
   accountsThunk.bootup
 ];
 
-export const tasks = [...transactionTasks];
+export const tasks = [...chartTasks];

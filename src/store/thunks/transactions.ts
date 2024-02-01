@@ -1,4 +1,3 @@
-import { takeLatest } from 'starfx';
 import { schema } from '../schema';
 import { thunks } from './foundation.ts';
 import { transactionCompute } from './transactionReoccurrence/index.ts';
@@ -19,11 +18,3 @@ export const transactionAdd = thunks.create(
 );
 
 export { thunks };
-
-function* watchTransactions() {
-  const task = yield* takeLatest('transaction:add', function* (action) {
-    console.log({ action });
-  });
-}
-
-export const tasks = [watchTransactions];
