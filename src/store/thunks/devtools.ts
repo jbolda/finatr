@@ -1,21 +1,9 @@
 /* 
 To start this, you need to have the packages
-we are playin remote, so install "remotedev": "^0.2.1
-then run the "npm  run redux-devtools" command
-
-
-(if we are playing local redux-devtools-extension)
-npm run redux-devtools | which is  "redux-devtools --open --hostname=localhost --port=9555",
-
-NOTE: on version 0.0.0.30 it breaks on pressure (loading DEMO0). Just fails and crashes the app.
 */
-import { AnyAction } from 'redux';
 import { connectViaExtension, extractState } from 'remotedev';
-import { FxStore } from 'starfx/store';
 
 import { AppState } from '../schema';
-
-// import { AppState } from '../state/rootStore';
 
 type Options = {
   action?: any;
@@ -59,7 +47,6 @@ export function subscribeToActions(fxstore: AppState, options?: Options) {
       console.error('Failed to send action', e);
     }
   };
-
   // Return the unsubscribe function for later use
   return unSubscribe();
 }

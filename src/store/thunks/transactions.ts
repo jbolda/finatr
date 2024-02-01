@@ -1,7 +1,8 @@
+import Big from 'big.js';
+
 import { schema } from '../schema';
 import { thunks } from './foundation.ts';
 import { transactionCompute } from './transactionReoccurrence/index.ts';
-import Big from 'big.js';
 
 export const transactionAdd = thunks.create(
   'transaction:add',
@@ -11,7 +12,7 @@ export const transactionAdd = thunks.create(
     const dailyRate = transactionCompute({ transaction });
 
     yield* schema.update(
-      schema.transactions.add([{ ...transaction, dailyRate }])
+      schema.transactions.add({ ...transaction, dailyRate })
     );
     yield* next();
   }
