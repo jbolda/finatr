@@ -8,26 +8,27 @@ import { initialState as schemaInitialState } from './schema.ts';
 import { tasks, thunks } from './thunks/index.ts';
 
 const devtoolsEnabled = true;
-export function setupStore({ logs = true, initialState = {} }) {
-  const persistor = createPersistor({
-    adapter: createLocalStorageAdapter(),
-    allowlist: ['settings']
-  });
-  
-  const store = configureStore({
-    initialState: {
-      ...schemaInitialState,
-      ...initialState
-    },
-    middleware: [persistStoreMdw(persistor)]
-  });
+
+const persistor = createPersistor({
+  adapter: createLocalStorageAdapter(),
+  allowlist: ['settings']
+});
+
+
+const store = configureStore({
+  initialState: schemaInitialState,
+  middleware: [persistStoreMdw(persistor)]
+});
+window.store = store;
+
+export const setupStore = ({ logs = true, initialState = {} }) => {
   const tsks = [];
-  tsks.push(thunks.bootup);
   if (logs) {
     // listen to starfx logger for all log events
     tsks.push(function* logger() {
       const ctx = yield* LogContext;
       for (const event of yield* each(ctx)) {
+        console.log('event', event)
         if (event.type.startsWith('error:')) {
           console.error(event.payload);
         } else if (event.type === 'action') {
@@ -45,19 +46,22 @@ export function setupStore({ logs = true, initialState = {} }) {
     });
   }
   tsks.push(...tasks);
-  
-  tsks.push(function* devtools() {
-    if (!devtoolsEnabled) return;
-    while (true) {
-      const action = yield* take('*');
-      subscribeToActions({} as any, { action });
-    }
-  });
+
   
   devtoolsEnabled && setupDevTool({}, { name: 'finatr', enabled: true });
   store.run(function* () {
     yield* persistor.rehydrate();
-    const group = yield* parallel(tsks);
+    const group = yield* parallel([
+      thunks.bootup,
+      ...tsks,
+      function* devtools() {
+        if (!devtoolsEnabled) return;
+        while (true) {
+          const action = yield* take('*');
+          subscribeToActions({} as any, { action });
+        }
+      }
+    ]);
     yield* group;
   });
 

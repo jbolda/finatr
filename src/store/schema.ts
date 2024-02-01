@@ -1,6 +1,6 @@
 import { createSchema, slice } from 'starfx/store';
 
-interface Settings {
+export interface Settings {
   planning: boolean;
   import: boolean;
   examples: boolean;
@@ -75,19 +75,22 @@ const defaultAccount = {
   interest: 0, // Big
   vehicle: '',
   payback: []
-};
+} as Account;
 
-const [schema, initialState] = createSchema({
-  cache: slice.table({ empty: {} }),
+
+
+export const [schema, initialState] = createSchema({
   loaders: slice.loader(),
-  settings: slice.obj<Settings>(defaultSettings),
+  cache: slice.table({ empty: {}}),
+  settings: slice.obj(defaultSettings),
   transactions: slice.table({ empty: defaultTransaction }),
-  transactionsComputed: slice.table({
-    empty: defaultTransaction
+  transactionsComputed: slice.table<Account>({
+    empty: {} as Account,
   }),
-  accounts: slice.table({ empty: defaultAccount })
+  accounts: slice.table({ 
+  empty: {} as Account }),
 });
 
-export { schema, initialState };
+// export { schema, initialState };
 
 export type AppState = typeof initialState;

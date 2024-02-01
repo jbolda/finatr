@@ -1,15 +1,17 @@
+import { create, Store } from 'microstates';
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { Provider, useSelector } from 'starfx/react';
 
-import { useSelector } from 'starfx/react';
-import { Store, create } from 'microstates';
-import AppModel, { State } from './state';
-
-import { Header } from './elements/Header';
 import { Footer } from './elements/Footer';
-
-import Homepage from './pages/homepage';
+import { Header } from './elements/Header';
 import Examples from './pages/examples';
+import Homepage from './pages/homepage';
+import AppModel, { State } from './state';
+import { useFxSelector } from './store/hook';
+import { AppState } from './store/schema';
+import { schema } from './store/schema.ts';
+
 const Settings = React.lazy(() => import('./pages/settings'));
 const Financial = React.lazy(() => import('./pages/flow'));
 const Accounts = React.lazy(() => import('./pages/accounts'));
@@ -30,15 +32,18 @@ export function useObservable(observable) {
   return val;
 }
 
-class Legacy extends React.Component {
+class Legacy extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
       model: Store(create(AppModel, AppModel), (nextState) =>
         this.setState({ model: nextState })
       )
-    };
+    } 
   }
+  state: {
+    model: Store;
+  };
 
   render() {
     return <App model={this.state.model} />;
@@ -51,8 +56,7 @@ const FeatureFlag = ({ flag, children }) => {
 };
 
 const App = (props) => {
-  const settings = useSelector((state) => state.settings);
-
+  const settings = useFxSelector((state:AppState) => state.settings);
   return (
     <State.Provider value={props.model}>
       <BrowserRouter>
