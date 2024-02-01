@@ -78,12 +78,16 @@ const defaultAccount = {
 };
 
 const [schema, initialState] = createSchema({
+  cache: slice.table({ empty: {} }),
+  loaders: slice.loader(),
   settings: slice.obj<Settings>(defaultSettings),
-  transactions: slice.table<Transaction[]>({ empty: defaultTransaction }),
-  transactionsComputed: slice.table<TransactionComputed[]>({
+  transactions: slice.table({ empty: defaultTransaction }),
+  transactionsComputed: slice.table({
     empty: defaultTransaction
   }),
-  accounts: slice.table<Account[]>({ empty: defaultAccount })
+  accounts: slice.table({ empty: defaultAccount })
 });
 
 export { schema, initialState };
+
+export type AppState = typeof initialState;
