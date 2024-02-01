@@ -3,8 +3,8 @@ import {
     configureStore, createLocalStorageAdapter, createPersistor, PERSIST_LOADER_ID, persistStoreMdw
 } from 'starfx/store';
 
+import { setupDevTool, subscribeToActions } from './devtools.ts';
 import { initialState as schemaInitialState } from './schema.ts';
-import { setupDevTool, subscribeToActions } from './thunks/devtools.ts';
 import { tasks, thunks } from './thunks/index.ts';
 
 const devtoolsEnabled = true;

@@ -1,9 +1,10 @@
 /* 
 To start this, you need to have the packages
+ 
 */
-import { connectViaExtension, extractState } from 'remotedev';
+import { connectViaExtension } from 'remotedev';
 
-import { AppState } from '../schema';
+import { AppState } from './schema';
 
 type Options = {
   action?: any;
@@ -12,7 +13,7 @@ type Options = {
 };
 
 let devToolsInstance: any;
-export function setupDevTool<T extends object>(fxstore: T, options?: Options) {
+export function setupDevTool<T extends object>(_: T, options?: Options) {
   const { enabled, name = '' } = options || {};
 
   // Initialize the DevTools instance and connect to the Redux DevTools extension
@@ -22,7 +23,6 @@ export function setupDevTool<T extends object>(fxstore: T, options?: Options) {
     port: 9555,
     realtime: true,
     enabled: true,
-    // //  import.meta.env.VITE_WITHDEVTOOLS,
     autoReconnect: true,
   });
 
@@ -33,7 +33,7 @@ export function setupDevTool<T extends object>(fxstore: T, options?: Options) {
   return devToolsInstance;
 }
 
-export function subscribeToActions(fxstore: AppState, options?: Options) {
+export function subscribeToActions(_: AppState, options?: Options) {
   if (!devToolsInstance) {
     console.error('DevTools not initialized');
     // Not initialized
