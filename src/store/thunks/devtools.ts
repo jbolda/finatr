@@ -27,7 +27,7 @@ export function setupDevTool<T extends object>(fxstore: T, options?: Options) {
   });
 
   // Initialize the DevTools instance with the initial state
-  devToolsInstance.init(window.fx.getState());
+  devToolsInstance.init(window.store.getState());
 
   // Return the DevTools instance for later use
   return devToolsInstance;
@@ -42,7 +42,7 @@ export function subscribeToActions(fxstore: AppState, options?: Options) {
   const unSubscribe = () => {
     try {
       // options?.action &&
-      devToolsInstance.send(options.action, window.fx.getState());
+      devToolsInstance.send(options.action, window.store.getState());
     } catch (e) {
       console.error('Failed to send action', e);
     }

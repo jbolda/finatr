@@ -18,4 +18,4 @@ export const transactionAdd = thunks.create(
   }
 );
 
-export { thunks };
+

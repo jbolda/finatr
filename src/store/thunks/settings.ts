@@ -22,4 +22,4 @@ export const changeSetting = thunks.create('setting', function* (ctx, next) {
   yield* next();
 });
 
-export { thunks };
+

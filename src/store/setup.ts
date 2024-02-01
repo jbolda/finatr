@@ -21,9 +21,8 @@ export function setupStore({ logs = true, initialState = {} }) {
     },
     middleware: [persistStoreMdw(persistor)]
   });
-
-  window['fx'] = store;
   const tsks = [];
+  tsks.push(thunks.bootup);
   if (logs) {
     // listen to starfx logger for all log events
     tsks.push(function* logger() {
@@ -45,7 +44,8 @@ export function setupStore({ logs = true, initialState = {} }) {
       }
     });
   }
-  tsks.push(...thunks, ...tasks);
+  tsks.push(...tasks);
+  
   tsks.push(function* devtools() {
     if (!devtoolsEnabled) return;
     while (true) {
@@ -53,7 +53,7 @@ export function setupStore({ logs = true, initialState = {} }) {
       subscribeToActions({} as any, { action });
     }
   });
-
+  
   devtoolsEnabled && setupDevTool({}, { name: 'finatr', enabled: true });
   store.run(function* () {
     yield* persistor.rehydrate();
