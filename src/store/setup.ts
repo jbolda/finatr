@@ -1,20 +1,19 @@
-import { LogContext, each, log, parallel, take } from 'starfx';
+import { each, log, LogContext, parallel, take } from 'starfx';
 import {
-  PERSIST_LOADER_ID,
-  configureStore,
-  createLocalStorageAdapter,
-  createPersistor,
-  persistStoreMdw
+    configureStore, createLocalStorageAdapter, createPersistor, PERSIST_LOADER_ID, persistStoreMdw
 } from 'starfx/store';
-import { initialState as schemaInitialState } from './schema.ts';
-import { thunks, tasks } from './thunks/index.ts';
 
+import { initialState as schemaInitialState } from './schema.ts';
+import { setupDevTool, subscribeToActions } from './thunks/devtools.ts';
+import { tasks, thunks } from './thunks/index.ts';
+
+const devtoolsEnabled = true;
 export function setupStore({ logs = true, initialState = {} }) {
   const persistor = createPersistor({
     adapter: createLocalStorageAdapter(),
     allowlist: ['settings']
   });
-
+  
   const store = configureStore({
     initialState: {
       ...schemaInitialState,
@@ -23,6 +22,7 @@ export function setupStore({ logs = true, initialState = {} }) {
     middleware: [persistStoreMdw(persistor)]
   });
 
+  window['fx'] = store;
   const tsks = [];
   if (logs) {
     // listen to starfx logger for all log events
@@ -46,7 +46,15 @@ export function setupStore({ logs = true, initialState = {} }) {
     });
   }
   tsks.push(...thunks, ...tasks);
+  tsks.push(function* devtools() {
+    if (!devtoolsEnabled) return;
+    while (true) {
+      const action = yield* take('*');
+      subscribeToActions({} as any, { action });
+    }
+  });
 
+  devtoolsEnabled && setupDevTool({}, { name: 'finatr', enabled: true });
   store.run(function* () {
     yield* persistor.rehydrate();
     const group = yield* parallel(tsks);
@@ -55,3 +63,4 @@ export function setupStore({ logs = true, initialState = {} }) {
 
   return store;
 }
+export type AppState = ReturnType<typeof setupStore>;

@@ -1,4 +1,5 @@
 import { select } from 'starfx/store';
+
 import { schema } from '../schema.ts';
 import { thunks } from './foundation.ts';
 
@@ -7,10 +8,12 @@ export const changeSetting = thunks.create('setting', function* (ctx, next) {
     const settings = yield* select(schema.settings.select);
     const newSettings = Object.keys(settings).reduce(
       (finalSettings, setting) => {
-        finalSettings[setting] = ctx.payload.value;
+        finalSettings[setting] =  ctx.payload.value;
         return finalSettings;
       },
-      {}
+      {
+        ...settings,
+      }  
     );
     yield* schema.update(schema.settings.set(newSettings));
   } else {

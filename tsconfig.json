@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "downlevelIteration": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "es5",
+      "es2015.collection",
+      "es2015.iterable"
+    ],
+    "baseUrl": ".",
+    "allowJs": true,
+    "allowImportingTsExtensions": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react",
+    "paths": {
+      "@app/*": ["src/*"],
+      "zlib": ["node_modules/browserify-zlib"],
+      "stream": ["node_modules/stream-browserify"],
+      "os":["node_modules/os-browserify"]
+    },
+  },
+  "include": ["src", "index.d.ts", "custom.d.ts" ,"webpack.config.js", "tests/src/state/sagas.test.tsx"]
+}
