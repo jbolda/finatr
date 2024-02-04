@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useSelector } from 'starfx/react';
 import { Store, create } from 'microstates';
 import AppModel, { State } from './state';
+import { schema } from './store/schema.ts';
 
 import { Header } from './elements/Header';
 import { Footer } from './elements/Footer';
@@ -51,7 +52,7 @@ const FeatureFlag = ({ flag, children }) => {
 };
 
 const App = (props) => {
-  const settings = useSelector((state) => state.settings);
+  const settings = useSelector(schema.settings.select);
 
   return (
     <State.Provider value={props.model}>
