@@ -32,7 +32,7 @@
     "microstates": "0.15.1",
     "papaparse": "5.3.1",
     "react": "18.2.0",
-    "react-aria": "^3.31.0",
+    "react-aria": "^3.32.0",
     "react-aria-components": "^1.0.0",
     "react-dom": "18.2.0",
     "react-file-reader-input": "2.0.0",
