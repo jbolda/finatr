@@ -1,14 +1,10 @@
 import Big from 'big.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';
-import dateMax from 'date-fns/fp/max/index.js';
-import dateMin from 'date-fns/fp/min/index.js';
-import isWithinInterval from 'date-fns/fp/isWithinInterval/index.js';
 import addDays from 'date-fns/fp/addDays/index.js';
 import addMonths from 'date-fns/fp/addMonths/index.js';
 import setDate from 'date-fns/fp/setDate/index.js';
 import addQuarters from 'date-fns/fp/addQuarters/index.js';
 import addYears from 'date-fns/fp/addYears/index.js';
-import isSameDay from 'date-fns/fp/isSameDay/index.js';
 import isAfter from 'date-fns/fp/isAfter/index.js';
 import isBefore from 'date-fns/fp/isBefore/index.js';
 import getDay from 'date-fns/fp/getDay/index.js';
@@ -16,7 +12,7 @@ import differenceInCalendarDays from 'date-fns/fp/differenceInDays/index.js';
 import differenceInCalendarMonths from 'date-fns/fp/differenceInCalendarMonths/index.js';
 import differenceInCalendarYears from 'date-fns/fp/differenceInCalendarYears/index.js';
 
-export const nextModification = (rtype) => {
+export const nextTransaction = (rtype) => {
   switch (rtype) {
     case 'none':
       return transactionNoReoccur;

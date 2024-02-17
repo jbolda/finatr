@@ -1,4 +1,6 @@
 import { createSchema, slice } from 'starfx/store';
+import { defaultTransaction, defaultAccount } from './factory.ts';
+import Big from 'big.js';
 
 interface Settings {
   planning: boolean;
@@ -27,38 +29,15 @@ interface Transaction {
   start: string;
   end: string;
   rtype: string;
-  cycle: number; // big
-  value: number; // big
-  occurrences: number;
+  cycle: number; // Big
+  value: number; // Big
+  dailyRate: number; // Big
+  occurrences: number; // Big
   beginAfterOccurrences: number;
 }
-const defaultTransaction = {
-  id: '0',
-  raccount: '',
-  description: '',
-  category: '',
-  type: '',
-  start: '',
-  end: '',
-  rtype: '',
-  cycle: 0,
-  value: 0,
-  // computedAmount = relationship(({ value, parentValue }) => ({
-  //   Type: AmountComputed,
-  //   value: {
-  //     ...value,
-  //     ...(!!parentValue.references
-  //       ? { references: parentValue.references }
-  //       : {})
-  //   }
-  // }));
-  occurrences: 0,
-  beginAferOccurrences: 0
-};
 
 interface TransactionComputed extends Transaction {
   fromAccounts: boolean;
-  dailyRate: number; // Big
   y: number; // Big
 }
 
@@ -69,13 +48,15 @@ interface Account {
   vehicle: string;
   payback: Transaction[];
 }
-const defaultAccount = {
-  name: '',
-  starting: 0, // Big
-  interest: 0, // Big
-  vehicle: '',
-  payback: []
-};
+
+interface BarChartData {
+  id: string;
+  transactionID: string;
+  data: {
+    date: Date;
+    y: typeof Big;
+  }[];
+}
 
 const [schema, initialState] = createSchema({
   cache: slice.table({ empty: {} }),
@@ -85,7 +66,8 @@ const [schema, initialState] = createSchema({
   transactionsComputed: slice.table({
     empty: defaultTransaction
   }),
-  accounts: slice.table({ empty: defaultAccount })
+  accounts: slice.table({ empty: defaultAccount }),
+  chartBarData: slice.table<BarChartData>()
 });
 
 export { schema, initialState };
