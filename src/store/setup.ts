@@ -1,6 +1,9 @@
-import { each, log, LogContext, parallel, take } from 'starfx';
+import { parallel, take } from 'starfx';
 import {
-    configureStore, createLocalStorageAdapter, createPersistor, PERSIST_LOADER_ID, persistStoreMdw
+  configureStore,
+  createLocalStorageAdapter,
+  createPersistor,
+  persistStoreMdw
 } from 'starfx/store';
 
 import { initialState as schemaInitialState } from './schema.ts';
@@ -13,7 +16,7 @@ export function setupStore({ logs = true, initialState = {} }) {
     adapter: createLocalStorageAdapter(),
     allowlist: ['settings']
   });
-  
+
   const store = configureStore({
     initialState: {
       ...schemaInitialState,
@@ -25,27 +28,15 @@ export function setupStore({ logs = true, initialState = {} }) {
   window['fx'] = store;
   const tsks = [];
   if (logs) {
-    // listen to starfx logger for all log events
-    tsks.push(function* logger() {
-      const ctx = yield* LogContext;
-      for (const event of yield* each(ctx)) {
-        if (event.type.startsWith('error:')) {
-          console.error(event.payload);
-        } else if (event.type === 'action') {
-          console.log(event.payload);
-        }
-        yield* each.next();
-      }
-    });
     // log all actions dispatched
     tsks.push(function* logActions() {
       while (true) {
         const action = yield* take('*');
-        yield* log({ type: 'action', payload: action });
+        console.log(action);
       }
     });
   }
-  tsks.push(...thunks, ...tasks);
+  tsks.push(thunks.bootup, ...tasks);
   tsks.push(function* devtools() {
     if (!devtoolsEnabled) return;
     while (true) {
@@ -63,4 +54,3 @@ export function setupStore({ logs = true, initialState = {} }) {
 
   return store;
 }
-export type AppState = ReturnType<typeof setupStore>;

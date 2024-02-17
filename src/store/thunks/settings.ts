@@ -8,12 +8,12 @@ export const changeSetting = thunks.create('setting', function* (ctx, next) {
     const settings = yield* select(schema.settings.select);
     const newSettings = Object.keys(settings).reduce(
       (finalSettings, setting) => {
-        finalSettings[setting] =  ctx.payload.value;
+        finalSettings[setting] = ctx.payload.value;
         return finalSettings;
       },
       {
-        ...settings,
-      }  
+        ...settings
+      }
     );
     yield* schema.update(schema.settings.set(newSettings));
   } else {
@@ -21,5 +21,3 @@ export const changeSetting = thunks.create('setting', function* (ctx, next) {
   }
   yield* next();
 });
-
-export { thunks };
