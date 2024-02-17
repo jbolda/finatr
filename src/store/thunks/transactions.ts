@@ -23,4 +23,11 @@ export const transactionAdd = thunks.create(
   }
 );
 
-export { thunks };
+export const transactionRemove = thunks.create<{ id: string }>(
+  'transaction:remove',
+  function* (ctx, next) {
+    console.log({ ctx });
+    yield* schema.update(schema.transactions.remove([ctx.payload.id]));
+    yield* next();
+  }
+);

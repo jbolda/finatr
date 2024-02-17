@@ -8,9 +8,7 @@ import Transactions from './transactions';
 import Accounts from './accounts';
 
 const Planning = (props) => {
-  const transactions = useSelector(schema.transactions.selectTableAsList);
   const accounts = useSelector(schema.accounts.selectTableAsList);
-  console.log({ transactions, accounts });
   return (
     <State.Consumer>
       {(model) => (
@@ -20,7 +18,7 @@ const Planning = (props) => {
             <IcicleChart data={model.state.transactionsComputed} />
           </div>
           <Divider text="Transactions" />
-          <Transactions transactions={transactions} />
+          <Transactions />
           <Divider text="Accounts" />
           <Accounts accounts={accounts} />
         </div>
