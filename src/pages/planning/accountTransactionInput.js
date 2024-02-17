@@ -1,13 +1,13 @@
 import React from 'react';
-import { State } from '~src/state';
+import { State } from '~/src/state';
 
 import { Formik, Field } from 'formik';
 import * as yup from 'yup';
 import { FieldGroup, Label } from '../../components/Form';
-import { Button } from '~src/elements/Button';
-import { Input } from '~src/elements/Input';
-import { Select } from '~src/elements/Select';
-import { Radio } from '~src/elements/Radio';
+import { Button } from '~/src/elements/Button';
+import { Input } from '~/src/elements/Input';
+import { Select } from '~/src/elements/Select';
+import { Radio } from '~/src/elements/Radio';
 import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
 const ComputedAmountSchema = yup

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { State } from '~src/state';
+import { State } from '~/src/state';
 
 import example_simple from 'url:./simple.json';
 import example_highRents from 'url:./high_rents.json';

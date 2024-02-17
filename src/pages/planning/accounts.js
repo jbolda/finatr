@@ -1,10 +1,10 @@
 import React from 'react';
-import { State } from '~src/state';
+import { State } from '~/src/state';
 
-import { Button } from '~src/elements/Button';
+import { Button } from '~/src/elements/Button';
 
-import { TabView } from '~src/components/TabView';
-import { FlexTable } from '~src/components/FlexTable';
+import { TabView } from '~/src/components/TabView';
+import { FlexTable } from '~/src/components/FlexTable';
 import AccountInput from './accountInput';
 import AccountTransactionInput from './accountTransactionInput';
 

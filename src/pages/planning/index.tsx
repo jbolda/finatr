@@ -1,5 +1,5 @@
 import React from 'react';
-import { State } from '~src/state';
+import { State } from '~/src/state';
 import { schema } from '../../store/schema';
 import { useSelector } from 'starfx/react';
 

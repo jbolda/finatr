@@ -1,14 +1,14 @@
 import React from 'react';
 import { Formik, Field } from 'formik';
-import { State } from '~src/state';
+import { State } from '~/src/state';
 import * as ynab from 'ynab';
 import getDay from 'date-fns/fp/getDay/index.js';
 import getDate from 'date-fns/fp/getDate/index.js';
 import parse from 'date-fns/parse/index.js';
-import { FieldGroup, Label } from '~src/components/Form';
+import { FieldGroup, Label } from '~/src/components/Form';
 
-import { Button } from '~src/elements/Button';
-import { Input } from '~src/elements/Input';
+import { Button } from '~/src/elements/Button';
+import { Input } from '~/src/elements/Input';
 
 class YNABInput extends React.Component {
   render() {

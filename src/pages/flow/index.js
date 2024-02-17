@@ -1,8 +1,8 @@
 import React from 'react';
-import { State } from '~src/state';
-import BarChart from './barChart';
+import { State } from '~/src/state';
+import BarChart from './barChart.js';
 
-import { Input } from '~src/elements/Input';
+import { Input } from '~/src/elements/Input';
 
 class FinancialFlow extends React.Component {
   render() {

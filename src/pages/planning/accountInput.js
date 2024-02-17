@@ -1,11 +1,11 @@
 import React from 'react';
-import { State } from '~src/state';
+import { State } from '~/src/state';
 import { useDispatch } from 'starfx/react';
 import { accountAdd } from '../../store/thunks/accounts';
 
-import { Input } from '~src/elements/Input';
-import { Select } from '~src/elements/Select';
-import { Button } from '~src/elements/Button';
+import { Input } from '~/src/elements/Input';
+import { Select } from '~/src/elements/Select';
+import { Button } from '~/src/elements/Button';
 
 import { Formik, Field } from 'formik';
 import * as yup from 'yup';

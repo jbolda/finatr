@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { map } from 'microstates';
-import { State } from '~src/state';
+import { State } from '~/src/state';
 
-import { TabView } from '~src/components/TabView';
-import { FlexTable } from '~src/components/FlexTable';
-import { Button } from '~src/elements/Button';
+import { TabView } from '~/src/components/TabView';
+import { FlexTable } from '~/src/components/FlexTable';
+import { Button } from '~/src/elements/Button';
 
 const Taxes = (props) => {
   const [activeTab, tabClick] = useState(0);
