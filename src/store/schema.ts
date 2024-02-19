@@ -7,16 +7,18 @@ interface Settings {
   import: boolean;
   examples: boolean;
   flow: boolean;
+  transactions: boolean;
   accounts: boolean;
   taxes: boolean;
 }
 
 const defaultSettings = {
-  planning: true,
-  import: false,
   examples: false,
-  flow: false,
   accounts: false,
+  transactions: false,
+  planning: true,
+  flow: false,
+  import: false,
   taxes: false
 };
 

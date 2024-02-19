@@ -82,10 +82,10 @@ const App = (props) => {
                 }
               />
               <Route
-                path="accounts"
+                path="transactions/set"
                 element={
                   <React.Suspense fallback={<>...</>}>
-                    <Accounts />
+                    <TransactionInput />
                   </React.Suspense>
                 }
               />

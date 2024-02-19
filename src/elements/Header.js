@@ -10,7 +10,8 @@ const navigation = [
   { name: 'Import/Export', to: 'import' },
   { name: 'Planning', to: 'planning' },
   { name: 'Cash Flow', to: 'flow' },
-  { name: 'Account Breakdowns', to: 'accounts' },
+  { name: 'Accounts', to: 'accounts' },
+  { name: 'Transactions', to: 'transaction' },
   { name: 'Taxes (in alpha)', to: 'taxes' },
   { name: 'Settings', to: 'settings' }
 ];

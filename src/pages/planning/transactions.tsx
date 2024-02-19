@@ -6,7 +6,8 @@ import { transactionRemove } from '../../store/thunks/transactions';
 import { TabView } from '~/src/components/TabView';
 import { FlexTable } from '~/src/components/FlexTable';
 import { Button } from '~/src/elements/Button';
-import TransactionInput from './transactionInput';
+import { useNavigate } from 'react-router-dom';
+import { tr } from 'date-fns/locale';
 
 const TransactionsFlow = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -17,13 +18,7 @@ const TransactionsFlow = () => {
       id="transactions"
       activeTab={activeTab}
       tabClick={setActiveTab}
-      tabTitles={[
-        'All Transactions',
-        'Add Transaction',
-        'Income',
-        'Expenses',
-        'Transfers'
-      ]}
+      tabTitles={['All Transactions', 'Income', 'Expenses', 'Transfers']}
       tabContents={[
         <React.Fragment>
           {/* <div className="buttons py-2">
@@ -39,7 +34,6 @@ const TransactionsFlow = () => {
           </div> */}
           <TransactionTable data={transactions} />
         </React.Fragment>,
-        <TransactionInput tabClick={setActiveTab} />,
         <TransactionTable
           data={transactions.filter(
             (transaction) => transaction.type === 'income'
@@ -64,6 +58,7 @@ export default TransactionsFlow;
 
 const TransactionTable = ({ data }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   return data.length === 0 || !data ? (
     <div>There are no transactions to show.</div>
   ) : (
@@ -78,6 +73,7 @@ const TransactionTable = ({ data }) => {
         'cycle',
         'value',
         'Daily Rate',
+        'Modify',
         'Delete'
       ]}
       itemData={data.map((transaction) => ({
@@ -92,6 +88,27 @@ const TransactionTable = ({ data }) => {
           !transaction.cycle ? '' : transaction.cycle.toFixed(0),
           !transaction.value ? '' : transaction.value.toFixed(2),
           transaction.dailyRate.toFixed(2),
+          <Button
+            onPress={() =>
+              navigate('/transactions/set', {
+                state: {
+                  transaction: {
+                    raccount: transaction.raccount,
+                    description: transaction.description,
+                    category: transaction.category,
+                    type: transaction.type,
+                    start: transaction.start,
+                    rtype: transaction.rtype,
+                    cycle: transaction.cycle.toFixed(0),
+                    value: transaction.value.toFixed(2)
+                  }
+                }
+              })
+            }
+            isDisabled={transaction.fromAccount}
+          >
+            <strong>M</strong>
+          </Button>,
           <Button
             onPress={() => dispatch(transactionRemove({ id: transaction.id }))}
             isDisabled={transaction.fromAccount}
