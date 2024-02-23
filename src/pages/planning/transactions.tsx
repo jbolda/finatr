@@ -1,13 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { schema } from '../../store/schema';
 import { useDispatch, useSelector } from 'starfx/react';
 import { transactionRemove } from '../../store/thunks/transactions';
+import { useNavigate } from 'react-router-dom';
 
 import { TabView } from '~/src/components/TabView';
 import { FlexTable } from '~/src/components/FlexTable';
 import { Button } from '~/src/elements/Button';
-import { useNavigate } from 'react-router-dom';
-import { tr } from 'date-fns/locale';
 
 const TransactionsFlow = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -92,7 +91,9 @@ const TransactionTable = ({ data }) => {
             onPress={() =>
               navigate('/transactions/set', {
                 state: {
+                  navigateTo: '/planning',
                   transaction: {
+                    id: transaction.id,
                     raccount: transaction.raccount,
                     description: transaction.description,
                     category: transaction.category,

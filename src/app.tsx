@@ -20,6 +20,9 @@ const AccountsContainer = React.lazy(
 const AccountInput = React.lazy(
   () => import('./pages/accounts/accountInput.js')
 );
+const TransactionsContainer = React.lazy(
+  () => import('./pages/transactions/container.tsx')
+);
 const TransactionInput = React.lazy(
   () => import('./pages/transactions/transactionInput.js')
 );
@@ -93,7 +96,14 @@ const App = (props) => {
                         </FeatureFlag>
                       }
                     />
-                    <Route path="accounts" element={<AccountsContainer />}>
+                    <Route
+                      path="accounts"
+                      element={
+                        <React.Suspense fallback={<>...</>}>
+                          <AccountsContainer />
+                        </React.Suspense>
+                      }
+                    >
                       <Route
                         index
                         element={
@@ -112,13 +122,22 @@ const App = (props) => {
                       />
                     </Route>
                     <Route
-                      path="transactions/set"
+                      path="transactions"
                       element={
                         <React.Suspense fallback={<>...</>}>
-                          <TransactionInput />
+                          <TransactionsContainer />
                         </React.Suspense>
                       }
-                    />
+                    >
+                      <Route
+                        path="set"
+                        element={
+                          <React.Suspense fallback={<>...</>}>
+                            <TransactionInput />
+                          </React.Suspense>
+                        }
+                      />
+                    </Route>
                     <Route
                       path="planning"
                       element={
