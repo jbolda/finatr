@@ -9,23 +9,24 @@ import * as yup from 'yup';
 import { FieldGroup, Label } from '~/src/components/Form.js';
 import { Button } from '~/src/elements/Button.tsx';
 import { Input } from '~/src/elements/Input.js';
-import { Select } from '~/src/elements/Select.tsx';
+import { Select } from '~/src/elements/Select.js';
 import { Radio } from '~/src/elements/Radio.js';
 
 import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
 const TransactionSchema = yup.object().shape({
-  id: yup.string(),
-  raccount: yup.string().required('Required'),
-  description: yup.string(),
-  category: yup.string(),
+  id: yup.string().default(''),
+  raccount: yup.string().required('Required').default('none'),
+  description: yup.string().default(''),
+  category: yup.string().default(''),
   type: yup
     .mixed()
     .oneOf(['income', 'expense', 'transfer'])
-    .required('Required'),
-  start: yup.date().required('Required'),
-  end: yup.date(),
-  occurrences: yup.number(),
+    .required('Required')
+    .default('expense'),
+  start: yup.date().required('Required').default(new Date()),
+  end: yup.date().default(new Date()),
+  occurrences: yup.number().default(0),
   rtype: yup
     .mixed()
     .oneOf([
@@ -38,9 +39,10 @@ const TransactionSchema = yup.object().shape({
       'semiannually',
       'annually'
     ])
-    .required('Required'),
-  cycle: yup.number().required('Required'),
-  value: yup.number(),
+    .required('Required')
+    .default('none'),
+  cycle: yup.number().required('Required').default(0),
+  value: yup.number().default(0),
   computedAmount: yup.object().shape({
     operation: yup.string(),
     reference: yup.mixed().notOneOf(['select']),
@@ -60,16 +62,16 @@ function TransactionInput(props) {
 
   return (
     <>
-      <h2>Add a Transaction</h2>
+      <h1>Add a Transaction</h1>
       <Formik
-        initialValues={state?.transaction}
+        initialValues={state?.transaction ?? TransactionSchema.getDefault()}
         enableReinitialize={true}
         validationSchema={TransactionSchema}
         onSubmit={(values, actions) => {
           dispatch(transactionAdd(values));
           actions.setSubmitting(false);
           actions.resetForm();
-          navigate('/planning');
+          navigate(state?.navigateTo ?? '..', { relative: 'path' });
         }}
       >
         {({
@@ -85,6 +87,7 @@ function TransactionInput(props) {
             onReset={handleReset}
             onSubmit={handleSubmit}
             autoComplete="off"
+            className="flex flex-col gap-4"
           >
             <Field name="id" id="id" type="text" className="hidden" />
 
