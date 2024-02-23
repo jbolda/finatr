@@ -44,30 +44,38 @@ const TransactionInputAmountComputed = ({
         }}
       />
     </Label>
-    {values.valueType === 'static' ? (
-      <FieldGroup
-        errors={errors}
-        name="value"
-        id={`${prefixID}value`}
-        touched={touched}
-      >
-        <Field as={Input} name="value" id={`${prefixID}value`} type="number" />
-      </FieldGroup>
-    ) : (
-      <React.Fragment>
-        <References
-          values={values}
-          setFieldValue={setFieldValue}
-          prefixID={prefixID}
-        />
-        <RecursiveAmountComputed
-          values={values}
-          setFieldValue={setFieldValue}
-          level={0}
-          prefixID={prefixID}
-        />
-      </React.Fragment>
-    )}
+    {
+      values.valueType === 'static' ? (
+        <FieldGroup
+          errors={errors}
+          name="value"
+          id={`${prefixID}value`}
+          touched={touched}
+        >
+          <Field
+            as={Input}
+            name="value"
+            id={`${prefixID}value`}
+            type="number"
+          />
+        </FieldGroup>
+      ) : null
+      //  (
+      //   <React.Fragment>
+      //     <References
+      //       values={values}
+      //       setFieldValue={setFieldValue}
+      //       prefixID={prefixID}
+      //     />
+      //     <RecursiveAmountComputed
+      //       values={values}
+      //       setFieldValue={setFieldValue}
+      //       level={0}
+      //       prefixID={prefixID}
+      //     />
+      //   </React.Fragment>
+      // )
+    }
   </FieldGroup>
 );
 

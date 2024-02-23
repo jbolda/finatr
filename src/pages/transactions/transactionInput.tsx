@@ -25,8 +25,14 @@ const TransactionSchema = yup.object().shape({
     .required('Required')
     .default('expense'),
   start: yup.date().required('Required').default(new Date()),
-  end: yup.date().default(new Date()),
+  end: yup.date().default(undefined),
   occurrences: yup.number().default(0),
+  beginAfterOccurrences: yup.number().default(0),
+  ending: yup
+    .mixed()
+    .oneOf(['never', 'at Date', 'after Number of Occurrences'])
+    .required('Required')
+    .default('none'),
   rtype: yup
     .mixed()
     .oneOf([
@@ -43,12 +49,17 @@ const TransactionSchema = yup.object().shape({
     .default('none'),
   cycle: yup.number().required('Required').default(0),
   value: yup.number().default(0),
-  computedAmount: yup.object().shape({
-    operation: yup.string(),
-    reference: yup.mixed().notOneOf(['select']),
-    references: yup.object(),
-    on: yup.object()
-  })
+  valueType: yup
+    .mixed()
+    .oneOf(['static']) //, 'dynamic'])
+    .required('Required')
+    .default('static')
+  // computedAmount: yup.object().shape({
+  //   operation: yup.string(),
+  //   reference: yup.mixed().notOneOf(['select']),
+  //   references: yup.object(),
+  //   on: yup.object()
+  // })
 });
 
 function TransactionInput(props) {
@@ -224,12 +235,12 @@ function TransactionInput(props) {
               <Field as={Input} name="cycle" id="cycle" type="number" />
             </FieldGroup>
 
-            {/* <TransactionInputAmountComputed
+            <TransactionInputAmountComputed
               errors={errors}
               touched={touched}
               values={values}
               setFieldValue={setFieldValue}
-            /> */}
+            />
 
             <div className="mt-4">
               <Button type="submit" isDisabled={isSubmitting}>
