@@ -14,6 +14,15 @@ import Examples from './pages/examples';
 const Settings = React.lazy(() => import('./pages/settings'));
 const Financial = React.lazy(() => import('./pages/flow'));
 const Accounts = React.lazy(() => import('./pages/accounts'));
+const AccountsContainer = React.lazy(
+  () => import('./pages/accounts/container.tsx')
+);
+const AccountInput = React.lazy(
+  () => import('./pages/accounts/accountInput.js')
+);
+const TransactionInput = React.lazy(
+  () => import('./pages/transactions/transactionInput.js')
+);
 const Planning = React.lazy(() => import('./pages/planning'));
 const FinancialIndependence = React.lazy(
   () => import('./pages/financialindependence')
@@ -57,75 +66,100 @@ const App = (props) => {
   return (
     <State.Provider value={props.model}>
       <BrowserRouter>
-        <div className="flex flex-col h-screen">
-          <Header settings={settings} />
-          <div className="flex-grow">
-            <Routes>
-              <Route index element={<Homepage />} />
-              <Route path="examples" element={<Examples />} />
-              <Route
-                path="settings"
-                element={
-                  <React.Suspense fallback={<>...</>}>
-                    <Settings />
-                  </React.Suspense>
-                }
-              />
-              <Route
-                path="flow"
-                element={
-                  <FeatureFlag flag={settings.cashFlow}>
-                    <React.Suspense fallback={<>...</>}>
-                      <Financial />
-                    </React.Suspense>
-                  </FeatureFlag>
-                }
-              />
-              <Route
-                path="transactions/set"
-                element={
-                  <React.Suspense fallback={<>...</>}>
-                    <TransactionInput />
-                  </React.Suspense>
-                }
-              />
-              <Route
-                path="planning"
-                element={
-                  <React.Suspense fallback={<>...</>}>
-                    <Planning />
-                  </React.Suspense>
-                }
-              />
-              <Route
-                path="financialindependence"
-                element={
-                  <React.Suspense fallback={<>...</>}>
-                    <FinancialIndependence />
-                  </React.Suspense>
-                }
-              />
-              <Route
-                path="import"
-                element={
-                  <React.Suspense fallback={<>...</>}>
-                    <Importing />
-                  </React.Suspense>
-                }
-              />
-              <Route
-                path="taxes"
-                element={
-                  <React.Suspense fallback={<>...</>}>
-                    <Taxes />
-                  </React.Suspense>
-                }
-              />
+        <div className="min-h-full">
+          <div className="flex flex-col h-screen">
+            <Header settings={settings} />
+            <main className="flex-grow -mt-32">
+              <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+                <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
+                  <Routes>
+                    <Route index element={<Homepage />} />
+                    <Route path="examples" element={<Examples />} />
+                    <Route
+                      path="settings"
+                      element={
+                        <React.Suspense fallback={<>...</>}>
+                          <Settings />
+                        </React.Suspense>
+                      }
+                    />
+                    <Route
+                      path="flow"
+                      element={
+                        <FeatureFlag flag={settings.flow}>
+                          <React.Suspense fallback={<>...</>}>
+                            <Financial />
+                          </React.Suspense>
+                        </FeatureFlag>
+                      }
+                    />
+                    <Route path="accounts" element={<AccountsContainer />}>
+                      <Route
+                        index
+                        element={
+                          <React.Suspense fallback={<>...</>}>
+                            <Accounts />
+                          </React.Suspense>
+                        }
+                      />
+                      <Route
+                        path="set"
+                        element={
+                          <React.Suspense fallback={<>...</>}>
+                            <AccountInput />
+                          </React.Suspense>
+                        }
+                      />
+                    </Route>
+                    <Route
+                      path="transactions/set"
+                      element={
+                        <React.Suspense fallback={<>...</>}>
+                          <TransactionInput />
+                        </React.Suspense>
+                      }
+                    />
+                    <Route
+                      path="planning"
+                      element={
+                        <React.Suspense fallback={<>...</>}>
+                          <Planning />
+                        </React.Suspense>
+                      }
+                    />
+                    <Route
+                      path="financialindependence"
+                      element={
+                        <React.Suspense fallback={<>...</>}>
+                          <FinancialIndependence />
+                        </React.Suspense>
+                      }
+                    />
+                    <Route
+                      path="import"
+                      element={
+                        <React.Suspense fallback={<>...</>}>
+                          <Importing />
+                        </React.Suspense>
+                      }
+                    />
+                    <Route
+                      path="taxes"
+                      element={
+                        <React.Suspense fallback={<>...</>}>
+                          <Taxes />
+                        </React.Suspense>
+                      }
+                    />
 
-              <Route path="*" element={<NoMatch />} />
-            </Routes>
+                    <Route path="*" element={<NoMatch />} />
+                  </Routes>
+                </div>
+              </div>
+            </main>
+
+            <Footer settings={settings} />
           </div>
-          <Footer settings={settings} />
         </div>
       </BrowserRouter>
     </State.Provider>

@@ -9,3 +9,12 @@ export const accountAdd = thunks.create('account:add', function* (ctx, next) {
   yield* schema.update(schema.accounts.add({ [accountID]: account }));
   yield* next();
 });
+
+export const accountRemove = thunks.create<{ id: string }>(
+  'account:remove',
+  function* (ctx, next) {
+    console.log({ ctx });
+    yield* schema.update(schema.accounts.remove([ctx.payload.id]));
+    yield* next();
+  }
+);

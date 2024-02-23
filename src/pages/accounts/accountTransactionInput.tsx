@@ -8,7 +8,7 @@ import { Button } from '~/src/elements/Button';
 import { Input } from '~/src/elements/Input';
 import { Select } from '~/src/elements/Select';
 import { Radio } from '~/src/elements/Radio';
-import TransactionInputAmountComputed from './transactionInputAmountComputed';
+import TransactionInputAmountComputed from '../transactions/transactionInputAmountComputed';
 
 const ComputedAmountSchema = yup
   .object()

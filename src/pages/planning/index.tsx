@@ -10,7 +10,6 @@ import { Button } from '~/src/elements/Button';
 import { useNavigate } from 'react-router-dom';
 
 const Planning = (props) => {
-  const accounts = useSelector(schema.accounts.selectTableAsList);
   return (
     <State.Consumer>
       {(model) => (
@@ -21,8 +20,8 @@ const Planning = (props) => {
           </div>
           <Divider text="Transactions" navigateTo="/transactions/set" />
           <Transactions />
-          <Divider text="Accounts" />
-          <Accounts accounts={accounts} />
+          <Divider text="Accounts" navigateTo="/accounts/set" />
+          <Accounts />
         </div>
       )}
     </State.Consumer>

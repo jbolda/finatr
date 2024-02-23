@@ -1,84 +1,54 @@
-import React from 'react';
-import { State } from '~/src/state';
-
-import { Button } from '~/src/elements/Button';
+import React, { useState } from 'react';
+import { schema } from '~/src/store/schema';
+import { useDispatch, useSelector } from 'starfx/react';
+import { accountRemove } from '../../store/thunks/accounts';
+import { useNavigate } from 'react-router-dom';
 
 import { TabView } from '~/src/components/TabView';
 import { FlexTable } from '~/src/components/FlexTable';
+import { Button } from '~/src/elements/Button';
 import AccountInput from './accountInput';
 import AccountTransactionInput from './accountTransactionInput';
 
-class AccountFlow extends React.Component {
-  constructor(props) {
-    super();
-    this.setAccountForm = this.setAccountForm.bind(this);
-    this.tabClick = this.tabClick.bind(this);
-    this.state = { activeTab: 0 };
-  }
+const AccountFlow = () => {
+  const [activeTab, setActiveTab] = useState(0);
+  const accounts = useSelector(schema.accounts.selectTableAsList);
 
-  tabClick(index) {
-    this.setState({ activeTab: index });
-  }
-
-  setAccountForm(model, index, name) {
-    this.setState({ activeTab: index });
-    model.modifyAccount(name);
-  }
-
-  render() {
-    return (
-      <State.Consumer>
-        {(model) => (
-          <TabView
-            id="accounts"
-            activeTab={this.state.activeTab}
-            tabClick={this.tabClick}
-            tabTitles={['All Accounts', 'Add Account', 'Debt']}
-            tabContents={[
-              <React.Fragment>
-                <Button onClick={model.toggleAllAccount}>
-                  Toggle All Visibility
-                </Button>
-                <AccountTable
-                  data={model.state.accountsComputed}
-                  actions={{
-                    model: model,
-                    setAccountForm: this.setAccountForm,
-                    deleteAccount: model.deleteAccount,
-                    toggleAccountVisibility: model.toggleAccountVisibility
-                  }}
-                />
-              </React.Fragment>,
-              <AccountInput tabClick={this.tabClick} />,
-              <React.Fragment>
-                <DebtTable
-                  data={model.state.accountsComputed}
-                  actions={{
-                    model: model,
-                    setAccountForm: this.setAccountForm
-                  }}
-                />
-                {model.state.accountsComputed.filter(
-                  (account) =>
-                    account.vehicle === 'debt' ||
-                    account.vehicle === 'loan' ||
-                    account.vehicle === 'credit line'
-                ).length === 0 ? null : (
-                  <AccountTransactionInput tabClick={this.tabClick} />
-                )}
-              </React.Fragment>
-            ]}
-          />
-        )}
-      </State.Consumer>
-    );
-  }
-}
+  return (
+    <TabView
+      id="accounts"
+      activeTab={activeTab}
+      tabClick={setActiveTab}
+      tabTitles={['Accounts', 'Debt']}
+      tabContents={[
+        <React.Fragment>
+          {/* <Button onClick={model.toggleAllAccount}>
+            Toggle All Visibility
+          </Button> */}
+          <AccountTable data={accounts} />
+        </React.Fragment>,
+        <React.Fragment>
+          {/* <DebtTable data={accounts} /> */}
+          {/* {accounts.filter(
+            (account) =>
+              account.vehicle === 'debt' ||
+              account.vehicle === 'loan' ||
+              account.vehicle === 'credit line'
+          ).length === 0 ? null : (
+            <AccountTransactionInput tabClick={this.tabClick} />
+          )} */}
+        </React.Fragment>
+      ]}
+    />
+  );
+};
 
 export default AccountFlow;
 
-const AccountTable = ({ data, actions }) =>
-  data.length === 0 || !data ? (
+const AccountTable = ({ data }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  return data.length === 0 || !data ? (
     <div>There are no accounts to show.</div>
   ) : (
     <FlexTable
@@ -94,10 +64,7 @@ const AccountTable = ({ data, actions }) =>
       itemData={data.map((account) => ({
         key: account.name,
         data: [
-          <Button
-            sx={{ variant: 'buttons.outline' }}
-            onClick={actions.toggleAccountVisibility.bind(this, account.name)}
-          >
+          <Button onPress={() => console.log('//TODO handle visibility')}>
             {account.visible ? `👀` : `🤫`}
           </Button>,
           account.name,
@@ -105,32 +72,33 @@ const AccountTable = ({ data, actions }) =>
           `${account.interest.toFixed(2)}%`,
           account.vehicle,
           <Button
-            sx={{
-              variant: 'buttons.outline',
-              color: 'blue'
-            }}
-            onClick={() =>
-              actions.setAccountForm(actions.model, 1, account.name)
+            onPress={() =>
+              navigate('/accounts/set', {
+                state: {
+                  navigateTo: 'accounts',
+                  account: {
+                    id: account.id,
+                    name: account.name,
+                    starting: account.starting.toFixed(2),
+                    interest: `${account.interest.toFixed(2)}%`,
+                    vehicle: account.vehicle
+                  }
+                }
+              })
             }
           >
             M
           </Button>,
-          <Button
-            sx={{
-              variant: 'buttons.outline',
-              color: 'red'
-            }}
-            onClick={actions.deleteAccount.bind(this, account.name)}
-          >
+          <Button onPress={() => dispatch(accountRemove({ id: account.id }))}>
             <strong>X</strong>
           </Button>
         ]
       }))}
-      actions={actions}
     />
   );
+};
 
-const DebtTable = ({ data, actions }) =>
+const DebtTable = ({ data }) =>
   data.filter(
     (account) =>
       account.vehicle === 'debt' ||
@@ -150,11 +118,10 @@ const DebtTable = ({ data, actions }) =>
         'Payback'
       ]}
       data={data}
-      actions={actions}
     />
   );
 
-const FlexDebtTable = ({ itemHeaders, data, actions }) => (
+const FlexDebtTable = ({ itemHeaders, data }) => (
   <FlexTable
     itemHeaders={itemHeaders}
     itemData={data
