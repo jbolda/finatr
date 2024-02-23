@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { schema } from '~/src/store/schema';
 import { useDispatch, useSelector } from 'starfx/react';
-import { accountRemove } from '../../store/thunks/accounts';
+import { accountRemove } from '~/src/store/thunks/accounts';
 import { useNavigate } from 'react-router-dom';
 
 import { TabView } from '~/src/components/TabView';

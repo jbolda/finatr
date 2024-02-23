@@ -1,5 +1,5 @@
 import { createSchema, slice } from 'starfx/store';
-import { defaultTransaction, defaultAccount } from './factory.ts';
+import { emptyTransaction, emptyAccount } from './factory.ts';
 import Big from 'big.js';
 
 interface Settings {
@@ -64,11 +64,11 @@ const [schema, initialState] = createSchema({
   cache: slice.table({ empty: {} }),
   loaders: slice.loader(),
   settings: slice.obj<Settings>(defaultSettings),
-  transactions: slice.table({ empty: defaultTransaction }),
+  transactions: slice.table({ empty: emptyTransaction }),
   transactionsComputed: slice.table({
-    empty: defaultTransaction
+    empty: emptyTransaction
   }),
-  accounts: slice.table({ empty: defaultAccount }),
+  accounts: slice.table({ empty: emptyAccount }),
   chartBarData: slice.table<BarChartData>()
 });
 

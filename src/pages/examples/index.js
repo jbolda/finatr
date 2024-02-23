@@ -1,9 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { State } from '~/src/state';
+import { useDispatch } from 'starfx/react';
+import { importEntries } from '~/src/store/thunks/import.ts';
 
-import example_simple from 'url:./simple.json';
-import example_highRents from 'url:./high_rents.json';
+import example_simple from './simple.json';
+import example_highRents from './high_rents.json';
 
 const listOfExamples = [
   {
@@ -28,16 +29,12 @@ const listOfExamples = [
 ];
 
 const Examples = () => (
-  <State.Consumer>
-    {(model) => (
-      <div className="bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
-        <div className="relative max-w-lg mx-auto divide-y-2 divide-gray-200 lg:max-w-7xl">
-          <ExampleHeading />
-          <ExampleList listOfExamples={listOfExamples} model={model} />
-        </div>
-      </div>
-    )}
-  </State.Consumer>
+  <div className="bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
+    <div className="relative max-w-lg mx-auto divide-y-2 divide-gray-200 lg:max-w-7xl">
+      <ExampleHeading />
+      <ExampleList listOfExamples={listOfExamples} />
+    </div>
+  </div>
 );
 
 export default Examples;
@@ -58,25 +55,23 @@ const ExampleHeading = () => (
   </div>
 );
 
-const ExampleList = ({ model, listOfExamples }) => {
+const ExampleList = ({ listOfExamples }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const loadExample = async (model, event) => {
-    const result = await fetch(event.currentTarget.value);
-    const json = await result.json();
+  const loadExample = async (json) => {
     console.log('example loaded', json);
-    model.setUpload(json);
-    navigate(`/flow`);
+    dispatch(importEntries(json));
+    navigate(`/planning`);
   };
 
   return (
     <div className="mt-6 pt-10 grid gap-16 lg:grid-cols-2 lg:gap-x-5 lg:gap-y-12">
       {listOfExamples.map((example) => (
-        <div key={example.file}>
+        <div key={example.name}>
           <button
             className="mt-2 block text-left"
-            onClick={(event) => loadExample(model, event)}
-            value={example.file}
+            onClick={(event) => loadExample(event)}
           >
             <div>
               <p className="text-xl font-semibold text-gray-900">
@@ -88,8 +83,7 @@ const ExampleList = ({ model, listOfExamples }) => {
           <div className="mt-3">
             <button
               className="text-base font-semibold text-indigo-600 hover:text-indigo-500"
-              onClick={(event) => loadExample(model, event)}
-              value={example.file}
+              onClick={(event) => loadExample(example.file)}
             >
               {`Load Example ->`}
             </button>
