@@ -60,8 +60,16 @@ const ExampleList = ({ listOfExamples }) => {
   const navigate = useNavigate();
 
   const loadExample = async (json) => {
-    console.log('example loaded', json);
-    dispatch(importEntries(json));
+    const today = new Date();
+    const jsonModified = {
+      accounts: json.accounts,
+      transactions: json.transactions.map((d) => ({
+        ...d,
+        start: d.start.replace('YYYY', today.getFullYear())
+      }))
+    };
+    console.log('example loaded', jsonModified);
+    dispatch(importEntries(jsonModified));
     navigate(`/planning`);
   };
 
