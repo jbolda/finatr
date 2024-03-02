@@ -16,7 +16,7 @@ export const transactionAdd = thunks.create(
     transaction.dailyRate = transactionCompute({ transaction });
 
     yield* schema.update(
-      schema.transactions.patch({ [transaction.id]: transaction })
+      schema.transactions.add({ [transaction.id]: transaction })
     );
     yield* next();
   }

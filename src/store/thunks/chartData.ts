@@ -1,4 +1,4 @@
-import { takeLatest } from 'starfx';
+import { takeLatest, take } from 'starfx';
 import { schema } from '../schema';
 import { transactionAdd } from './transactions';
 import { nextTransaction } from './transactionReoccurrence';
@@ -6,50 +6,89 @@ import Big from 'big.js';
 
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
 import { parse } from 'date-fns';
-import { isSameDay, isWithinInterval, addYears } from 'date-fns';
+import { isSameDay, isWithinInterval, addYears, addDays } from 'date-fns';
 import makeUUID from '../utils/makeUUID';
+import { select } from 'starfx/store';
 
 function* watchTransactions() {
-  const takeType = `@@starfx/${transactionAdd}`;
+  const takeType = `${transactionAdd}`;
   yield* takeLatest(takeType, function* (action) {
-    if (action.type === `@@starfx/${transactionAdd}`) {
+    try {
       // @ts-expect-error
       const transaction = action.payload.options;
-      // can we pull this from the original `schema.update()` transaction?
-      transaction.value = new Big(transaction.value);
-      transaction.cycle = new Big(transaction.cycle);
-      transaction.occurrences = new Big(transaction.occurrences);
+      // TODO can we pull this from the original `schema.update()` transaction?
+      transaction.value = new Big(transaction?.value ?? 0);
+      transaction.cycle = new Big(transaction?.cycle ?? 0);
+      transaction.occurrences = new Big(transaction?.occurrences ?? 0);
 
-      try {
-        const start = parse(transaction.start, 'yyyy-MM-dd', new Date());
-        const end =
-          transaction.end && transaction.end !== ''
-            ? parse(transaction.end, 'yyyy-MM-dd', new Date())
-            : addYears(start, 1);
+      const start = parse(transaction.start, 'yyyy-MM-dd', new Date());
+      const end =
+        transaction.end && transaction.end !== ''
+          ? parse(transaction.end, 'yyyy-MM-dd', new Date())
+          : addYears(start, 1);
 
-        const graphRange = {
-          start,
-          end
-        };
-        console.log({ transaction });
-        const data = yield* resolveBarChartData({
-          transaction,
-          graphRange
-        });
+      const graphRange = {
+        start,
+        end
+      };
+      const data = yield* resolveBarChartData({
+        transaction,
+        graphRange
+      });
 
-        const chartBarDataID = makeUUID();
-        yield* schema.update(
-          schema.chartBarData.add({
-            [chartBarDataID]: {
-              id: chartBarDataID,
-              transactionID: transaction.id,
-              data
-            }
-          })
-        );
-      } catch (error) {
-        console.error(error);
-      }
+      const previousChartData = yield* select(
+        schema.chartBarData.selectTableAsList
+      );
+
+      const chartBarDataID = makeUUID();
+      const nextTransaction = { id: chartBarDataID, transaction, data };
+
+      const allChartData = previousChartData.concat(nextTransaction);
+      const income = allChartData.filter(
+        (d) => d.transaction.type === 'income'
+      );
+      const expenses = allChartData.filter(
+        (d) => d.transaction.type === 'expense'
+      );
+
+      const getInitialY = (
+        arr: { id: string }[],
+        transactionIndex: number,
+        dataIndex: number
+      ) => {
+        let bottom = 0;
+        for (let i = 0; i < transactionIndex; i++) {
+          const { data } = arr[i];
+          const value = data[dataIndex].y;
+          if (value) bottom += value.toNumber();
+        }
+        return bottom;
+      };
+
+      const incomeStacked = income.reduce((all, item, transactionIndex) => {
+        all[item.id] = item;
+        all[item.id].stacked = item.data.map((d, i) => ({
+          date: d.date,
+          height: d?.y ? d.y.toNumber() : 0,
+          y: getInitialY(income, transactionIndex, i)
+        }));
+        return all;
+      }, {});
+      const expensesStacked = expenses.reduce((all, item, transactionIndex) => {
+        all[item.id] = item;
+        all[item.id].stacked = item.data.map((d, i) => ({
+          date: d.date,
+          height: d?.y ? d.y.toNumber() : 0,
+          y: getInitialY(expenses, transactionIndex, i)
+        }));
+        return all;
+      }, {});
+
+      yield* schema.update(
+        schema.chartBarData.set({ ...incomeStacked, ...expensesStacked })
+      );
+    } catch (error) {
+      console.error(error);
     }
   });
 }
@@ -82,13 +121,14 @@ function* resolveBarChartData({
   const stack = allDates.map((day) => {
     let y = null;
     if (isSameDay(day, next.date)) {
-      console.log(day, isSameDay(day, next.date), next);
       y = next.nextY;
 
       const { date, y: calculatedY } = nextTransactionFn({
         ...next,
-        seedDate: next.date
+        seedDate: addDays(next.date, 1)
       });
+      if (isSameDay(date, next.date))
+        throw new Error('same date, recursive calc');
       // save data for next value
       next.nextY = calculatedY;
       next.date = date;

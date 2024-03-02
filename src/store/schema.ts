@@ -2,6 +2,9 @@ import { createSchema, slice } from 'starfx/store';
 import { emptyTransaction, emptyAccount } from './factory.ts';
 import Big from 'big.js';
 
+import addDays from 'date-fns/fp/addDays/index.js';
+const addYear = addDays(365);
+
 interface Settings {
   planning: boolean;
   import: boolean;
@@ -22,12 +25,13 @@ const defaultSettings = {
   taxes: false
 };
 
+type TransactionType = 'income' | 'expense' | 'transfet';
 interface Transaction {
   id: string;
   raccount: string;
   description: string;
   category: string;
-  type: string;
+  type: TransactionType;
   start: string;
   end: string;
   rtype: string;
@@ -51,14 +55,24 @@ interface Account {
   payback: Transaction[];
 }
 
-interface BarChartData {
+interface ChartBarData {
   id: string;
-  transactionID: string;
+  transaction: Transaction;
   data: {
     date: Date;
     y: typeof Big;
   }[];
 }
+
+interface ChartBarRange {
+  start: Date;
+  end: Date;
+}
+
+const defaultChartBarRange: ChartBarRange = {
+  start: new Date(),
+  end: addYear(new Date())
+};
 
 const [schema, initialState] = createSchema({
   cache: slice.table({ empty: {} }),
@@ -69,7 +83,11 @@ const [schema, initialState] = createSchema({
     empty: emptyTransaction
   }),
   accounts: slice.table({ empty: emptyAccount }),
-  chartBarData: slice.table<BarChartData>()
+  chartBarData: slice.table<ChartBarData>(),
+  chartBarRange: slice.obj(defaultChartBarRange),
+  chartBarMax: slice.num(),
+  chartLineData: slice.table(),
+  chartLineMax: slice.num()
 });
 
 export { schema, initialState };

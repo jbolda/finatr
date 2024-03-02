@@ -77,7 +77,6 @@ const transactionNoReoccurCompute = ({ transaction }) => 0;
 
 // when transaction.rtype === 'day'
 const transactionDailyReoccur = ({ transaction, seedDate, occurrences }) => {
-  console.log({ transaction, seedDate, occurrences });
   if (!transaction.value) {
     throw new Error('transactionDailyReoccur expects transaction.value');
   }

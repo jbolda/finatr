@@ -1,4 +1,4 @@
-import { parallel, take } from 'starfx';
+import { Callable, parallel, take } from 'starfx';
 import {
   configureStore,
   createLocalStorageAdapter,
@@ -26,7 +26,7 @@ export function setupStore({ logs = true, initialState = {} }) {
   });
 
   window['fx'] = store;
-  const tsks = [];
+  const tsks: Callable<unknown>[] = [];
   if (logs) {
     // log all actions dispatched
     tsks.push(function* logActions() {
