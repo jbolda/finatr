@@ -1,8 +1,10 @@
-import { createSchema, slice } from 'starfx/store';
-import { emptyTransaction, emptyAccount } from './factory.ts';
 import Big from 'big.js';
-
+import { format } from 'date-fns';
 import addDays from 'date-fns/fp/addDays/index.js';
+import { createSchema, slice } from 'starfx/store';
+
+import { emptyTransaction, emptyAccount } from './factory.ts';
+
 const addYear = addDays(365);
 
 interface Settings {
@@ -66,12 +68,17 @@ interface ChartBarData {
 
 interface ChartBarRange {
   start: Date;
+  startString: string;
   end: Date;
+  endString: string;
 }
 
+const referenceDate = new Date();
 const defaultChartBarRange: ChartBarRange = {
-  start: new Date(),
-  end: addYear(new Date())
+  start: referenceDate,
+  startString: format(referenceDate, 'yyyy-MM-dd'),
+  end: addYear(referenceDate),
+  endString: format(addYear(referenceDate), 'yyyy-MM-dd')
 };
 
 const [schema, initialState] = createSchema({

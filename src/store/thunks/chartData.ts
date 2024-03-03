@@ -1,14 +1,36 @@
-import { takeLatest, take } from 'starfx';
-import { schema } from '../schema';
-import { transactionAdd } from './transactions';
-import { nextTransaction } from './transactionReoccurrence';
 import Big from 'big.js';
-
-import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
-import { parse } from 'date-fns';
+import { format, parse } from 'date-fns';
 import { isSameDay, isWithinInterval, addYears, addDays } from 'date-fns';
-import makeUUID from '../utils/makeUUID';
+import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
+import { takeLatest } from 'starfx';
 import { select } from 'starfx/store';
+
+import { schema } from '../schema';
+import makeUUID from '../utils/makeUUID';
+import { thunks } from './foundation.ts';
+import { nextTransaction } from './transactionReoccurrence';
+import { transactionAdd } from './transactions';
+
+export const updateChartDateRange = thunks.create(
+  'chartDateRange:update',
+  function* (ctx, next) {
+    const startDateInput = ctx.payload;
+    console.log(ctx);
+    const start = parse(startDateInput, 'yyyy-MM-dd', new Date());
+    const end = addYears(start, 1);
+
+    yield* schema.update(
+      schema.chartBarRange.set({
+        start,
+        end,
+        startString: format(start, 'yyyy-MM-dd'),
+        endString: format(end, 'yyyy-MM-dd')
+      })
+    );
+
+    yield* next();
+  }
+);
 
 function* watchTransactions() {
   const takeType = `${transactionAdd}`;
@@ -21,19 +43,13 @@ function* watchTransactions() {
       transaction.cycle = new Big(transaction?.cycle ?? 0);
       transaction.occurrences = new Big(transaction?.occurrences ?? 0);
 
-      const start = parse(transaction.start, 'yyyy-MM-dd', new Date());
-      const end =
-        transaction.end && transaction.end !== ''
-          ? parse(transaction.end, 'yyyy-MM-dd', new Date())
-          : addYears(start, 1);
-
-      const graphRange = {
-        start,
-        end
-      };
+      const { start, end } = yield* select(schema.chartBarRange.select);
       const data = yield* resolveBarChartData({
         transaction,
-        graphRange
+        graphRange: {
+          start,
+          end
+        }
       });
 
       const previousChartData = yield* select(
@@ -44,6 +60,11 @@ function* watchTransactions() {
       const nextTransaction = { id: chartBarDataID, transaction, data };
 
       const allChartData = previousChartData.concat(nextTransaction);
+      const maxValue = allChartData.reduce((currentMax, d) => {
+        const dVal = d.transaction.value.toNumber();
+        if (dVal > currentMax) return dVal;
+        return currentMax;
+      }, 0);
       const income = allChartData.filter(
         (d) => d.transaction.type === 'income'
       );
@@ -84,9 +105,10 @@ function* watchTransactions() {
         return all;
       }, {});
 
-      yield* schema.update(
-        schema.chartBarData.set({ ...incomeStacked, ...expensesStacked })
-      );
+      yield* schema.update([
+        schema.chartBarData.set({ ...incomeStacked, ...expensesStacked }),
+        schema.chartBarMax.set(maxValue)
+      ]);
     } catch (error) {
       console.error(error);
     }

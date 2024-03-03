@@ -1,8 +1,8 @@
 import Big from 'big.js';
 
 import { schema } from '../schema';
-import { thunks } from './foundation.ts';
 import makeUUID from '../utils/makeUUID.ts';
+import { thunks } from './foundation.ts';
 import { transactionCompute } from './transactionReoccurrence/index.ts';
 
 export const transactionAdd = thunks.create(

@@ -1,19 +1,19 @@
+import * as d3 from 'd3';
 import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
-// import PropTypes from 'prop-types';
-import * as d3 from 'd3';
 import { useSelector } from 'starfx/react';
+
 import { schema } from '~/src/store/schema';
 
-const BarChart = () => {
+const BarChart = ({ dateRange }) => {
   const tooltipTarget = useRef();
   const data = useSelector(schema.chartBarData.selectTableAsList);
-  const dateRange = useSelector(schema.chartBarRange.select);
+  const bar_max_domain = useSelector(schema.chartBarMax.select);
 
   useEffect(() => {
     let svgBar = d3.select('g.bar-section');
     let svgLine = d3.select('g.line-section');
-    drawCharts(data, dateRange, svgBar, svgLine, tooltipTarget);
+    drawCharts(data, bar_max_domain, dateRange, svgBar, svgLine, tooltipTarget);
   }, [data]);
 
   return (
@@ -69,7 +69,14 @@ export default BarChart;
 //   return stacked;
 // };
 
-const drawCharts = (data, dateRange, svgBar, svgLine, tooltipTarget) => {
+const drawCharts = (
+  data,
+  bar_max_domain,
+  dateRange,
+  svgBar,
+  svgLine,
+  tooltipTarget
+) => {
   let tooltipBar = {
     target: tooltipTarget,
     render: renderTooltipBar
@@ -92,18 +99,17 @@ const drawCharts = (data, dateRange, svgBar, svgLine, tooltipTarget) => {
   // const dataStacked = [].concat(incomeStacked, expenseStacked);
   // const transactionsMap = { ...incomeMap, ...expenseMap };
 
-  const maxBar = 2000; // data.BarChartMax
-
+  console.log({ data });
   barBuild.drawBar({
     selector: svgBar.select('.blobs'),
     dateRange,
     data,
-    max_domain: maxBar,
+    max_domain: bar_max_domain,
     tooltipBar
   });
 
   // axis bar
-  barBuild.drawAxis(svgBar, dateRange, maxBar);
+  barBuild.drawAxis(svgBar, dateRange, bar_max_domain);
 
   const maxLine = 2000;
   // let tooltipLine = {
@@ -324,20 +330,22 @@ barBuild.drawBar = function ({
     .data((d) => d.stacked)
     .join(
       (enter) => enter.filter((d) => d.height !== 0).append('rect'),
-      (update) => update.transition(),
+      (update) => update,
       (exit) => exit.transition().attr('height', 0).remove()
     )
-    .attr('height', 0)
     .attr('x', (d) => xScale(d.date))
+    .attr('y', (d) => yScale(0))
     .attr('rx', 3)
-    .attr('y', (d) => yScale(d.y) - yScale(d.height))
+    .attr('height', (d) => yScale(d.y))
     .attr('width', (d, i, nodes) => {
       const dataType = nodes[i].parentNode.__data__.transaction.type;
       return (dataType === 'income' ? widthsIncome : widthsExpense).bar;
     })
     .transition()
-    .duration(3000)
+    .duration(15000)
+    .delay(10000)
     .ease(d3.easeBounceOut)
+    .attr('y', (d) => yScale(d.y) - yScale(d.height))
     .attr('height', (d) => yScale(d.height));
 };
 
