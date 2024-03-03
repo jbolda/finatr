@@ -60,6 +60,7 @@
     "@playwright/experimental-ct-react17": "^1.40.1",
     "@playwright/test": "^1.40.1",
     "@tauri-apps/cli": "1.5.9",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/node": "^20.10.8",
     "covector": "^0.10.2",
     "parcel": "^2.11.0",
