@@ -9,35 +9,54 @@ const BarChart = ({ dateRange }) => {
   const tooltipTarget = useRef();
   const data = useSelector(schema.chartBarData.selectTableAsList);
   const bar_max_domain = useSelector(schema.chartBarMax.select);
+  const bar = barBuild;
 
   useEffect(() => {
     let svgBar = d3.select('g.bar-section');
     let svgLine = d3.select('g.line-section');
-    drawCharts(data, bar_max_domain, dateRange, svgBar, svgLine, tooltipTarget);
+    drawCharts(
+      data,
+      bar_max_domain * 1.2,
+      dateRange,
+      svgBar,
+      svgLine,
+      tooltipTarget
+    );
   }, [data]);
 
   return (
     <>
       <div ref={tooltipTarget} />
       <div style={{ overflow: 'auto' }}>
-        <svg className="draw-section" width="11550" height="660">
+        <svg className="draw-section" width="11550" height={bar.height() * 2}>
           <g
             className="bar-section"
             width="11550"
-            height="330"
-            transform="translate(60,10)"
+            height={bar.height()}
+            transform="translate(60,0)"
           >
-            <g className="blobs" transform="translate(0,10)" />
-            <g className="xaxis" transform="translate(0,280)" fill="none" />
-            <g className="yaxis" transform="translate(0,10)" fill="none" />
+            <g
+              className="blobs"
+              transform={`translate(${-bar.margin().left / 3},${
+                bar.margin().top
+              })`}
+            />
+            <g
+              className="xaxis"
+              transform={`translate(${-bar.margin().left / 3},${
+                bar.height() - bar.margin().top - bar.margin().bottom
+              })`}
+              fill="none"
+            />
+            <g className="yaxis" transform="translate(0,0)" fill="none" />
           </g>
           <g
             className="line-section"
             width="11550"
-            height="330"
-            transform="translate(60,340)"
+            height={bar.height()}
+            transform={`translate(60,${bar.height()})`}
           >
-            <g className="lines" />
+            <g className="lines" transform="translate(0,0)" />
             <g className="xaxis" transform="translate(0,280)" fill="none" />
             <g className="yaxis" transform="translate(0,10)" fill="none" />
           </g>
@@ -99,7 +118,7 @@ const drawCharts = (
   // const dataStacked = [].concat(incomeStacked, expenseStacked);
   // const transactionsMap = { ...incomeMap, ...expenseMap };
 
-  console.log({ data });
+  console.log({ data, bar_max_domain });
   barBuild.drawBar({
     selector: svgBar.select('.blobs'),
     dateRange,
@@ -180,7 +199,7 @@ let barBuild = {
     return 365;
   },
   margin: function () {
-    return { top: 10, right: 0, bottom: 20, left: 60 };
+    return { top: 0, right: 0, bottom: 40, left: 60 };
   },
   band: function () {
     return this.daysinfuture() * 30;
@@ -191,7 +210,7 @@ let barBuild = {
     return w;
   },
   height: function () {
-    return d3.min([this.div_width() * 0.5, 350]);
+    return d3.min([this.div_width() * 0.5, 330]);
   },
   shift: function () {
     return this.width() / this.daysinfuture();
@@ -200,7 +219,7 @@ let barBuild = {
     return d3
       .scaleTime()
       .domain([start, end])
-      .rangeRound([0, this.width() - this.margin().left]);
+      .rangeRound([0, this.width() - this.margin().left - this.margin().right]);
   },
   yScale: function (max_domain) {
     return (
@@ -209,6 +228,7 @@ let barBuild = {
         // the min and max transactions
         .domain([0, max_domain])
         // the area we have to draw the chart
+        //  the minimum is second to reverse to top left SVG coordinates
         .range([this.height() - this.margin().top - this.margin().bottom, 0])
     );
   }
@@ -223,7 +243,7 @@ barBuild.drawAxis = function (svg, dateRange, max_domain) {
 
   let yAxis = d3
     .axisRight(this.yScale(max_domain))
-    .ticks(10)
+    // .ticks(10)
     .tickSize(this.width());
 
   const drawnX = svg.select('.xaxis').transition().duration(500).call(xAxis);
@@ -297,10 +317,7 @@ barBuild.drawBar = function ({
       (update) => update,
       (exit) => exit.remove()
     )
-    .attr('class', (d) => {
-      console.log(d);
-      return d.transaction.type;
-    })
+    .attr('class', (d) => d.transaction.type)
     .attr('id', (d, i) => `${i}-${d.id}`)
     .style('fill', (d, i) => color(d)(i))
     .attr(
@@ -327,6 +344,7 @@ barBuild.drawBar = function ({
   let yScale = barBuild.yScale(max_domain);
   let rects = groups
     .selectAll(`rect`)
+    .filter((d) => d.height !== 0)
     .data((d) => d.stacked)
     .join(
       (enter) => enter.filter((d) => d.height !== 0).append('rect'),
@@ -336,17 +354,24 @@ barBuild.drawBar = function ({
     .attr('x', (d) => xScale(d.date))
     .attr('y', (d) => yScale(0))
     .attr('rx', 3)
-    .attr('height', (d) => yScale(d.y))
+    .attr('height', (d) => 0)
     .attr('width', (d, i, nodes) => {
       const dataType = nodes[i].parentNode.__data__.transaction.type;
       return (dataType === 'income' ? widthsIncome : widthsExpense).bar;
     })
     .transition()
-    .duration(15000)
-    .delay(10000)
+    .duration(1500)
     .ease(d3.easeBounceOut)
-    .attr('y', (d) => yScale(d.y) - yScale(d.height))
-    .attr('height', (d) => yScale(d.height));
+    .attr('y', (d) => yScale(d.height + d.y0))
+    .attr(
+      'height',
+      (d) =>
+        // as the scale is inversed, flip
+        this.height() -
+        this.margin().top -
+        this.margin().bottom -
+        yScale(d.height)
+    );
 };
 
 barBuild.initLine = function (svg) {

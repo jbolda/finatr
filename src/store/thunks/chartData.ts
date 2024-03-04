@@ -91,7 +91,7 @@ function* watchTransactions() {
         all[item.id].stacked = item.data.map((d, i) => ({
           date: d.date,
           height: d?.y ? d.y.toNumber() : 0,
-          y: getInitialY(income, transactionIndex, i)
+          y0: getInitialY(income, transactionIndex, i)
         }));
         return all;
       }, {});
@@ -100,7 +100,7 @@ function* watchTransactions() {
         all[item.id].stacked = item.data.map((d, i) => ({
           date: d.date,
           height: d?.y ? d.y.toNumber() : 0,
-          y: getInitialY(expenses, transactionIndex, i)
+          y0: getInitialY(expenses, transactionIndex, i)
         }));
         return all;
       }, {});

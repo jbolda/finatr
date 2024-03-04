@@ -62,7 +62,7 @@ interface ChartBarData {
   transaction: Transaction;
   data: {
     date: Date;
-    y: typeof Big;
+    y0: typeof Big;
   }[];
 }
 
