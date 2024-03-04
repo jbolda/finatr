@@ -60,11 +60,6 @@ function* watchTransactions() {
       const nextTransaction = { id: chartBarDataID, transaction, data };
 
       const allChartData = previousChartData.concat(nextTransaction);
-      const maxValue = allChartData.reduce((currentMax, d) => {
-        const dVal = d.transaction.value.toNumber();
-        if (dVal > currentMax) return dVal;
-        return currentMax;
-      }, 0);
       const income = allChartData.filter(
         (d) => d.transaction.type === 'income'
       );
@@ -86,22 +81,35 @@ function* watchTransactions() {
         return bottom;
       };
 
+      let maxValue = 0;
       const incomeStacked = income.reduce((all, item, transactionIndex) => {
         all[item.id] = item;
-        all[item.id].stacked = item.data.map((d, i) => ({
-          date: d.date,
-          height: d?.y ? d.y.toNumber() : 0,
-          y0: getInitialY(income, transactionIndex, i)
-        }));
+        all[item.id].stacked = item.data.map((d, i) => {
+          const stack = {
+            date: d.date,
+            height: d?.y ? d.y.toNumber() : 0,
+            y0: getInitialY(income, transactionIndex, i)
+          };
+          // side effect: find max chart value
+          if (stack.y0 + stack.height > maxValue)
+            maxValue = stack.y0 + stack.height;
+          return stack;
+        });
         return all;
       }, {});
       const expensesStacked = expenses.reduce((all, item, transactionIndex) => {
         all[item.id] = item;
-        all[item.id].stacked = item.data.map((d, i) => ({
-          date: d.date,
-          height: d?.y ? d.y.toNumber() : 0,
-          y0: getInitialY(expenses, transactionIndex, i)
-        }));
+        all[item.id].stacked = item.data.map((d, i) => {
+          const stack = {
+            date: d.date,
+            height: d?.y ? d.y.toNumber() : 0,
+            y0: getInitialY(expenses, transactionIndex, i)
+          };
+          // side effect: find max chart value
+          if (stack.y0 + stack.height > maxValue)
+            maxValue = stack.y0 + stack.height;
+          return stack;
+        });
         return all;
       }, {});
 
@@ -130,7 +138,8 @@ function* resolveBarChartData({
   const { date, nextY } = findSeed({
     transaction,
     y: transaction.value,
-    date: graphRange.start,
+    // back off one day to start outside the interval
+    date: addDays(graphRange.start, -1),
     nextTransactionFn,
     interval: graphRange
   });
@@ -150,7 +159,9 @@ function* resolveBarChartData({
         seedDate: addDays(next.date, 1)
       });
       if (isSameDay(date, next.date))
-        throw new Error('same date, recursive calc');
+        throw new Error(
+          'same date, recursive calc, we should not hit this error'
+        );
       // save data for next value
       next.nextY = calculatedY;
       next.date = date;

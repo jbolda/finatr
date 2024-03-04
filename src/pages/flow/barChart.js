@@ -14,14 +14,7 @@ const BarChart = ({ dateRange }) => {
   useEffect(() => {
     let svgBar = d3.select('g.bar-section');
     let svgLine = d3.select('g.line-section');
-    drawCharts(
-      data,
-      bar_max_domain * 1.2,
-      dateRange,
-      svgBar,
-      svgLine,
-      tooltipTarget
-    );
+    drawCharts(data, bar_max_domain, dateRange, svgBar, svgLine, tooltipTarget);
   }, [data]);
 
   return (
