@@ -196,6 +196,7 @@ const findSeed = ({
     transaction,
     interval,
     y: nextY,
-    date: nextDate
+    // to avoid getting stuck generating the same day over and over
+    date: isSameDay(date, nextDate) ? addDays(nextDate, 1) : nextDate
   });
 };
