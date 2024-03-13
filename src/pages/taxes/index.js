@@ -1,43 +1,39 @@
 import React, { useState } from 'react';
-import { map } from 'microstates';
-import { State } from '~/src/state';
 
-import { TabView } from '~/src/components/TabView';
 import { FlexTable } from '~/src/components/FlexTable';
+import { TabView } from '~/src/components/TabView';
+
 import { Button } from '~/src/elements/Button';
 
 const Taxes = (props) => {
   const [activeTab, tabClick] = useState(0);
 
+  const model = {};
   return (
-    <State.Consumer>
-      {(model) => (
-        <div className="bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
-          <div className="relative max-w-lg mx-auto divide-y-2 divide-gray-200 lg:max-w-7xl">
-            <div className="pb-6">
-              <h1 className="text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl">
-                Taxes
-              </h1>
-              <p className="text-xl text-gray-500">
-                This is still in an alpha state.
-              </p>
-              <p className="text-xl text-gray-500">
-                We don't have forms to enter data yet.
-              </p>
-              <p className="text-xl text-gray-500">
-                You can manually fill in data in your data file though.
-              </p>
-            </div>
-            <TabView
-              activeTab={activeTab}
-              tabClick={tabClick}
-              tabTitles={['Group', 'Table']}
-              tabContents={[<Group model={model} />, <Table model={model} />]}
-            />
-          </div>
+    <div className="bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
+      <div className="relative max-w-lg mx-auto divide-y-2 divide-gray-200 lg:max-w-7xl">
+        <div className="pb-6">
+          <h1 className="text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl">
+            Taxes
+          </h1>
+          <p className="text-xl text-gray-500">
+            This is still in an alpha state.
+          </p>
+          <p className="text-xl text-gray-500">
+            We don't have forms to enter data yet.
+          </p>
+          <p className="text-xl text-gray-500">
+            You can manually fill in data in your data file though.
+          </p>
         </div>
-      )}
-    </State.Consumer>
+        <TabView
+          activeTab={activeTab}
+          tabClick={tabClick}
+          tabTitles={['Group', 'Table']}
+          tabContents={[<Group model={model} />, <Table model={model} />]}
+        />
+      </div>
+    </div>
   );
 };
 

@@ -245,7 +245,7 @@ barBuild.drawAxis = function (svg, dateRange, max_domain) {
     .tickFormat(d3.timeFormat('%b %d'));
 
   let yAxis = d3
-    .axisRight(this.yScale(max_domain))
+    .axisRight(this.yScale(d3.max([max_domain, 100])))
     // .ticks(10)
     .tickSize(this.width());
 

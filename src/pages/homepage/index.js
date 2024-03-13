@@ -1,15 +1,6 @@
 import React from 'react';
-import { State } from '~/src/state';
 
-const Homepage = () => (
-  <State.Consumer>
-    {(model) => (
-      <React.Fragment>
-        <Hero />
-      </React.Fragment>
-    )}
-  </State.Consumer>
-);
+const Homepage = () => <Hero />;
 
 export default Homepage;
 

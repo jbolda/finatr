@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { schema } from '../../store/schema';
-import { useDispatch, useSelector } from 'starfx/react';
-import { transactionRemove } from '../../store/thunks/transactions';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'starfx/react';
 
-import { TabView } from '~/src/components/TabView';
+import { schema } from '~/src/store/schema';
+
 import { FlexTable } from '~/src/components/FlexTable';
+import { TabView } from '~/src/components/TabView';
+
 import { Button } from '~/src/elements/Button';
+
+import { transactionRemove } from '../../store/thunks/transactions';
 
 const TransactionsFlow = () => {
   const [activeTab, setActiveTab] = useState(0);

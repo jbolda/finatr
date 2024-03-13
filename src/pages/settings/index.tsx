@@ -1,8 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
+
+import { schema } from '~/src/store/schema.ts';
 import { changeSetting } from '~/src/store/thunks/settings.ts';
+
 import { Switch } from '~/src/elements/Switch.tsx';
-import { schema } from '../../store/schema.ts';
 
 const Settings = (props) => {
   const settings = useSelector(schema.settings.select);

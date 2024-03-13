@@ -1,6 +1,5 @@
+import { Big } from 'big.js';
 import { create, valueOf } from 'microstates';
-import { Big } from './customTypes.js';
-import { default as _Big } from 'big.js';
 
 class Stats {
   dailyIncome = create(Big, 0);
