@@ -1,9 +1,8 @@
-import { parse } from 'date-fns';
 import React from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
-import { updateChartDateRange } from '~src/store/thunks/chartData.ts';
 
-import { schema } from '~/src/store/schema.ts';
+import { dateRangeWithStrings } from '~/src/store/selectors/chartData.ts';
+import { updateChartDateRange } from '~/src/store/thunks/chartData.ts';
 
 import { Input } from '~/src/elements/Input';
 
@@ -11,7 +10,7 @@ import BarChart from './barChart.js';
 
 const FinancialFlow = () => {
   const dispatch = useDispatch();
-  const dateRange = useSelector(schema.chartBarRange.select);
+  const dateRange = useSelector(dateRangeWithStrings);
   return (
     <div className="container mx-auto my-2 px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-semibold py-3">Cash Flow</h1>

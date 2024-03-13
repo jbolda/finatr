@@ -1,5 +1,5 @@
 import Big from 'big.js';
-import { format, parse } from 'date-fns';
+import { parse } from 'date-fns';
 import { isSameDay, isWithinInterval, addYears, addDays } from 'date-fns';
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
 import { takeLatest } from 'starfx';
@@ -15,16 +15,13 @@ export const updateChartDateRange = thunks.create(
   'chartDateRange:update',
   function* (ctx, next) {
     const startDateInput = ctx.payload;
-    console.log(ctx);
     const start = parse(startDateInput, 'yyyy-MM-dd', new Date());
     const end = addYears(start, 1);
 
     yield* schema.update(
       schema.chartBarRange.set({
         start,
-        end,
-        startString: format(start, 'yyyy-MM-dd'),
-        endString: format(end, 'yyyy-MM-dd')
+        end
       })
     );
 

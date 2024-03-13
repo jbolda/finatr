@@ -1,5 +1,4 @@
 import Big from 'big.js';
-import { format } from 'date-fns';
 import addDays from 'date-fns/fp/addDays/index.js';
 import { createSchema, slice } from 'starfx/store';
 
@@ -68,17 +67,13 @@ interface ChartBarData {
 
 interface ChartBarRange {
   start: Date;
-  startString: string;
   end: Date;
-  endString: string;
 }
 
 const referenceDate = new Date();
 const defaultChartBarRange: ChartBarRange = {
   start: referenceDate,
-  startString: format(referenceDate, 'yyyy-MM-dd'),
-  end: addYear(referenceDate),
-  endString: format(addYear(referenceDate), 'yyyy-MM-dd')
+  end: addYear(referenceDate)
 };
 
 const [schema, initialState] = createSchema({
@@ -92,9 +87,7 @@ const [schema, initialState] = createSchema({
   accounts: slice.table({ empty: emptyAccount }),
   chartBarData: slice.table<ChartBarData>(),
   chartBarRange: slice.obj(defaultChartBarRange),
-  chartBarMax: slice.num(),
-  chartLineData: slice.table(),
-  chartLineMax: slice.num()
+  chartBarMax: slice.num()
 });
 
 export { schema, initialState };

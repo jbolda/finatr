@@ -10,22 +10,11 @@ const BarChart = ({ dateRange }) => {
   const tooltipTarget = useRef();
   const data = useSelector(schema.chartBarData.selectTableAsList);
   const accountData = useSelector(lineChartAccounts);
-  console.log({ accountData });
   const bar_max_domain = useSelector(schema.chartBarMax.select);
   const bar = barBuild;
 
   useEffect(() => {
-    let svgBar = d3.select('g.bar-section');
-    let svgLine = d3.select('g.line-section');
-    drawCharts(
-      data,
-      bar_max_domain,
-      dateRange,
-      svgBar,
-      accountData,
-      svgLine,
-      tooltipTarget
-    );
+    drawCharts(data, bar_max_domain, dateRange, accountData, tooltipTarget);
   }, [data]);
 
   return (
@@ -111,11 +100,11 @@ const drawCharts = (
   data,
   bar_max_domain,
   dateRange,
-  svgBar,
   accountData,
-  svgLine,
   tooltipTarget
 ) => {
+  let svgBar = d3.select('g.bar-section');
+  let svgLine = d3.select('g.line-section');
   barBuild.drawAxis(svgBar, dateRange, bar_max_domain);
   barBuild.drawAxis(svgLine, dateRange, accountData.max);
 
