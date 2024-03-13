@@ -34,6 +34,7 @@ function resolveLineChartData({ graphRange, accountsList, transactions }) {
   const incomeKeys = Object.keys(incomeStacked);
   const expensesKeys = Object.keys(expensesStacked);
 
+  let max = 0;
   const stack = allDates.reduce(
     (data, day, index) => {
       const dateIndex = index * 2;
@@ -59,13 +60,14 @@ function resolveLineChartData({ graphRange, accountsList, transactions }) {
         const firstStep = prevValue - expenses;
         data[accountIndex].data[dateIndex] = [day, firstStep];
         const secondStep = firstStep + income;
+        if (secondStep > max) max = secondStep;
         data[accountIndex].data[dateIndex + 1] = [day, secondStep];
       }
       return data;
     },
     accountsList.map((a) => ({ ...a, data: [] }))
   );
-  return stack;
+  return { data: stack, max };
 }
 
 const sumTotal = (

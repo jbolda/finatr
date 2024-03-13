@@ -32,7 +32,11 @@ const BarChart = ({ dateRange }) => {
     <>
       <div ref={tooltipTarget} />
       <div style={{ overflow: 'auto' }}>
-        <svg className="draw-section" width="11550" height={bar.height() * 2}>
+        <svg
+          className="draw-section"
+          width="11550"
+          height={bar.height() * 2 + bar.margin().gap}
+        >
           <g
             className="bar-section"
             width="11550"
@@ -58,11 +62,22 @@ const BarChart = ({ dateRange }) => {
             className="line-section"
             width="11550"
             height={bar.height()}
-            transform={`translate(60,${bar.height()})`}
+            transform={`translate(60,${bar.height() + bar.margin().gap})`}
           >
-            <g className="lines" transform="translate(0,0)" />
-            <g className="xaxis" transform="translate(0,280)" fill="none" />
-            <g className="yaxis" transform="translate(0,10)" fill="none" />
+            <g
+              className="lines"
+              transform={`translate(${-bar.margin().left / 3},${
+                bar.margin().top
+              })`}
+            />
+            <g
+              className="xaxis"
+              transform={`translate(${-bar.margin().left / 3},${
+                bar.height() - bar.margin().top - bar.margin().bottom
+              })`}
+              fill="none"
+            />
+            <g className="yaxis" transform="translate(0,0)" fill="none" />
           </g>
           <line className="tooltipLine" stroke="black" pointerEvents="none" />
         </svg>
@@ -101,9 +116,8 @@ const drawCharts = (
   svgLine,
   tooltipTarget
 ) => {
-  const maxLine = 20000;
   barBuild.drawAxis(svgBar, dateRange, bar_max_domain);
-  barBuild.drawAxis(svgLine, dateRange, maxLine);
+  barBuild.drawAxis(svgLine, dateRange, accountData.max);
 
   let tooltipBar = {
     target: tooltipTarget,
@@ -140,12 +154,12 @@ const drawCharts = (
     render: renderTooltipLine
   };
   barBuild.drawLine({
-    data: accountData,
+    data: accountData.data,
     dateRange,
     svg: d3.select('svg'),
     selector: svgLine.select('.lines'),
     tooltipLine,
-    max_domain: maxLine
+    max_domain: accountData.max
   });
 };
 
@@ -199,7 +213,7 @@ let barBuild = {
     return 365;
   },
   margin: function () {
-    return { top: 0, right: 0, bottom: 40, left: 60 };
+    return { top: 0, right: 0, bottom: 40, left: 60, gap: 30 };
   },
   band: function () {
     return this.daysinfuture() * 30;
