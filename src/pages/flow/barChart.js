@@ -4,17 +4,28 @@ import ReactDOM from 'react-dom';
 import { useSelector } from 'starfx/react';
 
 import { schema } from '~/src/store/schema';
+import { lineChartAccounts } from '~/src/store/selectors/accounts';
 
 const BarChart = ({ dateRange }) => {
   const tooltipTarget = useRef();
   const data = useSelector(schema.chartBarData.selectTableAsList);
+  const accountData = useSelector(lineChartAccounts);
+  console.log({ accountData });
   const bar_max_domain = useSelector(schema.chartBarMax.select);
   const bar = barBuild;
 
   useEffect(() => {
     let svgBar = d3.select('g.bar-section');
     let svgLine = d3.select('g.line-section');
-    drawCharts(data, bar_max_domain, dateRange, svgBar, svgLine, tooltipTarget);
+    drawCharts(
+      data,
+      bar_max_domain,
+      dateRange,
+      svgBar,
+      accountData,
+      svgLine,
+      tooltipTarget
+    );
   }, [data]);
 
   return (
@@ -86,9 +97,14 @@ const drawCharts = (
   bar_max_domain,
   dateRange,
   svgBar,
+  accountData,
   svgLine,
   tooltipTarget
 ) => {
+  const maxLine = 20000;
+  barBuild.drawAxis(svgBar, dateRange, bar_max_domain);
+  barBuild.drawAxis(svgLine, dateRange, maxLine);
+
   let tooltipBar = {
     target: tooltipTarget,
     render: renderTooltipBar
@@ -111,7 +127,6 @@ const drawCharts = (
   // const dataStacked = [].concat(incomeStacked, expenseStacked);
   // const transactionsMap = { ...incomeMap, ...expenseMap };
 
-  console.log({ data, bar_max_domain });
   barBuild.drawBar({
     selector: svgBar.select('.blobs'),
     dateRange,
@@ -120,26 +135,18 @@ const drawCharts = (
     tooltipBar
   });
 
-  // axis bar
-  barBuild.drawAxis(svgBar, dateRange, bar_max_domain);
-
-  const maxLine = 2000;
-  // let tooltipLine = {
-  //   target: tooltipTarget,
-  //   render: renderTooltipLine,
-  // };
-  // barBuild.drawLine(
-  //   data,
-  //   d3.select('.line-section'),
-  //   initLine.lineGroup,
-  //   initLine.tooltipLine,
-  //   data.AccountChart,
-  //   data.LineChartMax,
-  //   tooltipLine
-  // );
-
-  // axis line
-  barBuild.drawAxis(svgLine, dateRange, maxLine);
+  let tooltipLine = {
+    target: tooltipTarget,
+    render: renderTooltipLine
+  };
+  barBuild.drawLine({
+    data: accountData,
+    dateRange,
+    svg: d3.select('svg'),
+    selector: svgLine.select('.lines'),
+    tooltipLine,
+    max_domain: maxLine
+  });
 };
 
 const renderTooltipBar = (coordinates, tooltipData, tooltipTarget) => {
@@ -367,126 +374,108 @@ barBuild.drawBar = function ({
     );
 };
 
-barBuild.initLine = function (svg) {
-  let tooltipLine = svg
-    .append('line')
-    .attr('class', 'tooltipLine')
-    .attr('stroke', 'black')
-    .attr('pointer-events', 'none');
-  tooltipLine.enter();
-
-  let lineGroup = svg
-    .append('g')
-    .attr('class', 'line')
-    .attr('transform', `translate(${0},${this.margin().top})`);
-
-  return { lineGroup, tooltipLine };
-};
-
-barBuild.drawLine = function (
-  props,
-  svg,
-  lineGroup,
-  tooltipLine,
+barBuild.drawLine = function ({
   data,
+  dateRange,
+  svg,
+  selector,
+  tooltipLine,
   max_domain,
   tooltip
-) {
+}) {
   if (!data || data.length === 0) {
-    lineGroup.selectAll('path').data(data).exit().remove();
+    selector.selectAll('path').data(data).exit().remove();
     return;
   }
   let linecolors = d3.scaleOrdinal(d3.schemeCategory10);
   let marginLeft = this.margin().left;
 
-  const xScale = barBuild.xScale(props);
+  const xScale = barBuild.xScale(dateRange);
   const yScale = barBuild.yScale(max_domain);
 
   const line = d3
     .line()
-    .x((d) => xScale(d.date))
-    .y((d) => yScale(d.value));
+    .x((d) => xScale(d[0]))
+    .y((d) => {
+      console.log({ d, v: d[1], scaled: yScale(d[1]) });
+      return yScale(d[1]);
+    });
 
-  let lines = lineGroup.selectAll('path').data(data);
-
-  lines
+  selector
+    .selectAll('path')
+    .data(data)
+    .join(
+      (enter) => enter.append('path'),
+      (update) => update,
+      (exit) => exit.remove()
+    )
     // .transition()
     // .delay((d, i) => 800 + i * 150)
     // .duration(3000)
-    .attr('d', (d) => line(d.values))
+    .attr('d', (d) => line(d.data))
     .attr('stroke', (d, i) => linecolors(i))
     .attr('stroke-width', 2)
     .attr('fill', 'none');
 
-  lines
-    .enter()
-    .append('path')
-    .attr('d', (d) => line(d.values))
-    .attr('stroke', (d, i) => linecolors(i))
-    .attr('stroke-width', 2)
-    .attr('fill', 'none');
+  // svg
+  //   .on('mousemove', function (event) {
+  //     const node = event.srcElement;
+  //     let mouse = event;
+  //     let positionX = mouse[0] - marginLeft;
+  //     if (
+  //       !node?.firstChild?.childNodes ||
+  //       node.firstChild.childNodes.length === 0
+  //     )
+  //       return;
 
-  lines.exit().remove();
+  //     let lineGroup = Array.from(node?.firstChild?.childNodes[1].childNodes);
 
-  svg
-    .on('mousemove', function (event) {
-      const node = event.srcElement;
-      let mouse = event;
-      let positionX = mouse[0] - marginLeft;
-      if (
-        !node?.firstChild?.childNodes ||
-        node.firstChild.childNodes.length === 0
-      )
-        return;
+  //     let linePositions = lineGroup.map((lineNode) => {
+  //       let beginning = 0;
+  //       let end = lineNode.getTotalLength();
+  //       let target, position;
+  //       while (true) {
+  //         target = Math.floor((beginning + end) / 2);
+  //         position = lineNode.getPointAtLength(target);
+  //         if (
+  //           (target === end || target === beginning) &&
+  //           position.x !== positionX
+  //         ) {
+  //           break;
+  //         }
+  //         if (position.x > positionX) end = target;
+  //         else if (position.x < positionX) beginning = target;
+  //         else break; //position found
+  //       }
+  //       return { node: lineNode, positionY: position.y };
+  //     });
 
-      let lineGroup = Array.from(node?.firstChild?.childNodes[1].childNodes);
+  //     tooltipLine
+  //       .transition()
+  //       .duration(400)
+  //       .ease(d3.easeBackOut)
+  //       .attr('x1', positionX)
+  //       .attr('x2', positionX)
+  //       .attr('y1', 0)
+  //       .attr('y2', max_domain);
 
-      let linePositions = lineGroup.map((lineNode) => {
-        let beginning = 0;
-        let end = lineNode.getTotalLength();
-        let target, position;
-        while (true) {
-          target = Math.floor((beginning + end) / 2);
-          position = lineNode.getPointAtLength(target);
-          if (
-            (target === end || target === beginning) &&
-            position.x !== positionX
-          ) {
-            break;
-          }
-          if (position.x > positionX) end = target;
-          else if (position.x < positionX) beginning = target;
-          else break; //position found
-        }
-        return { node: lineNode, positionY: position.y };
-      });
+  //     let lineVals = linePositions
+  //       .map((line) => {
+  //         let scaledY = barBuild
+  //           .yScale(max_domain)
+  //           .invert(line.positionY)
+  //           .toFixed(2);
+  //         return { data: line.node.__data__, date: new Date(), value: scaledY };
+  //       })
+  //       .sort((a, b) => b.value - a.value);
 
-      tooltipLine
-        .transition()
-        .duration(400)
-        .ease(d3.easeBackOut)
-        .attr('x1', positionX)
-        .attr('x2', positionX)
-        .attr('y1', 0)
-        .attr('y2', max_domain);
-
-      let lineVals = linePositions
-        .map((line) => {
-          let scaledY = barBuild
-            .yScale(max_domain)
-            .invert(line.positionY)
-            .toFixed(2);
-          return { data: line.node.__data__, date: new Date(), value: scaledY };
-        })
-        .sort((a, b) => b.value - a.value);
-
-      tooltip.render(
-        { pageX: event.pageX, pageY: event.pageY },
-        lineVals,
-        tooltip.target
-      );
-    })
-    .on('mouseout', function () {
-      tooltip.unmount(tooltip.target);
-    });
+  //     tooltip.render(
+  //       { pageX: event.pageX, pageY: event.pageY },
+  //       lineVals,
+  //       tooltip.target
+  //     );
+  //   })
+  //   .on('mouseout', function () {
+  //     tooltip.unmount(tooltip.target);
+  //   });
 };

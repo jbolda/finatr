@@ -44,12 +44,10 @@ function* watchTransactions() {
       transaction.occurrences = new Big(transaction?.occurrences ?? 0);
 
       const { start, end } = yield* select(schema.chartBarRange.select);
+      const graphRange = { start, end };
       const data = yield* resolveBarChartData({
         transaction,
-        graphRange: {
-          start,
-          end
-        }
+        graphRange
       });
 
       const previousChartData = yield* select(
