@@ -15,7 +15,7 @@ const BarChart = ({ dateRange }) => {
 
   useEffect(() => {
     drawCharts(data, bar_max_domain, dateRange, accountData, tooltipTarget);
-  }, [data]);
+  }, [data, accountData.data, dateRange.start]);
 
   return (
     <>
@@ -103,6 +103,7 @@ const drawCharts = (
   accountData,
   tooltipTarget
 ) => {
+  console.log('rendering');
   let svgBar = d3.select('g.bar-section');
   let svgLine = d3.select('g.line-section');
   barBuild.drawAxis(svgBar, dateRange, bar_max_domain);
@@ -347,12 +348,11 @@ barBuild.drawBar = function ({
   let yScale = barBuild.yScale(max_domain);
   let rects = groups
     .selectAll(`rect`)
-    .filter((d) => d.height !== 0)
-    .data((d) => d.stacked)
+    .data((d) => d.stacked.filter((d) => d.height !== 0))
     .join(
-      (enter) => enter.filter((d) => d.height !== 0).append('rect'),
+      (enter) => enter.append('rect'),
       (update) => update,
-      (exit) => exit.transition().attr('height', 0).remove()
+      (exit) => exit.remove()
     )
     .attr('x', (d) => xScale(d.date))
     .attr('y', (d) => yScale(0))
@@ -399,10 +399,7 @@ barBuild.drawLine = function ({
   const line = d3
     .line()
     .x((d) => xScale(d[0]))
-    .y((d) => {
-      console.log({ d, v: d[1], scaled: yScale(d[1]) });
-      return yScale(d[1]);
-    });
+    .y((d) => yScale(d[1]));
 
   selector
     .selectAll('path')
@@ -412,9 +409,6 @@ barBuild.drawLine = function ({
       (update) => update,
       (exit) => exit.remove()
     )
-    // .transition()
-    // .delay((d, i) => 800 + i * 150)
-    // .duration(3000)
     .attr('d', (d) => line(d.data))
     .attr('stroke', (d, i) => linecolors(i))
     .attr('stroke-width', 2)

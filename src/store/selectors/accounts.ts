@@ -81,7 +81,6 @@ const sumTotal = (
 ) =>
   keys.reduce((finalValue, key) => {
     const d = transactions[key];
-    console.log({ d });
     if (d.transaction.raccount === accountName)
       return finalValue + d.stacked[index].height;
     return finalValue;
