@@ -1,10 +1,11 @@
+import { parseDate } from '@internationalized/date';
 import React from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
 import { dateRangeWithStrings } from '~/src/store/selectors/chartData.ts';
 import { updateChartDateRange } from '~/src/store/thunks/chartData.ts';
 
-import { Input } from '~/src/elements/Input';
+import { DatePicker } from '~/src/components/DatePicker.tsx';
 
 import BarChart from './barChart.js';
 
@@ -19,13 +20,11 @@ const FinancialFlow = () => {
           <BarChart dateRange={dateRange} />
         </div>
         <div className="px-4 py-4 sm:px-6">
-          <Input
-            name="begin-graph"
-            type="date"
-            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-            value={dateRange.startString}
-            onChange={(event) =>
-              dispatch(updateChartDateRange(event.target.value))
+          <DatePicker
+            label="Starting Date"
+            value={parseDate(dateRange.startString)}
+            onChange={(calendar) =>
+              dispatch(updateChartDateRange(calendar.toString()))
             }
           />
         </div>
