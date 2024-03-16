@@ -2,8 +2,8 @@ import { parseDate } from '@internationalized/date';
 import React from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { dateRangeWithStrings } from '~/src/store/selectors/chartData.ts';
-import { updateChartDateRange } from '~/src/store/thunks/chartData.ts';
+import { dateRangeWithStrings } from '~/src/store/selectors/chartRange.ts';
+import { updateChartDateRange } from '~/src/store/thunks/chartRange.ts';
 
 import { DatePicker } from '~/src/components/DatePicker.tsx';
 

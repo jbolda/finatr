@@ -3,34 +3,37 @@ import { createSelector } from 'starfx/store';
 
 import { schema } from '~/src/store/schema.ts';
 
+import { barChartTransactions } from './chartData';
+
 export const lineChartAccounts = createSelector(
-  schema.chartBarRange.select,
-  schema.chartBarData.selectTableAsList,
+  schema.chartRange.select,
+  barChartTransactions,
   schema.accounts.selectTableAsList,
   (graphRange, transactions, accounts) => {
     const lineChart = resolveLineChartData({
       graphRange,
       transactions,
-      accountsList: accounts
+      accounts
     });
     return lineChart;
   }
 );
 
-function resolveLineChartData({ graphRange, accountsList, transactions }) {
+function resolveLineChartData({ graphRange, accounts, transactions }) {
   const allDates = eachDayOfInterval(graphRange);
-  const incomeStacked = transactions
+  const incomeStacked = transactions.data
     .filter((t) => t.transaction.type === 'income')
     .reduce((o, t) => {
       o[t.id] = t;
       return o;
     }, {});
-  const expensesStacked = transactions
+  const expensesStacked = transactions.data
     .filter((t) => t.transaction.type === 'expense')
     .reduce((o, t) => {
       o[t.id] = t;
       return o;
     }, {});
+
   const incomeKeys = Object.keys(incomeStacked);
   const expensesKeys = Object.keys(expensesStacked);
 
@@ -40,10 +43,10 @@ function resolveLineChartData({ graphRange, accountsList, transactions }) {
       const dateIndex = index * 2;
       for (
         let accountIndex = 0;
-        accountIndex < accountsList.length;
+        accountIndex < accounts.length;
         accountIndex++
       ) {
-        const account = accountsList[accountIndex];
+        const account = accounts[accountIndex];
         const income = sumTotal(incomeKeys, incomeStacked, index, account.name);
         const expenses = sumTotal(
           expensesKeys,
@@ -53,7 +56,7 @@ function resolveLineChartData({ graphRange, accountsList, transactions }) {
         );
         const prevValue =
           data?.[accountIndex]?.data?.[dateIndex - 1]?.[1] ?? account.starting;
-        if (!prevValue) {
+        if (!prevValue && prevValue !== 0) {
           console.error({ account, prevValue, day, income, expenses });
           throw new Error(`nulled, wtf`);
         }
@@ -65,7 +68,7 @@ function resolveLineChartData({ graphRange, accountsList, transactions }) {
       }
       return data;
     },
-    accountsList.map((a) => ({ ...a, data: [] }))
+    accounts.map((a) => ({ ...a, data: [] }))
   );
   return { data: stack, max };
 }

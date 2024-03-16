@@ -3,19 +3,18 @@ import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'starfx/react';
 
-import { schema } from '~/src/store/schema';
 import { lineChartAccounts } from '~/src/store/selectors/accounts';
+import { barChartTransactions } from '~/src/store/selectors/chartData';
 
 const BarChart = ({ dateRange }) => {
   const tooltipTarget = useRef();
-  const data = useSelector(schema.chartBarData.selectTableAsList);
+  const transactionData = useSelector(barChartTransactions);
   const accountData = useSelector(lineChartAccounts);
-  const bar_max_domain = useSelector(schema.chartBarMax.select);
   const bar = barBuild;
 
   useEffect(() => {
-    drawCharts(data, bar_max_domain, dateRange, accountData, tooltipTarget);
-  }, [data, accountData.data, dateRange.start]);
+    drawCharts(dateRange, transactionData, accountData, tooltipTarget);
+  }, [transactionData.data, accountData.data, dateRange.start]);
 
   return (
     <>
@@ -96,17 +95,10 @@ export default BarChart;
 //   return stacked;
 // };
 
-const drawCharts = (
-  data,
-  bar_max_domain,
-  dateRange,
-  accountData,
-  tooltipTarget
-) => {
-  console.log('rendering');
+const drawCharts = (dateRange, transactionData, accountData, tooltipTarget) => {
   let svgBar = d3.select('g.bar-section');
   let svgLine = d3.select('g.line-section');
-  barBuild.drawAxis(svgBar, dateRange, bar_max_domain);
+  barBuild.drawAxis(svgBar, dateRange, transactionData.max);
   barBuild.drawAxis(svgLine, dateRange, accountData.max);
 
   let tooltipBar = {
@@ -134,8 +126,8 @@ const drawCharts = (
   barBuild.drawBar({
     selector: svgBar.select('.blobs'),
     dateRange,
-    data,
-    max_domain: bar_max_domain,
+    data: transactionData.data,
+    max_domain: transactionData.max,
     tooltipBar
   });
 
@@ -144,12 +136,12 @@ const drawCharts = (
     render: renderTooltipLine
   };
   barBuild.drawLine({
-    data: accountData.data,
-    dateRange,
     svg: d3.select('svg'),
     selector: svgLine.select('.lines'),
-    tooltipLine,
-    max_domain: accountData.max
+    dateRange,
+    data: accountData.data,
+    max_domain: accountData.max,
+    tooltipLine
   });
 };
 

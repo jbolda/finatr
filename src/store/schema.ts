@@ -43,11 +43,6 @@ interface Transaction {
   beginAfterOccurrences: number;
 }
 
-interface TransactionComputed extends Transaction {
-  fromAccounts: boolean;
-  y: number; // Big
-}
-
 interface Account {
   name: string;
   starting: number; // Big
@@ -56,22 +51,13 @@ interface Account {
   payback: Transaction[];
 }
 
-interface ChartBarData {
-  id: string;
-  transaction: Transaction;
-  data: {
-    date: Date;
-    y0: typeof Big;
-  }[];
-}
-
-interface ChartBarRange {
+interface ChartRange {
   start: Date;
   end: Date;
 }
 
 const referenceDate = new Date();
-const defaultChartBarRange: ChartBarRange = {
+const defaultChartBarRange: ChartRange = {
   start: referenceDate,
   end: addYear(referenceDate)
 };
@@ -81,13 +67,8 @@ const [schema, initialState] = createSchema({
   loaders: slice.loader(),
   settings: slice.obj<Settings>(defaultSettings),
   transactions: slice.table({ empty: emptyTransaction }),
-  transactionsComputed: slice.table({
-    empty: emptyTransaction
-  }),
   accounts: slice.table({ empty: emptyAccount }),
-  chartBarData: slice.table<ChartBarData>(),
-  chartBarRange: slice.obj(defaultChartBarRange),
-  chartBarMax: slice.num()
+  chartRange: slice.obj(defaultChartBarRange)
 });
 
 export { schema, initialState };
