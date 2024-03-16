@@ -76,25 +76,6 @@ const BarChart = ({ dateRange }) => {
 
 export default BarChart;
 
-// const buildStacked = (transactions) => {
-//   const keys = Object.keys(transactions);
-//   const stack = d3
-//     .stack()
-//     .value((d, key) => (d?.y ? d.y.toNumber() : 0))
-//     .keys(keys);
-
-//   const tidy = keys.flatMap((key) =>
-//     transactions[key].data.map((d) => ({ ...d, id: key }))
-//   );
-//   const indexed = d3.index(
-//     tidy,
-//     (d) => d.date,
-//     (d) => d.id
-//   );
-//   const stacked = stack(tidy);
-//   return stacked;
-// };
-
 const drawCharts = (dateRange, transactionData, accountData, tooltipTarget) => {
   let svgBar = d3.select('g.bar-section');
   let svgLine = d3.select('g.line-section');
@@ -105,23 +86,6 @@ const drawCharts = (dateRange, transactionData, accountData, tooltipTarget) => {
     target: tooltipTarget,
     render: renderTooltipBar
   };
-
-  // const income = data.filter((d) => d.transaction.type === 'income');
-  // const expense = data.filter((d) => d.transaction.type === 'expense');
-
-  // const incomeMap = income.reduce((all, item) => {
-  //   all[item.id] = item;
-  //   return all;
-  // }, {});
-  // const incomeStacked = buildStacked(incomeMap);
-  // const expenseMap = expense.reduce((all, item) => {
-  //   all[item.id] = item;
-  //   return all;
-  // }, {});
-  // const expenseStacked = buildStacked(expenseMap);
-  // console.log({ data, income, expense, incomeStacked, expenseStacked });
-  // const dataStacked = [].concat(incomeStacked, expenseStacked);
-  // const transactionsMap = { ...incomeMap, ...expenseMap };
 
   barBuild.drawBar({
     selector: svgBar.select('.blobs'),
