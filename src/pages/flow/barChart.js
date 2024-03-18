@@ -1,24 +1,28 @@
 import * as d3 from 'd3';
-import React, { useEffect, useRef } from 'react';
-import ReactDOM from 'react-dom';
+import { closestIndexTo, eachDayOfInterval } from 'date-fns';
+import React, { useEffect } from 'react';
 import { useSelector } from 'starfx/react';
 
 import { lineChartAccounts } from '~/src/store/selectors/accounts';
 import { barChartTransactions } from '~/src/store/selectors/chartData';
 
 const BarChart = ({ dateRange }) => {
-  const tooltipTarget = useRef();
   const transactionData = useSelector(barChartTransactions);
   const accountData = useSelector(lineChartAccounts);
   const bar = barBuild;
 
   useEffect(() => {
-    drawCharts(dateRange, transactionData, accountData, tooltipTarget);
+    drawCharts(dateRange, transactionData, accountData);
   }, [transactionData.data, accountData.data, dateRange.start]);
 
   return (
     <>
-      <div ref={tooltipTarget} />
+      <div className="absolute pointer-events-none">
+        <div
+          className="bg-slate-700 dark:bg-slate-600 border border-slate-800 dark:border-white/10 shadow-[inset_0_1px_0_0_theme(colors.gray.600)] dark:shadow-none text-white text-xs rounded-lg drop-shadow-lg will-change-transform px-3 py-1"
+          id="tooltipTarget"
+        />
+      </div>
       <div style={{ overflow: 'auto' }}>
         <svg
           className="draw-section"
@@ -57,7 +61,14 @@ const BarChart = ({ dateRange }) => {
               transform={`translate(${-bar.margin().left / 3},${
                 bar.margin().top
               })`}
-            />
+            >
+              <rect
+                id="mouseArea"
+                width="11550"
+                fill="white"
+                height={bar.height() - bar.margin().top - bar.margin().bottom}
+              />
+            </g>
             <g
               className="xaxis"
               transform={`translate(${-bar.margin().left / 3},${
@@ -67,7 +78,12 @@ const BarChart = ({ dateRange }) => {
             />
             <g className="yaxis" transform="translate(0,0)" fill="none" />
           </g>
-          <line className="tooltipLine" stroke="black" pointerEvents="none" />
+          <line
+            id="tooltipLine"
+            stroke="black"
+            pointerEvents="none"
+            transform={`translate(${(bar.margin().left * 2) / 3},0)`}
+          />
         </svg>
       </div>
     </>
@@ -76,79 +92,75 @@ const BarChart = ({ dateRange }) => {
 
 export default BarChart;
 
-const drawCharts = (dateRange, transactionData, accountData, tooltipTarget) => {
-  let svgBar = d3.select('g.bar-section');
-  let svgLine = d3.select('g.line-section');
+const drawCharts = (dateRange, transactionData, accountData) => {
+  const svgBar = d3.select('g.bar-section');
+  const svgLine = d3.select('g.line-section');
+  const tooltipTarget = d3.select('div#tooltipTarget').style('opacity', 0);
+  const tooltipLine = d3.select('line#tooltipLine').style('opacity', 0);
+
   barBuild.drawAxis(svgBar, dateRange, transactionData.max);
   barBuild.drawAxis(svgLine, dateRange, accountData.max);
-
-  let tooltipBar = {
-    target: tooltipTarget,
-    render: renderTooltipBar
-  };
 
   barBuild.drawBar({
     selector: svgBar.select('.blobs'),
     dateRange,
     data: transactionData.data,
     max_domain: transactionData.max,
-    tooltipBar
+    tooltip: {
+      target: tooltipTarget,
+      render: renderTooltipBar
+    }
   });
 
-  let tooltipLine = {
-    target: tooltipTarget,
-    render: renderTooltipLine
-  };
   barBuild.drawLine({
-    svg: d3.select('svg'),
+    svg: svgLine.select('rect#mouseArea'),
     selector: svgLine.select('.lines'),
     dateRange,
     data: accountData.data,
     max_domain: accountData.max,
-    tooltipLine
+    tooltip: {
+      target: tooltipTarget,
+      render: renderTooltipLine,
+      line: tooltipLine
+    }
   });
 };
 
 const renderTooltipBar = (coordinates, tooltipData, tooltipTarget) => {
-  let styles = {
-    position: 'absolute',
-    pointerEvents: 'none',
-    left: `${coordinates.pageX}px`,
-    top: `${coordinates.pageY}px`
-  };
-  const tooltipComponent = (
-    <div className="notification is-primary" id="tooltipBar" style={styles}>
-      <p>{`${tooltipData.type} in ${tooltipData.raccount}`}</p>
-      <p>category: {tooltipData.category}</p>
+  const transaction = tooltipData.transaction;
+  const tooltipComponent = `
+      <p>${transaction.type} in ${transaction.raccount}</p>
+      <p>category: ${transaction.category}</p>
       <p>
-        ${tooltipData.value.toFixed(2)} | ${tooltipData.dailyRate.toFixed(2)}{' '}
-        per day
-      </p>
-    </div>
-  );
+        ${transaction.value.toFixed(2)} | ${transaction.dailyRate.toFixed(
+          2
+        )} per day
+      </p>`;
 
-  ReactDOM.render(tooltipComponent, tooltipTarget);
+  tooltipTarget
+    .html(tooltipComponent)
+    .style('left', coordinates.pageX + 'px')
+    .style('top', coordinates.pageY + 'px');
 };
 
 const renderTooltipLine = (coordinates, tooltipData, tooltipTarget) => {
-  let styles = {
-    position: 'absolute',
-    pointerEvents: 'none',
-    left: `${coordinates.pageX}px`,
-    top: `${coordinates.pageY}px`
-  };
+  const tooltipComponent = tooltipData
+    .map(
+      (line) =>
+        `<p>
+          ${line.name} ${
+            line.valueStart === line.valueEnd
+              ? line.valueStart
+              : `${line.valueStart}->${line.valueEnd}`
+          }
+        </p>`
+    )
+    .join('\n');
 
-  const tooltipComponent = (
-    <div className="notification is-primary" id="tooltipLine" style={styles}>
-      {tooltipData.map((line) => (
-        <p key={line.data.account.name}>
-          {line.data.account.name} ${line.value}
-        </p>
-      ))}
-    </div>
-  );
-
-  ReactDOM.render(tooltipComponent, tooltipTarget);
+  tooltipTarget
+    .html(tooltipComponent)
+    .style('left', coordinates.pageX + 'px')
+    .style('top', coordinates.pageY + 'px');
 };
 
 let barBuild = {
@@ -288,16 +300,19 @@ barBuild.drawBar = function ({
             .translate
         },${0})`
     )
+    .on('mouseenter', function () {
+      tooltip.target.transition().duration(200).style('opacity', 0.9);
+    })
     .on('mouseover', function (event, d) {
       console.log({ event, d });
-      // tooltip.render(
-      //   { pageX: event.pageX, pageY: event.pageY },
-      //   d,
-      //   tooltip.target
-      // );
+      tooltip.render(
+        { pageX: event.pageX, pageY: event.pageY },
+        d,
+        tooltip.target
+      );
     })
     .on('mouseout', function () {
-      // tooltip.unmount(tooltip.target);
+      tooltip.target.transition().duration(500).style('opacity', 0);
     });
 
   let xScale = barBuild.xScale(dateRange);
@@ -334,11 +349,10 @@ barBuild.drawBar = function ({
 };
 
 barBuild.drawLine = function ({
-  data,
-  dateRange,
   svg,
   selector,
-  tooltipLine,
+  dateRange,
+  data,
   max_domain,
   tooltip
 }) {
@@ -349,6 +363,7 @@ barBuild.drawLine = function ({
   let linecolors = d3.scaleOrdinal(d3.schemeCategory10);
   let marginLeft = this.margin().left;
 
+  const dates = eachDayOfInterval(dateRange);
   const xScale = barBuild.xScale(dateRange);
   const yScale = barBuild.yScale(max_domain);
 
@@ -370,65 +385,42 @@ barBuild.drawLine = function ({
     .attr('stroke-width', 2)
     .attr('fill', 'none');
 
-  // svg
-  //   .on('mousemove', function (event) {
-  //     const node = event.srcElement;
-  //     let mouse = event;
-  //     let positionX = mouse[0] - marginLeft;
-  //     if (
-  //       !node?.firstChild?.childNodes ||
-  //       node.firstChild.childNodes.length === 0
-  //     )
-  //       return;
+  svg
+    .on('mouseenter', function () {
+      tooltip.target.transition().duration(200).style('opacity', 0.9);
+      tooltip.line.transition().duration(200).style('opacity', 0.9);
+    })
+    .on('mousemove', function (event) {
+      let positionX = event.offsetX;
+      // cause we have weird translations right now
+      const dateExact = xScale.invert(positionX - (60 * 2) / 3);
+      const dateIndex = closestIndexTo(dateExact, dates);
+      const date = dates[dateIndex];
+      const tooltipLinePositionX = xScale(date);
 
-  //     let lineGroup = Array.from(node?.firstChild?.childNodes[1].childNodes);
+      tooltip.line
+        .transition()
+        .duration(400)
+        .ease(d3.easeBackOut)
+        .attr('x1', tooltipLinePositionX)
+        .attr('x2', tooltipLinePositionX)
+        .attr('y1', 0)
+        .attr('y2', max_domain)
+        .style('opacity', 0.9);
 
-  //     let linePositions = lineGroup.map((lineNode) => {
-  //       let beginning = 0;
-  //       let end = lineNode.getTotalLength();
-  //       let target, position;
-  //       while (true) {
-  //         target = Math.floor((beginning + end) / 2);
-  //         position = lineNode.getPointAtLength(target);
-  //         if (
-  //           (target === end || target === beginning) &&
-  //           position.x !== positionX
-  //         ) {
-  //           break;
-  //         }
-  //         if (position.x > positionX) end = target;
-  //         else if (position.x < positionX) beginning = target;
-  //         else break; //position found
-  //       }
-  //       return { node: lineNode, positionY: position.y };
-  //     });
-
-  //     tooltipLine
-  //       .transition()
-  //       .duration(400)
-  //       .ease(d3.easeBackOut)
-  //       .attr('x1', positionX)
-  //       .attr('x2', positionX)
-  //       .attr('y1', 0)
-  //       .attr('y2', max_domain);
-
-  //     let lineVals = linePositions
-  //       .map((line) => {
-  //         let scaledY = barBuild
-  //           .yScale(max_domain)
-  //           .invert(line.positionY)
-  //           .toFixed(2);
-  //         return { data: line.node.__data__, date: new Date(), value: scaledY };
-  //       })
-  //       .sort((a, b) => b.value - a.value);
-
-  //     tooltip.render(
-  //       { pageX: event.pageX, pageY: event.pageY },
-  //       lineVals,
-  //       tooltip.target
-  //     );
-  //   })
-  //   .on('mouseout', function () {
-  //     tooltip.unmount(tooltip.target);
-  //   });
+      const lineValues = data.map((d) => ({
+        ...d,
+        valueStart: d.data[dateIndex * 2][1],
+        valueEnd: d.data[dateIndex * 2 + 1][1]
+      }));
+      tooltip.render(
+        { pageX: event.pageX, pageY: event.pageY },
+        lineValues,
+        tooltip.target
+      );
+    })
+    .on('mouseout', function () {
+      tooltip.target.transition().duration(500).style('opacity', 0);
+      tooltip.line.transition().duration(500).style('opacity', 0);
+    });
 };
