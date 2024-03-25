@@ -1,9 +1,8 @@
+import { Disclosure } from '@headlessui/react';
+import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
-import { MenuIcon, XIcon } from '@heroicons/react/outline';
-
-import { Disclosure } from '@headlessui/react';
 
 const navigation = [
   { name: 'Home', to: '/', end: true },
@@ -12,6 +11,7 @@ const navigation = [
   { name: 'Transactions', to: 'transactions' },
   { name: 'Planning', to: 'planning' },
   { name: 'Cash Flow', to: 'flow' },
+  { name: 'FI', to: 'financialindependence' },
   { name: 'Import/Export', to: 'import' },
   { name: 'Taxes (in alpha)', to: 'taxes' },
   { name: 'Settings', to: 'settings' }

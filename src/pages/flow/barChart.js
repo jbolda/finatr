@@ -304,7 +304,6 @@ barBuild.drawBar = function ({
       tooltip.target.transition().duration(200).style('opacity', 0.9);
     })
     .on('mouseover', function (event, d) {
-      console.log({ event, d });
       tooltip.render(
         { pageX: event.pageX, pageY: event.pageY },
         d,

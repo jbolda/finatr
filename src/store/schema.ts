@@ -7,22 +7,24 @@ import { emptyTransaction, emptyAccount } from './factory.ts';
 const addYear = addDays(365);
 
 interface Settings {
-  planning: boolean;
-  import: boolean;
   examples: boolean;
-  flow: boolean;
-  transactions: boolean;
+  import: boolean;
   accounts: boolean;
+  transactions: boolean;
+  planning: boolean;
+  financialindependence: boolean;
+  flow: boolean;
   taxes: boolean;
 }
 
 const defaultSettings = {
   examples: false,
+  import: false,
   accounts: false,
   transactions: false,
   planning: true,
+  financialindependence: false,
   flow: false,
-  import: false,
   taxes: false
 };
 

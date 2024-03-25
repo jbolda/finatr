@@ -18,5 +18,6 @@ export const emptyTransaction = {
   cycle: 0,
   value: 0,
   occurrences: 0,
-  beginAferOccurrences: 0
+  beginAferOccurrences: 0,
+  dailyRate: 0
 };

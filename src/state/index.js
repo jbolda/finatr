@@ -3,7 +3,6 @@ import React from 'react';
 
 import { coercePaybacks, transactionSplitter } from './resolveFinancials';
 import { transactionCompute } from './resolveFinancials/resolveTransactions';
-import { Stats } from './stats.js';
 import { TaxStrategy } from './taxStrategy.js';
 
 class AppModel extends Primitive {
