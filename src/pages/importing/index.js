@@ -1,9 +1,9 @@
 import React from 'react';
-import { State } from '~src/state';
-import { TabView } from '~src/components/TabView';
+import { State } from '~/src/state';
+import { TabView } from '~/src/components/TabView';
 const Flex = ({ children }) => <div>{children}</div>;
 const Box = ({ children }) => <div>{children}</div>;
-import { Button } from '~src/elements/Button';
+import { Button } from '~/src/elements/Button';
 
 import fileDownload from 'js-file-download';
 import FileReaderInput from 'react-file-reader-input';

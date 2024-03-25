@@ -1,12 +1,11 @@
+import { Big } from 'big.js';
+import getQuarter from 'date-fns/fp/getQuarter/index.js';
+import parseISO from 'date-fns/fp/parseISO/index.js';
 import {
   valueOf,
   create,
-  StringType
-  // DateType
+  StringType // DateType
 } from 'microstates';
-import { Big } from './customTypes.js';
-import parseISO from 'date-fns/fp/parseISO/index.js';
-import getQuarter from 'date-fns/fp/getQuarter/index.js';
 
 class Allocations {
   gross = create(Big, 0);

@@ -6,7 +6,7 @@
       "description": "beginning of month",
       "category": "paycheck",
       "type": "income",
-      "start": "2019-01-01",
+      "start": "YYYY-01-01",
       "rtype": "day of month",
       "cycle": 1,
       "value": 2800
@@ -17,7 +17,7 @@
       "description": "middle of month",
       "category": "paycheck",
       "type": "income",
-      "start": "2019-01-01",
+      "start": "YYYY-01-01",
       "rtype": "day of month",
       "cycle": 15,
       "value": 2800
@@ -28,7 +28,7 @@
       "description": "rent, electric and water",
       "category": "rent",
       "type": "expense",
-      "start": "2019-01-05",
+      "start": "YYYY-01-05",
       "rtype": "day of month",
       "cycle": 5,
       "value": 3200
@@ -39,7 +39,7 @@
       "description": "beginning of month",
       "category": "retirement",
       "type": "income",
-      "start": "2019-01-01",
+      "start": "YYYY-01-01",
       "rtype": "day of month",
       "cycle": 1,
       "value": 200
@@ -50,7 +50,7 @@
       "description": "middle of month",
       "category": "retirement",
       "type": "income",
-      "start": "2019-01-01",
+      "start": "YYYY-01-01",
       "rtype": "day of month",
       "cycle": 15,
       "value": 200
@@ -61,7 +61,7 @@
       "description": "internet",
       "category": "internet",
       "type": "expense",
-      "start": "2019-01-05",
+      "start": "YYYY-01-05",
       "rtype": "day of month",
       "cycle": 5,
       "value": 80
@@ -72,7 +72,7 @@
       "description": "student loans",
       "category": "student loans",
       "type": "expense",
-      "start": "2019-01-20",
+      "start": "YYYY-01-20",
       "rtype": "day of month",
       "cycle": 20,
       "value": 400
@@ -83,7 +83,7 @@
       "description": "groceries",
       "category": "groceries",
       "type": "expense",
-      "start": "2019-01-01",
+      "start": "YYYY-01-01",
       "rtype": "day of week",
       "cycle": 1,
       "value": 150
@@ -94,7 +94,7 @@
       "description": "going out",
       "category": "going out",
       "type": "expense",
-      "start": "2019-01-01",
+      "start": "YYYY-01-01",
       "rtype": "day of week",
       "cycle": 5,
       "value": 80
@@ -105,7 +105,7 @@
       "description": "metro card",
       "category": "transportation",
       "type": "expense",
-      "start": "2019-01-01",
+      "start": "YYYY-01-01",
       "rtype": "day of month",
       "cycle": 5,
       "value": 200
@@ -116,7 +116,7 @@
       "description": "cell phone",
       "category": "cell phone",
       "type": "expense",
-      "start": "2019-01-01",
+      "start": "YYYY-01-01",
       "rtype": "day of month",
       "cycle": 2,
       "value": 100
@@ -127,7 +127,7 @@
       "description": "fun",
       "category": "fun",
       "type": "expense",
-      "start": "2019-01-01",
+      "start": "YYYY-01-01",
       "rtype": "day of week",
       "cycle": 4,
       "value": 50
@@ -161,7 +161,7 @@
             "description": "pay off current balance",
             "debtAccount": "credit card",
             "raccount": "checking",
-            "start": "2019-02-15",
+            "start": "YYYY-02-15",
             "rtype": "day of month",
             "cycle": 15,
             "occurrences": 1,
@@ -173,7 +173,7 @@
             "description": "pay off future expenses",
             "debtAccount": "credit card",
             "raccount": "checking",
-            "start": "2019-02-15",
+            "start": "YYYY-02-15",
             "rtype": "day of month",
             "cycle": 15,
             "beginAfterOccurrences": 1,

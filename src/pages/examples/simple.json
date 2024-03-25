@@ -6,7 +6,7 @@
       "description": "bi-weekly paycheck",
       "category": "paycheck",
       "type": "income",
-      "start": "2019-01-01",
+      "start": "YYYY-01-01",
       "rtype": "day",
       "cycle": 14,
       "value": 1500
@@ -17,7 +17,7 @@
       "description": "monthly rent",
       "category": "rent",
       "type": "expense",
-      "start": "2019-01-01",
+      "start": "YYYY-01-01",
       "rtype": "day of month",
       "cycle": 1,
       "value": 700

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Field, FieldArray } from 'formik';
-import { FieldGroup, Label } from '~src/components/Form';
-import { Button } from '~src/elements/Button';
-import { Input } from '~src/elements/Input';
-import { Select } from '~src/elements/Select';
-import { Radio } from '~src/elements/Radio';
+import { FieldGroup, Label } from '~/src/components/Form.js';
+import { Button } from '~/src/elements/Button';
+import { Input } from '~/src/elements/Input';
+import { Select } from '~/src/elements/Select';
+import { Radio } from '~/src/elements/Radio';
 
 const TransactionInputAmountComputed = ({
   errors,
@@ -44,30 +44,38 @@ const TransactionInputAmountComputed = ({
         }}
       />
     </Label>
-    {values.valueType === 'static' ? (
-      <FieldGroup
-        errors={errors}
-        name="value"
-        id={`${prefixID}value`}
-        touched={touched}
-      >
-        <Field as={Input} name="value" id={`${prefixID}value`} type="number" />
-      </FieldGroup>
-    ) : (
-      <React.Fragment>
-        <References
-          values={values}
-          setFieldValue={setFieldValue}
-          prefixID={prefixID}
-        />
-        <RecursiveAmountComputed
-          values={values}
-          setFieldValue={setFieldValue}
-          level={0}
-          prefixID={prefixID}
-        />
-      </React.Fragment>
-    )}
+    {
+      values.valueType === 'static' ? (
+        <FieldGroup
+          errors={errors}
+          name="value"
+          id={`${prefixID}value`}
+          touched={touched}
+        >
+          <Field
+            as={Input}
+            name="value"
+            id={`${prefixID}value`}
+            type="number"
+          />
+        </FieldGroup>
+      ) : null
+      //  (
+      //   <React.Fragment>
+      //     <References
+      //       values={values}
+      //       setFieldValue={setFieldValue}
+      //       prefixID={prefixID}
+      //     />
+      //     <RecursiveAmountComputed
+      //       values={values}
+      //       setFieldValue={setFieldValue}
+      //       level={0}
+      //       prefixID={prefixID}
+      //     />
+      //   </React.Fragment>
+      // )
+    }
   </FieldGroup>
 );
 

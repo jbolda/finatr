@@ -1,12 +1,15 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
+import { schema } from '~/src/store/schema';
+import { useSelector } from 'starfx/react';
 
-export const IcicleChart = ({ data }) => {
+export const IcicleChart = () => {
   const d3Container = useRef(null);
+  const transactions = useSelector(schema.transactions.selectTableAsList);
 
   useEffect(() => {
-    if (!!data && d3Container.current) draw(d3Container, data);
-  }, [data]);
+    if (!!transactions && d3Container.current) draw(d3Container, transactions);
+  }, [transactions]);
 
   return (
     <div className="object-none object-center m-5 p-3">

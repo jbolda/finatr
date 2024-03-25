@@ -1,12 +1,7 @@
-import { createThunks, mdw } from 'starfx';
 import { select } from 'starfx/store';
-import { schema } from './schema';
 
-const thunks = createThunks();
-// catch errors from task and logs them with extra info
-thunks.use(mdw.err);
-// where all the thunks get called in the middleware stack
-thunks.use(thunks.routes());
+import { schema } from '../schema.ts';
+import { thunks } from './foundation.ts';
 
 export const changeSetting = thunks.create('setting', function* (ctx, next) {
   if (ctx.payload.key === 'all') {
@@ -16,7 +11,9 @@ export const changeSetting = thunks.create('setting', function* (ctx, next) {
         finalSettings[setting] = ctx.payload.value;
         return finalSettings;
       },
-      {}
+      {
+        ...settings
+      }
     );
     yield* schema.update(schema.settings.set(newSettings));
   } else {
@@ -24,5 +21,3 @@ export const changeSetting = thunks.create('setting', function* (ctx, next) {
   }
   yield* next();
 });
-
-export const settingsThunk = thunks;
