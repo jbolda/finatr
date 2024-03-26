@@ -1,3 +1,5 @@
+import Big from 'big.js';
+
 export const emptyAccount = {
   name: '',
   starting: 0, // Big
@@ -19,5 +21,5 @@ export const emptyTransaction = {
   value: 0,
   occurrences: 0,
   beginAferOccurrences: 0,
-  dailyRate: 0
+  dailyRate: Big(0)
 };

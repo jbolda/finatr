@@ -16,7 +16,7 @@ const FinancialIndependence = () => {
         {detailItem('Savings Rate', `${stats.savingsRate.toFixed(2)}`)}
         {detailItem(
           'Expense Multiple',
-          stats.expenseMultiple.toFixed(2),
+          `${stats.expenseMultiple.toFixed(2)}x`,
           `+${stats.expenseMultipleIncreasePerYear.toFixed(2)} x/year`
         )}
         {detailItem(

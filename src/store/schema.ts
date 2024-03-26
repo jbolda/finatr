@@ -1,4 +1,4 @@
-import Big from 'big.js';
+import Big, { type as BigType } from 'big.js';
 import addDays from 'date-fns/fp/addDays/index.js';
 import { createSchema, slice } from 'starfx/store';
 
@@ -40,7 +40,7 @@ interface Transaction {
   rtype: string;
   cycle: number; // Big
   value: number; // Big
-  dailyRate: number; // Big
+  dailyRate: BigType; // Big
   occurrences: number; // Big
   beginAfterOccurrences: number;
 }

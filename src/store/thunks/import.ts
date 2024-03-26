@@ -1,13 +1,15 @@
 import { put } from 'starfx';
+
 import { schema } from '../schema';
+import { accountAdd } from './accounts.ts';
+import { updateChartDateRange } from './chartRange.ts';
 import { thunks } from './foundation.ts';
 import { transactionAdd } from './transactions.ts';
-import { accountAdd } from './accounts.ts';
 
 export const importEntries = thunks.create(
   'importEntries',
   function* (ctx, next) {
-    const { transactions, accounts } = { ...ctx.payload };
+    const { transactions, accounts, graphRange } = { ...ctx.payload };
 
     yield* schema.update([
       schema.transactions.reset(),
@@ -22,6 +24,8 @@ export const importEntries = thunks.create(
     for (let account of accounts) {
       yield* put(accountAdd(account));
     }
+
+    if (graphRange?.start) yield* put(updateChartDateRange(graphRange.start));
 
     yield* next();
   }

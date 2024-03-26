@@ -7,7 +7,6 @@ export const financialStats = createSelector(
   schema.transactions.selectTableAsList,
   schema.accounts.selectTableAsList,
   (transactions, accounts) => {
-    console.log({ transactions, accounts });
     let dailyIncome = transactions.reduce(
       (accumulator, d) =>
         d.type === 'income' ? d.dailyRate.add(accumulator) : accumulator,
