@@ -64,13 +64,34 @@ const defaultChartBarRange: ChartRange = {
   end: addYear(referenceDate)
 };
 
+interface IncomeReceived {
+  id: string;
+  date: string;
+  group: string;
+  gross: number;
+  pretaxInvestments: number;
+  hsa: number;
+  federalTax: number;
+  medicare: number;
+  socialSecurity: number;
+  stateTax: number;
+}
+
+interface IncomeExpected {
+  quarter: number;
+  group: string;
+  quantity: number;
+}
+
 const [schema, initialState] = createSchema({
   cache: slice.table({ empty: {} }),
-  loaders: slice.loader(),
+  loaders: slice.loaders(),
   settings: slice.obj<Settings>(defaultSettings),
   transactions: slice.table({ empty: emptyTransaction }),
   accounts: slice.table({ empty: emptyAccount }),
-  chartRange: slice.obj(defaultChartBarRange)
+  chartRange: slice.obj(defaultChartBarRange),
+  incomeReceived: slice.table<IncomeReceived>(),
+  incomeExpected: slice.table<IncomeExpected>()
 });
 
 export { schema, initialState };

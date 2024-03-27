@@ -6,6 +6,7 @@ import {
   Row as AriaRow,
   Table as AriaTable,
   TableHeader as AriaTableHeader,
+  TableBody,
   Button,
   CellProps,
   Collection,
@@ -21,16 +22,18 @@ import {
 } from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
 import { tv } from 'tailwind-variants';
-import { Checkbox } from './Checkbox';
-import { composeTailwindRenderProps, focusRing } from './utils';
+
+import { Checkbox } from '../elements/Checkbox.tsx';
+import { composeTailwindRenderProps, focusRing } from '../elements/utils.ts';
 
 export function Table(props: TableProps) {
   return (
-    <ResizableTableContainer className="max-h-[280px] w-[550px] overflow-auto scroll-pt-[2.281rem] relative border dark:border-zinc-600 rounded-lg">
+    <ResizableTableContainer className="overflow-auto scroll-pt-[2.281rem] relative border dark:border-zinc-600 rounded-lg">
       <AriaTable {...props} className="border-separate border-spacing-0" />
     </ResizableTableContainer>
   );
 }
+export { TableBody };
 
 const columnStyles = tv({
   extend: focusRing,
