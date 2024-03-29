@@ -6,6 +6,7 @@ import { Footer } from './elements/Footer';
 import { Header } from './elements/Header';
 import Examples from './pages/examples';
 import Homepage from './pages/homepage';
+import TransactionsOverview from './pages/transactions/index.tsx';
 import { schema } from './store/schema.ts';
 
 const Settings = React.lazy(() => import('./pages/settings'));
@@ -100,6 +101,14 @@ const App = (props) => {
                       </React.Suspense>
                     }
                   >
+                    <Route
+                      index
+                      element={
+                        <React.Suspense fallback={<>...</>}>
+                          <TransactionsOverview />
+                        </React.Suspense>
+                      }
+                    />
                     <Route
                       path="set"
                       element={
