@@ -1,13 +1,11 @@
 import { test, expect } from '@playwright/experimental-ct-react17';
 import Big from 'big.js';
+import differenceInCalendarDays from 'date-fns/fp/differenceInDays/index.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';
 import startOfDay from 'date-fns/fp/startOfDay/index.js';
-import differenceInCalendarDays from 'date-fns/fp/differenceInDays/index.js';
 
-import computeTransactionModifications, {
-  transactionDayOfMonthReoccur,
-  generateModification
-} from './index.js';
+import { resolveBarChartData } from '../../selectors/chartData.ts';
+import { transactionDayOfMonthReoccur } from './index.ts';
 
 test.describe(`check transactionDayOfMonthReoccur`, () => {
   const transaction = {
@@ -125,16 +123,17 @@ test.describe(`check transactionDayOfMonthReoccur`, () => {
   });
 
   test(`returns correct number of modifications for range`, () => {
-    let testData = { ...transaction, start: graphRange.start, cycle: 17 };
-    let resolvedTestData = generateModification(
-      testData,
+    let testData = {
+      ...transaction,
+      start: '2018-01-16',
+      cycle: Big(17),
+      occurrences
+    };
+    let resolvedTestData = resolveBarChartData({
       graphRange,
-      graphRange.start,
-      [],
-      Big(0),
-      Big(0)
-    );
-    expect(resolvedTestData).toHaveLength(3);
+      transaction: testData
+    });
+    expect(resolvedTestData.filter((t) => t.y)).toHaveLength(3);
   });
 
   test(`returns correct number of modifications if start and cycle are the same`, () => {
@@ -147,35 +146,26 @@ test.describe(`check transactionDayOfMonthReoccur`, () => {
       start: '2017-08-22',
       rtype: 'day of month',
       cycle: Big(22),
-      value: Big(150)
+      value: Big(150),
+      occurrences
     };
     let testRange = {
       start: startOfDay(parseISO('2018-01-16')),
       end: startOfDay(parseISO('2018-08-01'))
     };
-    let resolvedTestData1 = generateModification(
-      testData,
-      testRange,
-      testRange.start,
-      [],
-      Big(0),
-      Big(0)
-    );
-    expect(resolvedTestData1).toHaveLength(7);
-    let testData2 = { ...testData, id: 'the-id2' };
-    let resolvedTestData2 = computeTransactionModifications(
-      [testData2],
-      testRange
-    );
-    expect(resolvedTestData2).toHaveLength(7);
+    let resolvedTestData1 = resolveBarChartData({
+      graphRange: testRange,
+      transaction: testData
+    });
+    expect(resolvedTestData1.filter((t) => t.y)).toHaveLength(7);
   });
 
   test(`returns correct number of modifications based on generated occurrences`, () => {
     let testData1 = {
       ...transaction,
       id: `${transaction.id} genOc`,
-      start: graphRange.start,
-      cycle: 17,
+      start: '2018-01-14',
+      cycle: Big(17),
       occurrences: Big(1)
     };
     let testRange = {
@@ -183,59 +173,43 @@ test.describe(`check transactionDayOfMonthReoccur`, () => {
       end: startOfDay(parseISO('2018-12-01'))
     };
 
-    let resolvedTestData1 = generateModification(
-      testData1,
-      testRange,
-      testRange.start,
-      [],
-      Big(0),
-      Big(0)
-    );
-    expect(resolvedTestData1).toHaveLength(1);
+    let resolvedTestData1 = resolveBarChartData({
+      graphRange: testRange,
+      transaction: testData1
+    });
+    expect(resolvedTestData1.filter((t) => t.y)).toHaveLength(1);
 
-    let testData2 = { ...testData1, occurrences: 2 };
-    let resolvedTestData2 = generateModification(
-      testData2,
-      testRange,
-      testRange.start,
-      [],
-      Big(0),
-      Big(0)
-    );
-    expect(resolvedTestData2).toHaveLength(2);
+    let testData2 = { ...testData1, occurrences: Big(2) };
+    let resolvedTestData2 = resolveBarChartData({
+      graphRange: testRange,
+      transaction: testData2
+    });
+    expect(resolvedTestData2.filter((t) => t.y)).toHaveLength(2);
   });
 
   test(`returns correct number of modifications based on visible occurrences`, () => {
     let testData1 = {
       ...transaction,
-      start: graphRange.start,
-      cycle: 17,
-      occurrences: 1
+      start: '2018-01-16',
+      cycle: Big(17),
+      occurrences: Big(1)
     };
     let testRange = {
       start: graphRange.start,
       end: startOfDay(parseISO('2018-12-01'))
     };
 
-    let resolvedTestData1 = generateModification(
-      testData1,
-      testRange,
-      testRange.start,
-      [],
-      Big(0),
-      Big(0)
-    );
-    expect(resolvedTestData1).toHaveLength(1);
+    let resolvedTestData1 = resolveBarChartData({
+      graphRange: testRange,
+      transaction: testData1
+    });
+    expect(resolvedTestData1.filter((t) => t.y)).toHaveLength(1);
 
-    let testData2 = { ...testData1, occurrences: 2 };
-    let resolvedTestData2 = generateModification(
-      testData2,
-      testRange,
-      testRange.start,
-      [],
-      Big(0),
-      Big(0)
-    );
-    expect(resolvedTestData2).toHaveLength(2);
+    let testData2 = { ...testData1, occurrences: Big(2) };
+    let resolvedTestData2 = resolveBarChartData({
+      graphRange: testRange,
+      transaction: testData2
+    });
+    expect(resolvedTestData2.filter((t) => t.y)).toHaveLength(2);
   });
 });

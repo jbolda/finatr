@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/experimental-ct-react17';
+import differenceInCalendarDays from 'date-fns/fp/differenceInDays/index.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';
 import startOfDay from 'date-fns/fp/startOfDay/index.js';
-import differenceInCalendarDays from 'date-fns/fp/differenceInDays/index.js';
 
-import { transactionNoReoccur } from './index.js';
+import { transactionNoReoccur } from './index.ts';
 
 test.describe(`check transactionNoReoccur`, () => {
   const transaction = {

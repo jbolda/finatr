@@ -3,7 +3,7 @@ import Big from 'big.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';
 import startOfDay from 'date-fns/fp/startOfDay/index.js';
 
-import { transactionQuarterlyReoccur } from './index.js';
+import { transactionQuarterlyReoccur } from './index.ts';
 
 test.describe('transactionQuarterlyReoccur', () => {
   test('has the next date', () => {

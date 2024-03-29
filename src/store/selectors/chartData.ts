@@ -1,5 +1,5 @@
 import Big from 'big.js';
-import { isSameDay, isWithinInterval, addDays } from 'date-fns';
+import { parseISO, isSameDay, isWithinInterval, addDays } from 'date-fns';
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
 import { createSelector } from 'starfx/store';
 
@@ -76,23 +76,28 @@ export const barChartTransactions = createSelector(
   }
 );
 
-function resolveBarChartData({
+export function resolveBarChartData({
   graphRange,
   transaction
 }: {
-  graphRange: any;
+  graphRange: { start: Date; end: Date };
   transaction: any;
 }) {
   const allDates = eachDayOfInterval(graphRange);
   const nextTransactionFn = nextTransaction(transaction.rtype);
 
-  const { date, nextY } = findSeed({
+  const {
+    date,
+    nextY,
+    occurred: occurredInSeed
+  } = findSeed({
     transaction,
     y: transaction.value,
     // back off one day to start outside the interval
-    date: addDays(graphRange.start, -1),
+    date: parseISO(transaction.start),
     nextTransactionFn,
-    interval: graphRange
+    interval: graphRange,
+    occurred: 0
   });
   const next = {
     transaction,
@@ -100,9 +105,14 @@ function resolveBarChartData({
     date,
     nextY
   };
+  let occurred = occurredInSeed - 1; // we will capture once instance on first loop
   const stack = allDates.map((day) => {
     let y = null;
-    if (isSameDay(day, next.date)) {
+    if (
+      isSameDay(day, next.date) &&
+      (transaction.occurrences.toNumber() === 0 ||
+        occurred < transaction.occurrences.toNumber())
+    ) {
       y = next.nextY;
 
       const { date, y: calculatedY } = nextTransactionFn({
@@ -116,6 +126,7 @@ function resolveBarChartData({
       // save data for next value
       next.nextY = calculatedY;
       next.date = date;
+      occurred += 1;
     }
     return { date: day, y };
   });
@@ -123,31 +134,42 @@ function resolveBarChartData({
   return stack;
 }
 
-const findSeed = ({
+export const findSeed = ({
   nextTransactionFn,
   transaction,
   date,
   y,
-  interval
+  interval,
+  occurred
 }: {
   nextTransactionFn: any;
   transaction: any;
   date: Date;
   y: typeof Big;
   interval: Interval;
+  occurred: number;
 }) => {
-  if (isWithinInterval(date, interval)) return { date, nextY: y };
+  // a transaction function has to run and mark an occurenace to have found the seed date
+  //  so we don't blindly use the transaction start date as the seed except for daily as
+  //  the start date dictates the start of a cycle
+  if (
+    isWithinInterval(date, interval) &&
+    (occurred !== 0 || transaction.rtype === 'day')
+  )
+    return { date, nextY: y, occurred };
   const { date: nextDate, y: nextY } = nextTransactionFn({
     transaction,
     seedDate: date,
     occurrences: transaction.occurrences
   });
+
   return findSeed({
     nextTransactionFn,
     transaction,
     interval,
     y: nextY,
     // to avoid getting stuck generating the same day over and over
-    date: isSameDay(date, nextDate) ? addDays(nextDate, 1) : nextDate
+    date: isSameDay(date, nextDate) ? addDays(nextDate, 1) : nextDate,
+    occurred: occurred + 1
   });
 };

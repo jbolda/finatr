@@ -3,35 +3,35 @@ import Big from 'big.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';
 import startOfDay from 'date-fns/fp/startOfDay/index.js';
 
-import { transactionSemiannuallyReoccur } from './index.js';
+import { transactionAnnuallyReoccur } from './index.ts';
 
-test.describe('transactionSemiannuallyReoccur', () => {
+test.describe('transactionAnnuallyReoccur', () => {
   test('has the next date', () => {
-    const transaction = { start: '2018-01-01', value: Big(10) };
-    const seedDate = startOfDay(parseISO('2018-03-01'));
-    const next = transactionSemiannuallyReoccur({
+    const transaction = { start: '2018-01-01', value: Big(365) };
+    const seedDate = startOfDay(parseISO('2018-01-01'));
+    const next = transactionAnnuallyReoccur({
       transaction,
       seedDate,
-      occurrences: Big(0)
+      occurrences: Big(1)
     });
-    expect(next.date).toEqual(startOfDay(parseISO('2018-07-01')));
+    expect(next.date).toEqual(startOfDay(parseISO('2019-01-01')));
   });
 
   test('has a value', () => {
-    const transaction = { start: '2018-01-01', value: Big(10) };
-    const seedDate = startOfDay(parseISO('2018-03-01'));
-    const next = transactionSemiannuallyReoccur({
+    const transaction = { start: '2018-01-01', value: Big(365) };
+    const seedDate = startOfDay(parseISO('2018-01-01'));
+    const next = transactionAnnuallyReoccur({
       transaction,
       seedDate,
       occurrences: Big(0)
     });
-    expect(Number(next.y)).toEqual(10);
+    expect(Number(next.y)).toEqual(365);
   });
 
   test('throws on missing value', () => {
     const seedDate = startOfDay(parseISO('2018-01-01'));
     expect(() => {
-      transactionSemiannuallyReoccur({
+      transactionAnnuallyReoccur({
         transaction: { start: '2018-01-01' },
         seedDate,
         occurrences: Big(0)
@@ -42,8 +42,8 @@ test.describe('transactionSemiannuallyReoccur', () => {
   test('throws on missing start', () => {
     const seedDate = startOfDay(parseISO('2018-01-01'));
     expect(() => {
-      transactionSemiannuallyReoccur({
-        transaction: { value: Big(15) },
+      transactionAnnuallyReoccur({
+        transaction: { value: Big(120) },
         seedDate,
         occurrences: Big(0)
       });
@@ -53,8 +53,8 @@ test.describe('transactionSemiannuallyReoccur', () => {
   test('throws on missing occurrences', () => {
     const seedDate = startOfDay(parseISO('2018-01-01'));
     expect(() => {
-      transactionSemiannuallyReoccur({
-        transaction: { start: '2018-01-01', value: Big(10) },
+      transactionAnnuallyReoccur({
+        transaction: { start: '2018-01-01', value: Big(120) },
         seedDate
       });
     }).toThrow();
@@ -63,17 +63,14 @@ test.describe('transactionSemiannuallyReoccur', () => {
   test('fails if transaction is null', () => {
     const seedDate = startOfDay(parseISO('2018-01-01'));
     expect(() => {
-      transactionSemiannuallyReoccur({ transaction: null, seedDate });
+      transactionAnnuallyReoccur({ transaction: null, seedDate });
     }).toThrow();
   });
 
   test('fails if prevDate is null', () => {
-    const transaction = { value: 182.5 };
+    const transaction = { value: 365 };
     expect(() => {
-      generateModification({
-        transaction,
-        prevDate: null
-      });
+      generateModification({ transaction, prevDate: null });
     }).toThrow();
   });
 });
