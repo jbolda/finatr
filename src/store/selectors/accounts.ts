@@ -58,7 +58,7 @@ function resolveLineChartData({ graphRange, accounts, transactions }) {
           data?.[accountIndex]?.data?.[dateIndex - 1]?.[1] ?? account.starting;
         if (!prevValue && prevValue !== 0) {
           console.error({ account, prevValue, day, income, expenses });
-          throw new Error(`nulled, wtf`);
+          throw new Error(`nulled`);
         }
         const firstStep = prevValue - expenses;
         data[accountIndex].data[dateIndex] = [day, firstStep];

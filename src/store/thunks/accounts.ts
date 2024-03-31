@@ -7,7 +7,6 @@ export const accountAdd = thunks.create('account:add', function* (ctx, next) {
   if (!account.id) {
     account.id = makeUUID();
   }
-  console.dir({ account });
   yield* schema.update(schema.accounts.add({ [account.id]: account }));
   yield* next();
 });

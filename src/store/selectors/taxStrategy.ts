@@ -30,7 +30,6 @@ export const taxStrategy = createSelector(
   taxedIncomeGrouped,
   incomeExpectedGrouped,
   (groups, expected) => {
-    console.log({ expected });
     const allocations = {
       gross: Big(0),
       federalTax: Big(0),
@@ -126,7 +125,6 @@ const processAllocations = (key, allocations, income, expected?: number) => {
 };
 
 export const taxStrategyAsList = createSelector(taxStrategy, (strategy) => {
-  console.log(strategy);
   const quarters = [1, 2, 3, 4];
   // const allocations = ['total', 'average', 'projected']
   const allocations = [

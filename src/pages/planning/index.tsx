@@ -32,7 +32,6 @@ const Divider = ({
   navigateTo: string;
 }) => {
   const navigate = useNavigate();
-  // console.log({ text, navigateTo });
   return (
     <div className="relative my-8">
       <div className="absolute inset-0 flex items-center" aria-hidden="true">

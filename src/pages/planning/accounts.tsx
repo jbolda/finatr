@@ -98,9 +98,8 @@ const AccountTable = ({ data }) => {
   );
 };
 
-const DebtTable = ({ data }) => {
-  console.log({ debts: data });
-  return data.filter(
+const DebtTable = ({ data }) =>
+  data.filter(
     (account) =>
       account.vehicle === 'debt' ||
       account.vehicle === 'loan' ||
@@ -121,7 +120,6 @@ const DebtTable = ({ data }) => {
       data={data}
     />
   );
-};
 
 const FlexDebtTable = ({ itemHeaders, data }) => {
   const dispatch = useDispatch();
