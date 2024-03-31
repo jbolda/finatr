@@ -1,14 +1,31 @@
 import React, { useState } from 'react';
-import { schema } from '~/src/store/schema';
-import { useDispatch, useSelector } from 'starfx/react';
-import { accountRemove } from '~/src/store/thunks/accounts';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'starfx/react';
 
-import { TabView } from '~/src/components/TabView';
+import { schema } from '~/src/store/schema';
+import { accountRemove } from '~/src/store/thunks/accounts';
+
 import { FlexTable } from '~/src/components/FlexTable';
+import { TabView } from '~/src/components/TabView';
+
 import { Button } from '~/src/elements/Button';
+
 import AccountInput from './accountInput';
 import AccountTransactionInput from './accountTransactionInput';
+
+const modifyAccount = (navigate, account) => {
+  return navigate('/accounts/set', {
+    state: {
+      account: {
+        id: account.id,
+        name: account.name,
+        starting: account.starting.toFixed(2),
+        interest: account.interest.toFixed(2),
+        vehicle: account.vehicle
+      }
+    }
+  });
+};
 
 const AccountFlow = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -28,7 +45,7 @@ const AccountFlow = () => {
           <AccountTable data={accounts} />
         </React.Fragment>,
         <React.Fragment>
-          {/* <DebtTable data={accounts} /> */}
+          <DebtTable data={accounts} />
           {/* {accounts.filter(
             (account) =>
               account.vehicle === 'debt' ||
@@ -53,7 +70,7 @@ const AccountTable = ({ data }) => {
   ) : (
     <FlexTable
       itemHeaders={[
-        'visible',
+        // 'visible',
         'name',
         'starting',
         'interest',
@@ -64,31 +81,14 @@ const AccountTable = ({ data }) => {
       itemData={data.map((account) => ({
         key: account.name,
         data: [
-          <Button onPress={() => console.log('//TODO handle visibility')}>
-            {account.visible ? `👀` : `🤫`}
-          </Button>,
+          // <Button onPress={() => console.log('//TODO handle visibility')}>
+          //   {account.visible ? `👀` : `🤫`}
+          // </Button>,
           account.name,
           account.starting.toFixed(2),
           `${account.interest.toFixed(2)}%`,
           account.vehicle,
-          <Button
-            onPress={() =>
-              navigate('/accounts/set', {
-                state: {
-                  navigateTo: 'accounts',
-                  account: {
-                    id: account.id,
-                    name: account.name,
-                    starting: account.starting.toFixed(2),
-                    interest: `${account.interest.toFixed(2)}%`,
-                    vehicle: account.vehicle
-                  }
-                }
-              })
-            }
-          >
-            M
-          </Button>,
+          <Button onPress={() => modifyAccount(navigate, account)}>M</Button>,
           <Button onPress={() => dispatch(accountRemove({ id: account.id }))}>
             <strong>X</strong>
           </Button>
@@ -98,8 +98,9 @@ const AccountTable = ({ data }) => {
   );
 };
 
-const DebtTable = ({ data }) =>
-  data.filter(
+const DebtTable = ({ data }) => {
+  console.log({ debts: data });
+  return data.filter(
     (account) =>
       account.vehicle === 'debt' ||
       account.vehicle === 'loan' ||
@@ -114,65 +115,72 @@ const DebtTable = ({ data }) =>
         'interest',
         'Add',
         'Modify',
-        'Delete',
-        'Payback'
+        'Delete'
+        // 'Payback'
       ]}
       data={data}
     />
   );
+};
 
-const FlexDebtTable = ({ itemHeaders, data }) => (
-  <FlexTable
-    itemHeaders={itemHeaders}
-    itemData={data
-      .filter(
-        (account) =>
-          account.vehicle === 'debt' ||
-          account.vehicle === 'loan' ||
-          account.vehicle === 'credit line'
-      )
-      .map((account) => ({
-        key: account.name,
-        data: [
-          account.name,
-          account.starting.toFixed(2),
-          `${account.interest.toFixed(2)}%`,
-          <Button
-            sx={{
-              variants: 'outline',
-              color: 'green'
-            }}
-            onClick={actions.model.forms.accountTransactionFormVisible.toggle}
-          >
-            +
-          </Button>,
-          <Button
-            sx={{
-              variants: 'outline',
-              color: 'blue'
-            }}
-            onClick={() =>
-              actions.setAccountForm(actions.model, 1, account.name)
-            }
-          >
-            M
-          </Button>,
-          <Button
-            sx={{
-              variants: 'outline',
-              color: 'red'
-            }}
-            onClick={() => actions.model.deleteAccount(account.name)}
-          >
-            X
-          </Button>,
-          account.payback ? (
-            <PaybackTable data={account} actions={actions} />
-          ) : null
-        ]
-      }))}
-  />
-);
+const FlexDebtTable = ({ itemHeaders, data }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  console.log({ itemHeaders, data });
+  return (
+    <FlexTable
+      itemHeaders={itemHeaders}
+      itemData={data
+        .filter(
+          (account) =>
+            account.vehicle === 'debt' ||
+            account.vehicle === 'loan' ||
+            account.vehicle === 'credit line'
+        )
+        .map((account) => ({
+          key: account.name,
+          data: [
+            account.name,
+            account.starting.toFixed(2),
+            `${account.interest.toFixed(2)}%`,
+            // <Button
+            //   sx={{
+            //     variants: 'outline',
+            //     color: 'green'
+            //   }}
+            //   onClick={actions.model.forms.accountTransactionFormVisible.toggle}
+            // >
+            //   +
+            // </Button>,
+            <Button
+              onPress={() =>
+                navigate('/accounts/set', {
+                  state: {
+                    navigateTo: 'accounts',
+                    account: {
+                      id: account.id,
+                      name: account.name,
+                      starting: account.starting.toFixed(2),
+                      interest: `${account.interest.toFixed(2)}%`,
+                      vehicle: account.vehicle
+                    }
+                  }
+                })
+              }
+            >
+              M
+            </Button>,
+            <Button onPress={() => dispatch(accountRemove({ id: account.id }))}>
+              <strong>X</strong>
+            </Button>
+            // account.payback ? (
+            //   <PaybackTable data={account} actions={actions} />
+            // ) : null
+          ]
+        }))}
+    />
+  );
+};
 
 const PaybackTable = ({ data, actions }) => (
   <FlexTable

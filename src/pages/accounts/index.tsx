@@ -6,7 +6,7 @@ import { Button } from '~/src/elements/Button.tsx';
 import Accounts from '../planning/accounts.tsx';
 import BarChart from './barChart';
 
-const AccountOverview = (props) => {
+const AccountOverview = () => {
   const navigate = useNavigate();
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8">

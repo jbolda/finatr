@@ -1,5 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
+
 import { navigateTo } from '../helpers/navigate';
+import { addDefaultAccount } from './helper';
 
 const addGenericTransaction = async (
   page: Page,
@@ -20,8 +22,9 @@ const addGenericTransaction = async (
 };
 
 test.beforeEach(async ({ page }) => {
+  await addDefaultAccount(page);
   await navigateTo(page, 'Planning');
-  await page.getByText('Add Transaction').click();
+  // await page.getByText('Add Transaction').click();
 });
 
 test('tab switches to the form', async ({ page }, testInfo) => {

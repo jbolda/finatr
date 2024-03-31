@@ -1,10 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import { Button } from '~/src/elements/Button';
+
+import Accounts from './accounts';
 import IcicleChart from './icicleChart';
 import Transactions from './transactions';
-import Accounts from './accounts';
-import { Button } from '~/src/elements/Button';
-import { useNavigate } from 'react-router-dom';
 
 const Planning = (props) => {
   return (
@@ -31,6 +32,7 @@ const Divider = ({
   navigateTo: string;
 }) => {
   const navigate = useNavigate();
+  // console.log({ text, navigateTo });
   return (
     <div className="relative my-8">
       <div className="absolute inset-0 flex items-center" aria-hidden="true">
@@ -41,7 +43,9 @@ const Divider = ({
         <span className="px-3 bg-gray-50 text-lg font-medium text-gray-900">
           {text}
         </span>
-        <Button onPress={() => navigate(navigateTo)}>Add</Button>
+        <Button onPress={() => navigate(navigateTo)}>
+          Add {text.slice(0, text.length - 1)}
+        </Button>
       </div>
     </div>
   );

@@ -1,19 +1,21 @@
+import { Formik, Field } from 'formik';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'starfx/react';
-import { accountAdd } from '../../store/thunks/accounts';
-
-import { Formik, Field } from 'formik';
 import * as yup from 'yup';
+
 import { FieldGroup } from '~/src/components/Form.js';
+
+import { Button } from '~/src/elements/Button';
 import { Input } from '~/src/elements/Input';
 import { Select } from '~/src/elements/Select.js';
-import { Button } from '~/src/elements/Button';
+
+import { accountAdd } from '../../store/thunks/accounts';
 
 const AccountSchema = yup.object().shape({
   name: yup.string().min(1).required('Required').default(''),
-  starting: yup.number().required('Required').default(0),
-  interest: yup.number().default(0),
+  starting: yup.number().required('Required').default(0.0),
+  interest: yup.number().default(0.0),
   vehicle: yup
     .mixed()
     .oneOf(['operating', 'loan', 'credit line', 'investment'])
@@ -30,13 +32,15 @@ function AccountInput(props) {
     <div>
       <h1>Add an Account</h1>
       <Formik
-        initialValues={state?.accounts ?? AccountSchema.getDefault()}
+        initialValues={state?.account ?? AccountSchema.getDefault()}
         enableReinitialize={true}
         validationSchema={AccountSchema}
         onSubmit={(values, actions) => {
-          dispatch(accountAdd(values));
-          actions.setSubmitting(false);
+          // numbers seem to come back as text if not touched
+          const casted = AccountSchema.cast(values);
+          dispatch(accountAdd(casted));
           actions.resetForm();
+          actions.setSubmitting(false);
           navigate(state?.navigateTo ?? '..', { relative: 'path' });
         }}
       >
@@ -55,11 +59,23 @@ function AccountInput(props) {
             </FieldGroup>
 
             <FieldGroup errors={errors} name="starting" touched={touched}>
-              <Field as={Input} type="number" name="starting" id="starting" />
+              <Field
+                as={Input}
+                type="number"
+                step="0.01"
+                name="starting"
+                id="starting"
+              />
             </FieldGroup>
 
             <FieldGroup errors={errors} name="interest" touched={touched}>
-              <Field as={Input} type="number" name="interest" id="interest" />
+              <Field
+                as={Input}
+                type="number"
+                step="0.01"
+                name="interest"
+                id="interest"
+              />
             </FieldGroup>
 
             <FieldGroup errors={errors} name="vehicle" touched={touched}>
