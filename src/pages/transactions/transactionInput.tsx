@@ -1,17 +1,19 @@
+import { Formik, Field } from 'formik';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'starfx/react';
-import { schema } from '~/src/store/schema.ts';
-import { transactionAdd } from '../../store/thunks/transactions.ts';
-
-import { Formik, Field } from 'formik';
 import * as yup from 'yup';
+
+import { schema } from '~/src/store/schema.ts';
+
 import { FieldGroup, Label } from '~/src/components/Form.js';
+
 import { Button } from '~/src/elements/Button.tsx';
 import { Input } from '~/src/elements/Input.js';
-import { Select } from '~/src/elements/Select.js';
 import { Radio } from '~/src/elements/Radio.js';
+import { Select } from '~/src/elements/Select.js';
 
+import { transactionAdd } from '../../store/thunks/transactions.ts';
 import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
 const TransactionSchema = yup.object().shape({
@@ -75,11 +77,21 @@ function TransactionInput(props) {
     <>
       <h1>Add a Transaction</h1>
       <Formik
-        initialValues={state?.transaction ?? TransactionSchema.getDefault()}
+        initialValues={
+          state?.transaction
+            ? {
+                ...TransactionSchema.cast(state.transaction),
+                start: new Date()
+              }
+            : TransactionSchema.getDefault()
+        }
         enableReinitialize={true}
         validationSchema={TransactionSchema}
         onSubmit={(values, actions) => {
-          dispatch(transactionAdd(values));
+          console.log({ values });
+          const casted = TransactionSchema.cast(values);
+          console.log({ casted });
+          dispatch(transactionAdd(casted));
           actions.setSubmitting(false);
           actions.resetForm();
           navigate(state?.navigateTo ?? '..', { relative: 'path' });

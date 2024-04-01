@@ -102,6 +102,7 @@ const TransactionTable = ({ data }) => {
                     category: transaction.category,
                     type: transaction.type,
                     start: transaction.start,
+                    ending: transaction.ending,
                     rtype: transaction.rtype,
                     cycle: transaction.cycle.toFixed(0),
                     value: transaction.value.toFixed(2)

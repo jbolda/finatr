@@ -10,35 +10,47 @@ const addGenericTransaction = async (
     extraActions: []
   }
 ) => {
-  await page.getByLabel('value').fill(value);
   await page.getByLabel('repeat type').selectOption('No Repeating');
-  await page.keyboard.press('Enter');
+  await page.getByLabel('ending').click();
+  await page.getByLabel('start').type('01012025');
+  await page.getByLabel('value').fill(value);
   if (extraActions) {
     for (let pageAction of extraActions) {
       await pageAction;
     }
   }
+  await page.keyboard.press('Enter');
   await expect(page.getByText(value)).toBeVisible();
 };
 
 test.beforeEach(async ({ page }) => {
+  await page.goto('/');
   await addDefaultAccount(page);
   await navigateTo(page, 'Planning');
   // await page.getByText('Add Transaction').click();
 });
 
 test('tab switches to the form', async ({ page }, testInfo) => {
-  const addButton = page.getByRole('tab').getByText('Add Transaction');
+  const addButton = page.getByText('Add Transaction');
   await addButton.click();
-  await expect(addButton).toBeAttached();
+  await expect(page.getByText('Add a Transaction')).toBeAttached();
 });
 
 test('submits simple transaction', async ({ page }, testInfo) => {
+  const addButton = page.getByText('Add Transaction');
+  await addButton.click();
   await addGenericTransaction(page);
 });
 
 test('check income is listed in income tab after submit', async ({ page }) => {
-  await addGenericTransaction(page);
+  const addButton = page.getByText('Add Transaction');
+  await addButton.click();
+  await addGenericTransaction(page, {
+    value: '55.00',
+    extraActions: [
+      page.getByLabel('type', { exact: true }).selectOption('Income')
+    ]
+  });
 
   await page.getByRole('tab').getByText('Income').click();
   // all transactions should be visible, so just check existence
@@ -48,6 +60,8 @@ test('check income is listed in income tab after submit', async ({ page }) => {
 test('check expense is listed in expense tab after submit', async ({
   page
 }) => {
+  const addButton = page.getByText('Add Transaction');
+  await addButton.click();
   await addGenericTransaction(page, {
     value: '67.00',
     extraActions: [
@@ -63,6 +77,8 @@ test('check expense is listed in expense tab after submit', async ({
 test('check transfer is listed in transfer tab after submit', async ({
   page
 }) => {
+  const addButton = page.getByText('Add Transaction');
+  await addButton.click();
   await addGenericTransaction(page, {
     value: '53',
     extraActions: [

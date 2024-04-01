@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
-import { getRowWith } from '../helpers/tableHelpers';
+
 import { navigateTo } from '../helpers/navigate';
+import { getRowWith } from '../helpers/tableHelpers';
 
 test.beforeEach(async ({ page }) => {
+  await page.goto('/');
   await navigateTo(page, 'Planning');
   await page.getByText('Add Account').click();
 
