@@ -1,3 +1,4 @@
+import { parseISO } from 'date-fns';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'starfx/react';
@@ -102,10 +103,13 @@ const TransactionTable = ({ data }) => {
                     category: transaction.category,
                     type: transaction.type,
                     start: transaction.start,
-                    ending: transaction.ending,
+                    ending: transaction.ending ?? 'never',
                     rtype: transaction.rtype,
+                    beginAfterOccurrences:
+                      transaction.beginAfterOccurrences ?? 0,
                     cycle: transaction.cycle.toFixed(0),
-                    value: transaction.value.toFixed(2)
+                    value: transaction.value.toFixed(2),
+                    valueType: transaction.valueType ?? 'static'
                   }
                 }
               })

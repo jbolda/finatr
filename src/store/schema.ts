@@ -36,7 +36,7 @@ interface Transaction {
   category: string;
   type: TransactionType;
   start: string;
-  end: string;
+  ending: string;
   rtype: string;
   cycle: number; // Big
   value: number; // Big

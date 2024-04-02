@@ -79,18 +79,13 @@ function TransactionInput(props) {
       <Formik
         initialValues={
           state?.transaction
-            ? {
-                ...TransactionSchema.cast(state.transaction),
-                start: new Date()
-              }
+            ? state.transaction
             : TransactionSchema.getDefault()
         }
         enableReinitialize={true}
         validationSchema={TransactionSchema}
         onSubmit={(values, actions) => {
-          console.log({ values });
           const casted = TransactionSchema.cast(values);
-          console.log({ casted });
           dispatch(transactionAdd(casted));
           actions.setSubmitting(false);
           actions.resetForm();
