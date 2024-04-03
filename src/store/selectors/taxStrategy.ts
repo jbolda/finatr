@@ -1,7 +1,7 @@
 import { Big } from 'big.js';
 import getQuarter from 'date-fns/fp/getQuarter/index.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';
-import { createSelector } from 'starfx/store';
+import { createSelector } from 'starfx';
 
 import { schema } from '~/src/store/schema.ts';
 

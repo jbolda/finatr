@@ -4,7 +4,7 @@ import {
   createLocalStorageAdapter,
   createPersistor,
   persistStoreMdw
-} from 'starfx/store';
+} from 'starfx';
 
 import { initialState as schemaInitialState } from './schema.ts';
 import { setupDevTool, subscribeToActions } from './thunks/devtools.ts';

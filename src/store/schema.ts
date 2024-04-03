@@ -1,6 +1,6 @@
-import Big, { type as BigType } from 'big.js';
+import { type as BigType } from 'big.js';
 import addDays from 'date-fns/fp/addDays/index.js';
-import { createSchema, slice } from 'starfx/store';
+import { createSchema, slice } from 'starfx';
 
 import { emptyTransaction, emptyAccount } from './factory.ts';
 

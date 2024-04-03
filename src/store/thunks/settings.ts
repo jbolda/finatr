@@ -1,4 +1,4 @@
-import { select } from 'starfx/store';
+import { select } from 'starfx';
 
 import { schema } from '../schema.ts';
 import { thunks } from './foundation.ts';

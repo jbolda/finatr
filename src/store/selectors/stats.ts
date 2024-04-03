@@ -1,5 +1,5 @@
 import { Big } from 'big.js';
-import { createSelector } from 'starfx/store';
+import { createSelector } from 'starfx';
 
 import { schema } from '../schema';
 

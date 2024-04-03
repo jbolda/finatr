@@ -1,7 +1,7 @@
 import Big from 'big.js';
 import { parseISO, isSameDay, isWithinInterval, addDays } from 'date-fns';
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
-import { createSelector } from 'starfx/store';
+import { createSelector } from 'starfx';
 
 import { schema } from '../schema';
 import { nextTransaction } from '../thunks/transactionReoccurrence';
