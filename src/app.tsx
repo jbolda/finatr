@@ -45,7 +45,7 @@ const App = (props) => {
         <div className="flex flex-col h-screen">
           <Header settings={settings} />
           <main className="flex-grow -mt-32">
-            <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+            <div className="mx-auto container px-4 pb-12 sm:px-6 lg:px-8">
               <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
                 <Routes>
                   <Route index element={<Homepage />} />

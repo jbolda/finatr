@@ -38,7 +38,7 @@ export const Header = ({ settings }) => {
                       alt="finatr"
                     />
                   </div> */}
-                <div className="hidden sm:-my-px sm:flex">
+                <div className="hidden sm:-my-px md:flex">
                   {navigation
                     .filter((item) => settings[item.to] !== false)
                     .map((item) => (
@@ -60,7 +60,7 @@ export const Header = ({ settings }) => {
                     ))}
                 </div>
               </div>
-              <div className="-mr-2 flex items-center sm:hidden">
+              <div className="-mr-2 flex items-center md:hidden">
                 <Disclosure.Button className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
@@ -73,19 +73,21 @@ export const Header = ({ settings }) => {
             </div>
           </div>
 
-          <Disclosure.Panel className="sm:hidden">
+          <Disclosure.Panel className="md:hidden">
             <div className="pt-1 pb-2 space-y-1">
-              {navigation.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  activeClassName="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium border-indigo-500 text-gray-900"
-                  className="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                  end={item.end}
-                >
-                  {item.name}
-                </NavLink>
-              ))}
+              {navigation
+                .filter((item) => settings[item.to] !== false)
+                .map((item) => (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    activeClassName="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium border-indigo-500 text-gray-900"
+                    className="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    end={item.end}
+                  >
+                    {item.name}
+                  </NavLink>
+                ))}
             </div>
           </Disclosure.Panel>
         </div>
