@@ -1,10 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'starfx/react';
+
 import { importEntries } from '~/src/store/thunks/import.ts';
 
-import example_simple from './simple.json';
 import example_highRents from './high_rents.json';
+import example_simple from './simple.json';
 
 const listOfExamples = [
   {
@@ -29,7 +30,7 @@ const listOfExamples = [
 ];
 
 const Examples = () => (
-  <div className="bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
+  <div className="pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
     <div className="relative max-w-lg mx-auto divide-y-2 divide-gray-200 lg:max-w-7xl">
       <ExampleHeading />
       <ExampleList listOfExamples={listOfExamples} />

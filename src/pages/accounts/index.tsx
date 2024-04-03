@@ -13,14 +13,14 @@ const AccountOverview = () => {
       <h1 className="text-3xl font-semibold py-3">Accounts</h1>
       <Button onPress={() => navigate('/accounts/set')}>Add</Button>
       <Accounts />
-      <div className="bg-white my-2 py-1 overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+      {/* <div className="my-2 py-1 overflow-hidden shadow rounded-lg divide-y divide-gray-200">
         <div className="px-4 py-5 sm:px-6">
-          {/* <h2 className="text-2xl font-semibold">{account.account.name}</h2> */}
+          <h2 className="text-2xl font-semibold">{account.account.name}</h2>
         </div>
         <div className="px-4 py-5 sm:p-6">
-          {/* <BarChart data={model.charts.state} account={account} /> */}
+          <BarChart data={model.charts.state} account={account} />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

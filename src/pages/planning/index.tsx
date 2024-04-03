@@ -39,7 +39,7 @@ const Divider = ({
       </div>
       <div className="relative flex justify-between">
         <span />
-        <span className="px-3 bg-gray-50 text-lg font-medium text-gray-900">
+        <span className="px-3 bg-white text-lg font-medium text-gray-900">
           {text}
         </span>
         <Button onPress={() => navigate(navigateTo)}>

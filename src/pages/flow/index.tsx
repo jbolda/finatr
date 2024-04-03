@@ -7,7 +7,7 @@ import { updateChartDateRange } from '~/src/store/thunks/chartRange.ts';
 
 import { DatePicker } from '~/src/components/DatePicker.tsx';
 
-import BarChart from './barChart.js';
+import BarChart from './barChart.tsx';
 
 const FinancialFlow = () => {
   const dispatch = useDispatch();
