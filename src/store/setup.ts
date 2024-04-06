@@ -1,19 +1,16 @@
-import { Callable, parallel, take } from 'starfx';
 import {
-  configureStore,
-  createLocalStorageAdapter,
-  createPersistor,
-  persistStoreMdw
+    Callable, configureStore, createLocalStorageAdapter, createPersistor, parallel,
+    PERSIST_LOADER_ID, persistStoreMdw, take
 } from 'starfx';
 
-import { initialState as schemaInitialState } from './schema.ts';
+import { AppState, initialState as schemaInitialState, schema } from './schema.ts';
 import { setupDevTool, subscribeToActions } from './thunks/devtools.ts';
 import { tasks, thunks } from './thunks/index.ts';
 
 const devtoolsEnabled = true;
 export function setupStore({ logs = true, initialState = {} }) {
   const persistor = createPersistor({
-    adapter: createLocalStorageAdapter(),
+    adapter: createLocalStorageAdapter<AppState>(),
     allowlist: ['settings']
   });
 
@@ -49,6 +46,7 @@ export function setupStore({ logs = true, initialState = {} }) {
   store.run(function* () {
     yield* persistor.rehydrate();
     const group = yield* parallel(tsks);
+    yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID}));
     yield* group;
   });
 
