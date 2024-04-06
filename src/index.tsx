@@ -17,4 +17,4 @@ async function init() {
     </React.StrictMode>
   );
 }
-init().catch((err) => console.error('ouch', err));
+init().catch((err) => console.error('root error', err));
