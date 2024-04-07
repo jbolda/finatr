@@ -1,8 +1,8 @@
-import { type as BigType } from 'big.js';
+import { Big } from 'big.js';
 import addDays from 'date-fns/fp/addDays/index.js';
 import { createSchema, slice } from 'starfx';
 
-import { emptyTransaction, emptyAccount } from './factory.ts';
+import { emptyAccount, emptyTransaction } from './factory.ts';
 
 const addYear = addDays(365);
 
@@ -40,7 +40,7 @@ interface Transaction {
   rtype: string;
   cycle: number; // Big
   value: number; // Big
-  dailyRate: BigType; // Big
+  dailyRate: Big; // Big
   occurrences: number; // Big
   beginAfterOccurrences: number;
 }
