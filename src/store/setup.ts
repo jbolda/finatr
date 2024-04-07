@@ -14,7 +14,7 @@ import {
   initialState as schemaInitialState,
   schema
 } from './schema.ts';
-import { setupDevTool, subscribeToActions } from './thunks/devtools.ts';
+import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
 import { tasks, thunks } from './thunks/index.ts';
 
 const devtoolsEnabled = true;
@@ -22,12 +22,12 @@ export function setupStore({ logs = true, initialState = {} }) {
   const persistor = createPersistor({
     adapter: createLocalStorageAdapter<AppState>(),
     allowlist: [
-      'settings',
-      'chartRange',
-      'accounts',
-      'transactions',
-      'incomeReceived',
-      'incomeExpected'
+      'settings'
+      // 'chartRange',
+      // 'accounts',
+      // 'transactions',
+      // 'incomeReceived',
+      // 'incomeExpected'
     ]
   });
 
@@ -39,7 +39,6 @@ export function setupStore({ logs = true, initialState = {} }) {
     middleware: [persistStoreMdw(persistor)]
   });
 
-  window['fx'] = store;
   const tsks: Callable<unknown>[] = [];
   if (logs) {
     // log all actions dispatched
@@ -50,16 +49,16 @@ export function setupStore({ logs = true, initialState = {} }) {
       }
     });
   }
-  tsks.push(thunks.bootup, ...tasks);
-  tsks.push(function* devtools() {
-    if (!devtoolsEnabled) return;
-    while (true) {
-      const action = yield* take('*');
-      subscribeToActions({} as any, { action });
-    }
-  });
+  tsks.push(
+    thunks.bootup,
+    connectReduxDevToolsExtension({
+      name: 'finatr',
+      store,
+      enabled: devtoolsEnabled
+    }),
+    ...tasks
+  );
 
-  devtoolsEnabled && setupDevTool({}, { name: 'finatr', enabled: true });
   store.run(function* () {
     yield* persistor.rehydrate();
     const group = yield* parallel(tsks);
