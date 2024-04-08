@@ -20,7 +20,6 @@
   "dependencies": {
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^1.0.6",
-    "@microstates/react": "0.12.0",
     "@tailwindcss/forms": "^0.5.7",
     "@tauri-apps/api": "1.5.3",
     "big.js": "6.1.1",
@@ -29,24 +28,17 @@
     "formik": "2.2.9",
     "js-file-download": "0.4.12",
     "lucide-react": "^0.292.0",
-    "microstates": "0.15.1",
-    "papaparse": "5.3.1",
+    "papaparse": "5.4.1",
     "react": "18.2.0",
     "react-aria": "^3.31.0",
     "react-aria-components": "^1.0.0",
     "react-dom": "18.2.0",
-    "react-file-reader-input": "2.0.0",
     "react-router-dom": "^6.21.1",
-    "starfx": "^0.5.2",
+    "starfx": "0.10.0",
     "tailwindcss-react-aria-components": "^1.0.0",
-    "ynab": "2.2.0",
-    "yup": "1.2.0"
+    "yup": "1.4.0"
   },
   "overrides": {
-    "@microstates/react": {
-      "react": "18.2.0",
-      "microstates": "0.15.1"
-    },
     "react-file-reader-input": {
       "react": "18.2.0",
       "react-dom": "18.2.0"
@@ -59,19 +51,22 @@
     "@playwright/experimental-ct-react17": "^1.40.1",
     "@playwright/test": "^1.40.1",
     "@tauri-apps/cli": "1.5.9",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/big.js": "^6.2.2",
     "@types/node": "^20.10.8",
     "covector": "^0.10.2",
     "parcel": "^2.11.0",
     "postcss": "^8.4.32",
     "prettier": "^3.1.1",
     "process": "^0.11.10",
-    "tailwindcss": "^3.4.0",
+    "querystring-es3": "^0.2.1",
     "tailwind-merge": "2.2.0",
-    "tailwindcss-animate": "^1.0.7",
-    "tailwind-variants": "^0.1.18"
+    "tailwind-variants": "^0.1.18",
+    "tailwindcss": "^3.4.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "volta": {
-    "node": "20.10.0",
-    "npm": "10.2.5"
+    "node": "20.12.1",
+    "npm": "10.5.1"
   }
 }

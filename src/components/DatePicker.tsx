@@ -6,13 +6,19 @@ import {
   DateValue,
   ValidationResult
 } from 'react-aria-components';
-import { Button } from './Button';
-import { Calendar } from './Calendar';
-import { DateInput } from './DateField';
-import { Dialog } from './Dialog';
-import { Description, FieldError, FieldGroup, Label } from '../elements/Field';
-import { Popover } from './Popover';
-import { composeTailwindRenderProps } from './utils';
+
+import { Button } from '../elements/Button.tsx';
+import { DateInput } from '../elements/DateField.tsx';
+import {
+  Description,
+  FieldError,
+  FieldGroup,
+  Label
+} from '../elements/Field.tsx';
+import { composeTailwindRenderProps } from '../elements/utils.ts';
+import { Calendar } from './Calendar.tsx';
+import { Dialog } from './Dialog.tsx';
+import { Popover } from './Popover.tsx';
 
 export interface DatePickerProps<T extends DateValue>
   extends AriaDatePickerProps<T> {
