@@ -33,7 +33,7 @@
     "react-aria": "^3.31.0",
     "react-aria-components": "^1.0.0",
     "react-dom": "18.2.0",
-    "react-router-dom": "^6.21.1",
+    "react-router-dom": "^6.22.3",
     "starfx": "0.10.0",
     "tailwindcss-react-aria-components": "^1.0.0",
     "yup": "1.4.0"
