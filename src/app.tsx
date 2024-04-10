@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useSelector } from 'starfx/react';
 
-import { Footer } from './elements/Footer';
-import { Header } from './elements/Header';
+import { Footer } from './components/Footer.tsx';
+import { Header } from './components/Header.tsx';
 import Examples from './pages/examples';
 import Homepage from './pages/homepage';
 import TransactionsOverview from './pages/transactions/index.tsx';
@@ -44,8 +44,9 @@ const App = (props) => {
       <div className="min-h-full">
         <div className="flex flex-col h-screen">
           <Header settings={settings} />
+
           <main className="flex-grow -mt-32">
-            <div className="mx-auto container px-4 pb-12 sm:px-6 lg:px-8">
+            <div className="mx-auto container pb-12">
               <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
                 <Routes>
                   <Route index element={<Homepage />} />
