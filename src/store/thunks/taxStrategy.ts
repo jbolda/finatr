@@ -1,4 +1,5 @@
-import Big from 'big.js';
+import { USD } from '@dinero.js/currencies';
+import { dinero } from 'dinero.js';
 
 import { schema } from '../schema';
 import makeUUID from '../utils/makeUUID.ts';
@@ -10,15 +11,18 @@ export const addIncomeReceived = thunks.create(
     const income = { ...ctx.payload };
     if (!income?.id) income.id = makeUUID();
 
-    const incomeBigged = Object.entries(income).reduce(
-      (bigged, [key, value]) => {
-        bigged[key] = typeof value === 'number' ? Big(value) : value;
-        return bigged;
+    const incomeDineroed = Object.entries(income).reduce(
+      (dineroed, [key, value]) => {
+        dineroed[key] =
+          typeof value === 'number'
+            ? dinero({ amount: value, currency: USD })
+            : value;
+        return dineroed;
       },
       {}
     );
     yield* schema.update(
-      schema.incomeReceived.add({ [income.id]: incomeBigged })
+      schema.incomeReceived.add({ [income.id]: incomeDineroed })
     );
     yield* next();
   }

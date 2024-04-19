@@ -1,6 +1,6 @@
-import Big from 'big.js';
 import { parseISO, isSameDay, isWithinInterval, addDays } from 'date-fns';
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
+import { toDecimal, type Dinero } from 'dinero.js';
 import { createSelector } from 'starfx';
 
 import { schema } from '../schema';
@@ -37,7 +37,7 @@ export const barChartTransactions = createSelector(
       for (let i = 0; i < transactionIndex; i++) {
         const { data } = arr[i];
         const value = data[dataIndex].y;
-        if (value) bottom += value.toNumber();
+        if (value) bottom += Number(toDecimal(value));
       }
       return bottom;
     };
@@ -47,7 +47,7 @@ export const barChartTransactions = createSelector(
       const stacked = item.data.map((d, i) => {
         const stack = {
           date: d.date,
-          height: d?.y ? d.y.toNumber() : 0,
+          height: d?.y ? Number(toDecimal(d.y)) : 0,
           y0: getInitialY(income, transactionIndex, i)
         };
         // side effect: find max chart value
@@ -61,7 +61,7 @@ export const barChartTransactions = createSelector(
       const stacked = item.data.map((d, i) => {
         const stack = {
           date: d.date,
-          height: d?.y ? d.y.toNumber() : 0,
+          height: d?.y ? Number(toDecimal(d.y)) : 0,
           y0: getInitialY(expenses, transactionIndex, i)
         };
         // side effect: find max chart value
@@ -110,8 +110,7 @@ export function resolveBarChartData({
     let y = null;
     if (
       isSameDay(day, next.date) &&
-      (transaction.occurrences.toNumber() === 0 ||
-        occurred < transaction.occurrences.toNumber())
+      (transaction.occurrences === 0 || occurred < transaction.occurrences)
     ) {
       y = next.nextY;
 
@@ -145,10 +144,10 @@ export const findSeed = ({
   nextTransactionFn: any;
   transaction: any;
   date: Date;
-  y: typeof Big;
+  y: Dinero<number>;
   interval: Interval;
   occurred: number;
-}) => {
+}): { date: Date; nextY: Dinero<number>; occurred: number } => {
   // a transaction function has to run and mark an occurenace to have found the seed date
   //  so we don't blindly use the transaction start date as the seed except for daily as
   //  the start date dictates the start of a cycle

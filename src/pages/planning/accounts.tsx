@@ -1,3 +1,4 @@
+import { toDecimal } from 'dinero.js';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'starfx/react';
@@ -85,8 +86,8 @@ const AccountTable = ({ data }) => {
           //   {account.visible ? `👀` : `🤫`}
           // </Button>,
           account.name,
-          account.starting.toFixed(2),
-          `${account.interest.toFixed(2)}%`,
+          toDecimal(account.starting),
+          `${account.interest.amount * Math.pow(10, -account.interest.scale)}%`,
           account.vehicle,
           <Button onPress={() => modifyAccount(navigate, account)}>M</Button>,
           <Button onPress={() => dispatch(accountRemove({ id: account.id }))}>
@@ -139,8 +140,10 @@ const FlexDebtTable = ({ itemHeaders, data }) => {
           key: account.name,
           data: [
             account.name,
-            account.starting.toFixed(2),
-            `${account.interest.toFixed(2)}%`,
+            toDecimal(account.starting),
+            `${
+              account.interest.amount * Math.pow(10, -account.interest.scale)
+            }%`,
             // <Button
             //   sx={{
             //     variants: 'outline',
@@ -159,7 +162,10 @@ const FlexDebtTable = ({ itemHeaders, data }) => {
                       id: account.id,
                       name: account.name,
                       starting: account.starting.toFixed(2),
-                      interest: `${account.interest.toFixed(2)}%`,
+                      interest: `${
+                        account.interest.amount *
+                        Math.pow(10, -account.interest.scale)
+                      }%`,
                       vehicle: account.vehicle
                     }
                   }

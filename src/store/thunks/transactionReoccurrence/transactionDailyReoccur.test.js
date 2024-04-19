@@ -1,11 +1,11 @@
+import { USD } from '@dinero.js/currencies';
 import { test, expect } from '@playwright/experimental-ct-react17';
-import Big from 'big.js';
-import { addDays } from 'date-fns';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays/index.js';
 import getDate from 'date-fns/fp/getDate/index.js';
 import getMonth from 'date-fns/fp/getMonth/index.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';
 import startOfDay from 'date-fns/fp/startOfDay/index.js';
+import { dinero } from 'dinero.js';
 
 import { findSeed } from '../../selectors/chartData.ts';
 import { transactionDailyReoccur } from './index.ts';
@@ -20,9 +20,9 @@ test.describe(`check transactionDailyReoccur`, () => {
       type: `income`,
       start: `2018-03-22`,
       rtype: `day`,
-      cycle: Big(1),
-      occurrences: Big(0),
-      value: Big(150)
+      cycle: 1,
+      occurrences: 0,
+      value: dinero({ amount: 150, currency: USD })
     };
     let graphRange = {
       start: startOfDay(parseISO('2018-04-01')),
@@ -42,7 +42,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let resolvedTestData = transactionDailyReoccur({
         transaction,
         seedDate: seed.date,
-        occurrences: Big(0)
+        occurrences: 0
       });
       expect(resolvedTestData).toHaveProperty('date');
       expect(resolvedTestData).toHaveProperty('y');
@@ -76,7 +76,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let resolvedTestData = transactionDailyReoccur({
         transaction,
         seedDate: seed.date,
-        occurrences: Big(0)
+        occurrences: 0
       });
       // where January = 0, 20XX-04-01 will be Month = 3
       expect(getMonth(resolvedTestData.date)).toBe(3);
@@ -84,7 +84,7 @@ test.describe(`check transactionDailyReoccur`, () => {
     });
 
     test(`returns a cycle of 1`, () => {
-      let testData = { ...transaction, cycle: Big(1) };
+      let testData = { ...transaction, cycle: 1 };
       const seed = findSeed({
         nextTransactionFn: transactionDailyReoccur,
         transaction: testData,
@@ -99,7 +99,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let resolvedTestData = transactionDailyReoccur({
         transaction: testData,
         seedDate: seed.date,
-        occurrences: Big(0)
+        occurrences: 0
       });
       expect(getDate(resolvedTestData.date)).toBe(2);
       expect(
@@ -109,7 +109,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let secondIteration = transactionDailyReoccur({
         transaction: testData,
         seedDate: resolvedTestData.date,
-        occurrences: Big(1)
+        occurrences: 1
       });
       expect(
         differenceInCalendarDays(resolvedTestData.date)(secondIteration.date)
@@ -117,7 +117,7 @@ test.describe(`check transactionDailyReoccur`, () => {
     });
 
     test(`returns a cycle of 3`, () => {
-      let testData = { ...transaction, cycle: Big(3) };
+      let testData = { ...transaction, cycle: 3 };
       const seed = findSeed({
         nextTransactionFn: transactionDailyReoccur,
         transaction: testData,
@@ -132,7 +132,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let resolvedTestData = transactionDailyReoccur({
         transaction: testData,
         seedDate: seed.date,
-        occurrences: Big(0)
+        occurrences: 0
       });
       expect(getDate(resolvedTestData.date)).toBe(6);
       expect(
@@ -142,7 +142,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let secondIteration = transactionDailyReoccur({
         transaction: testData,
         seedDate: resolvedTestData.date,
-        occurrences: Big(1)
+        occurrences: 1
       });
       expect(
         differenceInCalendarDays(resolvedTestData.date)(secondIteration.date)
@@ -150,7 +150,7 @@ test.describe(`check transactionDailyReoccur`, () => {
     });
 
     test(`returns a cycle of 5`, () => {
-      let testData = { ...transaction, cycle: Big(5) };
+      let testData = { ...transaction, cycle: 5 };
       const seed = findSeed({
         nextTransactionFn: transactionDailyReoccur,
         transaction: testData,
@@ -165,7 +165,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let resolvedTestData = transactionDailyReoccur({
         transaction: testData,
         seedDate: seed.date,
-        occurrences: Big(0)
+        occurrences: 0
       });
       expect(getDate(resolvedTestData.date)).toBe(6);
       expect(
@@ -175,7 +175,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let secondIteration = transactionDailyReoccur({
         transaction: testData,
         seedDate: resolvedTestData.date,
-        occurrences: Big(1)
+        occurrences: 1
       });
       expect(
         differenceInCalendarDays(resolvedTestData.date)(secondIteration.date)
@@ -183,7 +183,7 @@ test.describe(`check transactionDailyReoccur`, () => {
     });
 
     test(`returns a cycle of 14`, () => {
-      let testData = { ...transaction, cycle: Big(14) };
+      let testData = { ...transaction, cycle: 14 };
       const seed = findSeed({
         nextTransactionFn: transactionDailyReoccur,
         transaction: testData,
@@ -198,7 +198,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let resolvedTestData = transactionDailyReoccur({
         transaction: testData,
         seedDate: seed.date,
-        occurrences: Big(0)
+        occurrences: 0
       });
       expect(getDate(resolvedTestData.date)).toBe(5 + 14);
       expect(
@@ -208,7 +208,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let secondIteration = transactionDailyReoccur({
         transaction: testData,
         seedDate: resolvedTestData.date,
-        occurrences: Big(1)
+        occurrences: 1
       });
       expect(
         differenceInCalendarDays(resolvedTestData.date)(secondIteration.date)
@@ -225,9 +225,9 @@ test.describe(`check transactionDailyReoccur`, () => {
       type: `income`,
       start: `2018-03-22`,
       rtype: `day`,
-      cycle: Big(1),
-      occurrences: Big(0),
-      value: Big(150)
+      cycle: 1,
+      occurrences: 0,
+      value: dinero({ amount: 150, currency: USD })
     };
     let graphRange = {
       start: startOfDay(parseISO('2018-03-01')),
@@ -238,7 +238,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let resolvedTestData = transactionDailyReoccur({
         transaction,
         seedDate: graphRange.date,
-        occurrences: Big(0)
+        occurrences: 0
       });
       expect(resolvedTestData).toHaveProperty('date');
       expect(resolvedTestData).toHaveProperty('y');
@@ -272,7 +272,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let resolvedTestData = transactionDailyReoccur({
         transaction,
         seedDate: seed.date,
-        occurrences: Big(0)
+        occurrences: 0
       });
       // where January = 0, 20XX-03-23 will be Month = 2
       expect(getMonth(resolvedTestData.date)).toBe(2);
@@ -280,7 +280,7 @@ test.describe(`check transactionDailyReoccur`, () => {
     });
 
     test(`returns a cycle of 1`, () => {
-      let testData = { ...transaction, cycle: Big(1) };
+      let testData = { ...transaction, cycle: 1 };
       const seed = findSeed({
         nextTransactionFn: transactionDailyReoccur,
         transaction: testData,
@@ -295,7 +295,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let resolvedTestData = transactionDailyReoccur({
         transaction: testData,
         seedDate: seed.date,
-        occurrences: Big(0)
+        occurrences: 0
       });
       expect(getDate(resolvedTestData.date)).toBe(23);
       expect(
@@ -305,7 +305,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let secondIteration = transactionDailyReoccur({
         transaction: testData,
         seedDate: resolvedTestData.date,
-        occurrences: Big(1)
+        occurrences: 1
       });
       expect(
         differenceInCalendarDays(resolvedTestData.date)(secondIteration.date)
@@ -313,7 +313,7 @@ test.describe(`check transactionDailyReoccur`, () => {
     });
 
     test(`returns a cycle of 3`, () => {
-      let testData = { ...transaction, cycle: Big(3) };
+      let testData = { ...transaction, cycle: 3 };
       const seed = findSeed({
         nextTransactionFn: transactionDailyReoccur,
         transaction: testData,
@@ -328,7 +328,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let resolvedTestData = transactionDailyReoccur({
         transaction: testData,
         seedDate: seed.date,
-        occurrences: Big(0)
+        occurrences: 0
       });
       expect(getDate(resolvedTestData.date)).toBe(25);
       expect(
@@ -338,7 +338,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let secondIteration = transactionDailyReoccur({
         transaction: testData,
         seedDate: resolvedTestData.date,
-        occurrences: Big(1)
+        occurrences: 1
       });
       expect(
         differenceInCalendarDays(resolvedTestData.date)(secondIteration.date)
@@ -346,7 +346,7 @@ test.describe(`check transactionDailyReoccur`, () => {
     });
 
     test(`returns a cycle of 5`, () => {
-      let testData = { ...transaction, cycle: Big(5) };
+      let testData = { ...transaction, cycle: 5 };
       const seed = findSeed({
         nextTransactionFn: transactionDailyReoccur,
         transaction: testData,
@@ -361,7 +361,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let resolvedTestData = transactionDailyReoccur({
         transaction: testData,
         seedDate: seed.date,
-        occurrences: Big(0)
+        occurrences: 0
       });
       expect(getDate(resolvedTestData.date)).toBe(27);
       expect(
@@ -371,7 +371,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let secondIteration = transactionDailyReoccur({
         transaction: testData,
         seedDate: resolvedTestData.date,
-        occurrences: Big(1)
+        occurrences: 1
       });
       expect(
         differenceInCalendarDays(resolvedTestData.date)(secondIteration.date)
@@ -379,7 +379,7 @@ test.describe(`check transactionDailyReoccur`, () => {
     });
 
     test(`returns a cycle of 14`, () => {
-      let testData = { ...transaction, cycle: Big(14) };
+      let testData = { ...transaction, cycle: 14 };
       const seed = findSeed({
         nextTransactionFn: transactionDailyReoccur,
         transaction: testData,
@@ -394,7 +394,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let resolvedTestData = transactionDailyReoccur({
         transaction: testData,
         seedDate: seed.date,
-        occurrences: Big(0)
+        occurrences: 0
       });
       expect(getDate(resolvedTestData.date)).toBe(5);
       expect(
@@ -404,7 +404,7 @@ test.describe(`check transactionDailyReoccur`, () => {
       let secondIteration = transactionDailyReoccur({
         transaction: testData,
         seedDate: resolvedTestData.date,
-        occurrences: Big(1)
+        occurrences: 1
       });
       expect(
         differenceInCalendarDays(resolvedTestData.date)(secondIteration.date)

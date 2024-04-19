@@ -1,69 +1,196 @@
-import { Big } from 'big.js';
+import { USD } from '@dinero.js/currencies';
+import {
+  dinero,
+  add,
+  subtract,
+  multiply,
+  equal,
+  normalizeScale,
+  toSnapshot,
+  trimScale,
+  type Dinero
+} from 'dinero.js';
 import { createSelector } from 'starfx';
 
 import { schema } from '../schema';
+
+const ratioAmounts = (r1, r2): number => {
+  const [sc1, sc2] = normalizeScale([r1, r2]);
+  const sc1s = toSnapshot(sc1);
+  const sc2s = toSnapshot(sc2);
+  return sc1s.amount / sc2s.amount;
+};
+
+export const deriveDailies = (transactions) => {
+  const zero = dinero({ amount: 0, currency: USD });
+
+  const income = transactions.reduce(
+    (accumulator, d) =>
+      d.type === 'income' ? add(d.dailyRate, accumulator) : accumulator,
+    zero
+  );
+
+  const expense = transactions.reduce(
+    (accumulator, d) =>
+      d.type === 'expense' ? add(d.dailyRate, accumulator) : accumulator,
+    zero
+  );
+
+  return { income, expense };
+};
+
+export const deriveFIstats = ({
+  totalDebt,
+  dailyExpense,
+  totalInvest,
+  FIconst,
+  FIconstIncrease
+}: {
+  totalDebt: Dinero<number>;
+  dailyExpense: Dinero<number>;
+  totalInvest: Dinero<number>;
+  FIconst: number;
+  FIconstIncrease: number;
+}) => {
+  const zero = dinero({ amount: 0, currency: USD });
+  const FIconstpercent = (FIconst ?? 0) * 100;
+
+  return {
+    // this can reasonable use debt as it is a first milestone
+    //   and has a bit of a basis in a net worth type calculation
+    percentToFirstFI: ratioAmounts(
+      multiply(subtract(totalInvest, totalDebt), 100),
+      dinero({ amount: 100_000, currency: USD })
+    ),
+
+    // the remaining calculations do not consider debt as it is more than likely
+    //  already covered in the expenses, we are conservatively expecting
+    //  that debt payment to continue forever with these high level numbers
+    percentToFUMoneyConsidering: equal(dailyExpense, zero)
+      ? 100
+      : FIconstpercent / 2,
+    yearsToFUMoneyConsidering:
+      FIconst >= 2
+        ? 0
+        : FIconstIncrease === 0
+          ? 999
+          : (2 - FIconst) / FIconstIncrease,
+
+    percentToFUMoneyConfident: equal(dailyExpense, zero)
+      ? 100
+      : FIconstpercent / 3,
+    yearsToFUMoneyConfident:
+      FIconst >= 3
+        ? 0
+        : FIconstIncrease === 0
+          ? 999
+          : (3 - FIconst) / FIconstIncrease,
+
+    percentToHalfFI: equal(dailyExpense, zero) ? 100 : FIconstpercent / 12.5,
+    yearsToHalfFI:
+      FIconst >= 12.5
+        ? 0
+        : FIconstIncrease === 0
+          ? 999
+          : (12.5 - FIconst) / FIconstIncrease,
+
+    percentToLeanFI: equal(dailyExpense, zero) ? 100 : FIconstpercent / 17.5,
+    yearsToLeanFI:
+      FIconst >= 17.5
+        ? 0
+        : FIconstIncrease === 0
+          ? 999
+          : (17.5 - FIconst) / FIconstIncrease,
+
+    percentToFlexFI: equal(dailyExpense, zero) ? 100 : FIconstpercent / 20,
+    yearsToFlexFI:
+      FIconst >= 20
+        ? 0
+        : FIconstIncrease === 0
+          ? 999
+          : (20 - FIconst) / FIconstIncrease,
+
+    percentToFINumber: equal(dailyExpense, zero) ? 100 : FIconstpercent / 25,
+    yearsToFINumber:
+      FIconst >= 25
+        ? 0
+        : FIconstIncrease === 0
+          ? 999
+          : (25 - FIconst) / FIconstIncrease,
+
+    percentToFatFI: equal(dailyExpense, zero) ? 100 : FIconstpercent / 30,
+    yearsToFatFI:
+      FIconst >= 30
+        ? 0
+        : FIconstIncrease === 0
+          ? 999
+          : (30 - FIconst) / FIconstIncrease
+  };
+};
+
+export const determineFI = ({
+  totalExpense,
+  totalInvest,
+  totalInvestInterest
+}: {
+  totalExpense: Dinero<number>;
+  totalInvest: Dinero<number>;
+  totalInvestInterest: Dinero<number>;
+}) => {
+  const zero = dinero({ amount: 0, currency: USD });
+  const FIconst = equal(totalExpense, zero)
+    ? 100
+    : ratioAmounts(totalInvest, totalExpense);
+
+  const increase = equal(totalExpense, zero)
+    ? 100
+    : ratioAmounts(add(totalInvest, totalInvestInterest), totalExpense) -
+      FIconst;
+
+  return { constant: FIconst, increase };
+};
 
 export const financialStats = createSelector(
   schema.transactions.selectTableAsList,
   schema.accounts.selectTableAsList,
   (transactions, accounts) => {
-    let dailyIncome = transactions.reduce(
-      (accumulator, d) =>
-        d.type === 'income' ? d.dailyRate.add(accumulator) : accumulator,
-      Big(0)
-    );
-
-    let dailyExpense = transactions.reduce(
-      (accumulator, d) =>
-        d.type === 'expense' ? d.dailyRate.add(accumulator) : accumulator,
-      Big(0)
-    );
+    const zero = dinero({ amount: 0, currency: USD });
+    const daily = deriveDailies(transactions);
 
     let dailyInvest = transactions.reduce((accumulator, d) => {
       let account = accounts.find((acc) => acc.name === d.raccount);
 
       if (account && account.vehicle === 'investment') {
-        return d.dailyRate.add(accumulator);
+        return add(d.dailyRate, accumulator);
       } else {
         return accumulator;
       }
-    }, Big(0));
+    }, zero);
 
-    let dailyInvestInterest = transactions.reduce(
-      (accumulator, d) => {
-        let account = accounts.find((acc) => acc.name === d.raccount);
-
-        if (account && account.vehicle === 'investment') {
-          const increaseQuantity = Big(1).add(accumulator.quantity);
-          const increaseVal = d.dailyRate.add(accumulator.value);
-          return { quantity: increaseQuantity, value: increaseVal };
-        } else {
-          return accumulator;
-        }
-      },
-      { quantity: Big(0), value: Big(0) }
-    );
+    const savingsRate = equal(daily.expense, zero)
+      ? 100
+      : ratioAmounts(
+          multiply(dailyInvest, 100),
+          equal(daily.income, zero)
+            ? dinero({ amount: 1, currency: USD })
+            : daily.income
+        );
 
     let totalInvest = accounts.reduce((accumulator, d) => {
       if (d.vehicle === 'investment') {
-        return Big(d.starting).add(accumulator);
+        return add(d.starting, accumulator);
       } else {
         return accumulator;
       }
-    }, Big(0));
+    }, zero);
 
-    let totalInvestInterest = accounts.reduce(
-      (accumulator, d) => {
-        if (d.vehicle === 'investment') {
-          const increaseQuantity = Big(1).add(accumulator.quantity);
-          const increaseVal = Big(d.interest).add(accumulator.value);
-          return { quantity: increaseQuantity, value: increaseVal };
-        } else {
-          return accumulator;
-        }
-      },
-      { quantity: Big(0), value: Big(0) }
-    );
+    let totalInvestInterest = accounts.reduce((accumulator, d) => {
+      if (d.vehicle === 'investment') {
+        return add(multiply(d.starting, d.interest), accumulator);
+      } else {
+        return accumulator;
+      }
+    }, zero);
 
     let totalDebt = accounts.reduce((accumulator, d) => {
       if (
@@ -71,103 +198,72 @@ export const financialStats = createSelector(
         d.vehicle === 'loan' ||
         d.vehicle === 'credit line'
       ) {
-        return Big(d.starting).add(accumulator);
+        return add(d.starting, accumulator);
       } else {
         return accumulator;
       }
-    }, Big(0));
+    }, zero);
+    const totalExpense = multiply(daily.expense, 365);
 
-    const FIconst = dailyExpense.eq(0)
-      ? Big(100)
-      : totalInvest.div(dailyExpense.times(365));
+    const fi = determineFI({ totalInvest, totalExpense, totalInvestInterest });
 
-    const FIconstpercent = FIconst.times(100);
-
-    const simpleInterested = totalInvest
-      .times(
-        totalInvestInterest.value
-          .div(
-            totalInvestInterest.quantity.eq(0)
-              ? 1
-              : totalInvestInterest.quantity
-          )
-          .div(100)
-      )
-      .add(
-        dailyInvest.times(365).times(
-          dailyInvestInterest.value
-            .div(
-              dailyInvestInterest.quantity.eq(0)
-                ? 1
-                : dailyInvestInterest.quantity
-            )
-            .div(100)
-            .add(1)
-        )
-      )
-      .div(dailyExpense.eq(0) ? 1 : dailyExpense.times(365));
+    const {
+      percentToFUMoneyConsidering,
+      yearsToFUMoneyConsidering,
+      percentToFUMoneyConfident,
+      yearsToFUMoneyConfident,
+      percentToFirstFI,
+      percentToHalfFI,
+      yearsToHalfFI,
+      percentToLeanFI,
+      yearsToLeanFI,
+      percentToFlexFI,
+      yearsToFlexFI,
+      percentToFINumber,
+      yearsToFINumber,
+      percentToFatFI,
+      yearsToFatFI
+    } = deriveFIstats({
+      totalDebt,
+      dailyExpense: daily.expense,
+      totalInvest,
+      FIconst: fi.constant,
+      FIconstIncrease: fi.increase
+    });
 
     return {
-      dailyIncome: dailyIncome,
-      dailyExpense: dailyExpense,
-      savingsRate: dailyExpense.eq(0)
-        ? 100
-        : dailyInvest.times(100).div(dailyIncome.eq(0) ? 1 : dailyIncome),
+      dailyIncome: daily.income,
+      dailyExpense: daily.expense,
+      dailyInvest,
+      totalInvest: trimScale(totalInvest),
+      totalInvestInterest: trimScale(totalInvestInterest),
+      savingsRate,
 
-      percentToPositiveNetWorth: totalDebt.eq(0)
-        ? 100
-        : totalInvest.times(100).div(totalDebt),
+      percentToPositiveNetWorth: equal(totalDebt, zero)
+        ? ratioAmounts(
+            multiply(totalInvest, 100),
+            dinero({ amount: 1, currency: USD })
+          )
+        : ratioAmounts(multiply(totalInvest, 100), totalDebt),
 
-      expenseMultiple: FIconst,
-      expenseMultipleIncreasePerYear: simpleInterested,
-      percentToFirstFI: totalInvest.times(100).div(totalDebt.plus(100000)),
-      percentToFUMoneyConsidering: dailyExpense.eq(0)
-        ? 100
-        : FIconstpercent.div(2),
+      investToExpenseMultiple: fi.constant,
+      investToExpenseIncreasePerYear: fi.increase,
 
-      yearsToFUMoneyConsidering:
-        simpleInterested.eq(0) || FIconst.gte(2)
-          ? 999
-          : Big(2).minus(FIconst).div(simpleInterested),
-
-      percentToFUMoneyConfident: dailyExpense.eq(0)
-        ? 100
-        : FIconstpercent.div(3),
-
-      yearsToFUMoneyConfident:
-        simpleInterested.eq(0) || FIconst.gte(3)
-          ? 999
-          : Big(3).minus(FIconst).div(simpleInterested),
-
-      percentToHalfFI: dailyExpense.eq(0) ? 100 : FIconstpercent.div(12.5),
-      yearsToHalfFI:
-        simpleInterested.eq(0) || FIconst.gte(12.5)
-          ? 999
-          : Big(12.5).minus(FIconst).div(simpleInterested),
-
-      percentToLeanFI: dailyExpense.eq(0) ? 100 : FIconstpercent.div(17.5),
-      yearsToLeanFI:
-        simpleInterested.eq(0) || FIconst.gte(17.5)
-          ? 999
-          : Big(17.5).minus(FIconst).div(simpleInterested),
-
-      percentToFlexFI: dailyExpense.eq(0) ? 100 : FIconstpercent.div(20),
-      yearsToFlexFI:
-        simpleInterested.eq(0) || FIconst.gte(20)
-          ? 999
-          : Big(20).minus(FIconst).div(simpleInterested),
-
-      percentToFINumber: dailyExpense.eq(0) ? 100 : FIconstpercent.div(25),
-      yearsToFINumber:
-        simpleInterested.eq(0) || FIconst.gte(25)
-          ? 999
-          : Big(25).minus(FIconst).div(simpleInterested),
-
-      percentToFatFI: dailyExpense.eq(0) ? 100 : FIconstpercent.div(30),
-      yearsToFatFI:
-        simpleInterested.eq(0) || FIconst.gte(30)
-          ? 999
-          : Big(30).minus(FIconst).div(simpleInterested)
+      percentToFUMoneyConsidering,
+      yearsToFUMoneyConsidering,
+      percentToFUMoneyConfident,
+      yearsToFUMoneyConfident,
+      percentToFirstFI,
+      percentToHalfFI,
+      yearsToHalfFI,
+      percentToLeanFI,
+      yearsToLeanFI,
+      percentToFlexFI,
+      yearsToFlexFI,
+      percentToFINumber,
+      yearsToFINumber,
+      percentToFatFI,
+      yearsToFatFI
     };
   }
 );

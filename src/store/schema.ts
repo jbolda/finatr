@@ -1,10 +1,15 @@
-import { Big } from 'big.js';
 import addDays from 'date-fns/fp/addDays/index.js';
+import { type Dinero } from 'dinero.js';
 import { createSchema, slice } from 'starfx';
 
 import { emptyAccount, emptyTransaction } from './factory.ts';
 
 const addYear = addDays(365);
+
+export type ScaledNumber = {
+  amount: number;
+  scale: number;
+};
 
 interface Settings {
   examples: boolean;
@@ -28,7 +33,7 @@ const defaultSettings = {
   taxes: false
 };
 
-type TransactionType = 'income' | 'expense' | 'transfet';
+type TransactionType = 'income' | 'expense' | 'transfer';
 interface Transaction {
   id: string;
   raccount: string;
@@ -38,18 +43,24 @@ interface Transaction {
   start: string;
   ending: string;
   rtype: string;
-  cycle: number; // Big
-  value: number; // Big
-  dailyRate: Big; // Big
-  occurrences: number; // Big
+  cycle: number;
+  value: Dinero<number>;
+  dailyRate: Dinero<number>;
+  occurrences: number;
   beginAfterOccurrences: number;
 }
 
+type AmountVehicle =
+  | 'operating'
+  | 'investment'
+  | 'debt'
+  | 'loan'
+  | 'credit line';
 interface Account {
   name: string;
-  starting: number; // Big
-  interest: number; // Big
-  vehicle: string;
+  starting: Dinero<number>;
+  interest: ScaledNumber;
+  vehicle: AmountVehicle;
   payback: Transaction[];
 }
 
