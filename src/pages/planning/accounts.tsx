@@ -20,8 +20,9 @@ const modifyAccount = (navigate, account) => {
       account: {
         id: account.id,
         name: account.name,
-        starting: account.starting.toFixed(2),
-        interest: account.interest.toFixed(2),
+        starting: toDecimal(account.starting),
+        interest:
+          account.interest.amount * Math.pow(10, -account.interest.scale),
         vehicle: account.vehicle
       }
     }
@@ -153,27 +154,7 @@ const FlexDebtTable = ({ itemHeaders, data }) => {
             // >
             //   +
             // </Button>,
-            <Button
-              onPress={() =>
-                navigate('/accounts/set', {
-                  state: {
-                    navigateTo: 'accounts',
-                    account: {
-                      id: account.id,
-                      name: account.name,
-                      starting: account.starting.toFixed(2),
-                      interest: `${
-                        account.interest.amount *
-                        Math.pow(10, -account.interest.scale)
-                      }%`,
-                      vehicle: account.vehicle
-                    }
-                  }
-                })
-              }
-            >
-              M
-            </Button>,
+            <Button onPress={() => modifyAccount(navigate, account)}>M</Button>,
             <Button onPress={() => dispatch(accountRemove({ id: account.id }))}>
               <strong>X</strong>
             </Button>
