@@ -1,4 +1,5 @@
 import { eachDayOfInterval } from 'date-fns';
+import { toDecimal, type Dinero } from 'dinero.js';
 import { createSelector } from 'starfx';
 
 import { schema } from '~/src/store/schema.ts';
@@ -19,7 +20,24 @@ export const lineChartAccounts = createSelector(
   }
 );
 
-function resolveLineChartData({ graphRange, accounts, transactions }) {
+function resolveLineChartData({
+  graphRange,
+  accounts,
+  transactions
+}: {
+  graphRange: any;
+  accounts: {
+    name: string;
+    starting: Dinero<number>;
+    interest: {
+      amount: number;
+      scale: number;
+    };
+    vehicle: string;
+    payback: never[];
+  }[];
+  transactions: any;
+}) {
   const allDates = eachDayOfInterval(graphRange);
   const incomeStacked = transactions.data
     .filter((t) => t.transaction.type === 'income')
@@ -55,7 +73,8 @@ function resolveLineChartData({ graphRange, accounts, transactions }) {
           account.name
         );
         const prevValue =
-          data?.[accountIndex]?.data?.[dateIndex - 1]?.[1] ?? account.starting;
+          data?.[accountIndex]?.data?.[dateIndex - 1]?.[1] ??
+          Number(toDecimal(account.starting));
         if (!prevValue && prevValue !== 0) {
           console.error({ account, prevValue, day, income, expenses });
           throw new Error(`nulled`);

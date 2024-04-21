@@ -1,3 +1,4 @@
+import { toDecimal } from 'dinero.js';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'starfx/react';
@@ -87,9 +88,9 @@ const TransactionTable = ({ data }) => {
           transaction.type,
           transaction.start,
           transaction.rtype,
-          !transaction.cycle ? '' : transaction.cycle.toFixed(0),
-          !transaction.value ? '' : transaction.value.toFixed(2),
-          transaction.dailyRate.toFixed(2),
+          !transaction.cycle,
+          toDecimal(transaction.value),
+          toDecimal(transaction.dailyRate),
           <Button
             onPress={() =>
               navigate('/transactions/set', {
@@ -106,8 +107,8 @@ const TransactionTable = ({ data }) => {
                     rtype: transaction.rtype,
                     beginAfterOccurrences:
                       transaction.beginAfterOccurrences ?? 0,
-                    cycle: transaction.cycle.toFixed(0),
-                    value: transaction.value.toFixed(2),
+                    cycle: transaction.cycle,
+                    value: toDecimal(transaction.value),
                     valueType: transaction.valueType ?? 'static'
                   }
                 }

@@ -1,12 +1,23 @@
+import { USD } from '@dinero.js/currencies';
+import { dinero } from 'dinero.js';
+import { dineroFromFloat } from '~/src/dineroUtils.ts';
+
 import { schema } from '../schema';
 import makeUUID from '../utils/makeUUID.ts';
 import { thunks } from './foundation.ts';
 
 export const accountAdd = thunks.create('account:add', function* (ctx, next) {
-  const account = { ...ctx.payload };
-  if (!account.id) {
+  const rawAccount = { ...ctx.payload };
+  const account = { ...rawAccount };
+  if (!rawAccount.id) {
     account.id = makeUUID();
   }
+  account.starting =
+    typeof rawAccount.starting === 'object'
+      ? dinero(rawAccount.starting)
+      : dineroFromFloat({ amount: rawAccount.starting, currency: USD });
+  account.interest = { amount: rawAccount.interest * 100, scale: 2 };
+
   yield* schema.update(schema.accounts.add({ [account.id]: account }));
   yield* next();
 });

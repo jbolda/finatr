@@ -1,7 +1,9 @@
-import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
-import { schema } from '~/src/store/schema';
+import { toDecimal } from 'dinero.js';
+import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'starfx/react';
+
+import { schema } from '~/src/store/schema';
 
 export const IcicleChart = () => {
   const d3Container = useRef(null);
@@ -42,13 +44,13 @@ const draw = async (svgRef, data) => {
           ...acc.transactions,
           { ...currentVal, dailyRateRelative: acc.income }
         ];
-        acc.income += Number(currentVal.dailyRate);
+        acc.income += Number(toDecimal(currentVal.dailyRate));
       } else if (currentVal.type === 'expense') {
         acc.transactions = [
           ...acc.transactions,
           { ...currentVal, dailyRateRelative: acc.expense }
         ];
-        acc.expense += Number(currentVal.dailyRate);
+        acc.expense += Number(toDecimal(currentVal.dailyRate));
       }
       return acc;
     },
@@ -107,7 +109,7 @@ const draw = async (svgRef, data) => {
       (exit) => exit.remove()
     )
     .attr('width', width)
-    .attr('height', (d) => scale(Number(d.dailyRate)))
+    .attr('height', (d) => scale(Number(toDecimal(d.dailyRate))))
     .attr('fill-opacity', 0.6)
     .attr('fill', (d) => color(d.category))
     .attr(
@@ -125,7 +127,7 @@ const draw = async (svgRef, data) => {
       (enter) => {
         const tnode = enter.append('text');
         tnode.append('tspan').text((d) => d.description);
-        tnode.append('tspan').text((d) => ` ${format(d.value)}`);
+        tnode.append('tspan').text((d) => ` ${toDecimal(d.value)}`);
         return tnode;
       },
       (update) => update,
@@ -134,7 +136,9 @@ const draw = async (svgRef, data) => {
     .style('user-select', 'none')
     .attr('pointer-events', 'none')
     .attr('x', (d) => (d.type === 'income' ? 0 : width))
-    .attr('y', (d) => scale(Number(d.dailyRateRelative) + Number(d.dailyRate)));
+    .attr('y', (d) =>
+      scale(Number(d.dailyRateRelative) + Number(toDecimal(d.dailyRate)))
+    );
 
   return svg.node();
 };
