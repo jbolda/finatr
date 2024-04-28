@@ -1,5 +1,7 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { RouterProvider } from 'react-aria-components';
+import { Routes, Route, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'starfx/react';
 
 import { Footer } from './components/Footer.tsx';
@@ -38,9 +40,10 @@ const FeatureFlag = ({ flag, children }) => {
 
 const App = (props) => {
   const settings = useSelector(schema.settings.select);
+  let navigate = useNavigate();
 
   return (
-    <BrowserRouter>
+    <RouterProvider navigate={navigate}>
       <div className="min-h-full">
         <div className="flex flex-col h-screen">
           <Header settings={settings} />
@@ -161,7 +164,7 @@ const App = (props) => {
           <Footer settings={settings} />
         </div>
       </div>
-    </BrowserRouter>
+    </RouterProvider>
   );
 };
 
