@@ -1,6 +1,7 @@
-import { Big } from 'big.js';
+import { USD } from '@dinero.js/currencies';
 import getQuarter from 'date-fns/fp/getQuarter/index.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';
+import { dinero } from 'dinero.js';
 import { createSelector } from 'starfx';
 
 import { schema } from '~/src/store/schema.ts';
@@ -31,12 +32,12 @@ export const taxStrategy = createSelector(
   incomeExpectedGrouped,
   (groups, expected) => {
     const allocations = {
-      gross: Big(0),
-      federalTax: Big(0),
-      stateTax: Big(0),
-      socialSecurity: Big(0),
-      hsa: Big(0),
-      pretaxInvestments: Big(0)
+      gross: dinero({ amount: 0, currency: USD }),
+      federalTax: dinero({ amount: 0, currency: USD }),
+      stateTax: dinero({ amount: 0, currency: USD }),
+      socialSecurity: dinero({ amount: 0, currency: USD }),
+      hsa: dinero({ amount: 0, currency: USD }),
+      pretaxInvestments: dinero({ amount: 0, currency: USD })
     };
 
     const quarters = [1, 2, 3, 4];

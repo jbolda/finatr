@@ -33,7 +33,7 @@ test('submits modified transaction', async ({ page }) => {
   await page.getByLabel('value').fill('59');
   await page.keyboard.press('Enter');
 
-  await expect(page.getByText('59.00')).toBeVisible();
+  await expect(page.getByText('59.00').first()).toBeVisible();
 });
 
 test('check income is listed in income tab after submit', async ({ page }) => {
@@ -42,5 +42,5 @@ test('check income is listed in income tab after submit', async ({ page }) => {
 
   await page.getByRole('tab').getByText('Income').click();
 
-  await expect(page.getByText('57.00')).toBeVisible();
+  await expect(page.getByText('57.00').first()).toBeVisible();
 });
