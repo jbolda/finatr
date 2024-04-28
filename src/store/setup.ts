@@ -1,3 +1,4 @@
+import { dinero } from 'dinero.js';
 import {
   Callable,
   createStore,
@@ -17,17 +18,49 @@ import {
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
 import { tasks, thunks } from './thunks/index.ts';
 
+function reDinero(item: unknown) {
+  if (!item || (typeof item !== 'object' && Object.entries(item).length > 0))
+    return item;
+  const reDineroed: Record<string, any> = { ...item };
+  for (const [key, value] of Object.entries(item)) {
+    if (value && typeof value === 'object') {
+      if ('amount' in value && 'currency' in value && 'scale' in value) {
+        reDineroed[key] = dinero(value);
+      }
+    }
+  }
+  return reDineroed;
+}
+
+function reconcilerWithReconstitution(original: any, persisted: any) {
+  const reconstituted = { ...persisted };
+  const sliceNames = ['accounts', 'transactions'];
+
+  for (const sliceName of sliceNames) {
+    if (sliceName in persisted) {
+      for (const [key, item] of Object.entries(persisted[sliceName])) {
+        const updatedData = reDinero(item);
+        reconstituted[sliceName][key] = updatedData;
+      }
+    }
+  }
+
+  return { ...original, ...reconstituted };
+}
+
 const devtoolsEnabled = true;
 export function setupStore({ logs = true, initialState = {} }) {
   const persistor = createPersistor({
+    key: 'finatr',
     adapter: createLocalStorageAdapter<AppState>(),
+    reconciler: reconcilerWithReconstitution,
     allowlist: [
-      'settings'
-      // 'chartRange',
-      // 'accounts',
-      // 'transactions',
-      // 'incomeReceived',
-      // 'incomeExpected'
+      'settings',
+      'chartRange',
+      'accounts',
+      'transactions',
+      'incomeReceived',
+      'incomeExpected'
     ]
   });
 
