@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@estruyf/github-actions-reporter": "^1.6.0",
-    "@playwright/experimental-ct-react17": "^1.43.0",
+    "@playwright/experimental-ct-react17": "^1.43.1",
     "@playwright/test": "^1.43.1",
     "@tauri-apps/cli": "1.5.9",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
