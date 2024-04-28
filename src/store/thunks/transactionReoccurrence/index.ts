@@ -1,4 +1,4 @@
-import Big from 'big.js';
+import { USD } from '@dinero.js/currencies';
 import addDays from 'date-fns/fp/addDays/index.js';
 import addMonths from 'date-fns/fp/addMonths/index.js';
 import addQuarters from 'date-fns/fp/addQuarters/index.js';
@@ -11,6 +11,7 @@ import isAfter from 'date-fns/fp/isAfter/index.js';
 import isBefore from 'date-fns/fp/isBefore/index.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';
 import setDate from 'date-fns/fp/setDate/index.js';
+import { dinero, allocate, type Dinero } from 'dinero.js';
 
 export const nextTransaction = (rtype) => {
   switch (rtype) {
@@ -73,7 +74,8 @@ export const transactionNoReoccur = ({ transaction, seedDate }) => {
     y: transaction.value
   };
 };
-const transactionNoReoccurCompute = ({ transaction }) => 0;
+const transactionNoReoccurCompute = ({ transaction }) =>
+  dinero({ amount: 0, currency: USD });
 
 // when transaction.rtype === 'day'
 export const transactionDailyReoccur = ({
@@ -89,7 +91,7 @@ export const transactionDailyReoccur = ({
     throw new Error('transactionDailyReoccur expects transaction.cycle');
   }
 
-  if (!occurrences) {
+  if (occurrences === undefined) {
     throw new Error('transactionDailyReoccur expects occurrences');
   }
 
@@ -103,7 +105,7 @@ export const transactionDailyReoccur = ({
   };
 };
 const transactionDailyReoccurCompute = ({ transaction }) =>
-  transaction.value.div(transaction.cycle);
+  allocate(transaction.value, [1, 6])[0];
 
 // when transaction.rtype === 'day of week'
 export const transactionDayOfWeekReoccur = ({
@@ -123,7 +125,7 @@ export const transactionDayOfWeekReoccur = ({
     throw new Error('transactionDayOfWeekReoccur expects transaction.start');
   }
 
-  if (!occurrences) {
+  if (occurrences === undefined) {
     throw new Error('transactionDayOfWeekReoccur expects occurrences');
   }
 
@@ -138,27 +140,29 @@ export const transactionDayOfWeekReoccur = ({
   const parsedStartDate = parseISO(transaction.start);
   const seedDay = getDay(seedDate);
   const startDay = getDay(parsedStartDate);
-  const dayAdjust = transaction.cycle.gte(seedDay)
-    ? transaction.cycle.minus(seedDay)
-    : transaction.cycle.minus(seedDay).plus(7);
+  const dayAdjust =
+    transaction.cycle >= seedDay
+      ? transaction.cycle - seedDay
+      : transaction.cycle - seedDay + 7;
 
   const dayCycles = isBefore(seedDate)(parsedStartDate)
-    ? Big(differenceInCalendarDays(parsedStartDate)(seedDate))
-        .plus(dayAdjust)
-        .div(7)
-        .round(0, 3)
-        .times(7)
-    : transaction.cycle.gte(startDay)
-      ? transaction.cycle.minus(startDay)
-      : transaction.cycle.minus(startDay).plus(7);
+    ? Math.ceil(
+        (differenceInCalendarDays(parsedStartDate)(seedDate) + dayAdjust) / 7
+      ) * 7
+    : transaction.cycle > startDay
+      ? transaction.cycle - startDay
+      : transaction.cycle - startDay + 7;
 
   return {
     date: addDays(dayCycles)(parsedStartDate),
     y: transaction.value
   };
 };
-const transactionDayOfWeekReoccurCompute = ({ transaction }) =>
-  transaction.value.div(7);
+const transactionDayOfWeekReoccurCompute = ({
+  transaction
+}: {
+  transaction: { value: Dinero<number> };
+}) => allocate(transaction.value, [1, 6])[0];
 
 // when transaction.rtype === 'day of month'
 export const transactionDayOfMonthReoccur = ({
@@ -174,7 +178,7 @@ export const transactionDayOfMonthReoccur = ({
     throw new Error('transactionDayOfMonthReoccur expects transaction.cycle');
   }
 
-  if (!occurrences) {
+  if (occurrences === undefined) {
     throw new Error('transactionDayOfMonthReoccur expects occurrences');
   }
 
@@ -183,7 +187,7 @@ export const transactionDayOfMonthReoccur = ({
   let cycleDate = setDate(transaction.cycle);
   if (
     isBeforeSeedDate(cycleDate(seedDate)) ||
-    (!!occurrences && !occurrences.eq(0))
+    (occurrences !== undefined && occurrences !== 0)
   ) {
     monthlyDate = cycleDate(addMonths(1)(seedDate));
   } else {
@@ -195,7 +199,7 @@ export const transactionDayOfMonthReoccur = ({
   };
 };
 const transactionDayOfMonthReoccurCompute = ({ transaction }) =>
-  transaction.value.div(30);
+  allocate(transaction.value, [1, 29])[0];
 
 // when transaction.rtype === 'bimonthly'
 export const transactionBimonthlyReoccur = ({ transaction, seedDate }) => {
@@ -213,7 +217,7 @@ export const transactionBimonthlyReoccur = ({ transaction, seedDate }) => {
   };
 };
 const transactionBimonthlyReoccurCompute = ({ transaction }) =>
-  transaction.value.div(30).div(2);
+  allocate(transaction.value, [1, 59])[0];
 
 // when transaction.rtype === 'quarterly'
 export const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
@@ -231,7 +235,7 @@ export const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
   };
 };
 const transactionQuarterlyReoccurCompute = ({ transaction }) =>
-  transaction.value.div(30).div(3);
+  allocate(transaction.value, [1, 89])[0];
 
 // when transaction.rtype === 'semiannually'
 export const transactionSemiannuallyReoccur = ({
@@ -247,7 +251,7 @@ export const transactionSemiannuallyReoccur = ({
     throw new Error('transactionSemiannuallyReoccur expects transaction.start');
   }
 
-  if (!occurrences) {
+  if (occurrences === undefined) {
     throw new Error('transactionSemiannuallyReoccur expects occurrences');
   }
   // Finds how many months are between when this started and the date in question
@@ -259,25 +263,24 @@ export const transactionSemiannuallyReoccur = ({
   // If we have any occurrences, then seedDate will actually be the date of the
   // last occurrences so we add 6 to that to get the next occurence.
   const parsedStartDate = parseISO(transaction.start);
-  const monthDifference = Big(
-    differenceInCalendarMonths(parsedStartDate)(seedDate)
-  )
-    .div(6)
-    .round(0, 3)
-    .times(6)
-    .plus(occurrences.eq(0) ? 0 : 6);
+  const monthDifference =
+    Math.ceil(differenceInCalendarMonths(parsedStartDate)(seedDate) / 6) * 6 +
+    (occurrences === 0 ? 0 : 6);
   const afterSeed = isAfter(seedDate);
   const increment = afterSeed(addMonths(monthDifference)(parsedStartDate))
     ? 0
     : 6;
 
   return {
-    date: addMonths(monthDifference.plus(increment))(parsedStartDate),
+    date: addMonths(monthDifference + increment)(parsedStartDate),
     y: transaction.value
   };
 };
 const transactionSemiannuallyReoccurCompute = ({ transaction }) =>
-  transaction.value.div(182.5);
+  allocate(transaction.value, [
+    { amount: 1825, scale: 1 },
+    { amount: 1825, scale: 1 }
+  ])[0];
 
 // when transaction.rtype === 'annually'
 export const transactionAnnuallyReoccur = ({
@@ -293,7 +296,7 @@ export const transactionAnnuallyReoccur = ({
     throw new Error('transactionAnnuallyReoccur expects transaction.start');
   }
 
-  if (!occurrences) {
+  if (occurrences === undefined) {
     throw new Error('transactionAnnuallyReoccur expects occurrences');
   }
 
@@ -305,11 +308,9 @@ export const transactionAnnuallyReoccur = ({
   // any occurrences, then seedDate will actually be the date of the
   // last occurrences so we add 1 to that to get the next occurence.
   const parsedStartDate = parseISO(transaction.start);
-  const yearDifference = Big(
-    differenceInCalendarYears(parsedStartDate)(seedDate)
-  )
-    .round(0, 3)
-    .plus(occurrences.eq(0) ? 0 : 1);
+  const yearDifference =
+    Math.ceil(differenceInCalendarYears(parsedStartDate)(seedDate)) +
+    (occurrences == 0 ? 0 : 1);
 
   return {
     date: addYears(yearDifference)(parsedStartDate),
@@ -317,4 +318,4 @@ export const transactionAnnuallyReoccur = ({
   };
 };
 const transactionAnnuallyReoccurCompute = ({ transaction }) =>
-  transaction.value.div(365);
+  allocate(transaction.value, [1, 364])[0];

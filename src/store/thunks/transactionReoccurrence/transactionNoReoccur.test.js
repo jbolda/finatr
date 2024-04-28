@@ -1,7 +1,9 @@
+import { USD } from '@dinero.js/currencies';
 import { test, expect } from '@playwright/experimental-ct-react17';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays/index.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';
 import startOfDay from 'date-fns/fp/startOfDay/index.js';
+import { dinero } from 'dinero.js';
 
 import { transactionNoReoccur } from './index.ts';
 
@@ -15,7 +17,7 @@ test.describe(`check transactionNoReoccur`, () => {
     start: `2018-03-22`,
     rtype: `none`,
     cycle: 0,
-    value: 150
+    value: dinero({ amount: 150, currency: USD })
   };
   let graphRange = {
     start: startOfDay(parseISO('2018-01-01')),
