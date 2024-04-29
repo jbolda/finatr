@@ -59,7 +59,7 @@
     "@types/big.js": "^6.2.2",
     "@types/node": "^20.12.7",
     "covector": "^0.10.2",
-    "parcel": "^2.11.0",
+    "parcel": "^2.12.0",
     "postcss": "^8.4.32",
     "prettier": "^3.2.5",
     "process": "^0.11.10",
