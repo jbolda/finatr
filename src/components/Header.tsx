@@ -49,7 +49,6 @@ function renderMenuItem(
 
 export const Header = ({ settings }) => {
   let location = useLocation();
-  console.log({ settings });
   return (
     <nav className="bg-gradient-to-r to-gray-800 from-cyan-700 pb-36">
       <div className="mx-auto container py-3 px-4 sm:px-6 lg:px-8">
