@@ -1,0 +1,59 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "assignees": [],
+  "labels": ["renovate", "dependencies"],
+  "semanticCommitScope": "deps",
+  "prCreation": "immediate",
+  "separateMinorPatch": false,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "extends": ["schedule:monthly"]
+  },
+  "packageRules": [
+    {
+      "groupName": "react monorepo",
+      "matchPackageNames": ["@types/react", "@types/react-dom"]
+    },
+    {
+      "groupName": "react-aria",
+      "matchPackageNames": [
+        "react-aria",
+        "react-aria-components",
+        "tailwindcss-react-aria-components"
+      ]
+    },
+    {
+      "groupName": "tailwindcss",
+      "matchPackageNames": [
+        "tailwindcss",
+        "tailwind-merge",
+        "tailwind-variants",
+        "tailwind-animate",
+        "@tailwindcss/forms"
+      ]
+    },
+    {
+      "extends": "monorepo:tauri",
+      "groupName": "tauri monorepo",
+      "matchUpdateTypes": ["digest", "patch", "minor", "major"]
+    },
+    {
+      "extends": "monorepo:playwright",
+      "groupName": "playwright monorepo",
+      "matchUpdateTypes": ["digest", "patch", "minor", "major"],
+      "matchPackageNames": ["@estruyf/github-actions-reporter"]
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)(workflow-templates|\\.(?:github|gitea|forgejo)/(?:workflows|actions))/.+\\.ya?ml$",
+        "(^|/)action\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-z-.]+?) depName=(?<depName>[^\\s]+?)(?: (?:lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?\\s+[A-Za-z0-9_]+?_VERSION\\s*:\\s*[\"']?(?<currentValue>.+?)[\"']?\\s"
+      ]
+    }
+  ]
+}
