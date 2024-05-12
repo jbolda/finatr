@@ -56,7 +56,9 @@ export const Header = ({ settings }) => {
           <Menu
             className="sm:-my-px md:flex"
             selectionMode="single"
-            items={navigation.filter((item) => settings[item.to] !== false)}
+            items={navigation.filter(
+              (item) => settings[item.to.substring(1)] !== false
+            )}
             selectedKeys={[location.pathname]}
           >
             {(item) =>
@@ -83,7 +85,9 @@ export const Header = ({ settings }) => {
               className="outline-none"
               aria-label="navigation popover"
               selectionMode="single"
-              items={navigation.filter((item) => settings[item.to] !== false)}
+              items={navigation.filter(
+                (item) => settings[item.to.substring(1)] !== false
+              )}
               selectedKeys={[location.pathname]}
             >
               {(item) =>
