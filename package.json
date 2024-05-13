@@ -27,7 +27,7 @@
     "dinero.js": "^2.0.0-alpha.14",
     "formik": "^2.2.9",
     "js-file-download": "0.4.12",
-    "lucide-react": "^0.292.0",
+    "lucide-react": "^0.378.0",
     "papaparse": "^5.4.1",
     "react": "18.2.0",
     "react-aria": "^3.32.1",
