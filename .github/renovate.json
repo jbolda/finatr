@@ -5,13 +5,12 @@
   "semanticCommitScope": "deps",
   "prCreation": "immediate",
   "separateMinorPatch": false,
-  "lockFileMaintenance": {
-    "enabled": true,
-    "extends": ["schedule:monthly"]
-  },
+  "lockFileMaintenance": { "enabled": true, "extends": ["schedule:monthly"] },
   "packageRules": [
     {
       "groupName": "react monorepo",
+      "matchUpdateTypes": ["digest", "patch", "minor", "major"],
+      "matchSourceUrls": ["https://github.com/facebook/react"],
       "matchPackageNames": ["@types/react", "@types/react-dom"]
     },
     {
@@ -33,14 +32,14 @@
       ]
     },
     {
-      "extends": "monorepo:tauri",
       "groupName": "tauri monorepo",
-      "matchUpdateTypes": ["digest", "patch", "minor", "major"]
+      "matchUpdateTypes": ["digest", "patch", "minor", "major"],
+      "matchSourceUrls": ["https://github.com/tauri-apps/tauri"]
     },
     {
-      "extends": "monorepo:playwright",
-      "groupName": "playwright monorepo",
       "matchUpdateTypes": ["digest", "patch", "minor", "major"],
+      "groupName": "playwright monorepo",
+      "matchSourceUrls": ["https://github.com/microsoft/playwright"],
       "matchPackageNames": ["@estruyf/github-actions-reporter"]
     }
   ],
