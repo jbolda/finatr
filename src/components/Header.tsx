@@ -1,4 +1,4 @@
-import { MenuIcon } from '@heroicons/react/outline';
+import { Menu as MenuIcon } from 'lucide-react';
 import React from 'react';
 import {
   Button,

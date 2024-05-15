@@ -1,6 +1,6 @@
-import React from 'react';
 import { ErrorMessage } from 'formik';
-import { ExclamationCircleIcon } from '@heroicons/react/solid';
+import { CircleAlert } from 'lucide-react';
+import React from 'react';
 
 export const FieldGroup = ({
   name,
@@ -17,10 +17,7 @@ export const FieldGroup = ({
         {children}
         {errors?.hasOwnProperty(name) && touched?.hasOwnProperty(name) ? ( // errors[name] && touched?.name ? (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ExclamationCircleIcon
-              className="h-5 w-5 text-red-500"
-              aria-hidden="true"
-            />
+            <CircleAlert className="h-5 w-5 text-red-500" aria-hidden="true" />
           </div>
         ) : null}
       </div>
