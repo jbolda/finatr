@@ -16,7 +16,7 @@ jobs:
           fetch-depth: 0
       - uses: volta-cli/action@v4
       - name: covector status
-        uses: jbolda/covector/packages/action@release
+        uses: jbolda/covector/packages/action@covector-v0
         id: covector-status
         with:
           command: 'status'
@@ -26,7 +26,7 @@ jobs:
           git config --global user.name "${{ github.event.pusher.name }}"
           git config --global user.email "${{ github.event.pusher.email }}"
       - name: covector version
-        uses: jbolda/covector/packages/action@release
+        uses: jbolda/covector/packages/action@covector-v0
         id: covector-version
         if: ${{ steps.covector-status.outputs.status != 'No changes.' }}
         with:
