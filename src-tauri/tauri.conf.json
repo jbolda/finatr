@@ -1,58 +1,51 @@
 {
-  "package": {
-    "productName": "finatr"
-  },
-  "build": {
-    "distDir": "../dist",
-    "devPath": "http://localhost:1234",
-    "beforeDevCommand": "npm run start",
-    "beforeBuildCommand": "npm run build"
-  },
-  "tauri": {
-    "bundle": {
-      "active": true,
-      "targets": "all",
-      "identifier": "com.finatr.app",
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ],
-      "resources": [],
-      "externalBin": [],
-      "copyright": "",
-      "category": "DeveloperTool",
-      "shortDescription": "",
-      "longDescription": "",
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": ""
+    },
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "resources": [],
+    "externalBin": [],
+    "copyright": "",
+    "category": "DeveloperTool",
+    "shortDescription": "",
+    "longDescription": "",
+    "macOS": {
+      "frameworks": [],
+      "minimumSystemVersion": "",
+      "exceptionDomain": "",
+      "signingIdentity": null,
+      "entitlements": null
+    },
+    "linux": {
       "deb": {
         "depends": []
-      },
-      "macOS": {
-        "frameworks": [],
-        "minimumSystemVersion": "",
-        "exceptionDomain": "",
-        "signingIdentity": null,
-        "entitlements": null
-      },
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
       }
     },
-    "updater": {
-      "active": false,
-      "endpoints": [
-        "https://update.tauri.app/jbolda/finatr/{{target}}/{{current_version}}"
-      ]
-    },
-    "allowlist": {
-      "all": false,
-      "shell": {
-        "open": true
-      }
+    "createUpdaterArtifacts": "v1Compatible"
+  },
+  "build": {
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist",
+    "beforeDevCommand": "npm run start",
+    "devUrl": "http://localhost:1234"
+  },
+  "productName": "finatr",
+  "identifier": "com.finatr.app",
+  "plugins": {},
+  "app": {
+    "security": {
+      "csp": "default-src https: tauri: 'self'; connect-src ipc: http://ipc.localhost"
     },
     "windows": [
       {
@@ -64,9 +57,6 @@
         "decorations": true,
         "transparent": true
       }
-    ],
-    "security": {
-      "csp": "default-src https: tauri: 'self'"
-    }
+    ]
   }
 }
