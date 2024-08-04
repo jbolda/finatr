@@ -41,14 +41,14 @@ const Importing = () => {
 
   const accounts = useSelector(schema.accounts.selectTableAsList);
   const transactions = useSelector(schema.transactions.selectTableAsList);
-  const graphRange = useSelector(dateRangeWithStrings);
+  const graphRange = useSelector(schema.chartRange.select);
   const handleDownload = () => {
     console.log({ accounts, transactions });
 
     let outputData = {
       accounts,
       transactions,
-      graphRange: { start: graphRange.startString, end: graphRange.endString }
+      graphRange
     };
 
     // ...(get(['taxStrategy', 'incomeReceived'], modelState) &&

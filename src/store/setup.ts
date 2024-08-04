@@ -1,3 +1,4 @@
+import { parseJSON } from 'date-fns';
 import { dinero } from 'dinero.js';
 import {
   Callable,
@@ -18,18 +19,19 @@ import {
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
 import { tasks, thunks } from './thunks/index.ts';
 
-function reDinero(item: unknown) {
+function reconstitute(sliceName: string, item: unknown) {
   if (!item || (typeof item !== 'object' && Object.entries(item).length > 0))
     return item;
-  const reDineroed: Record<string, any> = { ...item };
+
+  const reconstituted: Record<string, any> = { ...item };
   for (const [key, value] of Object.entries(item)) {
     if (value && typeof value === 'object') {
       if ('amount' in value && 'currency' in value && 'scale' in value) {
-        reDineroed[key] = dinero(value);
+        reconstituted[key] = dinero(value);
       }
     }
   }
-  return reDineroed;
+  return reconstituted;
 }
 
 function reconcilerWithReconstitution(original: any, persisted: any) {
@@ -39,12 +41,18 @@ function reconcilerWithReconstitution(original: any, persisted: any) {
   for (const sliceName of sliceNames) {
     if (sliceName in persisted) {
       for (const [key, item] of Object.entries(persisted[sliceName])) {
-        const updatedData = reDinero(item);
+        const updatedData = reconstitute(sliceName, item);
         reconstituted[sliceName][key] = updatedData;
       }
     }
   }
 
+  if (reconstituted.chartRange) {
+    reconstituted.chartRange = {
+      start: parseJSON(reconstituted.chartRange.start),
+      end: parseJSON(reconstituted.chartRange.end)
+    };
+  }
   return { ...original, ...reconstituted };
 }
 
