@@ -9,11 +9,11 @@ import { nextTransaction } from '../thunks/transactionReoccurrence';
 export const barChartTransactions = createSelector(
   schema.chartRange.select,
   schema.transactions.selectTableAsList,
-  (graphRange, transactions) => {
+  (chartRange, transactions) => {
     const allChartData = transactions.map((transaction) => {
       const data = resolveBarChartData({
         transaction,
-        graphRange
+        chartRange
       });
       return { transaction, data };
     });
@@ -77,13 +77,13 @@ export const barChartTransactions = createSelector(
 );
 
 export function resolveBarChartData({
-  graphRange,
+  chartRange,
   transaction
 }: {
-  graphRange: { start: Date; end: Date };
+  chartRange: { start: Date; end: Date };
   transaction: any;
 }) {
-  const allDates = eachDayOfInterval(graphRange);
+  const allDates = eachDayOfInterval(chartRange);
   const nextTransactionFn = nextTransaction(transaction.rtype);
 
   const {
@@ -96,7 +96,7 @@ export function resolveBarChartData({
     // back off one day to start outside the interval
     date: parseISO(transaction.start),
     nextTransactionFn,
-    interval: graphRange,
+    interval: chartRange,
     occurred: 0
   });
   const next = {

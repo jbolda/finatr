@@ -5,8 +5,8 @@ import { schema } from '~/src/store/schema.ts';
 
 export const dateRangeWithStrings = createSelector(
   schema.chartRange.select,
-  (graphRange) => {
-    const { start, end } = graphRange;
+  (chartRange) => {
+    const { start, end } = chartRange;
     return {
       start,
       startString: format(start, 'yyyy-MM-dd'),

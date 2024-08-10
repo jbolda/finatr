@@ -1,26 +1,28 @@
 import { USD } from '@dinero.js/currencies';
-import { dinero } from 'dinero.js';
-import { dineroFromFloat } from '~/src/dineroUtils.ts';
 
-import { schema } from '../schema';
+import { schema, type Account } from '../schema';
+import { dineroFromFloat, redinero } from '../utils/dineroUtils.ts';
 import makeUUID from '../utils/makeUUID.ts';
 import { thunks } from './foundation.ts';
 
-export const accountAdd = thunks.create('account:add', function* (ctx, next) {
-  const rawAccount = { ...ctx.payload };
-  const account = { ...rawAccount };
-  if (!rawAccount.id) {
-    account.id = makeUUID();
-  }
-  account.starting =
-    typeof rawAccount.starting === 'object'
-      ? dinero(rawAccount.starting)
-      : dineroFromFloat({ amount: rawAccount.starting, currency: USD });
-  account.interest = { amount: rawAccount.interest * 100, scale: 2 };
+export const accountAdd = thunks.create<Account>(
+  'account:add',
+  function* (ctx, next) {
+    const rawAccount = { ...ctx.payload };
+    const account = { ...rawAccount };
+    if (!rawAccount.id) {
+      account.id = makeUUID();
+    }
+    account.starting = redinero(rawAccount.starting);
+    account.interest =
+      typeof rawAccount.interest === 'number'
+        ? { amount: rawAccount.interest * 100, scale: 2 }
+        : rawAccount.interest;
 
-  yield* schema.update(schema.accounts.add({ [account.id]: account }));
-  yield* next();
-});
+    yield* schema.update(schema.accounts.add({ [account.id]: account }));
+    yield* next();
+  }
+);
 
 export const accountRemove = thunks.create<{ id: string }>(
   'account:remove',

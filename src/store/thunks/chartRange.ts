@@ -4,7 +4,7 @@ import { addYears } from 'date-fns';
 import { schema } from '../schema.ts';
 import { thunks } from './foundation.ts';
 
-export const updateChartDateRange = thunks.create(
+export const updateChartDateRange = thunks.create<string>(
   'chartDateRange:update',
   function* (ctx, next) {
     const startDateInput = ctx.payload;
