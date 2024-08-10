@@ -20,11 +20,11 @@ test.describe(`check transactionDayOfMonthReoccur`, () => {
     cycle: 1,
     value: dinero({ amount: 150, currency: USD })
   };
-  let graphRange = {
+  let chartRange = {
     start: startOfDay(parseISO('2018-01-16')),
     end: startOfDay(parseISO('2018-04-01'))
   };
-  let seedDate = graphRange.start;
+  let seedDate = chartRange.start;
   let occurrences = 0;
 
   test(`has all the correct properties`, () => {
@@ -45,7 +45,7 @@ test.describe(`check transactionDayOfMonthReoccur`, () => {
       occurrences
     });
     expect(
-      differenceInCalendarDays(graphRange.start)(resolvedTestData.date)
+      differenceInCalendarDays(chartRange.start)(resolvedTestData.date)
     ).toBe(16);
   });
 
@@ -107,19 +107,19 @@ test.describe(`check transactionDayOfMonthReoccur`, () => {
       occurrences: 4
     });
     expect(
-      differenceInCalendarDays(graphRange.start)(resolvedTestData1.date)
+      differenceInCalendarDays(chartRange.start)(resolvedTestData1.date)
     ).toBe(0);
     expect(
-      differenceInCalendarDays(graphRange.start)(resolvedTestData2.date)
+      differenceInCalendarDays(chartRange.start)(resolvedTestData2.date)
     ).toBe(31);
     expect(
-      differenceInCalendarDays(graphRange.start)(resolvedTestData3.date)
+      differenceInCalendarDays(chartRange.start)(resolvedTestData3.date)
     ).toBe(59);
     expect(
-      differenceInCalendarDays(graphRange.start)(resolvedTestData4.date)
+      differenceInCalendarDays(chartRange.start)(resolvedTestData4.date)
     ).toBe(90);
     expect(
-      differenceInCalendarDays(graphRange.start)(resolvedTestData5.date)
+      differenceInCalendarDays(chartRange.start)(resolvedTestData5.date)
     ).toBe(120);
   });
 
@@ -131,7 +131,7 @@ test.describe(`check transactionDayOfMonthReoccur`, () => {
       occurrences
     };
     let resolvedTestData = resolveBarChartData({
-      graphRange,
+      chartRange,
       transaction: testData
     });
     expect(resolvedTestData.filter((t) => t.y)).toHaveLength(3);
@@ -155,7 +155,7 @@ test.describe(`check transactionDayOfMonthReoccur`, () => {
       end: startOfDay(parseISO('2018-08-01'))
     };
     let resolvedTestData1 = resolveBarChartData({
-      graphRange: testRange,
+      chartRange: testRange,
       transaction: testData
     });
     expect(resolvedTestData1.filter((t) => t.y)).toHaveLength(7);
@@ -170,19 +170,19 @@ test.describe(`check transactionDayOfMonthReoccur`, () => {
       occurrences: 1
     };
     let testRange = {
-      start: graphRange.start,
+      start: chartRange.start,
       end: startOfDay(parseISO('2018-12-01'))
     };
 
     let resolvedTestData1 = resolveBarChartData({
-      graphRange: testRange,
+      chartRange: testRange,
       transaction: testData1
     });
     expect(resolvedTestData1.filter((t) => t.y)).toHaveLength(1);
 
     let testData2 = { ...testData1, occurrences: 2 };
     let resolvedTestData2 = resolveBarChartData({
-      graphRange: testRange,
+      chartRange: testRange,
       transaction: testData2
     });
     expect(resolvedTestData2.filter((t) => t.y)).toHaveLength(2);
@@ -196,19 +196,19 @@ test.describe(`check transactionDayOfMonthReoccur`, () => {
       occurrences: 1
     };
     let testRange = {
-      start: graphRange.start,
+      start: chartRange.start,
       end: startOfDay(parseISO('2018-12-01'))
     };
 
     let resolvedTestData1 = resolveBarChartData({
-      graphRange: testRange,
+      chartRange: testRange,
       transaction: testData1
     });
     expect(resolvedTestData1.filter((t) => t.y)).toHaveLength(1);
 
     let testData2 = { ...testData1, occurrences: 2 };
     let resolvedTestData2 = resolveBarChartData({
-      graphRange: testRange,
+      chartRange: testRange,
       transaction: testData2
     });
     expect(resolvedTestData2.filter((t) => t.y)).toHaveLength(2);
