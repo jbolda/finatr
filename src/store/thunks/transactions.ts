@@ -1,24 +1,19 @@
-import { USD } from '@dinero.js/currencies';
 import { format } from 'date-fns';
-import { dinero } from 'dinero.js';
-import { dineroFromFloat } from '~/src/dineroUtils.ts';
 
-import { schema } from '../schema';
+import { schema, type Transaction } from '../schema';
+import { redinero } from '../utils/dineroUtils.ts';
 import makeUUID from '../utils/makeUUID.ts';
 import { thunks } from './foundation.ts';
 import { transactionCompute } from './transactionReoccurrence/index.ts';
 
-export const transactionAdd = thunks.create(
+export const transactionAdd = thunks.create<Transaction>(
   'transaction:add',
   function* (ctx, next) {
     const transaction = { ...ctx.payload };
     if (!transaction?.id) transaction.id = makeUUID();
     if (typeof transaction.start === 'object')
       transaction.start = format(transaction.start, 'yyyy-MM-dd');
-    transaction.value =
-      typeof ctx.payload?.value === 'object'
-        ? dinero(ctx.payload.value)
-        : dineroFromFloat({ amount: ctx.payload.value, currency: USD });
+    transaction.value = redinero(transaction.value);
     transaction.cycle = ctx.payload?.cycle ?? 0;
     transaction.occurrences = ctx.payload?.occurrences ?? 0;
     transaction.dailyRate = transactionCompute({ transaction });

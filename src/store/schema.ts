@@ -11,7 +11,7 @@ export type ScaledNumber = {
   scale: number;
 };
 
-interface Settings {
+export interface Settings {
   examples: boolean;
   import: boolean;
   accounts: boolean;
@@ -24,7 +24,7 @@ interface Settings {
 
 const defaultSettings = {
   examples: false,
-  import: false,
+  import: true,
   accounts: false,
   transactions: false,
   planning: true,
@@ -33,8 +33,8 @@ const defaultSettings = {
   taxes: false
 };
 
-type TransactionType = 'income' | 'expense' | 'transfer';
-interface Transaction {
+export type TransactionType = 'income' | 'expense' | 'transfer';
+export interface Transaction {
   id: string;
   raccount: string;
   description: string;
@@ -50,21 +50,22 @@ interface Transaction {
   beginAfterOccurrences: number;
 }
 
-type AmountVehicle =
+export type AmountVehicle =
   | 'operating'
   | 'investment'
   | 'debt'
   | 'loan'
   | 'credit line';
-interface Account {
+export interface Account {
+  id: string;
   name: string;
   starting: Dinero<number>;
   interest: ScaledNumber;
   vehicle: AmountVehicle;
-  payback: Transaction[];
+  payback?: Transaction[];
 }
 
-interface ChartRange {
+export interface ChartRange {
   start: Date;
   end: Date;
 }

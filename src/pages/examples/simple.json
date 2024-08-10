@@ -27,7 +27,10 @@
     {
       "name": "account",
       "starting": 400,
-      "interest": 0,
+      "interest": {
+        "amount": 2000,
+        "scale": 2
+      },
       "vehicle": "operating",
       "visible": true
     }

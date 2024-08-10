@@ -10,9 +10,9 @@ export const lineChartAccounts = createSelector(
   schema.chartRange.select,
   barChartTransactions,
   schema.accounts.selectTableAsList,
-  (graphRange, transactions, accounts) => {
+  (chartRange, transactions, accounts) => {
     const lineChart = resolveLineChartData({
-      graphRange,
+      chartRange,
       transactions,
       accounts
     });
@@ -21,11 +21,11 @@ export const lineChartAccounts = createSelector(
 );
 
 function resolveLineChartData({
-  graphRange,
+  chartRange,
   accounts,
   transactions
 }: {
-  graphRange: any;
+  chartRange: any;
   accounts: {
     name: string;
     starting: Dinero<number>;
@@ -38,7 +38,7 @@ function resolveLineChartData({
   }[];
   transactions: any;
 }) {
-  const allDates = eachDayOfInterval(graphRange);
+  const allDates = eachDayOfInterval(chartRange);
   const incomeStacked = transactions.data
     .filter((t) => t.transaction.type === 'income')
     .reduce((o, t) => {

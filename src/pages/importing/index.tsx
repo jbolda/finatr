@@ -2,16 +2,17 @@ import fileDownload from 'js-file-download';
 import Papa from 'papaparse';
 import React from 'react';
 import { FileTrigger } from 'react-aria-components';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'starfx/react';
 
 import { schema } from '~/src/store/schema';
-import { dateRangeWithStrings } from '~/src/store/selectors/chartRange';
 import { importEntries } from '~/src/store/thunks/import';
 
 import { Button } from '~/src/elements/Button';
 
 const Importing = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleUpload = async (files: FileList | null) => {
     if (!files) return;
@@ -22,13 +23,15 @@ const Importing = () => {
       if (file.name.endsWith('.json')) {
         const result = JSON.parse(content);
         console.log('file upload result', result);
-        return dispatch(importEntries(result));
+        dispatch(importEntries(result));
+        navigate(`/planning`);
       } else if (file.name.endsWith('.csv')) {
         const result = {
           accounts: Papa.parse(content, { header: true }).data
         };
         console.log('file upload result', result);
-        return dispatch(importEntries(result));
+        dispatch(importEntries(result));
+        navigate(`/planning`);
       } else {
         console.warn(
           "Invalid filetype, not a json or csv. We didn't do anything with the file you uploaded."
@@ -41,14 +44,14 @@ const Importing = () => {
 
   const accounts = useSelector(schema.accounts.selectTableAsList);
   const transactions = useSelector(schema.transactions.selectTableAsList);
-  const graphRange = useSelector(schema.chartRange.select);
+  const chartRange = useSelector(schema.chartRange.select);
   const handleDownload = () => {
     console.log({ accounts, transactions });
 
     let outputData = {
       accounts,
       transactions,
-      graphRange
+      chartRange
     };
 
     // ...(get(['taxStrategy', 'incomeReceived'], modelState) &&

@@ -5,6 +5,7 @@ import { useSelector } from 'starfx/react';
 
 import { lineChartAccounts } from '~/src/store/selectors/accounts';
 import { barChartTransactions } from '~/src/store/selectors/chartData';
+import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
 
 const BarChart = ({ dateRange }) => {
   const transactionData = useSelector(barChartTransactions);
@@ -132,9 +133,7 @@ const renderTooltipBar = (coordinates, tooltipData, tooltipTarget) => {
       <p>${transaction.type} in ${transaction.raccount}</p>
       <p>category: ${transaction.category}</p>
       <p>
-        ${transaction.value.toFixed(2)} | ${transaction.dailyRate.toFixed(
-          2
-        )} per day
+        ${toHumanCurrency(transaction.value)} | ${toHumanCurrency(transaction.dailyRate)} per day
       </p>`;
 
   tooltipTarget

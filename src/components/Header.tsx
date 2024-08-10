@@ -56,6 +56,7 @@ export const Header = ({ settings }) => {
           <Menu
             className="sm:-my-px md:flex"
             selectionMode="single"
+            aria-label="navigation"
             items={navigation.filter(
               (item) => settings[item.to.substring(1)] !== false
             )}

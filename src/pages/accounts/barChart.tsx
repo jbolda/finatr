@@ -1,6 +1,8 @@
+import * as d3 from 'd3';
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
-import * as d3 from 'd3';
+
+import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
 
 export class BarChartSpecific extends PureComponent {
   componentDidMount() {
@@ -158,8 +160,8 @@ export class BarChartSpecific extends PureComponent {
         <p>{`${tooltipData.type} in ${tooltipData.raccount}`}</p>
         <p>category: {tooltipData.category}</p>
         <p>
-          ${tooltipData.value.toFixed(2)} | ${tooltipData.dailyRate.toFixed(2)}{' '}
-          per day
+          ${toHumanCurrency(tooltipData.value)} | $
+          {tooltipData.dailyRate.toFixed(2)} per day
         </p>
       </div>
     );
