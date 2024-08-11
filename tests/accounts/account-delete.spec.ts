@@ -15,9 +15,7 @@ test.beforeEach(async ({ page }) => {
 
 test('deletes the recently added account', async ({ page }) => {
   const row = getRowWith(page, 'accounts', '55.00');
-  const deleteButton = row
-    .locator('td', { hasText: 'Delete: ' })
-    .getByRole('button', { name: 'X' });
+  const deleteButton = row.getByRole('button', { name: 'delete' });
   await deleteButton.click();
 
   await expect(page.getByText('test account')).not.toBeAttached();

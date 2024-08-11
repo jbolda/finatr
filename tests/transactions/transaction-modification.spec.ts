@@ -19,9 +19,7 @@ test.beforeEach(async ({ page }) => {
   await page.keyboard.press('Enter');
 
   const row = getRowWith(page, 'transactions', 'test transaction');
-  const modifyButton = row
-    .locator('td', { hasText: 'Modify: ' })
-    .getByRole('button', { name: 'M' });
+  const modifyButton = row.getByRole('button', { name: 'modify' });
   await modifyButton.click();
 });
 

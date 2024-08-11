@@ -20,6 +20,19 @@ test.describe('transactionQuarterlyReoccur', () => {
     expect(next.date).toEqual(startOfDay(parseISO('2018-05-01')));
   });
 
+  test('four quarters is a year', () => {
+    const transaction = {
+      value: dinero({ amount: 135, currency: USD }),
+      cycle: 4
+    };
+    const seedDate = startOfDay(parseISO('2023-05-17'));
+    const next = transactionQuarterlyReoccur({
+      transaction,
+      seedDate
+    });
+    expect(next.date).toEqual(startOfDay(parseISO('2024-05-17')));
+  });
+
   test('throws when transaction.cycle=null', () => {
     const transaction = { value: dinero({ amount: 10, currency: USD }) };
     const seedDate = startOfDay(parseISO('2018-02-01'));

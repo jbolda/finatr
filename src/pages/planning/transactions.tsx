@@ -1,12 +1,24 @@
 import { toDecimal } from 'dinero.js';
+import { Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Group } from 'react-aria-components';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
+import type { Dispatch } from 'redux';
+import type { AnyAction } from 'starfx';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema } from '~/src/store/schema';
+import { schema, Transaction } from '~/src/store/schema';
+import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
 
-import { FlexTable } from '~/src/components/FlexTable';
 import { TabView } from '~/src/components/TabView';
+import {
+  Cell,
+  Column,
+  Row,
+  Table,
+  TableBody,
+  TableHeader
+} from '~/src/components/Table';
 
 import { Button } from '~/src/elements/Button';
 
@@ -35,20 +47,20 @@ const TransactionsFlow = () => {
               </button>
             ))}
           </div> */}
-          <TransactionTable data={transactions} />
+          <TransactionTable transactions={transactions} />
         </React.Fragment>,
         <TransactionTable
-          data={transactions.filter(
+          transactions={transactions.filter(
             (transaction) => transaction.type === 'income'
           )}
         />,
         <TransactionTable
-          data={transactions.filter(
+          transactions={transactions.filter(
             (transaction) => transaction.type === 'expense'
           )}
         />,
         <TransactionTable
-          data={transactions.filter(
+          transactions={transactions.filter(
             (transaction) => transaction.type === 'transfer'
           )}
         />
@@ -59,73 +71,102 @@ const TransactionsFlow = () => {
 
 export default TransactionsFlow;
 
-const TransactionTable = ({ data }) => {
+const TransactionTable = ({
+  transactions
+}: {
+  transactions: Transaction[];
+}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  return data.length === 0 || !data ? (
-    <div>There are no transactions to show.</div>
-  ) : (
-    <FlexTable
-      itemHeaders={[
-        'raccount',
-        'description',
-        'category',
-        'type',
-        'start',
-        'rtype',
-        'cycle',
-        'value',
-        'Daily Rate',
-        'Modify',
-        'Delete'
-      ]}
-      itemData={data.map((transaction) => ({
-        key: transaction.id,
-        data: [
-          transaction.raccount,
-          transaction.description,
-          transaction.category,
-          transaction.type,
-          transaction.start,
-          transaction.rtype,
-          !transaction.cycle,
-          toDecimal(transaction.value),
-          toDecimal(transaction.dailyRate),
-          <Button
-            onPress={() =>
-              navigate('/transactions/set', {
-                state: {
-                  navigateTo: '/planning',
-                  transaction: {
-                    id: transaction.id,
-                    raccount: transaction.raccount,
-                    description: transaction.description,
-                    category: transaction.category,
-                    type: transaction.type,
-                    start: transaction.start,
-                    ending: transaction.ending ?? 'never',
-                    rtype: transaction.rtype,
-                    beginAfterOccurrences:
-                      transaction.beginAfterOccurrences ?? 0,
-                    cycle: transaction.cycle,
-                    value: toDecimal(transaction.value),
-                    valueType: transaction.valueType ?? 'static'
-                  }
-                }
-              })
-            }
-            isDisabled={transaction.fromAccount}
-          >
-            <strong>M</strong>
-          </Button>,
-          <Button
-            onPress={() => dispatch(transactionRemove({ id: transaction.id }))}
-            isDisabled={transaction.fromAccount}
-          >
-            <strong>X</strong>
-          </Button>
-        ]
-      }))}
-    />
+  return (
+    <Table aria-label="All Accounts" selectionMode="none">
+      <TableHeader>
+        <Column isRowHeader>raccount</Column>
+        {[
+          'description',
+          'category',
+          'type',
+          'start',
+          'rtype',
+          'cycle',
+          'value',
+          'Daily Rate',
+          'Actions'
+        ].map((h) => (
+          <Column>{h}</Column>
+        ))}
+      </TableHeader>
+      <TableBody renderEmptyState={() => 'No transactions.'}>
+        {transactions.map((transaction) => (
+          <TransactionRow
+            transaction={transaction}
+            navigate={navigate}
+            dispatch={dispatch}
+          />
+        ))}
+      </TableBody>
+    </Table>
   );
 };
+
+const TransactionRow = ({
+  transaction,
+  navigate,
+  dispatch
+}: {
+  transaction: Transaction;
+  navigate: NavigateFunction;
+  dispatch: Dispatch<AnyAction>;
+}) => (
+  <Row>
+    <Cell>{transaction.raccount}</Cell>
+    <Cell>{transaction.description}</Cell>
+    <Cell>{transaction.category}</Cell>
+    <Cell>{transaction.type}</Cell>
+    <Cell>{transaction.start}</Cell>
+    <Cell>{transaction.rtype}</Cell>
+    <Cell>{transaction.cycle}</Cell>
+    <Cell>{toHumanCurrency(transaction.value)}</Cell>
+    <Cell>{toHumanCurrency(transaction.dailyRate)}</Cell>
+
+    <Cell>
+      <Group aria-label="Actions" className="space-x-1">
+        {' '}
+        <Button
+          aria-label="Modify"
+          onPress={() =>
+            navigate('/transactions/set', {
+              state: {
+                navigateTo: '/planning',
+                transaction: {
+                  id: transaction.id,
+                  raccount: transaction.raccount,
+                  description: transaction.description,
+                  category: transaction.category,
+                  type: transaction.type,
+                  start: transaction.start,
+                  ending: transaction.ending ?? 'never',
+                  rtype: transaction.rtype,
+                  beginAfterOccurrences: transaction.beginAfterOccurrences ?? 0,
+                  cycle: transaction.cycle,
+                  value: toDecimal(transaction.value),
+                  valueType: transaction.valueType ?? 'static'
+                }
+              }
+            })
+          }
+          // isDisabled={transaction.fromAccount}
+        >
+          <Pencil className="max-h-3" />
+        </Button>
+        <Button
+          aria-label="Delete"
+          onPress={() => dispatch(transactionRemove({ id: transaction.id }))}
+          // isDisabled={transaction.fromAccount}
+        >
+          <Trash2 className="max-h-3" />
+        </Button>
+      </Group>
+    </Cell>
+  </Row>
+);
