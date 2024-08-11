@@ -20,9 +20,7 @@ test.beforeEach(async ({ page }) => {
 
 test('deletes the recently added transaction', async ({ page }) => {
   const row = getRowWith(page, 'transactions', 'test transaction');
-  const deleteButton = row
-    .locator('td', { hasText: 'Delete: ' })
-    .getByRole('button', { name: 'X' });
+  const deleteButton = row.getByRole('button', { name: 'delete' });
   await deleteButton.click();
 
   await expect(
