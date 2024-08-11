@@ -40,7 +40,6 @@ export class TabView extends React.Component {
       <div id={this.props.id}>
         {!this.props.tabTitles || !this.props.tabContents ? null : (
           <Tabs
-            className="overflow-hidden shadow sm:rounded-lg"
             selectedKey={activeTab}
             onSelectionChange={(index) => this.tabClick(index)}
           >
@@ -63,7 +62,6 @@ export class TabView extends React.Component {
                 data-testid={`${this.props.id}-${this.props.tabTitles[index]
                   .toLowerCase()
                   .replace(' ', '-')}`}
-                className="bg-white px-4 py-5 sm:p-6"
               >
                 {content}
               </TabPanel>

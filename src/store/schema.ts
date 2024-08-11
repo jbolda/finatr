@@ -34,12 +34,14 @@ const defaultSettings = {
 };
 
 export type TransactionType = 'income' | 'expense' | 'transfer';
+export type ValueType = 'static' | 'dynamic';
 export interface Transaction {
   id: string;
   raccount: string;
   description: string;
   category: string;
   type: TransactionType;
+  valueType: ValueType;
   start: string;
   ending: string;
   rtype: string;
@@ -99,8 +101,8 @@ const [schema, initialState] = createSchema({
   cache: slice.table({ empty: {} }),
   loaders: slice.loaders(),
   settings: slice.obj<Settings>(defaultSettings),
-  transactions: slice.table({ empty: emptyTransaction }),
-  accounts: slice.table({ empty: emptyAccount }),
+  transactions: slice.table<Transaction>({ empty: emptyTransaction }),
+  accounts: slice.table<Account>({ empty: emptyAccount }),
   chartRange: slice.obj(defaultChartBarRange),
   incomeReceived: slice.table<IncomeReceived>(),
   incomeExpected: slice.table<IncomeExpected>()

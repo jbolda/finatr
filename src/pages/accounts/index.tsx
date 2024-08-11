@@ -9,7 +9,7 @@ import BarChart from './barChart';
 const AccountOverview = () => {
   const navigate = useNavigate();
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <React.Fragment>
       <h1 className="text-3xl font-semibold py-3">Accounts</h1>
       <Button onPress={() => navigate('/accounts/set')}>Add</Button>
       <Accounts />
@@ -21,7 +21,7 @@ const AccountOverview = () => {
           <BarChart data={model.charts.state} account={account} />
         </div>
       </div> */}
-    </div>
+    </React.Fragment>
   );
 };
 

@@ -37,7 +37,7 @@ export function redinero(
 // the closured transformer.
 function createFormatter(transformer: {
   ({ value, currency }: { value: number; currency: Currency<number> }): string;
-  (options: TransformerOptions<number, string>): unknown;
+  (options: TransformerOptions<number, string>): string;
 }) {
   return function formatter(dineroObject: Dinero<number>) {
     return toDecimal(dineroObject, transformer);
@@ -47,5 +47,6 @@ function createFormatter(transformer: {
 // This function is reusable to format any Dinero object
 // with the same transformer.
 export const toHumanCurrency = createFormatter(
-  ({ value, currency }) => `${currency.code} ${value}`
+  ({ value, currency }) =>
+    `${currency.code === 'USD' ? '$' : `${currency.code} `}${value}`
 );
