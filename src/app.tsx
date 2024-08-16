@@ -17,9 +17,7 @@ const Accounts = React.lazy(() => import('./pages/accounts'));
 const AccountsContainer = React.lazy(
   () => import('./pages/accounts/container.tsx')
 );
-const AccountInput = React.lazy(
-  () => import('./pages/accounts/accountInput.js')
-);
+const AccountInput = React.lazy(() => import('./forms/accountInput.js'));
 const TransactionsContainer = React.lazy(
   () => import('./pages/transactions/container.tsx')
 );

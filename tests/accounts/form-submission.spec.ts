@@ -21,8 +21,9 @@ test('submits simple account', async ({ page }) => {
 
 test('check debt is listed in debt tab after submit', async ({ page }) => {
   await page.getByLabel('name').fill('Test Debt Account');
-  await page.getByLabel('vehicle').selectOption('Loan');
-  await page.keyboard.press('Enter');
+  await page.getByLabel('vehicle').click();
+  await page.getByRole('option', { name: 'Loan' }).click();
+  await page.getByRole('button', { name: 'Add Account' }).click();
 
   await page.getByRole('tab').getByText('Debt').click();
   await expect(page.getByText('Test Debt Account')).toBeVisible();

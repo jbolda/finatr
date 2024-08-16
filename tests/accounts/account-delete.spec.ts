@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
   await navigateTo(page, 'Planning');
   await page.getByText('Add Account').click();
 
-  await page.getByLabel('starting').fill('55');
+  await page.getByLabel('Starting').first().fill('55');
   await page.getByLabel('name').fill('test account');
   await page.keyboard.press('Enter');
 });
