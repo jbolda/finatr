@@ -7,10 +7,11 @@ import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema, Transaction } from '~/src/store/schema';
-import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
+import { schema, Transaction } from '~/src/store/schema.ts';
+import { transactionRemove } from '~/src/store/thunks/transactions.ts';
+import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
 
-import { TabView } from '~/src/components/TabView';
+import { TabView } from '~/src/components/TabView.tsx';
 import {
   Cell,
   Column,
@@ -20,9 +21,7 @@ import {
   TableHeader
 } from '~/src/components/Table';
 
-import { Button } from '~/src/elements/Button';
-
-import { transactionRemove } from '../../store/thunks/transactions';
+import { Button } from '~/src/elements/Button.tsx';
 
 const TransactionsFlow = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -93,12 +92,13 @@ const TransactionTable = ({
           'Daily Rate',
           'Actions'
         ].map((h) => (
-          <Column>{h}</Column>
+          <Column key={h}>{h}</Column>
         ))}
       </TableHeader>
       <TableBody renderEmptyState={() => 'No transactions.'}>
         {transactions.map((transaction) => (
           <TransactionRow
+            key={transaction.id}
             transaction={transaction}
             navigate={navigate}
             dispatch={dispatch}

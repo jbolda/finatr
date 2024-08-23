@@ -6,7 +6,6 @@ import {
   taxStrategyAsList
 } from '~/src/store/selectors/taxStrategy.ts';
 
-import { FlexTable } from '~/src/components/FlexTable.tsx';
 import { TabView } from '~/src/components/TabView.jsx';
 import {
   Table,

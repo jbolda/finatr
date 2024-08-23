@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Button } from '~/src/elements/Button';
+import { Button } from '~/src/elements/Button.tsx';
 
 import Accounts from './accounts';
 import IcicleChart from './icicleChart';

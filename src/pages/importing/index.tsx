@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'starfx/react';
 import { schema } from '~/src/store/schema';
 import { importEntries } from '~/src/store/thunks/import';
 
-import { Button } from '~/src/elements/Button';
+import { Button } from '~/src/elements/Button.tsx';
 
 const Importing = () => {
   const dispatch = useDispatch();

@@ -22,7 +22,7 @@ const TransactionsContainer = React.lazy(
   () => import('./pages/transactions/container.tsx')
 );
 const TransactionInput = React.lazy(
-  () => import('./pages/transactions/transactionInput.js')
+  () => import('./forms/transactionInput.js')
 );
 const Planning = React.lazy(() => import('./pages/planning'));
 const FinancialIndependence = React.lazy(

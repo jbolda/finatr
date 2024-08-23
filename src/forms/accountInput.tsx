@@ -1,62 +1,65 @@
 import { useForm } from '@tanstack/react-form';
-import { yupValidator } from '@tanstack/yup-form-adapter';
-import { Formik, Field } from 'formik';
+import { zodValidator } from '@tanstack/zod-form-adapter';
 import React from 'react';
 import { ListBoxItem } from 'react-aria-components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'starfx/react';
-import * as yup from 'yup';
+import { z } from 'zod';
 
-import { Button } from '~/src/elements/Button';
-import { Input } from '~/src/elements/Input';
-import { NumberField } from '~/src/elements/NumberField';
+import { accountAdd } from '~/src/store/thunks/accounts';
+
+import { Button } from '~/src/elements/Button.tsx';
+import { NumberField } from '~/src/elements/NumberField.tsx';
 import { Select } from '~/src/elements/Select.tsx';
-import { TextField } from '~/src/elements/TextField';
+import { TextField } from '~/src/elements/TextField.tsx';
 
-import { accountAdd } from '../store/thunks/accounts';
-
-const AccountSchema = yup.object({
-  name: yup.string().min(3).required('Required').default(''),
-  starting: yup.number().required('Required').default(0.0),
-  interest: yup.number().default(0.0),
-  vehicle: yup
-    .mixed()
-    .oneOf(['operating', 'loan', 'credit line', 'investment'])
-    .required('Required')
+const AccountSchema = z.object({
+  name: z.string().min(1),
+  starting: z.number().default(0.0),
+  interest: z.number().default(0.0),
+  vehicle: z
+    .enum(['operating', 'loan', 'credit line', 'investment'])
     .default('operating')
 });
 
-function AccountInput(props) {
+function AccountInput() {
   const navigate = useNavigate();
   const { state: locationState } = useLocation();
   const dispatch = useDispatch();
-  const { Field, handleSubmit, state, Subscribe, reset } = useForm({
-    defaultValues: locationState?.account ?? AccountSchema.getDefault(),
+  const { Field, handleSubmit, Subscribe, reset } = useForm({
+    defaultValues: locationState?.account ?? {
+      name: '',
+      starting: 0.0,
+      interest: 0.0,
+      vehicle: AccountSchema.shape.vehicle._def.defaultValue()
+    },
     onSubmit: ({ value }) => {
       console.log(value);
       dispatch(accountAdd(value));
       reset();
       navigate(locationState?.navigateTo ?? '..', { relative: 'path' });
     },
-    validators: { onChange: AccountSchema },
-    validatorAdapter: yupValidator()
+    validatorAdapter: zodValidator()
   });
 
   return (
-    <div>
-      <h1>Add an Account</h1>
+    <>
+      <h1 className="text-xl py-3">Add an Account</h1>
       <form
+        className="flex flex-col gap-4"
         onSubmit={(e) => {
           e.preventDefault();
+          e.stopPropagation();
           handleSubmit();
         }}
       >
         <Field
           name="name"
+          validators={{ onChange: AccountSchema.shape.name }}
           children={(field) => (
             <TextField
               label="Name"
-              isRequired
+              isRequired={!AccountSchema.shape.name.isOptional()}
               type="text"
               value={field.state.value}
               onBlur={field.handleBlur}
@@ -68,10 +71,11 @@ function AccountInput(props) {
 
         <Field
           name="starting"
+          validators={{ onChange: AccountSchema.shape.starting }}
           children={(field) => (
             <NumberField
               label="Starting"
-              isRequired
+              isRequired={!AccountSchema.shape.starting.isOptional()}
               formatOptions={{
                 style: 'currency',
                 currency: 'USD',
@@ -88,10 +92,11 @@ function AccountInput(props) {
 
         <Field
           name="interest"
+          validators={{ onChange: AccountSchema.shape.interest }}
           children={(field) => (
             <NumberField
               label="Interest"
-              isRequired
+              isRequired={!AccountSchema.shape.interest.isOptional()}
               step={0.01}
               formatOptions={{
                 style: 'percent'
@@ -106,9 +111,11 @@ function AccountInput(props) {
 
         <Field
           name="vehicle"
+          validators={{ onChange: AccountSchema.shape.vehicle }}
           children={(field) => (
             <Select
               label="Account Vehicle"
+              isRequired={!AccountSchema.shape.vehicle.isOptional()}
               items={[
                 { id: 'operating', name: 'Operating' },
                 { id: 'loan', name: 'Loan' },
@@ -134,7 +141,7 @@ function AccountInput(props) {
           )}
         />
       </form>
-    </div>
+    </>
   );
 }
 
