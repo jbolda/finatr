@@ -19,7 +19,7 @@ import {
   Table,
   TableBody,
   TableHeader
-} from '~/src/components/Table';
+} from '~/src/components/Table.tsx';
 
 import { Button } from '~/src/elements/Button.tsx';
 
