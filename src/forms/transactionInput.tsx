@@ -179,7 +179,7 @@ function TransactionInput() {
           validators={{ onChange: TransactionSchema.shape.type }}
           children={(field) => (
             <Select
-              label="Repeat Type"
+              label="Transaction Type"
               isRequired={!TransactionSchema.shape.type.isOptional()}
               name={field.name}
               items={[
