@@ -136,7 +136,11 @@ function AccountInput() {
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
             <Button type="submit" isDisabled={!canSubmit}>
-              {isSubmitting ? '...' : 'Add Account'}
+              {isSubmitting
+                ? '...'
+                : locationState?.account
+                  ? `Modify Account`
+                  : `Add Account`}
             </Button>
           )}
         />

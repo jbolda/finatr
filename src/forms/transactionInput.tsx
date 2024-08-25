@@ -1,3 +1,4 @@
+import { parseDate, today, getLocalTimeZone } from '@internationalized/date';
 import { useForm } from '@tanstack/react-form';
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import React from 'react';
@@ -64,13 +65,13 @@ function TransactionInput() {
   const dispatch = useDispatch();
   const accounts = useSelector(schema.accounts.selectTableAsList);
   const { Field, handleSubmit, Subscribe, reset, useStore } = useForm({
-    defaultValues: locationState?.account ?? {
+    defaultValues: locationState?.transaction ?? {
       id: '',
       raccount: 'none',
       description: '',
       category: '',
       type: TransactionSchema.shape.type._def.defaultValue(),
-      start: undefined,
+      start: today(getLocalTimeZone()).toString(),
       end: undefined,
       occurrences: TransactionSchema.shape.occurrences._def.defaultValue(),
       beginAfterOccurrences:
@@ -206,6 +207,7 @@ function TransactionInput() {
               label="Start Date"
               isRequired={!TransactionSchema.shape.start.isOptional()}
               shouldForceLeadingZeros
+              value={parseDate(field.state.value)}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.toString())}
               errorMessage={field.state.meta.errors.join(', ')}
@@ -278,6 +280,7 @@ function TransactionInput() {
                 label="End Date"
                 isRequired={!TransactionSchema.shape.end.isOptional()}
                 shouldForceLeadingZeros
+                value={parseDate(field.state.value)}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.toString())}
                 errorMessage={field.state.meta.errors.join(', ')}

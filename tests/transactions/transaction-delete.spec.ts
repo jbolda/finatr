@@ -11,6 +11,7 @@ test.beforeEach(async ({ page }) => {
   await navigateTo(page, 'Planning');
   await page.getByText('Add Transaction').click();
 
+  await selectOption(page, 'Account', 'Test Account Submission');
   await page.getByLabel('value').first().fill('55');
   await page.getByLabel('ending').click();
   await selectDate(page, 'start', '01/01/2025');

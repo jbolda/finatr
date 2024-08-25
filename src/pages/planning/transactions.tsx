@@ -7,7 +7,7 @@ import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema, Transaction } from '~/src/store/schema.ts';
+import { transactionsWithAccounts } from '~/src/store/selectors/transactions';
 import { transactionRemove } from '~/src/store/thunks/transactions.ts';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
 
@@ -25,7 +25,7 @@ import { Button } from '~/src/elements/Button.tsx';
 
 const TransactionsFlow = () => {
   const [activeTab, setActiveTab] = useState(0);
-  const transactions = useSelector(schema.transactions.selectTableAsList);
+  const transactions = useSelector(transactionsWithAccounts);
 
   return (
     <TabView
@@ -73,7 +73,7 @@ export default TransactionsFlow;
 const TransactionTable = ({
   transactions
 }: {
-  transactions: Transaction[];
+  transactions: TransactionWithAccount[];
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -114,7 +114,7 @@ const TransactionRow = ({
   navigate,
   dispatch
 }: {
-  transaction: Transaction;
+  transaction: TransactionWithAccount;
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
 }) => (
@@ -140,16 +140,16 @@ const TransactionRow = ({
                 navigateTo: '/planning',
                 transaction: {
                   id: transaction.id,
-                  raccount: transaction.raccount,
+                  raccount: transaction.raccountMeta.id,
                   description: transaction.description,
                   category: transaction.category,
                   type: transaction.type,
-                  start: transaction.start,
-                  ending: transaction.ending ?? 'never',
+                  start: transaction.start.toString(),
+                  ending: transaction.ending?.toString() ?? 'never',
                   rtype: transaction.rtype,
                   beginAfterOccurrences: transaction.beginAfterOccurrences ?? 0,
                   cycle: transaction.cycle,
-                  value: toDecimal(transaction.value),
+                  value: parseFloat(toDecimal(transaction.value)),
                   valueType: transaction.valueType ?? 'static'
                 }
               }

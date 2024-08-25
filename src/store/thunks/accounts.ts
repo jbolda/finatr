@@ -16,7 +16,7 @@ export const accountAdd = thunks.create<Account>(
     account.starting = redinero(rawAccount.starting);
     account.interest =
       typeof rawAccount.interest === 'number'
-        ? { amount: rawAccount.interest * 100, scale: 2 }
+        ? { amount: rawAccount.interest, scale: -2 }
         : rawAccount.interest;
 
     yield* schema.update(schema.accounts.add({ [account.id]: account }));

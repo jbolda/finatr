@@ -32,9 +32,9 @@ const modifyAccount = (navigate: NavigateFunction, account: Account) => {
       account: {
         id: account.id,
         name: account.name,
-        starting: toDecimal(account.starting),
+        starting: parseFloat(toDecimal(account.starting)),
         interest:
-          account.interest.amount * Math.pow(10, -account.interest.scale),
+          account.interest.amount * Math.pow(10, -account.interest.scale - 2),
         vehicle: account.vehicle
       }
     }

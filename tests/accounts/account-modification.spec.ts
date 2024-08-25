@@ -32,7 +32,7 @@ test('check debt is listed in debt tab after submit', async ({ page }) => {
   await page.getByLabel('starting').first().fill('577');
   await page.getByLabel('vehicle').click();
   await page.getByRole('option', { name: 'Loan' }).click();
-  await page.getByRole('button', { name: 'Add Account' }).click();
+  await page.getByRole('button', { name: 'Modify Account' }).click();
 
   await page.getByRole('tab').getByText('Debt').click();
   await expect(page.getByText('test account')).toBeVisible();
