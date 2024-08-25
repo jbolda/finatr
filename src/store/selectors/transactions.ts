@@ -2,7 +2,7 @@ import { createSelector } from 'starfx';
 
 import { schema, type Account, type Transaction } from '~/src/store/schema.ts';
 
-interface TransactionWithAccount extends Transaction {
+export interface TransactionWithAccount extends Transaction {
   raccountMeta: Account;
 }
 

@@ -7,7 +7,10 @@ import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { transactionsWithAccounts } from '~/src/store/selectors/transactions';
+import {
+  transactionsWithAccounts,
+  TransactionWithAccount
+} from '~/src/store/selectors/transactions';
 import { transactionRemove } from '~/src/store/thunks/transactions.ts';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
 
@@ -131,9 +134,9 @@ const TransactionRow = ({
 
     <Cell>
       <Group aria-label="Actions" className="space-x-1">
-        {' '}
         <Button
           aria-label="Modify"
+          className="px-0.5"
           onPress={() =>
             navigate('/transactions/set', {
               state: {
@@ -161,6 +164,7 @@ const TransactionRow = ({
         </Button>
         <Button
           aria-label="Delete"
+          className="px-0.5"
           onPress={() => dispatch(transactionRemove({ id: transaction.id }))}
           // isDisabled={transaction.fromAccount}
         >
