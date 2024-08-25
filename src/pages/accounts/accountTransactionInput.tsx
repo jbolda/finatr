@@ -8,7 +8,7 @@ import { Radio } from '~/src/elements/Radio';
 import { Select } from '~/src/elements/Select';
 
 import { FieldGroup, Label } from '../../components/Form';
-import TransactionInputAmountComputed from '../transactions/transactionInputAmountComputed';
+import TransactionInputAmountComputed from '../../forms/transactionInputAmountComputed';
 
 const ComputedAmountSchema = yup
   .object()

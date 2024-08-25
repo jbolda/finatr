@@ -7,11 +7,11 @@ import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema, type Account } from '~/src/store/schema';
-import { accountRemove } from '~/src/store/thunks/accounts';
-import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
+import { schema, type Account } from '~/src/store/schema.ts';
+import { accountRemove } from '~/src/store/thunks/accounts.ts';
+import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
 
-import { TabView } from '~/src/components/TabView';
+import { TabView } from '~/src/components/TabView.tsx';
 import {
   Cell,
   Column,
@@ -21,7 +21,7 @@ import {
   TableHeader
 } from '~/src/components/Table';
 
-import { Button } from '~/src/elements/Button';
+import { Button } from '~/src/elements/Button.tsx';
 
 // import AccountTransactionInput from '../accounts/accountTransactionInput';
 // import AccountInput from './accountInput';
@@ -32,9 +32,9 @@ const modifyAccount = (navigate: NavigateFunction, account: Account) => {
       account: {
         id: account.id,
         name: account.name,
-        starting: toDecimal(account.starting),
+        starting: parseFloat(toDecimal(account.starting)),
         interest:
-          account.interest.amount * Math.pow(10, -account.interest.scale),
+          account.interest.amount * Math.pow(10, -account.interest.scale - 2),
         vehicle: account.vehicle
       }
     }
@@ -65,12 +65,13 @@ const AccountFlow = () => {
             <TableHeader>
               <Column isRowHeader>Name</Column>
               {['Starting', 'Interest', 'Vehicle', 'Actions'].map((h) => (
-                <Column>{h}</Column>
+                <Column key={h}>{h}</Column>
               ))}
             </TableHeader>
             <TableBody renderEmptyState={() => 'No accounts.'}>
               {accounts.map((account) => (
                 <AccountRow
+                  key={account.id}
                   account={account}
                   navigate={navigate}
                   dispatch={dispatch}
@@ -86,12 +87,13 @@ const AccountFlow = () => {
               <TableHeader>
                 <Column isRowHeader>Name</Column>
                 {['Starting', 'Interest', 'Vehicle', 'Actions'].map((h) => (
-                  <Column>{h}</Column>
+                  <Column key={h}>{h}</Column>
                 ))}
               </TableHeader>
               <TableBody renderEmptyState={() => 'No accounts.'}>
                 {debt.map((account) => (
                   <AccountRow
+                    key={account.id}
                     account={account}
                     navigate={navigate}
                     dispatch={dispatch}

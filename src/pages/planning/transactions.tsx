@@ -7,10 +7,14 @@ import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema, Transaction } from '~/src/store/schema';
-import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
+import {
+  transactionsWithAccounts,
+  TransactionWithAccount
+} from '~/src/store/selectors/transactions';
+import { transactionRemove } from '~/src/store/thunks/transactions.ts';
+import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
 
-import { TabView } from '~/src/components/TabView';
+import { TabView } from '~/src/components/TabView.tsx';
 import {
   Cell,
   Column,
@@ -18,15 +22,13 @@ import {
   Table,
   TableBody,
   TableHeader
-} from '~/src/components/Table';
+} from '~/src/components/Table.tsx';
 
-import { Button } from '~/src/elements/Button';
-
-import { transactionRemove } from '../../store/thunks/transactions';
+import { Button } from '~/src/elements/Button.tsx';
 
 const TransactionsFlow = () => {
   const [activeTab, setActiveTab] = useState(0);
-  const transactions = useSelector(schema.transactions.selectTableAsList);
+  const transactions = useSelector(transactionsWithAccounts);
 
   return (
     <TabView
@@ -74,7 +76,7 @@ export default TransactionsFlow;
 const TransactionTable = ({
   transactions
 }: {
-  transactions: Transaction[];
+  transactions: TransactionWithAccount[];
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -93,12 +95,13 @@ const TransactionTable = ({
           'Daily Rate',
           'Actions'
         ].map((h) => (
-          <Column>{h}</Column>
+          <Column key={h}>{h}</Column>
         ))}
       </TableHeader>
       <TableBody renderEmptyState={() => 'No transactions.'}>
         {transactions.map((transaction) => (
           <TransactionRow
+            key={transaction.id}
             transaction={transaction}
             navigate={navigate}
             dispatch={dispatch}
@@ -114,7 +117,7 @@ const TransactionRow = ({
   navigate,
   dispatch
 }: {
-  transaction: Transaction;
+  transaction: TransactionWithAccount;
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
 }) => (
@@ -131,25 +134,25 @@ const TransactionRow = ({
 
     <Cell>
       <Group aria-label="Actions" className="space-x-1">
-        {' '}
         <Button
           aria-label="Modify"
+          className="px-0.5"
           onPress={() =>
             navigate('/transactions/set', {
               state: {
                 navigateTo: '/planning',
                 transaction: {
                   id: transaction.id,
-                  raccount: transaction.raccount,
+                  raccount: transaction.raccountMeta.id,
                   description: transaction.description,
                   category: transaction.category,
                   type: transaction.type,
-                  start: transaction.start,
-                  ending: transaction.ending ?? 'never',
+                  start: transaction.start.toString(),
+                  ending: transaction.ending?.toString() ?? 'never',
                   rtype: transaction.rtype,
                   beginAfterOccurrences: transaction.beginAfterOccurrences ?? 0,
                   cycle: transaction.cycle,
-                  value: toDecimal(transaction.value),
+                  value: parseFloat(toDecimal(transaction.value)),
                   valueType: transaction.valueType ?? 'static'
                 }
               }
@@ -161,6 +164,7 @@ const TransactionRow = ({
         </Button>
         <Button
           aria-label="Delete"
+          className="px-0.5"
           onPress={() => dispatch(transactionRemove({ id: transaction.id }))}
           // isDisabled={transaction.fromAccount}
         >

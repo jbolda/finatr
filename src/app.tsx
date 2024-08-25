@@ -17,14 +17,12 @@ const Accounts = React.lazy(() => import('./pages/accounts'));
 const AccountsContainer = React.lazy(
   () => import('./pages/accounts/container.tsx')
 );
-const AccountInput = React.lazy(
-  () => import('./pages/accounts/accountInput.js')
-);
+const AccountInput = React.lazy(() => import('./forms/accountInput.js'));
 const TransactionsContainer = React.lazy(
   () => import('./pages/transactions/container.tsx')
 );
 const TransactionInput = React.lazy(
-  () => import('./pages/transactions/transactionInput.js')
+  () => import('./forms/transactionInput.js')
 );
 const Planning = React.lazy(() => import('./pages/planning'));
 const FinancialIndependence = React.lazy(

@@ -2,7 +2,7 @@
   "transactions": [
     {
       "id": "b59b562a-321a-45a6-964c-c1cb0232311a",
-      "raccount": "checking",
+      "raccount": "080f8f3a-a7d7-463c-b5ce-008d89f5c2e5",
       "description": "beginning of month",
       "category": "paycheck",
       "type": "income",
@@ -13,7 +13,7 @@
     },
     {
       "id": "23df0d4b-7cd4-4840-8be4-c58deb85f8ce",
-      "raccount": "checking",
+      "raccount": "080f8f3a-a7d7-463c-b5ce-008d89f5c2e5",
       "description": "middle of month",
       "category": "paycheck",
       "type": "income",
@@ -24,7 +24,7 @@
     },
     {
       "id": "15206ac6-7bca-4511-84ed-f35529f9b40d",
-      "raccount": "checking",
+      "raccount": "080f8f3a-a7d7-463c-b5ce-008d89f5c2e5",
       "description": "rent, electric and water",
       "category": "rent",
       "type": "expense",
@@ -35,7 +35,7 @@
     },
     {
       "id": "5c58e080-709e-4d86-9c14-55aa06749359",
-      "raccount": "IRA",
+      "raccount": "2cb6ba86-0e12-4283-ad95-09f9370e279a",
       "description": "beginning of month",
       "category": "retirement",
       "type": "income",
@@ -46,7 +46,7 @@
     },
     {
       "id": "34353fff-1565-47ff-a860-92d330ac4919",
-      "raccount": "IRA",
+      "raccount": "2cb6ba86-0e12-4283-ad95-09f9370e279a",
       "description": "middle of month",
       "category": "retirement",
       "type": "income",
@@ -57,7 +57,7 @@
     },
     {
       "id": "e5ef2fa9-e89b-43d5-8029-5849ab9d7952",
-      "raccount": "credit card",
+      "raccount": "cd182267-5437-4c7d-8f17-515ef1f091f8",
       "description": "internet",
       "category": "internet",
       "type": "expense",
@@ -68,7 +68,7 @@
     },
     {
       "id": "1590c1cf-0bae-44ea-84b3-165b5ca63cee",
-      "raccount": "checking",
+      "raccount": "080f8f3a-a7d7-463c-b5ce-008d89f5c2e5",
       "description": "student loans",
       "category": "student loans",
       "type": "expense",
@@ -79,7 +79,7 @@
     },
     {
       "id": "29993d5c-c7b8-4ea9-be6c-31419e5a7b12",
-      "raccount": "credit card",
+      "raccount": "cd182267-5437-4c7d-8f17-515ef1f091f8",
       "description": "groceries",
       "category": "groceries",
       "type": "expense",
@@ -90,7 +90,7 @@
     },
     {
       "id": "ce42454e-09c0-47d4-b24a-9f528e27e0b3",
-      "raccount": "credit card",
+      "raccount": "cd182267-5437-4c7d-8f17-515ef1f091f8",
       "description": "going out",
       "category": "going out",
       "type": "expense",
@@ -101,7 +101,7 @@
     },
     {
       "id": "cb5a5564-0cf5-4da7-a11c-681302e43760",
-      "raccount": "credit card",
+      "raccount": "cd182267-5437-4c7d-8f17-515ef1f091f8",
       "description": "metro card",
       "category": "transportation",
       "type": "expense",
@@ -112,7 +112,7 @@
     },
     {
       "id": "c7ea3f5c-95f0-4fc5-915a-9e4ade4ebfa2",
-      "raccount": "credit card",
+      "raccount": "cd182267-5437-4c7d-8f17-515ef1f091f8",
       "description": "cell phone",
       "category": "cell phone",
       "type": "expense",
@@ -123,7 +123,7 @@
     },
     {
       "id": "c6add7c9-26ef-4f40-94b4-49bbaa5fa3c7",
-      "raccount": "credit card",
+      "raccount": "cd182267-5437-4c7d-8f17-515ef1f091f8",
       "description": "fun",
       "category": "fun",
       "type": "expense",
@@ -135,6 +135,7 @@
   ],
   "accounts": [
     {
+      "id": "2cb6ba86-0e12-4283-ad95-09f9370e279a",
       "name": "IRA",
       "starting": 50000,
       "interest": 8,
@@ -142,6 +143,7 @@
       "visible": false
     },
     {
+      "id": "080f8f3a-a7d7-463c-b5ce-008d89f5c2e5",
       "name": "checking",
       "starting": 4000,
       "interest": 0,
@@ -149,6 +151,7 @@
       "visible": true
     },
     {
+      "id": "cd182267-5437-4c7d-8f17-515ef1f091f8",
       "name": "credit card",
       "starting": 1200,
       "interest": 0,
@@ -160,7 +163,7 @@
           {
             "description": "pay off current balance",
             "debtAccount": "credit card",
-            "raccount": "checking",
+            "raccount": "080f8f3a-a7d7-463c-b5ce-008d89f5c2e5",
             "start": "YYYY-02-15",
             "rtype": "day of month",
             "cycle": 15,
@@ -172,7 +175,7 @@
           {
             "description": "pay off future expenses",
             "debtAccount": "credit card",
-            "raccount": "checking",
+            "raccount": "080f8f3a-a7d7-463c-b5ce-008d89f5c2e5",
             "start": "YYYY-02-15",
             "rtype": "day of month",
             "cycle": 15,
