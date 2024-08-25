@@ -2,7 +2,7 @@
   "transactions": [
     {
       "id": "ce42454e-09c0-47d4-b24a-9f528e27e0b3",
-      "raccount": "account",
+      "raccount": "f87a4199-8fb2-42e8-854c-d30dc8dd58e5",
       "description": "bi-weekly paycheck",
       "category": "paycheck",
       "type": "income",
@@ -13,7 +13,7 @@
     },
     {
       "id": "bf757794-5e33-406a-a510-c33bf9814755",
-      "raccount": "account",
+      "raccount": "f87a4199-8fb2-42e8-854c-d30dc8dd58e5",
       "description": "monthly rent",
       "category": "rent",
       "type": "expense",
@@ -25,6 +25,7 @@
   ],
   "accounts": [
     {
+      "id": "f87a4199-8fb2-42e8-854c-d30dc8dd58e5",
       "name": "account",
       "starting": 400,
       "interest": {

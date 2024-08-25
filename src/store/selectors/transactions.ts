@@ -11,7 +11,7 @@ export const transactionsWithAccounts = createSelector(
   schema.transactions.selectTableAsList,
   (accounts, transactions) => {
     const tA: TransactionWithAccount[] = transactions.map((t) => {
-      const account = accounts[t.raccount];
+      const account = accounts?.[t.raccount] ?? { name: t.raccount };
       const merged = {
         ...t,
         raccount: account.name,
