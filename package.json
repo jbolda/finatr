@@ -25,7 +25,7 @@
     "@tauri-apps/api": "^2.0.0-rc.0",
     "@tauri-apps/plugin-shell": "^2.0.0-rc.0",
     "d3": "^7.9.0",
-    "date-fns": "^2.23.0",
+    "date-fns": "^3.0.0",
     "dinero.js": "^2.0.0-alpha.14",
     "formik": "^2.2.9",
     "js-file-download": "0.4.12",
