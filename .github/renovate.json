@@ -14,6 +14,18 @@
       "matchPackageNames": ["@types/react", "@types/react-dom"]
     },
     {
+      "extends": [
+        "monorepo:react-router"
+      ],
+      "groupName": "react-router monorepo",
+      "matchUpdateTypes": [
+        "digest",
+        "patch",
+        "minor",
+        "major"
+      ]
+    },
+    {
       "groupName": "react-aria",
       "matchPackageNames": [
         "react-aria",
@@ -28,20 +40,29 @@
         "tailwind-merge",
         "tailwind-variants",
         "tailwind-animate",
-        "@tailwindcss/forms"
+        "@tailwindcss/forms",
+        "postcss"
       ]
     },
     {
       "groupName": "tauri monorepo",
       "matchUpdateTypes": ["digest", "patch", "minor", "major"],
-      "matchSourceUrls": ["https://github.com/tauri-apps/tauri"]
+      "matchSourceUrls": ["https://github.com/tauri-apps/tauri", "https://github.com/tauri-apps/plugins-workspace"]
     },
     {
-      "matchUpdateTypes": ["digest", "patch", "minor", "major"],
+      "extends": [
+        "monorepo:playwright"
+      ],
       "groupName": "playwright monorepo",
+      "matchUpdateTypes": ["digest", "patch", "minor", "major"],
       "matchSourceUrls": ["https://github.com/microsoft/playwright"],
       "matchPackageNames": ["@estruyf/github-actions-reporter"]
-    }
+    },
+    {
+      "groupName": "serde",
+      "prPriority": -1,
+      "matchPackageNames": ["serde**"]
+    },
   ],
   "customManagers": [
     {
