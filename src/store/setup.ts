@@ -6,8 +6,11 @@ import {
   parallel,
   PERSIST_LOADER_ID,
   persistStoreMdw,
-  take
+  take,
+  takeEvery
 } from 'starfx';
+import { WebrtcProvider } from 'y-webrtc';
+import * as Y from 'yjs';
 
 import {
   AppState,
@@ -15,8 +18,24 @@ import {
   schema
 } from './schema.ts';
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
-import { tasks, thunks } from './thunks/index.ts';
+import { tasks, thunks, updater } from './thunks/index.ts';
 import { reconcilerWithReconstitution } from './utils/reconcilerWithReconstitution.ts';
+import { applyPatch, applyYEvent } from './yjs/index.ts';
+
+const protocol = window.location.protocol === 'https' ? 'wss' : 'ws';
+const ydoc = new Y.Doc();
+const provider = new WebrtcProvider('your-room-name', ydoc, {
+  signaling: [
+    `${protocol}//signaling.yjs.dev`,
+    `${protocol}//demos.yjs.dev`,
+    `${protocol}//y-webrtc-signaling-eu.herokuapp.com`,
+    `${protocol}//y-webrtc-signaling-us.herokuapp.com`
+  ],
+  password: 'optional-room-password'
+});
+// array of numbers which produce a sum
+const yarray = ydoc.getArray('count');
+const ymap = ydoc.getMap<{ thing: string }>('list');
 
 const devtoolsEnabled = true;
 export function setupStore({ logs = true, initialState = {} }) {
@@ -52,6 +71,41 @@ export function setupStore({ logs = true, initialState = {} }) {
       }
     });
   }
+
+  tsks.push(function* syncWithYjs() {
+    // sync Yjs changes to immerjs
+    // ydoc.on('update', (update, origin, doc) => {
+    //   console.log({ update, origin, doc });
+    // });
+    // ydoc.on('update', (update, origin, doc) => {
+    //   console.log({ update, origin, doc });
+    // });
+    // ydoc.on('afterAllTransactions', (doc, transactions) => {
+    //   console.log({ doc, transactions, ydoc });
+    // });
+    ymap.observe((event) => {
+      console.log({ event });
+      store.dispatch(
+        updater([schema.list.set(applyYEvent(store.getState().list, event))])
+      );
+    });
+
+    // sync immerjs changes to Yjs
+    yield* takeEvery('store', function* (action) {
+      const patches = action.payload.patches;
+
+      console.log({ action, ymapAsJSONBefore: ymap.toJSON() });
+      try {
+        for (const patch of patches) {
+          applyPatch(ydoc, patch);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      console.log({ ymapAsJSON: ymap.toJSON() });
+    });
+  });
+
   tsks.push(
     thunks.bootup,
     connectReduxDevToolsExtension({
