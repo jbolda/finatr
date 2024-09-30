@@ -18,7 +18,7 @@ import {
   schema
 } from './schema.ts';
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
-import { tasks, thunks, updater } from './thunks/index.ts';
+import { sync, tasks, thunks } from './thunks/index.ts';
 import { reconcilerWithReconstitution } from './utils/reconcilerWithReconstitution.ts';
 import { applyPatch, applyYEvent } from './yjs/index.ts';
 
@@ -67,7 +67,7 @@ export function setupStore({ logs = true, initialState = {} }) {
     tsks.push(function* logActions() {
       while (true) {
         const action = yield* take('*');
-        console.log(action);
+        console.log('everyActionLogger', action);
       }
     });
   }
@@ -84,20 +84,27 @@ export function setupStore({ logs = true, initialState = {} }) {
     //   console.log({ doc, transactions, ydoc });
     // });
     ymap.observe((event) => {
-      console.log({ event });
+      console.log({ event, immerState: store.getState() });
       store.dispatch(
-        updater([schema.list.set(applyYEvent(store.getState().list, event))])
+        sync([schema.list.set(applyYEvent(store.getState().list, event))])
       );
     });
 
     // sync immerjs changes to Yjs
     yield* takeEvery('store', function* (action) {
-      const patches = action.payload.patches;
+      const patches = action.payload?.patches;
+      if (!patches) return;
 
-      console.log({ action, ymapAsJSONBefore: ymap.toJSON() });
+      console.log({
+        action,
+        ymapAsJSONBefore: ymap.toJSON()
+      });
       try {
         for (const patch of patches) {
-          applyPatch(ydoc, patch);
+          // be cheeky and hard code a guard
+          if (patch.path[0] === 'list' && patch.op !== 'replace') {
+            applyPatch(ydoc, patch);
+          }
         }
       } catch (error) {
         console.error(error);

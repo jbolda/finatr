@@ -125,8 +125,7 @@ function defaultApplyPatch(
   if (base instanceof Y.Map && typeof property === 'string') {
     switch (op) {
       case PATCH_ADD:
-        // skip this for now to cheekily avoid the loop
-        // case PATCH_REPLACE:
+      case PATCH_REPLACE:
         base.set(property, toYDataType(value));
         break;
       case PATCH_REMOVE:
