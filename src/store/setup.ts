@@ -73,21 +73,12 @@ export function setupStore({ logs = true, initialState = {} }) {
   }
 
   tsks.push(function* syncWithYjs() {
-    // sync Yjs changes to immerjs
-    // ydoc.on('update', (update, origin, doc) => {
-    //   console.log({ update, origin, doc });
-    // });
-    // ydoc.on('update', (update, origin, doc) => {
-    //   console.log({ update, origin, doc });
-    // });
-    // ydoc.on('afterAllTransactions', (doc, transactions) => {
-    //   console.log({ doc, transactions, ydoc });
-    // });
     ymap.observe((event) => {
-      console.log({ event, immerState: store.getState() });
-      store.dispatch(
-        sync([schema.list.set(applyYEvent(store.getState().list, event))])
-      );
+      if (!event.transaction.local) {
+        store.dispatch(
+          sync([schema.list.set(applyYEvent(store.getState().list, event))])
+        );
+      }
     });
 
     // sync immerjs changes to Yjs
@@ -95,10 +86,6 @@ export function setupStore({ logs = true, initialState = {} }) {
       const patches = action.payload?.patches;
       if (!patches) return;
 
-      console.log({
-        action,
-        ymapAsJSONBefore: ymap.toJSON()
-      });
       try {
         for (const patch of patches) {
           // be cheeky and hard code a guard
@@ -109,7 +96,6 @@ export function setupStore({ logs = true, initialState = {} }) {
       } catch (error) {
         console.error(error);
       }
-      console.log({ ymapAsJSON: ymap.toJSON() });
     });
   });
 

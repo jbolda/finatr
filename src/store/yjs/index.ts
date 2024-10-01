@@ -11,8 +11,6 @@ import {
   toYDataType
 } from './utils.ts';
 
-// enablePatches();
-
 export type Snapshot = JSONObject | JSONArray;
 
 export function applyYEvent<T extends JSONValue>(
@@ -25,23 +23,16 @@ export function applyYEvent<T extends JSONValue>(
     const source = event.target as Y.Map<any>;
 
     event.changes.keys.forEach((change, key) => {
-      console.log({ change, key });
       switch (change.action) {
         case 'add':
         case 'update':
-          console.log({
-            get: source.get(key),
-            plain: toPlainValue(source.get(key))
-          });
           nextBase[key] = toPlainValue(source.get(key));
-          console.log({ baseToBreak: base, nextBase });
           break;
         case 'delete':
           delete nextBase[key];
           break;
       }
     });
-    console.log({ baseMiddle: base, nextBase });
     return nextBase;
   } else if (event instanceof Y.YArrayEvent && isJSONArray(base)) {
     const arr = base as unknown as any[];
@@ -63,6 +54,7 @@ export function applyYEvent<T extends JSONValue>(
         retain += change.insert.length;
       }
     });
+    return arr;
   }
 }
 
@@ -125,6 +117,7 @@ function defaultApplyPatch(
   if (base instanceof Y.Map && typeof property === 'string') {
     switch (op) {
       case PATCH_ADD:
+      // skip this for now to cheekily avoid the loop
       case PATCH_REPLACE:
         base.set(property, toYDataType(value));
         break;
