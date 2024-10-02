@@ -22,20 +22,17 @@ import { sync, tasks, thunks } from './thunks/index.ts';
 import { reconcilerWithReconstitution } from './utils/reconcilerWithReconstitution.ts';
 import { applyPatch, applyYEvent } from './yjs/index.ts';
 
-const protocol = window.location.protocol === 'https' ? 'wss' : 'ws';
+const protocol = 'wss'; // window.location.protocol === 'https' ? 'wss' : 'ws';
 const ydoc = new Y.Doc();
 const provider = new WebrtcProvider('your-room-name', ydoc, {
-  signaling: [
-    `${protocol}//signaling.yjs.dev`,
-    `${protocol}//demos.yjs.dev`,
-    `${protocol}//y-webrtc-signaling-eu.herokuapp.com`,
-    `${protocol}//y-webrtc-signaling-us.herokuapp.com`
-  ],
+  signaling: [`${protocol}://demos.yjs.dev/ws`],
   password: 'optional-room-password'
 });
 // array of numbers which produce a sum
 const yarray = ydoc.getArray('count');
 const ymap = ydoc.getMap<{ thing: string }>('list');
+
+const yjsAllowlist: (keyof typeof schema)[] = ['count', 'list'];
 
 const devtoolsEnabled = true;
 export function setupStore({ logs = true, initialState = {} }) {
@@ -49,7 +46,8 @@ export function setupStore({ logs = true, initialState = {} }) {
       'accounts',
       'transactions',
       'incomeReceived',
-      'incomeExpected'
+      'incomeExpected',
+      'list'
     ]
   });
 
@@ -73,23 +71,33 @@ export function setupStore({ logs = true, initialState = {} }) {
   }
 
   tsks.push(function* syncWithYjs() {
-    ymap.observe((event) => {
-      if (!event.transaction.local) {
-        store.dispatch(
-          sync([schema.list.set(applyYEvent(store.getState().list, event))])
-        );
-      }
-    });
+    for (let allowedTypeKey of yjsAllowlist) {
+      const allowedType = ydoc.share.get(allowedTypeKey);
+      if (!allowedType)
+        throw new Error(`${allowedTypeKey} is not part of ydoc`);
+      allowedType.observe((event) => {
+        if (!event.transaction.local) {
+          store.dispatch(
+            sync([
+              schema.list.set(
+                // @ts-expect-error type index issue but :shrug:
+                applyYEvent(store.getState()[allowedTypeKey], event)
+              )
+            ])
+          );
+        }
+      });
+    }
 
     // sync immerjs changes to Yjs
     yield* takeEvery('store', function* (action) {
       const patches = action.payload?.patches;
-      if (!patches) return;
+      // meta is reliant on the patch to `schema.update()`
+      if (!patches || action.payload?.meta?.sync) return;
 
       try {
         for (const patch of patches) {
-          // be cheeky and hard code a guard
-          if (patch.path[0] === 'list' && patch.op !== 'replace') {
+          if (yjsAllowlist.includes(patch.path[0])) {
             applyPatch(ydoc, patch);
           }
         }

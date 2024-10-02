@@ -15,7 +15,8 @@
     "pretty": "prettier --write \"{src,__{tests,mocks}__}/**/*.js\"",
     "playwright": "playwright",
     "tauri": "tauri",
-    "covector": "covector"
+    "covector": "covector",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@dinero.js/currencies": "^2.0.0-alpha.14",
@@ -65,6 +66,7 @@
     "buffer": "^6.0.3",
     "covector": "^0.12.0",
     "parcel": "^2.11.0",
+    "patch-package": "8.0.0",
     "postcss": "^8.4.32",
     "prettier": "^3.2.5",
     "process": "^0.11.10",
