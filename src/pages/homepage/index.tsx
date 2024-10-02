@@ -1,10 +1,17 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'starfx/react';
+
+import { schema } from '~/src/store/schema';
+import { updater } from '~/src/store/thunks';
 
 const Homepage = () => <Hero />;
 
 export default Homepage;
 
 function Hero() {
+  const dispatch = useDispatch();
+  const count = useSelector(schema.count.select);
+  const list = useSelector(schema.list.selectTableAsList);
   return (
     <div className="relative overflow-hidden">
       <div
@@ -102,6 +109,29 @@ function Hero() {
             information can be built upon going forward to forecast
             considerations like FI(RE).
           </p>
+          <button
+            onClick={() => dispatch(updater([schema.count.increment(1)]))}
+          >
+            Increase counter from {count}
+          </button>
+          <ul>
+            {list.map((l) => (
+              <li key={l.thing}>{l.thing}</li>
+            ))}
+          </ul>
+          <button
+            onClick={() =>
+              dispatch(
+                updater([
+                  schema.list.add({
+                    [Date.now()]: { thing: Math.random().toString() }
+                  })
+                ])
+              )
+            }
+          >
+            Bump List
+          </button>
           <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
             <div className="rounded-md shadow">
               <a

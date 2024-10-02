@@ -1,0 +1,48 @@
+diff --git a/node_modules/starfx/esm/store/fx.js b/node_modules/starfx/esm/store/fx.js
+index e19b823..d799983 100644
+--- a/node_modules/starfx/esm/store/fx.js
++++ b/node_modules/starfx/esm/store/fx.js
+@@ -1,11 +1,11 @@
+ import { StoreContext } from "./context.js";
+ import { parallel, safe } from "../fx/mod.js";
+ import { getIdFromAction, take } from "../action.js";
+-export function* updateStore(updater) {
++export function* updateStore(updater, meta) {
+     const store = yield* StoreContext;
+     // had to cast the store since StoreContext has a generic store type
+     const st = store;
+-    const ctx = yield* st.update(updater);
++    const ctx = yield* st.update(updater, meta);
+     return ctx;
+ }
+ export function* select(selectorFn, p) {
+diff --git a/node_modules/starfx/esm/store/schema.js b/node_modules/starfx/esm/store/schema.js
+index a1f2d2c..819de01 100644
+--- a/node_modules/starfx/esm/store/schema.js
++++ b/node_modules/starfx/esm/store/schema.js
+@@ -14,8 +14,8 @@ export function createSchema(slices = defaultSchema()) {
+         acc[key] = db[key].initialState;
+         return acc;
+     }, {});
+-    function* update(ups) {
+-        return yield* updateStore(ups);
++    function* update(ups, meta) {
++        return yield* updateStore(ups, meta);
+     }
+     db.update = update;
+     return [db, initialState];
+diff --git a/node_modules/starfx/esm/store/store.js b/node_modules/starfx/esm/store/store.js
+index 427c8ac..49a7f61 100644
+--- a/node_modules/starfx/esm/store/store.js
++++ b/node_modules/starfx/esm/store/store.js
+@@ -85,8 +85,9 @@ export function createStore({ initialState, scope: initScope, middleware = [], }
+         return fn;
+     }
+     const mdw = createUpdater();
+-    function* update(updater) {
++    function* update(updater, meta) {
+         const ctx = {
++            meta,
+             updater,
+             patches: [],
+             result: Ok(undefined),

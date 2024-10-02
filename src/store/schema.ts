@@ -105,7 +105,9 @@ const [schema, initialState] = createSchema({
   accounts: slice.table<Account>({ empty: emptyAccount }),
   chartRange: slice.obj(defaultChartBarRange),
   incomeReceived: slice.table<IncomeReceived>(),
-  incomeExpected: slice.table<IncomeExpected>()
+  incomeExpected: slice.table<IncomeExpected>(),
+  count: slice.num(),
+  list: slice.table<{ thing: string }>()
 });
 
 export { schema, initialState };

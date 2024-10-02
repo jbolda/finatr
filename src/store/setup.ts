@@ -6,8 +6,11 @@ import {
   parallel,
   PERSIST_LOADER_ID,
   persistStoreMdw,
-  take
+  take,
+  takeEvery
 } from 'starfx';
+import { WebrtcProvider } from 'y-webrtc';
+import * as Y from 'yjs';
 
 import {
   AppState,
@@ -15,8 +18,21 @@ import {
   schema
 } from './schema.ts';
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
-import { tasks, thunks } from './thunks/index.ts';
+import { sync, tasks, thunks } from './thunks/index.ts';
 import { reconcilerWithReconstitution } from './utils/reconcilerWithReconstitution.ts';
+import { applyPatch, applyYEvent } from './yjs/index.ts';
+
+const protocol = 'wss'; // window.location.protocol === 'https' ? 'wss' : 'ws';
+const ydoc = new Y.Doc();
+const provider = new WebrtcProvider('your-room-name', ydoc, {
+  signaling: [`${protocol}://demos.yjs.dev/ws`],
+  password: 'optional-room-password'
+});
+// array of numbers which produce a sum
+const yarray = ydoc.getArray('count');
+const ymap = ydoc.getMap<{ thing: string }>('list');
+
+const yjsAllowlist: (keyof typeof schema)[] = ['count', 'list'];
 
 const devtoolsEnabled = true;
 export function setupStore({ logs = true, initialState = {} }) {
@@ -30,7 +46,8 @@ export function setupStore({ logs = true, initialState = {} }) {
       'accounts',
       'transactions',
       'incomeReceived',
-      'incomeExpected'
+      'incomeExpected',
+      'list'
     ]
   });
 
@@ -48,10 +65,48 @@ export function setupStore({ logs = true, initialState = {} }) {
     tsks.push(function* logActions() {
       while (true) {
         const action = yield* take('*');
-        console.log(action);
+        console.log('everyActionLogger', action);
       }
     });
   }
+
+  tsks.push(function* syncWithYjs() {
+    for (let allowedTypeKey of yjsAllowlist) {
+      const allowedType = ydoc.share.get(allowedTypeKey);
+      if (!allowedType)
+        throw new Error(`${allowedTypeKey} is not part of ydoc`);
+      allowedType.observe((event) => {
+        if (!event.transaction.local) {
+          store.dispatch(
+            sync([
+              schema.list.set(
+                // @ts-expect-error type index issue but :shrug:
+                applyYEvent(store.getState()[allowedTypeKey], event)
+              )
+            ])
+          );
+        }
+      });
+    }
+
+    // sync immerjs changes to Yjs
+    yield* takeEvery('store', function* (action) {
+      const patches = action.payload?.patches;
+      // meta is reliant on the patch to `schema.update()`
+      if (!patches || action.payload?.meta?.sync) return;
+
+      try {
+        for (const patch of patches) {
+          if (yjsAllowlist.includes(patch.path[0])) {
+            applyPatch(ydoc, patch);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  });
+
   tsks.push(
     thunks.bootup,
     connectReduxDevToolsExtension({
