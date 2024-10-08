@@ -1,5 +1,5 @@
 [package]
-name = "app"
+name = "finatr"
 version = "0.2.1"
 description = "A Tauri App"
 authors = ["you"]
@@ -7,14 +7,17 @@ license = ""
 repository = ""
 edition = "2021"
 
+[lib]
+name = "finatr_lib"
+crate-type = ["lib", "cdylib", "staticlib"]
+
 [build-dependencies]
-tauri-build = { version = "2.0.0-rc", features = [] }
+tauri-build = { version = "2.0", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2.0.0-rc", features = [] }
-tauri-plugin-shell = "2.0.0-rc.0"
+tauri = { version = "2.0", features = [] }
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
