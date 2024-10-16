@@ -1,3 +1,4 @@
+import { type Session } from '@supabase/supabase-js';
 import addDays from 'date-fns/fp/addDays/index.js';
 import { type Dinero } from 'dinero.js';
 import { createSchema, slice } from 'starfx';
@@ -100,6 +101,7 @@ interface IncomeExpected {
 const [schema, initialState] = createSchema({
   cache: slice.table({ empty: {} }),
   loaders: slice.loaders(),
+  auth: slice.obj<Session | { user: null }>({ user: null }),
   settings: slice.obj<Settings>(defaultSettings),
   transactions: slice.table<Transaction>({ empty: emptyTransaction }),
   accounts: slice.table<Account>({ empty: emptyAccount }),

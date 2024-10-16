@@ -5,6 +5,7 @@
 node_modules
 .parcel-cache
 dist
+.env
 
 .vscode
 *.log
