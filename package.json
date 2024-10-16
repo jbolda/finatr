@@ -76,7 +76,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "volta": {
-    "node": "20.16.0",
+    "node": "20.18.0",
     "npm": "10.8.2"
   }
 }
