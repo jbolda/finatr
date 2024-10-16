@@ -29,12 +29,12 @@ export const importEntries = thunks.create<{
   ]);
 
   // the fires off a dispatch and returns immediately
-  for (let transaction of transactions) {
-    yield* put(transactionAdd(transaction));
-  }
-
   for (let account of accounts) {
     yield* put(accountAdd(account));
+  }
+
+  for (let transaction of transactions) {
+    yield* put(transactionAdd(transaction));
   }
 
   if (chartRange?.start)

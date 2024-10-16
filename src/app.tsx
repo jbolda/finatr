@@ -1,3 +1,6 @@
+import { Auth } from '@supabase/auth-ui-react';
+import { ThemeSupa } from '@supabase/auth-ui-shared';
+import { type SupabaseClient } from '@supabase/supabase-js';
 import React from 'react';
 import { RouterProvider } from 'react-aria-components';
 import { Routes, Route, Link } from 'react-router-dom';
@@ -36,8 +39,13 @@ const FeatureFlag = ({ flag, children }) => {
   return <NoMatch />;
 };
 
-const App = (props) => {
+const App = ({
+  supabase
+}: {
+  supabase: SupabaseClient<any, 'public', any> | null;
+}) => {
   const settings = useSelector(schema.settings.select);
+  const auth = useSelector(schema.auth.select);
   let navigate = useNavigate();
 
   return (
@@ -52,6 +60,19 @@ const App = (props) => {
                 <Routes>
                   <Route index element={<Homepage />} />
                   <Route path="examples" element={<Examples />} />
+                  <Route
+                    path="auth"
+                    element={
+                      supabase && !auth.user ? (
+                        <Auth
+                          supabaseClient={supabase}
+                          appearance={{ theme: ThemeSupa }}
+                        />
+                      ) : (
+                        <div>Logged in!</div>
+                      )
+                    }
+                  />
                   <Route
                     path="settings"
                     element={
