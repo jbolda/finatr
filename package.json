@@ -58,7 +58,7 @@
     "@estruyf/github-actions-reporter": "^1.6.0",
     "@playwright/experimental-ct-react17": "^1.43.0",
     "@playwright/test": "^1.43.0",
-    "@tauri-apps/cli": "2.0.0-rc.3",
+    "@tauri-apps/cli": "2.0.3",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/node": "^20.16.12",
     "buffer": "^6.0.3",
