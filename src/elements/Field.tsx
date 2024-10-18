@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
   FieldErrorProps,
   Group,
@@ -14,6 +14,7 @@ import {
 } from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
 import { tv } from 'tailwind-variants';
+
 import { composeTailwindRenderProps, focusRing } from './utils.ts';
 
 export function Label(props: LabelProps) {
@@ -38,14 +39,12 @@ export function Description(props: TextProps) {
   );
 }
 
-export function FieldError(props: FieldErrorProps) {
+export function FieldError(props: { children: ReactNode }) {
   return (
-    <RACFieldError
+    <Text
       {...props}
-      className={composeTailwindRenderProps(
-        props.className,
-        'text-sm text-red-600 forced-colors:text-[Mark]'
-      )}
+      slot="errorMessage"
+      className={'text-sm text-red-600 forced-colors:text-[Mark]'}
     />
   );
 }

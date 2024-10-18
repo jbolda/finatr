@@ -6,17 +6,17 @@ import {
   Button,
   ListBox,
   ListBoxItemProps,
-  SelectValue,
-  ValidationResult
+  SelectValue
 } from 'react-aria-components';
 import { tv } from 'tailwind-variants';
-import { Description, FieldError, Label } from './Field.tsx';
+
 import {
   DropdownItem,
   DropdownSection,
   DropdownSectionProps
 } from '../components/ListBox.jsx';
 import { Popover } from '../components/Popover.jsx';
+import { Description, FieldError, Label } from './Field.tsx';
 import { composeTailwindRenderProps, focusRing } from './utils.ts';
 
 const styles = tv({
@@ -35,7 +35,7 @@ export interface SelectProps<T extends object>
   extends Omit<AriaSelectProps<T>, 'children'> {
   label?: string;
   description?: string;
-  errorMessage?: string | ((validation: ValidationResult) => string);
+  errorMessage?: string;
   items?: Iterable<T>;
   children: React.ReactNode | ((item: T) => React.ReactNode);
 }

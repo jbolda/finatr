@@ -19,6 +19,33 @@ export function dineroFromFloat({
   return dinero({ amount, currency, scale });
 }
 
+export function floatFromDinero(d: Dinero<number>) {
+  return parseFloat(toDecimal(d));
+}
+
+export function scaledFromFloat(value: number, scale: number) {
+  const factor = 10 ** scale;
+  const amount = Math.round(value * factor);
+
+  return { amount, scale: -scale };
+}
+
+export function floatFromScaled(
+  {
+    amount,
+    scale
+  }: {
+    amount: number;
+    scale: number;
+  },
+  additionalScale?: number
+) {
+  const factor = Math.pow(10, scale + (additionalScale ?? 0));
+  const floated = amount * factor;
+  console.log({ floated, amount, scale, factor, m: amount * factor });
+  return floated;
+}
+
 export function redinero(
   value: Dinero<number> | DineroOptions<number> | number
 ): Dinero<number> {
@@ -50,3 +77,40 @@ export const toHumanCurrency = createFormatter(
   ({ value, currency }) =>
     `${currency.code === 'USD' ? '$' : `${currency.code} `}${value}`
 );
+
+// This function is reusable to format any simple amount / scale object
+export const toHumanInterest = ({
+  amount,
+  scale,
+  leadingSymbol = '',
+  trailingSymbol = ''
+}: {
+  amount: number;
+  scale: number;
+  leadingSymbol?: string;
+  trailingSymbol?: string;
+}) => {
+  if (amount === 0) return `${leadingSymbol}0${trailingSymbol}`;
+  const stringifiedArray = amount.toString().split('');
+  // apply operations backwards
+  stringifiedArray.reverse();
+  stringifiedArray.splice(-scale - 2, 0, '.');
+
+  // remove trailing zeros
+  let trailingZeros = 0;
+  for (let v of stringifiedArray) {
+    if (v === '0' || v === '.') {
+      trailingZeros++;
+    } else {
+      break;
+    }
+  }
+  const finalStringArray = stringifiedArray.slice(trailingZeros).reverse();
+  if (finalStringArray[0] === '.') finalStringArray.splice(0, 0, '0');
+
+  // add symbols to final string
+  finalStringArray.splice(0, 0, leadingSymbol);
+  finalStringArray.push(trailingSymbol);
+  console.log(finalStringArray);
+  return finalStringArray.join('');
+};

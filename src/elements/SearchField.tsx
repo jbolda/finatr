@@ -2,9 +2,9 @@ import { SearchIcon, XIcon } from 'lucide-react';
 import React from 'react';
 import {
   SearchField as AriaSearchField,
-  SearchFieldProps as AriaSearchFieldProps,
-  ValidationResult
+  SearchFieldProps as AriaSearchFieldProps
 } from 'react-aria-components';
+
 import { Button } from './Button.ts';
 import { Description, FieldError, FieldGroup, Input, Label } from './Field.tsx';
 import { composeTailwindRenderProps } from './utils.ts';
@@ -12,7 +12,7 @@ import { composeTailwindRenderProps } from './utils.ts';
 export interface SearchFieldProps extends AriaSearchFieldProps {
   label?: string;
   description?: string;
-  errorMessage?: string | ((validation: ValidationResult) => string);
+  errorMessage?: string;
 }
 
 export function SearchField({

@@ -1,10 +1,10 @@
 import React from 'react';
 import {
   TextField as AriaTextField,
-  TextFieldProps as AriaTextFieldProps,
-  ValidationResult
+  TextFieldProps as AriaTextFieldProps
 } from 'react-aria-components';
 import { tv } from 'tailwind-variants';
+
 import {
   Description,
   FieldError,
@@ -26,7 +26,7 @@ const inputStyles = tv({
 export interface TextFieldProps extends AriaTextFieldProps {
   label?: string;
   description?: string;
-  errorMessage?: string | ((validation: ValidationResult) => string);
+  errorMessage?: string;
 }
 
 export function TextField({
