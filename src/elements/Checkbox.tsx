@@ -5,10 +5,10 @@ import {
   CheckboxGroup as AriaCheckboxGroup,
   CheckboxGroupProps as AriaCheckboxGroupProps,
   CheckboxProps,
-  ValidationResult,
   composeRenderProps
 } from 'react-aria-components';
 import { tv } from 'tailwind-variants';
+
 import { Description, FieldError, Label } from './Field.tsx';
 import { composeTailwindRenderProps, focusRing } from './utils.ts';
 
@@ -17,7 +17,7 @@ export interface CheckboxGroupProps
   label?: string;
   children?: ReactNode;
   description?: string;
-  errorMessage?: string | ((validation: ValidationResult) => string);
+  errorMessage?: string;
 }
 
 export function CheckboxGroup(props: CheckboxGroupProps) {

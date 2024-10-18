@@ -15,8 +15,8 @@ import { TextField } from '~/src/elements/TextField.tsx';
 
 const AccountSchema = z.object({
   name: z.string().min(1),
-  starting: z.number().default(0.0),
-  interest: z.number().default(0.0),
+  starting: z.number().nonnegative().step(0.01).default(0.0),
+  interest: z.number().nonnegative().default(0.0),
   vehicle: z
     .enum(['operating', 'loan', 'credit line', 'investment'])
     .default('operating')
@@ -25,6 +25,7 @@ const AccountSchema = z.object({
 function AccountInput() {
   const navigate = useNavigate();
   const { state: locationState } = useLocation();
+  console.log({ locationState });
   const dispatch = useDispatch();
   const { Field, handleSubmit, Subscribe, reset } = useForm({
     defaultValues: locationState?.account ?? {
@@ -39,6 +40,7 @@ function AccountInput() {
       reset();
       navigate(locationState?.navigateTo ?? '..', { relative: 'path' });
     },
+    validators: { onChange: AccountSchema },
     validatorAdapter: zodValidator()
   });
 
@@ -55,7 +57,6 @@ function AccountInput() {
       >
         <Field
           name="name"
-          validators={{ onChange: AccountSchema.shape.name }}
           children={(field) => (
             <TextField
               label="Name"
@@ -71,7 +72,6 @@ function AccountInput() {
 
         <Field
           name="starting"
-          validators={{ onChange: AccountSchema.shape.starting }}
           children={(field) => (
             <NumberField
               label="Starting"
@@ -92,15 +92,16 @@ function AccountInput() {
 
         <Field
           name="interest"
-          validators={{ onChange: AccountSchema.shape.interest }}
           children={(field) => (
             <NumberField
               label="Interest"
               isRequired={!AccountSchema.shape.interest.isOptional()}
-              step={0.01}
               formatOptions={{
-                style: 'percent'
+                style: 'percent',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 4
               }}
+              step={0.0001}
               value={field.state.value}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e)}
@@ -111,7 +112,6 @@ function AccountInput() {
 
         <Field
           name="vehicle"
-          validators={{ onChange: AccountSchema.shape.vehicle }}
           children={(field) => (
             <Select
               label="Account Vehicle"

@@ -4,9 +4,9 @@ import {
   NumberField as AriaNumberField,
   NumberFieldProps as AriaNumberFieldProps,
   Button,
-  ButtonProps,
-  ValidationResult
+  ButtonProps
 } from 'react-aria-components';
+
 import {
   Description,
   FieldError,
@@ -20,7 +20,7 @@ import { composeTailwindRenderProps } from './utils.ts';
 export interface NumberFieldProps extends AriaNumberFieldProps {
   label?: string;
   description?: string;
-  errorMessage?: string | ((validation: ValidationResult) => string);
+  errorMessage?: string;
 }
 
 export function NumberField({

@@ -1,4 +1,3 @@
-import { toDecimal } from 'dinero.js';
 import { Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
 import { Group } from 'react-aria-components';
@@ -9,7 +8,12 @@ import { useDispatch, useSelector } from 'starfx/react';
 
 import { schema, type Account } from '~/src/store/schema.ts';
 import { accountRemove } from '~/src/store/thunks/accounts.ts';
-import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
+import {
+  floatFromDinero,
+  floatFromScaled,
+  toHumanCurrency,
+  toHumanInterest
+} from '~/src/store/utils/dineroUtils.ts';
 
 import { TabView } from '~/src/components/TabView.tsx';
 import {
@@ -32,9 +36,8 @@ const modifyAccount = (navigate: NavigateFunction, account: Account) => {
       account: {
         id: account.id,
         name: account.name,
-        starting: parseFloat(toDecimal(account.starting)),
-        interest:
-          account.interest.amount * Math.pow(10, -account.interest.scale - 2),
+        starting: floatFromDinero(account.starting),
+        interest: floatFromScaled(account.interest),
         vehicle: account.vehicle
       }
     }
@@ -134,10 +137,7 @@ const AccountRow = ({
   <Row>
     <Cell>{account.name}</Cell>
     <Cell>{toHumanCurrency(account.starting)}</Cell>
-    <Cell>
-      {`${account.interest.amount * Math.pow(10, -account.interest.scale)}
-  %`}
-    </Cell>
+    <Cell>{toHumanInterest({ ...account.interest, trailingSymbol: '%' })}</Cell>
     <Cell>{account.vehicle}</Cell>
     <Cell>
       <Group aria-label="Actions" className="space-x-1">

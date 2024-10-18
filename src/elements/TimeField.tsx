@@ -2,9 +2,9 @@ import React from 'react';
 import {
   TimeField as AriaTimeField,
   TimeFieldProps as AriaTimeFieldProps,
-  TimeValue,
-  ValidationResult
+  TimeValue
 } from 'react-aria-components';
+
 import { DateInput } from './DateField.tsx';
 import { Description, FieldError, Label } from './Field.tsx';
 
@@ -12,7 +12,7 @@ export interface TimeFieldProps<T extends TimeValue>
   extends AriaTimeFieldProps<T> {
   label?: string;
   description?: string;
-  errorMessage?: string | ((validation: ValidationResult) => string);
+  errorMessage?: string;
 }
 
 export function TimeField<T extends TimeValue>({

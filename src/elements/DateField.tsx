@@ -5,10 +5,10 @@ import {
   DateInput as AriaDateInput,
   DateInputProps,
   DateSegment,
-  DateValue,
-  ValidationResult
+  DateValue
 } from 'react-aria-components';
 import { tv } from 'tailwind-variants';
+
 import { Description, FieldError, Label, fieldGroupStyles } from './Field.tsx';
 import { composeTailwindRenderProps } from './utils.ts';
 
@@ -16,7 +16,7 @@ export interface DateFieldProps<T extends DateValue>
   extends AriaDateFieldProps<T> {
   label?: string;
   description?: string;
-  errorMessage?: string | ((validation: ValidationResult) => string);
+  errorMessage?: string;
 }
 
 export function DateField<T extends DateValue>({

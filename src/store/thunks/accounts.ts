@@ -1,7 +1,5 @@
-import { USD } from '@dinero.js/currencies';
-
 import { schema, type Account } from '../schema';
-import { dineroFromFloat, redinero } from '../utils/dineroUtils.ts';
+import { scaledFromFloat, redinero } from '../utils/dineroUtils.ts';
 import makeUUID from '../utils/makeUUID.ts';
 import { thunks } from './foundation.ts';
 
@@ -14,10 +12,11 @@ export const accountAdd = thunks.create<Account>(
       account.id = makeUUID();
     }
     account.starting = redinero(rawAccount.starting);
-    account.interest =
-      typeof rawAccount.interest === 'number'
-        ? { amount: rawAccount.interest, scale: -2 }
-        : rawAccount.interest;
+    console.log(rawAccount.interest);
+    if (typeof rawAccount.interest === 'number') {
+      account.interest = scaledFromFloat(rawAccount.interest, 5);
+    }
+    console.log(rawAccount.interest);
 
     yield* schema.update(schema.accounts.add({ [account.id]: account }));
     yield* next();

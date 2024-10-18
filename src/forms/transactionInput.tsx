@@ -88,6 +88,7 @@ function TransactionInput() {
       reset();
       navigate(locationState?.navigateTo ?? '..', { relative: 'path' });
     },
+    validators: { onChange: TransactionSchema },
     validatorAdapter: zodValidator()
   });
   const ending = useStore((state) => state.values.ending);
@@ -110,7 +111,6 @@ function TransactionInput() {
       >
         <Field
           name="id"
-          validators={{ onChange: TransactionSchema.shape.id }}
           children={(field) => (
             <TextField
               label="ID"
@@ -127,7 +127,6 @@ function TransactionInput() {
 
         <Field
           name="raccount"
-          validators={{ onChange: TransactionSchema.shape.raccount }}
           children={(field) => (
             <Select
               label="Account"
@@ -145,7 +144,6 @@ function TransactionInput() {
 
         <Field
           name="description"
-          validators={{ onChange: TransactionSchema.shape.description }}
           children={(field) => (
             <TextField
               label="Description"
@@ -161,7 +159,6 @@ function TransactionInput() {
 
         <Field
           name="category"
-          validators={{ onChange: TransactionSchema.shape.category }}
           children={(field) => (
             <TextField
               label="Category"
@@ -177,7 +174,6 @@ function TransactionInput() {
 
         <Field
           name="type"
-          validators={{ onChange: TransactionSchema.shape.type }}
           children={(field) => (
             <Select
               label="Transaction Type"
@@ -217,9 +213,6 @@ function TransactionInput() {
 
         <Field
           name="beginAfterOccurrences"
-          validators={{
-            onChange: TransactionSchema.shape.beginAfterOccurrences
-          }}
           children={(field) => (
             <NumberField
               label="Begin After Specified Occurences"
@@ -236,7 +229,6 @@ function TransactionInput() {
 
         <Field
           name="ending"
-          validators={{ onChange: TransactionSchema.shape.ending }}
           children={(field) => (
             <RadioGroup
               label="Ending"
@@ -258,7 +250,6 @@ function TransactionInput() {
         {ending === 'after number of occurrences' ? (
           <Field
             name="occurrences"
-            validators={{ onChange: TransactionSchema.shape.occurrences }}
             children={(field) => (
               <NumberField
                 label="Occurences"
@@ -291,7 +282,6 @@ function TransactionInput() {
 
         <Field
           name="rtype"
-          validators={{ onChange: TransactionSchema.shape.rtype }}
           children={(field) => (
             <Select
               label="Repeat Type"
@@ -319,7 +309,6 @@ function TransactionInput() {
 
         <Field
           name="cycle"
-          validators={{ onChange: TransactionSchema.shape.cycle }}
           children={(field) => (
             <NumberField
               label="Cycle"
@@ -334,7 +323,6 @@ function TransactionInput() {
 
         <Field
           name="value"
-          validators={{ onChange: TransactionSchema.shape.value }}
           children={(field) => (
             <NumberField
               label="Value"
