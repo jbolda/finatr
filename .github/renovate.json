@@ -27,6 +27,10 @@
       ]
     },
     {
+      "groupName": "supabase",
+      "matchPackageNames": ["@supabase**"]
+    },
+    {
       "groupName": "tailwindcss",
       "matchPackageNames": [
         "tailwindcss",
