@@ -6,24 +6,17 @@
   "prCreation": "immediate",
   "separateMinorPatch": false,
   "lockFileMaintenance": { "enabled": true, "extends": ["schedule:monthly"] },
+  "schedule": ["after 2am on monday"],
   "packageRules": [
     {
       "groupName": "react monorepo",
       "matchUpdateTypes": ["digest", "patch", "minor", "major"],
-      "matchSourceUrls": ["https://github.com/facebook/react"],
       "matchPackageNames": ["@types/react", "@types/react-dom"]
     },
     {
-      "extends": [
-        "monorepo:react-router"
-      ],
+      "extends": ["monorepo:react-router"],
       "groupName": "react-router monorepo",
-      "matchUpdateTypes": [
-        "digest",
-        "patch",
-        "minor",
-        "major"
-      ]
+      "matchUpdateTypes": ["digest", "patch", "minor", "major"]
     },
     {
       "groupName": "react-aria",
@@ -47,22 +40,18 @@
     {
       "groupName": "tauri monorepo",
       "matchUpdateTypes": ["digest", "patch", "minor", "major"],
-      "matchSourceUrls": ["https://github.com/tauri-apps/tauri", "https://github.com/tauri-apps/plugins-workspace"]
-    },
-    {
-      "extends": [
-        "monorepo:playwright"
+      "matchSourceUrls": [
+        "https://github.com/tauri-apps/tauri",
+        "https://github.com/tauri-apps/plugins-workspace"
       ],
-      "groupName": "playwright monorepo",
-      "matchUpdateTypes": ["digest", "patch", "minor", "major"],
-      "matchSourceUrls": ["https://github.com/microsoft/playwright"],
-      "matchPackageNames": ["@estruyf/github-actions-reporter"]
-    },
-    {
-      "groupName": "serde",
-      "prPriority": -1,
       "matchPackageNames": ["serde**"]
     },
+    {
+      "extends": ["monorepo:playwright"],
+      "groupName": "playwright monorepo",
+      "matchUpdateTypes": ["digest", "patch", "minor", "major"],
+      "matchPackageNames": ["@playwright**", "@estruyf/github-actions-reporter"]
+    }
   ],
   "customManagers": [
     {
