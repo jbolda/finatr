@@ -2,9 +2,24 @@ import { eachDayOfInterval } from 'date-fns';
 import { toDecimal, type Dinero } from 'dinero.js';
 import { createSelector } from 'starfx';
 
-import { schema } from '~/src/store/schema.ts';
+import { Account, schema, Transaction } from '~/src/store/schema.ts';
 
 import { barChartTransactions } from './chartData';
+
+export type ChartAccounts = {
+  data: {
+    data: [any, number][];
+    name: string;
+    starting: Dinero<number>;
+    interest: {
+      amount: number;
+      scale: number;
+    };
+    vehicle: string;
+    payback?: Transaction[];
+  }[];
+  max: number;
+};
 
 export const lineChartAccounts = createSelector(
   schema.chartRange.select,
@@ -26,17 +41,22 @@ function resolveLineChartData({
   transactions
 }: {
   chartRange: any;
-  accounts: {
-    name: string;
-    starting: Dinero<number>;
-    interest: {
-      amount: number;
-      scale: number;
-    };
-    vehicle: string;
-    payback: never[];
-  }[];
-  transactions: any;
+  accounts: Account[];
+  transactions: {
+    data: {
+      stacked: {
+        date: Date;
+        height: number;
+        y0: number;
+      }[];
+      transaction: Transaction;
+      data: {
+        date: Date;
+        y: Dinero<number> | null;
+      }[];
+    }[];
+    max: number;
+  };
 }) {
   const allDates = eachDayOfInterval(chartRange);
   const incomeStacked = transactions.data
@@ -65,12 +85,12 @@ function resolveLineChartData({
         accountIndex++
       ) {
         const account = accounts[accountIndex];
-        const income = sumTotal(incomeKeys, incomeStacked, index, account.name);
+        const income = sumTotal(incomeKeys, incomeStacked, index, account);
         const expenses = sumTotal(
           expensesKeys,
           expensesStacked,
           index,
-          account.name
+          account
         );
         const prevValue =
           data?.[accountIndex]?.data?.[dateIndex - 1]?.[1] ??
@@ -87,7 +107,7 @@ function resolveLineChartData({
       }
       return data;
     },
-    accounts.map((a) => ({ ...a, data: [] }))
+    accounts.map((a) => ({ ...a, data: [] as [any, number][] }))
   );
   return { data: stack, max };
 }
@@ -99,11 +119,11 @@ const sumTotal = (
     { stacked: { height: number }[]; transaction: { raccount: string } }
   >,
   index: number,
-  accountName: string
+  account: Account
 ) =>
   keys.reduce((finalValue, key) => {
     const d = transactions[key];
-    if (d.transaction.raccount === accountName)
+    if (d.transaction.raccount === account.id)
       return finalValue + d.stacked[index].height;
     return finalValue;
   }, 0);

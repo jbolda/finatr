@@ -41,9 +41,7 @@ export function floatFromScaled(
   additionalScale?: number
 ) {
   const factor = Math.pow(10, scale + (additionalScale ?? 0));
-  const floated = amount * factor;
-  console.log({ floated, amount, scale, factor, m: amount * factor });
-  return floated;
+  return amount * factor;
 }
 
 export function redinero(
