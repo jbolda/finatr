@@ -27,34 +27,34 @@ const FinancialFlow = () => {
   return (
     <div className="container mx-auto my-2 px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-semibold py-3">Cash Flow</h1>
-      <div className="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
-        <div className="px-4 py-4 sm:px-6 flex items-center space-x-8">
-          <DatePicker
-            label="Starting Date"
-            value={parseDate(dateRange.startString)}
-            onChange={(calendar) =>
-              dispatch(updateChartDateRange(calendar.toString()))
-            }
-          />
-          <DataFilterSelector
-            vehicleFilter={vehicleFilter}
-            setVehicleFilter={setVehicleFilter}
-            setAccountFilters={setAccountFilters}
-            vehicles={[
-              'all',
-              'operating',
-              'investment',
-              'debt',
-              'loan',
-              'credit line'
-            ]}
-          />
-        </div>
-        <AccountListFilter
-          accountFilters={accountFilters}
-          setAccountFilters={setAccountFilters}
-          accounts={accounts}
+      <div className="overflow-auto px-4 py-4 sm:px-6 flex items-center space-x-8">
+        <DatePicker
+          label="Starting Date"
+          value={parseDate(dateRange.startString)}
+          onChange={(calendar) =>
+            dispatch(updateChartDateRange(calendar.toString()))
+          }
         />
+        <DataFilterSelector
+          vehicleFilter={vehicleFilter}
+          setVehicleFilter={setVehicleFilter}
+          setAccountFilters={setAccountFilters}
+          vehicles={[
+            'all',
+            'operating',
+            'investment',
+            'debt',
+            'loan',
+            'credit line'
+          ]}
+        />
+      </div>
+      <AccountListFilter
+        accountFilters={accountFilters}
+        setAccountFilters={setAccountFilters}
+        accounts={accounts}
+      />
+      <div className="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
         <div className="px-4 py-5 sm:p-6">
           <BarChart
             dateRange={dateRange}
