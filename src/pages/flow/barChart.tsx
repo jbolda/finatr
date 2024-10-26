@@ -9,7 +9,7 @@ import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
 
 const BarChart = ({
   dateRange,
-  accountData,
+  accounts,
   vehicleFilter
 }: {
   dateRange: {
@@ -18,18 +18,15 @@ const BarChart = ({
     end: Date;
     endString: string;
   };
-  accountData: ChartAccounts;
+  accounts: ChartAccounts['data'];
   vehicleFilter: string;
 }) => {
   const transactionData = useSelector(barChartTransactions);
   const bar = barBuild;
 
   useEffect(() => {
-    drawCharts(dateRange, transactionData, {
-      data: accountData.data.filter((d) => d.vehicle === vehicleFilter),
-      max: 0
-    });
-  }, [transactionData.data, accountData.data, dateRange.start]);
+    drawCharts(dateRange, transactionData, accounts);
+  }, [transactionData.data, accounts, dateRange.start, vehicleFilter]);
 
   return (
     <>
@@ -108,14 +105,16 @@ const BarChart = ({
 
 export default BarChart;
 
-const drawCharts = (dateRange, transactionData, accountData: ChartAccounts) => {
+const drawCharts = (
+  dateRange,
+  transactionData,
+  accounts: ChartAccounts['data']
+) => {
   const svgBar = d3.select('g.bar-section');
   const svgLine = d3.select('g.line-section');
   const tooltipTarget = d3.select('div#tooltipTarget').style('opacity', 0);
   const tooltipLine = d3.select('line#tooltipLine').style('opacity', 0);
-  const accountMax = d3.max(accountData.data, (d) =>
-    d3.max(d.data, (dd) => dd[1])
-  );
+  const accountMax = d3.max(accounts, (d) => d3.max(d.data, (dd) => dd[1]));
 
   barBuild.drawAxis(svgBar, dateRange, transactionData.max);
   barBuild.drawAxis(svgLine, dateRange, accountMax);
@@ -135,7 +134,7 @@ const drawCharts = (dateRange, transactionData, accountData: ChartAccounts) => {
     svg: svgLine.select('rect#mouseArea'),
     selector: svgLine.select('.lines'),
     dateRange,
-    data: accountData.data,
+    data: accounts,
     max_domain: accountMax,
     tooltip: {
       target: tooltipTarget,
