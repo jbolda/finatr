@@ -25,7 +25,7 @@ const FinancialFlow = () => {
       : accountData.data.filter((d) => d.vehicle === vehicleFilter);
 
   return (
-    <div className="container mx-auto my-2 px-4 sm:px-6 lg:px-8">
+    <div className="container mx-auto my-2 px-0 sm:px-4 lg:px-8">
       <h1 className="text-3xl font-semibold py-3">Cash Flow</h1>
       <div className="overflow-auto px-4 py-4 sm:px-6 flex items-center space-x-8">
         <DatePicker

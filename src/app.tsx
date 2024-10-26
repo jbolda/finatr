@@ -56,7 +56,7 @@ const App = ({
 
           <main className="flex-grow -mt-32">
             <div className="mx-auto container pb-12">
-              <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
+              <div className="rounded-lg bg-white px-1 py-6 shadow sm:px-5">
                 <Routes>
                   <Route index element={<Homepage />} />
                   <Route path="examples" element={<Examples />} />
