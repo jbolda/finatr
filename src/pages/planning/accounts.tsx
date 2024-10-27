@@ -20,6 +20,7 @@ import {
   Cell,
   Column,
   Row,
+  singleSort,
   Table,
   TableBody,
   TableHeader
@@ -45,8 +46,6 @@ const modifyAccount = (navigate: NavigateFunction, account: Account) => {
 };
 
 const AccountFlow = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
   const accounts = useSelector(schema.accounts.selectTableAsList);
   const debt = accounts.filter(
@@ -63,67 +62,59 @@ const AccountFlow = () => {
       tabClick={setActiveTab}
       tabTitles={['Accounts', 'Debt']}
       tabContents={[
-        <React.Fragment>
-          <Table aria-label="All Accounts" selectionMode="none">
-            <TableHeader>
-              <Column isRowHeader>Name</Column>
-              {['Starting', 'Interest', 'Vehicle', 'Actions'].map((h) => (
-                <Column key={h}>{h}</Column>
-              ))}
-            </TableHeader>
-            <TableBody renderEmptyState={() => 'No accounts.'}>
-              {accounts.map((account) => (
-                <AccountRow
-                  key={account.id}
-                  account={account}
-                  navigate={navigate}
-                  dispatch={dispatch}
-                />
-              ))}
-            </TableBody>
-          </Table>
-        </React.Fragment>,
-        <React.Fragment>
-          <React.Fragment>
-            {/* <AccountTransactionInput tabClick={this.tabClick} /> */}
-            <Table aria-label="Debt Accounts" selectionMode="none">
-              <TableHeader>
-                <Column isRowHeader>Name</Column>
-                {['Starting', 'Interest', 'Vehicle', 'Actions'].map((h) => (
-                  <Column key={h}>{h}</Column>
-                ))}
-              </TableHeader>
-              <TableBody renderEmptyState={() => 'No accounts.'}>
-                {debt.map((account) => (
-                  <AccountRow
-                    key={account.id}
-                    account={account}
-                    navigate={navigate}
-                    dispatch={dispatch}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </React.Fragment>
-          {/* // <FlexDebtTable
-    //   itemHeaders={[
-    //     'account name',
-    //     'starting',
-    //     'interest',
-    //     'Add',
-    //     'Modify',
-    //     'Delete'
-    //     // 'Payback'
-    //   ]}
-    //   data={data}
-    // />} */}
-        </React.Fragment>
+        <AccountTable label="All Accounts" accounts={accounts} />,
+        <AccountTable label="Debt Accounts" accounts={debt} />
       ]}
     />
   );
 };
 
 export default AccountFlow;
+
+const AccountTable = ({
+  label,
+  accounts
+}: {
+  label: string;
+  accounts: Account[];
+}) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [sortable, setSetSortable] = useState<{
+    column: string;
+    direction: 'ascending' | 'descending';
+  }>({ column: 'Vehicle', direction: 'descending' });
+
+  return (
+    <Table
+      aria-label={label}
+      selectionMode="none"
+      onSortChange={(item) => setSetSortable(item)}
+      sortDescriptor={sortable}
+    >
+      <TableHeader>
+        <Column id="name" isRowHeader allowsSorting>
+          Name
+        </Column>
+        {['Starting', 'Interest', 'Vehicle', 'Actions'].map((h) => (
+          <Column key={h} id={h} allowsSorting>
+            {h}
+          </Column>
+        ))}
+      </TableHeader>
+      <TableBody renderEmptyState={() => 'No accounts.'}>
+        {accounts.sort(singleSort(sortable)).map((account) => (
+          <AccountRow
+            key={account.id}
+            account={account}
+            navigate={navigate}
+            dispatch={dispatch}
+          />
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
 
 const AccountRow = ({
   account,

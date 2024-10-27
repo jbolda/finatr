@@ -19,6 +19,7 @@ import {
   Cell,
   Column,
   Row,
+  singleSort,
   Table,
   TableBody,
   TableHeader
@@ -49,19 +50,25 @@ const TransactionsFlow = () => {
               </button>
             ))}
           </div> */}
-          <TransactionTable transactions={transactions} />
+          <TransactionTable
+            label="All Transactions"
+            transactions={transactions}
+          />
         </React.Fragment>,
         <TransactionTable
+          label="Income"
           transactions={transactions.filter(
             (transaction) => transaction.type === 'income'
           )}
         />,
         <TransactionTable
+          label="Expense"
           transactions={transactions.filter(
             (transaction) => transaction.type === 'expense'
           )}
         />,
         <TransactionTable
+          label="Transfer"
           transactions={transactions.filter(
             (transaction) => transaction.type === 'transfer'
           )}
@@ -74,8 +81,10 @@ const TransactionsFlow = () => {
 export default TransactionsFlow;
 
 const TransactionTable = ({
+  label,
   transactions
 }: {
+  label: string;
   transactions: TransactionWithAccount[];
 }) => {
   const dispatch = useDispatch();
@@ -83,27 +92,27 @@ const TransactionTable = ({
   const [sortable, setSetSortable] = useState<{
     column: string;
     direction: 'ascending' | 'descending';
-  }>({ column: 'type', direction: 'ascending' });
+  }>({ column: 'type', direction: 'descending' });
 
   return (
     <Table
-      aria-label="All Accounts"
+      aria-label={label}
       selectionMode="none"
       onSortChange={(item) => setSetSortable(item)}
       sortDescriptor={sortable}
     >
       <TableHeader>
         <Column id="raccount" isRowHeader allowsSorting>
-          raccount
+          Account
         </Column>
         {[
-          'description',
-          'category',
-          'type',
-          'start',
+          'Description',
+          'Category',
+          'Type',
+          'Start',
           'rtype',
-          'cycle',
-          'value',
+          'Cycle',
+          'Value',
           'Daily Rate',
           'Actions'
         ].map((h) => (
@@ -113,24 +122,14 @@ const TransactionTable = ({
         ))}
       </TableHeader>
       <TableBody renderEmptyState={() => 'No transactions.'}>
-        {transactions
-          .sort(function (a, b) {
-            if (a[sortable.column] < b[sortable.column]) {
-              return sortable.direction === 'ascending' ? 1 : -1;
-            }
-            if (a[sortable.column] > b[sortable.column]) {
-              return sortable.direction === 'ascending' ? -1 : 1;
-            }
-            return 0;
-          })
-          .map((transaction) => (
-            <TransactionRow
-              key={transaction.id}
-              transaction={transaction}
-              navigate={navigate}
-              dispatch={dispatch}
-            />
-          ))}
+        {transactions.sort(singleSort(sortable)).map((transaction) => (
+          <TransactionRow
+            key={transaction.id}
+            transaction={transaction}
+            navigate={navigate}
+            dispatch={dispatch}
+          />
+        ))}
       </TableBody>
     </Table>
   );
