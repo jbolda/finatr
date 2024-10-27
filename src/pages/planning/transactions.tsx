@@ -80,10 +80,22 @@ const TransactionTable = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [sortable, setSetSortable] = useState<{
+    column: string;
+    direction: 'ascending' | 'descending';
+  }>({ column: 'type', direction: 'ascending' });
+
   return (
-    <Table aria-label="All Accounts" selectionMode="none">
+    <Table
+      aria-label="All Accounts"
+      selectionMode="none"
+      onSortChange={(item) => setSetSortable(item)}
+      sortDescriptor={sortable}
+    >
       <TableHeader>
-        <Column isRowHeader>raccount</Column>
+        <Column id="raccount" isRowHeader allowsSorting>
+          raccount
+        </Column>
         {[
           'description',
           'category',
@@ -95,18 +107,30 @@ const TransactionTable = ({
           'Daily Rate',
           'Actions'
         ].map((h) => (
-          <Column key={h}>{h}</Column>
+          <Column key={h} id={h} allowsSorting>
+            {h}
+          </Column>
         ))}
       </TableHeader>
       <TableBody renderEmptyState={() => 'No transactions.'}>
-        {transactions.map((transaction) => (
-          <TransactionRow
-            key={transaction.id}
-            transaction={transaction}
-            navigate={navigate}
-            dispatch={dispatch}
-          />
-        ))}
+        {transactions
+          .sort(function (a, b) {
+            if (a[sortable.column] < b[sortable.column]) {
+              return sortable.direction === 'ascending' ? 1 : -1;
+            }
+            if (a[sortable.column] > b[sortable.column]) {
+              return sortable.direction === 'ascending' ? -1 : 1;
+            }
+            return 0;
+          })
+          .map((transaction) => (
+            <TransactionRow
+              key={transaction.id}
+              transaction={transaction}
+              navigate={navigate}
+              dispatch={dispatch}
+            />
+          ))}
       </TableBody>
     </Table>
   );
