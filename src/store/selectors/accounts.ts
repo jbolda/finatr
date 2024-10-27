@@ -62,13 +62,13 @@ function resolveLineChartData({
   const incomeStacked = transactions.data
     .filter((t) => t.transaction.type === 'income')
     .reduce((o, t) => {
-      o[t.id] = t;
+      o[t.transaction.id] = t;
       return o;
     }, {});
   const expensesStacked = transactions.data
     .filter((t) => t.transaction.type === 'expense')
     .reduce((o, t) => {
-      o[t.id] = t;
+      o[t.transaction.id] = t;
       return o;
     }, {});
 

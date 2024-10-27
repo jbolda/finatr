@@ -20,7 +20,6 @@ import {
   composeRenderProps,
   useTableOptions
 } from 'react-aria-components';
-import { twMerge } from 'tailwind-merge';
 import { tv } from 'tailwind-variants';
 
 import { Checkbox } from '../elements/Checkbox.tsx';
@@ -148,3 +147,17 @@ const cellStyles = tv({
 export function Cell(props: CellProps) {
   return <AriaCell {...props} className={cellStyles} />;
 }
+
+export const singleSort = (sortable: {
+  column: string;
+  direction: 'ascending' | 'descending';
+}) =>
+  function (a: any, b: any) {
+    if (a[sortable.column.toLowerCase()] < b[sortable.column.toLowerCase()]) {
+      return sortable.direction === 'ascending' ? 1 : -1;
+    }
+    if (a[sortable.column.toLowerCase()] > b[sortable.column.toLowerCase()]) {
+      return sortable.direction === 'ascending' ? -1 : 1;
+    }
+    return 0;
+  };

@@ -109,6 +109,5 @@ export const toHumanInterest = ({
   // add symbols to final string
   finalStringArray.splice(0, 0, leadingSymbol);
   finalStringArray.push(trailingSymbol);
-  console.log(finalStringArray);
   return finalStringArray.join('');
 };

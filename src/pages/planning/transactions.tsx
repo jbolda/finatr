@@ -19,6 +19,7 @@ import {
   Cell,
   Column,
   Row,
+  singleSort,
   Table,
   TableBody,
   TableHeader
@@ -49,19 +50,25 @@ const TransactionsFlow = () => {
               </button>
             ))}
           </div> */}
-          <TransactionTable transactions={transactions} />
+          <TransactionTable
+            label="All Transactions"
+            transactions={transactions}
+          />
         </React.Fragment>,
         <TransactionTable
+          label="Income"
           transactions={transactions.filter(
             (transaction) => transaction.type === 'income'
           )}
         />,
         <TransactionTable
+          label="Expense"
           transactions={transactions.filter(
             (transaction) => transaction.type === 'expense'
           )}
         />,
         <TransactionTable
+          label="Transfer"
           transactions={transactions.filter(
             (transaction) => transaction.type === 'transfer'
           )}
@@ -74,32 +81,48 @@ const TransactionsFlow = () => {
 export default TransactionsFlow;
 
 const TransactionTable = ({
+  label,
   transactions
 }: {
+  label: string;
   transactions: TransactionWithAccount[];
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [sortable, setSetSortable] = useState<{
+    column: string;
+    direction: 'ascending' | 'descending';
+  }>({ column: 'type', direction: 'descending' });
+
   return (
-    <Table aria-label="All Accounts" selectionMode="none">
+    <Table
+      aria-label={label}
+      selectionMode="none"
+      onSortChange={(item) => setSetSortable(item)}
+      sortDescriptor={sortable}
+    >
       <TableHeader>
-        <Column isRowHeader>raccount</Column>
+        <Column id="raccount" isRowHeader allowsSorting>
+          Account
+        </Column>
         {[
-          'description',
-          'category',
-          'type',
-          'start',
+          'Description',
+          'Category',
+          'Type',
+          'Start',
           'rtype',
-          'cycle',
-          'value',
+          'Cycle',
+          'Value',
           'Daily Rate',
           'Actions'
         ].map((h) => (
-          <Column key={h}>{h}</Column>
+          <Column key={h} id={h} allowsSorting>
+            {h}
+          </Column>
         ))}
       </TableHeader>
       <TableBody renderEmptyState={() => 'No transactions.'}>
-        {transactions.map((transaction) => (
+        {transactions.sort(singleSort(sortable)).map((transaction) => (
           <TransactionRow
             key={transaction.id}
             transaction={transaction}
