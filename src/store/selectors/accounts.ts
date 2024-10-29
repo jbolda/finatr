@@ -71,9 +71,12 @@ function resolveLineChartData({
       o[t.transaction.id] = t;
       return o;
     }, {});
-
-  const incomeKeys = Object.keys(incomeStacked);
-  const expensesKeys = Object.keys(expensesStacked);
+  const transfersStacked = transactions.data
+    .filter((t) => t.transaction.type === 'transfer')
+    .reduce((o, t) => {
+      o[t.transaction.id] = t;
+      return o;
+    }, {});
 
   let max = 0;
   const stack = allDates.reduce(
@@ -85,13 +88,26 @@ function resolveLineChartData({
         accountIndex++
       ) {
         const account = accounts[accountIndex];
-        const income = sumTotal(incomeKeys, incomeStacked, index, account);
+        const income = sumTotal(incomeStacked, index, account.id, 'raccount');
         const expenses = sumTotal(
-          expensesKeys,
           expensesStacked,
           index,
-          account
+          account.id,
+          'raccount'
         );
+        const transfersOut = sumTotal(
+          transfersStacked,
+          index,
+          account.id,
+          'raccount'
+        );
+        const transfersIn = sumTotal(
+          transfersStacked,
+          index,
+          account.id,
+          'transferIn'
+        );
+
         const prevValue =
           data?.[accountIndex]?.data?.[dateIndex - 1]?.[1] ??
           Number(toDecimal(account.starting));
@@ -99,9 +115,9 @@ function resolveLineChartData({
           console.error({ account, prevValue, day, income, expenses });
           throw new Error(`nulled`);
         }
-        const firstStep = prevValue - expenses;
+        const firstStep = prevValue - expenses - transfersOut;
         data[accountIndex].data[dateIndex] = [day, firstStep];
-        const secondStep = firstStep + income;
+        const secondStep = firstStep + income + transfersIn;
         if (secondStep > max) max = secondStep;
         data[accountIndex].data[dateIndex + 1] = [day, secondStep];
       }
@@ -113,17 +129,20 @@ function resolveLineChartData({
 }
 
 const sumTotal = (
-  keys: string[],
   transactions: Record<
     string,
-    { stacked: { height: number }[]; transaction: { raccount: string } }
+    { stacked: { height: number }[]; transaction: Transaction }
   >,
   index: number,
-  account: Account
+  accountId: string,
+  accountIdRefOnTransaction: 'raccount' | 'transferIn' = 'raccount'
 ) =>
-  keys.reduce((finalValue, key) => {
+  Object.keys(transactions).reduce((finalValue, key) => {
     const d = transactions[key];
-    if (d.transaction.raccount === account.id)
+    if (
+      accountIdRefOnTransaction in d.transaction &&
+      d.transaction[accountIdRefOnTransaction] === accountId
+    )
       return finalValue + d.stacked[index].height;
     return finalValue;
   }, 0);

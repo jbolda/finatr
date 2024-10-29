@@ -148,7 +148,12 @@ const TransactionRow = ({
     <Cell>{transaction.raccount}</Cell>
     <Cell>{transaction.description}</Cell>
     <Cell>{transaction.category}</Cell>
-    <Cell>{transaction.type}</Cell>
+    <Cell>
+      {transaction.type}
+      {transaction.type === 'transfer' && transaction.transferIn
+        ? ` to ${transaction.transferIn}`
+        : ``}
+    </Cell>
     <Cell>{transaction.start}</Cell>
     <Cell>{transaction.rtype}</Cell>
     <Cell>{transaction.cycle}</Cell>
@@ -167,6 +172,7 @@ const TransactionRow = ({
                 transaction: {
                   id: transaction.id,
                   raccount: transaction.raccountMeta.id,
+                  transferIn: transaction.transferInMeta?.id,
                   description: transaction.description,
                   category: transaction.category,
                   type: transaction.type,

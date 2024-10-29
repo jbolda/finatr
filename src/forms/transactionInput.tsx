@@ -23,6 +23,7 @@ import { TextField } from '~/src/elements/TextField.tsx';
 const TransactionSchema = z.object({
   id: z.string().optional(),
   raccount: z.string().default('none'),
+  transferIn: z.string().default('none'),
   description: z.string().default(''),
   category: z.string().min(1),
   type: z.enum(['income', 'expense', 'transfer']).default('expense'),
@@ -68,6 +69,7 @@ function TransactionInput() {
     defaultValues: locationState?.transaction ?? {
       id: '',
       raccount: 'none',
+      transferIn: undefined,
       description: '',
       category: '',
       type: TransactionSchema.shape.type._def.defaultValue(),
@@ -191,6 +193,32 @@ function TransactionInput() {
             >
               {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
             </Select>
+          )}
+        />
+
+        <Subscribe
+          selector={(state) => state.values.type}
+          children={(transactionType) => (
+            <Field
+              name="transferIn"
+              children={(field) =>
+                transactionType === 'transfer' ? (
+                  <Select
+                    label="Account Target"
+                    isRequired={
+                      !TransactionSchema.shape.transferIn.isOptional()
+                    }
+                    items={accounts}
+                    selectedKey={field.state.value}
+                    onBlur={field.handleBlur}
+                    onSelectionChange={(e) => field.handleChange(e)}
+                    errorMessage={field.state.meta.errors.join(', ')}
+                  >
+                    {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
+                  </Select>
+                ) : null
+              }
+            />
           )}
         />
 
