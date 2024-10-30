@@ -38,7 +38,9 @@ export type TransactionType = 'income' | 'expense' | 'transfer';
 export type ValueType = 'static' | 'dynamic';
 export interface Transaction {
   id: string;
-  raccount: string;
+  raccount: string; // account id
+  vaccount: string; // account id
+  transferIn?: string; // account id
   description: string;
   category: string;
   type: TransactionType;

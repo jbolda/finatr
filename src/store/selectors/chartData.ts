@@ -3,7 +3,7 @@ import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
 import { toDecimal, type Dinero } from 'dinero.js';
 import { createSelector } from 'starfx';
 
-import { schema } from '../schema';
+import { schema, Transaction } from '../schema';
 import { nextTransaction } from '../thunks/transactionReoccurrence';
 
 export const barChartTransactions = createSelector(
@@ -21,60 +21,70 @@ export const barChartTransactions = createSelector(
     const expenses = allChartData.filter(
       (d) => d.transaction.type === 'expense'
     );
+    const transfers = allChartData.filter(
+      (d) => d.transaction.type === 'transfer'
+    );
 
-    const getInitialY = (
-      arr: {
-        transaction: (typeof transactions)[0];
-        data: {
-          date: Date;
-          y: any;
-        }[];
-      }[],
-      transactionIndex: number,
-      dataIndex: number
-    ) => {
-      let bottom = 0;
-      for (let i = 0; i < transactionIndex; i++) {
-        const { data } = arr[i];
-        const value = data[dataIndex].y;
-        if (value) bottom += Number(toDecimal(value));
-      }
-      return bottom;
+    const incomeStacked = stackTransactions(income);
+    const expensesStacked = stackTransactions(expenses);
+    const transfersStacked = stackTransactions(transfers);
+    const maxValue = Math.max(
+      incomeStacked.maxValue,
+      expensesStacked.maxValue,
+      transfersStacked.maxValue
+    );
+
+    return {
+      data: ([] as ReturnType<typeof stackTransactions>['stack']).concat(
+        incomeStacked.stack,
+        expensesStacked.stack,
+        transfersStacked.stack
+      ),
+      max: maxValue
     };
-
-    let maxValue = 0;
-    const incomeStacked = income.map((item, transactionIndex) => {
-      const stacked = item.data.map((d, i) => {
-        const stack = {
-          date: d.date,
-          height: d?.y ? Number(toDecimal(d.y)) : 0,
-          y0: getInitialY(income, transactionIndex, i)
-        };
-        // side effect: find max chart value
-        if (stack.y0 + stack.height > maxValue)
-          maxValue = stack.y0 + stack.height;
-        return stack;
-      });
-      return { ...item, stacked };
-    });
-    const expensesStacked = expenses.map((item, transactionIndex) => {
-      const stacked = item.data.map((d, i) => {
-        const stack = {
-          date: d.date,
-          height: d?.y ? Number(toDecimal(d.y)) : 0,
-          y0: getInitialY(expenses, transactionIndex, i)
-        };
-        // side effect: find max chart value
-        if (stack.y0 + stack.height > maxValue)
-          maxValue = stack.y0 + stack.height;
-        return stack;
-      });
-      return { ...item, stacked };
-    });
-
-    return { data: incomeStacked.concat(expensesStacked), max: maxValue };
   }
 );
+
+const getInitialY = (
+  arr: {
+    transaction: Transaction;
+    data: {
+      date: Date;
+      y: any;
+    }[];
+  }[],
+  transactionIndex: number,
+  dataIndex: number
+) => {
+  let bottom = 0;
+  for (let i = 0; i < transactionIndex; i++) {
+    const { data } = arr[i];
+    const value = data[dataIndex].y;
+    if (value) bottom += Number(toDecimal(value));
+  }
+  return bottom;
+};
+
+const stackTransactions = (
+  transactions: { transaction: Transaction; data: any }[]
+) => {
+  let maxValue = 0;
+  const transactionStack = transactions.map((item, transactionIndex) => {
+    const stacked = item.data.map((d, i) => {
+      const stack = {
+        date: d.date,
+        height: d?.y ? Number(toDecimal(d.y)) : 0,
+        y0: getInitialY(transactions, transactionIndex, i)
+      };
+      // side effect: find max chart value
+      if (stack.y0 + stack.height > maxValue)
+        maxValue = stack.y0 + stack.height;
+      return stack;
+    });
+    return { ...item, stacked };
+  });
+  return { maxValue, stack: transactionStack };
+};
 
 export function resolveBarChartData({
   chartRange,
