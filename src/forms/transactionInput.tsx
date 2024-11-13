@@ -23,7 +23,7 @@ import { TextField } from '~/src/elements/TextField.tsx';
 const TransactionSchema = z.object({
   id: z.string().optional(),
   raccount: z.string().default('none'),
-  transferIn: z.string().default('none'),
+  transferIn: z.string().default('none').nullable(),
   description: z.string().default(''),
   category: z.string().min(1),
   type: z.enum(['income', 'expense', 'transfer']).default('expense'),
@@ -64,12 +64,13 @@ function TransactionInput() {
   const navigate = useNavigate();
   const { state: locationState } = useLocation();
   const dispatch = useDispatch();
-  const accounts = useSelector(schema.accounts.selectTableAsList);
+  const accountsList = useSelector(schema.accounts.selectTableAsList);
+  const accounts = accountsList.sort((a, b) => (a.name > b.name ? 1 : -1));
   const { Field, handleSubmit, Subscribe, reset, useStore } = useForm({
     defaultValues: locationState?.transaction ?? {
       id: '',
       raccount: 'none',
-      transferIn: undefined,
+      transferIn: 'none',
       description: '',
       category: '',
       type: TransactionSchema.shape.type._def.defaultValue(),
@@ -202,16 +203,18 @@ function TransactionInput() {
             <Field
               name="transferIn"
               children={(field) =>
-                transactionType === 'transfer' ? (
+                transactionType !== 'income' ? (
                   <Select
                     label="Account Target"
                     isRequired={
                       !TransactionSchema.shape.transferIn.isOptional()
                     }
-                    items={accounts}
+                    items={[{ id: 'none', name: 'none' }].concat(accounts)}
                     selectedKey={field.state.value}
                     onBlur={field.handleBlur}
-                    onSelectionChange={(e) => field.handleChange(e)}
+                    onSelectionChange={(e) =>
+                      field.handleChange(e === 'none' ? null : e)
+                    }
                     errorMessage={field.state.meta.errors.join(', ')}
                   >
                     {(item) => <ListBoxItem>{item.name}</ListBoxItem>}

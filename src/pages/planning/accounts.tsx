@@ -1,6 +1,6 @@
 import { Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
-import { Group } from 'react-aria-components';
+import { type ColumnProps, Group } from 'react-aria-components';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
@@ -93,12 +93,19 @@ const AccountTable = ({
       sortDescriptor={sortable}
     >
       <TableHeader>
-        <Column id="name" isRowHeader allowsSorting>
+        <Column id="name" defaultWidth="3fr" isRowHeader allowsSorting>
           Name
         </Column>
-        {['Starting', 'Interest', 'Vehicle', 'Actions'].map((h) => (
-          <Column key={h} id={h} allowsSorting>
-            {h}
+        {(
+          [
+            ['Starting', '2fr'],
+            ['Interest', '1fr'],
+            ['Vehicle', '2fr'],
+            ['Actions', '2fr']
+          ] as [string, ColumnProps['defaultWidth']][]
+        ).map((h) => (
+          <Column key={h[0]} id={h[0]} defaultWidth={h[1]} allowsSorting>
+            {h[0]}
           </Column>
         ))}
       </TableHeader>
