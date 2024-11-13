@@ -107,6 +107,12 @@ function resolveLineChartData({
           account.id,
           'transferIn'
         );
+        const expenseTransfersIn = sumTotal(
+          expensesStacked,
+          index,
+          account.id,
+          'transferIn'
+        );
 
         const prevValue =
           data?.[accountIndex]?.data?.[dateIndex - 1]?.[1] ??
@@ -117,7 +123,15 @@ function resolveLineChartData({
         }
         const firstStep = prevValue - expenses - transfersOut;
         data[accountIndex].data[dateIndex] = [day, firstStep];
-        const secondStep = firstStep + income + transfersIn;
+        const secondStep =
+          firstStep +
+          income +
+          (['debt', 'loan', 'credit line'].includes(account.vehicle)
+            ? transfersIn
+            : -transfersIn) +
+          (['debt', 'loan', 'credit line'].includes(account.vehicle)
+            ? -expenseTransfersIn
+            : expenseTransfersIn);
         if (secondStep > max) max = secondStep;
         data[accountIndex].data[dateIndex + 1] = [day, secondStep];
       }

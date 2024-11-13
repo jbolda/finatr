@@ -1,7 +1,7 @@
 import { toDecimal } from 'dinero.js';
 import { Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
-import { Group } from 'react-aria-components';
+import { type ColumnProps, Group } from 'react-aria-components';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
@@ -102,22 +102,22 @@ const TransactionTable = ({
       sortDescriptor={sortable}
     >
       <TableHeader>
-        <Column id="raccount" isRowHeader allowsSorting>
+        <Column id="raccount" defaultWidth="4fr" isRowHeader allowsSorting>
           Account
         </Column>
-        {[
-          'Description',
-          'Category',
-          'Type',
-          'Start',
-          'rtype',
-          'Cycle',
-          'Value',
-          'Daily Rate',
-          'Actions'
-        ].map((h) => (
-          <Column key={h} id={h} allowsSorting>
-            {h}
+        {(
+          [
+            ['Description', '4fr'],
+            ['Category', '2fr'],
+            ['Type', '3fr'],
+            ['Frequency', '4fr'],
+            ['Value', '2fr'],
+            ['Daily Rate', '1fr'],
+            ['Actions', '2fr']
+          ] as [string, ColumnProps['defaultWidth']][]
+        ).map((h) => (
+          <Column key={h[0]} id={h[0]} defaultWidth={h[1]} allowsSorting>
+            {h[0]}
           </Column>
         ))}
       </TableHeader>
@@ -150,13 +150,13 @@ const TransactionRow = ({
     <Cell>{transaction.category}</Cell>
     <Cell>
       {transaction.type}
-      {transaction.type === 'transfer' && transaction.transferIn
-        ? ` to ${transaction.transferIn}`
+      {transaction.transferIn
+        ? `${transaction.type === 'expense' ? ' paid' : ''} to ${transaction.transferIn}`
         : ``}
     </Cell>
-    <Cell>{transaction.start}</Cell>
-    <Cell>{transaction.rtype}</Cell>
-    <Cell>{transaction.cycle}</Cell>
+    <Cell>
+      {transaction.rtype} {transaction.cycle} at {transaction.start}
+    </Cell>
     <Cell>{toHumanCurrency(transaction.value)}</Cell>
     <Cell>{toHumanCurrency(transaction.dailyRate)}</Cell>
 
