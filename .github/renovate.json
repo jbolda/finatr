@@ -27,6 +27,13 @@
       ]
     },
     {
+      "groupName": "Tanstack Form",
+      "matchUpdateTypes": ["digest", "patch", "minor", "major"],
+      "matchSourceUrls": [
+        "https://github.com/TanStack/form"
+      ]
+    },
+    {
       "groupName": "supabase",
       "matchPackageNames": ["@supabase**"]
     },
@@ -51,9 +58,11 @@
       "matchPackageNames": ["serde**"]
     },
     {
-      "extends": ["monorepo:playwright"],
       "groupName": "playwright monorepo",
       "matchUpdateTypes": ["digest", "patch", "minor", "major"],
+      "matchSourceUrls": [
+        "https://github.com/microsoft/playwright"
+      ],
       "matchPackageNames": ["@playwright**", "@estruyf/github-actions-reporter"]
     }
   ],
