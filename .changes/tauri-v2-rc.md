@@ -1,5 +1,5 @@
 ---
-"app": minor
+'app': minor
 ---
 
-Upgrade desktop app integration with Tauri to v2 RC.
+Upgrade desktop app integration with Tauri to v2.
