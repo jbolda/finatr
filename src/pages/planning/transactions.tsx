@@ -1,7 +1,13 @@
 import { toDecimal } from 'dinero.js';
 import { Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
-import { type ColumnProps, Group } from 'react-aria-components';
+import {
+  type ColumnProps,
+  Group,
+  Header,
+  Key,
+  type Selection
+} from 'react-aria-components';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
@@ -14,6 +20,13 @@ import {
 import { transactionRemove } from '~/src/store/thunks/transactions.ts';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
 
+import {
+  MenuTrigger,
+  Menu,
+  MenuItem,
+  MenuSection
+} from '~/src/components/Menu';
+import { Separator } from '~/src/components/Separator';
 import { TabView } from '~/src/components/TabView.tsx';
 import {
   Cell,
@@ -29,17 +42,40 @@ import { Button } from '~/src/elements/Button.tsx';
 
 const TransactionsFlow = () => {
   const [activeTab, setActiveTab] = useState(0);
+  const navigate = useNavigate();
+  const [activeView, setActiveView] = useState<Selection>(new Set(['table']));
   const transactions = useSelector(transactionsWithAccounts);
 
   return (
-    <TabView
-      id="transactions"
-      activeTab={activeTab}
-      tabClick={setActiveTab}
-      tabTitles={['All Transactions', 'Income', 'Expenses', 'Transfers']}
-      tabContents={[
-        <React.Fragment>
-          {/* <div className="buttons py-2">
+    <>
+      <MenuTrigger>
+        <Button aria-label="Menu">...</Button>
+        <Menu>
+          <MenuSection>
+            <MenuItem onAction={() => navigate('/transactions/set')}>
+              Add...
+            </MenuItem>
+          </MenuSection>
+          <Separator />
+          <MenuSection
+            selectionMode="single"
+            selectedKeys={activeView}
+            onSelectionChange={setActiveView}
+          >
+            <Header>View</Header>
+            <MenuItem id="table">as Table</MenuItem>
+            <MenuItem id="cards">as Cards</MenuItem>
+          </MenuSection>
+        </Menu>
+      </MenuTrigger>
+      <TabView
+        id="transactions"
+        activeTab={activeTab}
+        tabClick={setActiveTab}
+        tabTitles={['All Transactions', 'Income', 'Expenses', 'Transfers']}
+        tabContents={[
+          <React.Fragment>
+            {/* <div className="buttons py-2">
             {Object.keys(model.state.transactionCategories).map((category) => (
               <button
                 key={category}
@@ -50,31 +86,36 @@ const TransactionsFlow = () => {
               </button>
             ))}
           </div> */}
+            <TransactionTable
+              label="All Transactions"
+              transactions={transactions}
+              view={activeView}
+            />
+          </React.Fragment>,
           <TransactionTable
-            label="All Transactions"
-            transactions={transactions}
+            label="Income"
+            transactions={transactions.filter(
+              (transaction) => transaction.type === 'income'
+            )}
+            view={activeView}
+          />,
+          <TransactionTable
+            label="Expense"
+            transactions={transactions.filter(
+              (transaction) => transaction.type === 'expense'
+            )}
+            view={activeView}
+          />,
+          <TransactionTable
+            label="Transfer"
+            transactions={transactions.filter(
+              (transaction) => transaction.type === 'transfer'
+            )}
+            view={activeView}
           />
-        </React.Fragment>,
-        <TransactionTable
-          label="Income"
-          transactions={transactions.filter(
-            (transaction) => transaction.type === 'income'
-          )}
-        />,
-        <TransactionTable
-          label="Expense"
-          transactions={transactions.filter(
-            (transaction) => transaction.type === 'expense'
-          )}
-        />,
-        <TransactionTable
-          label="Transfer"
-          transactions={transactions.filter(
-            (transaction) => transaction.type === 'transfer'
-          )}
-        />
-      ]}
-    />
+        ]}
+      />
+    </>
   );
 };
 
@@ -82,10 +123,12 @@ export default TransactionsFlow;
 
 const TransactionTable = ({
   label,
-  transactions
+  transactions,
+  view
 }: {
   label: string;
   transactions: TransactionWithAccount[];
+  view: Selection;
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -94,6 +137,9 @@ const TransactionTable = ({
     direction: 'ascending' | 'descending';
   }>({ column: 'type', direction: 'descending' });
 
+  if (view !== 'all' && view.has('cards'))
+    return <pre>{JSON.stringify(transactions, null, 2)}</pre>;
+  console.log(view);
   return (
     <Table
       aria-label={label}
