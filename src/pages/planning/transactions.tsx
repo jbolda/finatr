@@ -52,6 +52,7 @@ const TransactionsFlow = () => {
         <Button aria-label="Menu">...</Button>
         <Menu>
           <MenuSection>
+            <Header>Actions</Header>
             <MenuItem onAction={() => navigate('/transactions/set')}>
               Add...
             </MenuItem>
@@ -121,6 +122,89 @@ const TransactionsFlow = () => {
 
 export default TransactionsFlow;
 
+const TransactionCard = ({
+  transaction,
+  navigate,
+  dispatch
+}: {
+  transaction: TransactionWithAccount;
+  navigate: NavigateFunction;
+  dispatch: Dispatch<AnyAction>;
+}) => {
+  console.log(transaction);
+  return (
+    <div>
+      <div className="lg:col-start-3 lg:row-end-1">
+        <h2 className="sr-only">Transaction</h2>
+        <div className="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
+          <dl className="flex flex-wrap">
+            <div className="flex-auto pl-6 pt-3">
+              <dt className="text-sm/6 font-semibold text-gray-900">
+                {transaction.raccount}
+              </dt>
+              <dd className="mt-1 text-base font-semibold text-gray-900">
+                {transaction.description}
+              </dd>
+            </div>
+            <div className="flex-none self-end px-6 pt-4">
+              <dt className="sr-only">Category</dt>
+              <dd className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                {transaction.category}
+              </dd>
+            </div>
+            <div className="my-2 flex w-full flex-none gap-x-4 px-6">
+              <dt className="flex-none">
+                <span className="sr-only">Unknown</span>
+                {transaction.rtype}
+              </dt>
+              <dd className="text-sm/6 text-gray-500">
+                <time dateTime="2023-01-31">{transaction.start}</time>
+              </dd>
+            </div>
+
+            <div className="my-2 flex w-full flex-none gap-x-4 px-6">
+              <dl className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 px-4 py-1 sm:px-2 xl:px-4">
+                <dt className="text-sm/6 font-medium text-gray-500">
+                  {transaction.type}
+                </dt>
+                <dd className="text-xs font-medium">
+                  {toHumanCurrency(transaction.dailyRate)} per day
+                </dd>
+                <dd className="w-full flex-none text-3xl/10 font-medium tracking-tight text-gray-900">
+                  {toHumanCurrency(transaction.value)}
+                </dd>
+              </dl>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const navigateToTransactionForm = (transaction: TransactionWithAccount) => {
+  return {
+    state: {
+      navigateTo: '/planning',
+      transaction: {
+        id: transaction.id,
+        raccount: transaction.raccountMeta.id,
+        transferIn: transaction.transferInMeta?.id,
+        description: transaction.description,
+        category: transaction.category,
+        type: transaction.type,
+        start: transaction.start.toString(),
+        ending: transaction.ending?.toString() ?? 'never',
+        rtype: transaction.rtype,
+        beginAfterOccurrences: transaction.beginAfterOccurrences ?? 0,
+        cycle: transaction.cycle,
+        value: parseFloat(toDecimal(transaction.value)),
+        valueType: transaction.valueType ?? 'static'
+      }
+    }
+  };
+};
+
 const TransactionTable = ({
   label,
   transactions,
@@ -138,8 +222,20 @@ const TransactionTable = ({
   }>({ column: 'type', direction: 'descending' });
 
   if (view !== 'all' && view.has('cards'))
-    return <pre>{JSON.stringify(transactions, null, 2)}</pre>;
-  console.log(view);
+    return (
+      <div className="grid gap-4 grid-cols-3">
+        <h3 className="text-base font-semibold text-gray-900">Transactions</h3>
+        {transactions.map((transaction) => (
+          <TransactionCard
+            key={transaction.description}
+            transaction={transaction}
+            navigate={navigate}
+            dispatch={dispatch}
+          />
+        ))}
+      </div>
+    );
+
   return (
     <Table
       aria-label={label}
@@ -212,26 +308,10 @@ const TransactionRow = ({
           aria-label="Modify"
           className="px-0.5"
           onPress={() =>
-            navigate('/transactions/set', {
-              state: {
-                navigateTo: '/planning',
-                transaction: {
-                  id: transaction.id,
-                  raccount: transaction.raccountMeta.id,
-                  transferIn: transaction.transferInMeta?.id,
-                  description: transaction.description,
-                  category: transaction.category,
-                  type: transaction.type,
-                  start: transaction.start.toString(),
-                  ending: transaction.ending?.toString() ?? 'never',
-                  rtype: transaction.rtype,
-                  beginAfterOccurrences: transaction.beginAfterOccurrences ?? 0,
-                  cycle: transaction.cycle,
-                  value: parseFloat(toDecimal(transaction.value)),
-                  valueType: transaction.valueType ?? 'static'
-                }
-              }
-            })
+            navigate(
+              '/transactions/set',
+              navigateToTransactionForm(transaction)
+            )
           }
           // isDisabled={transaction.fromAccount}
         >

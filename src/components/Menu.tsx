@@ -10,11 +10,7 @@ import {
   composeRenderProps
 } from 'react-aria-components';
 
-import {
-  DropdownSection,
-  DropdownSectionProps,
-  dropdownItemStyles
-} from './ListBox';
+import { dropdownItemStyles } from './ListBox';
 import { Popover, PopoverProps } from './Popover';
 
 export { MenuTrigger, MenuSection } from 'react-aria-components';
