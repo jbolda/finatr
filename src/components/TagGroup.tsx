@@ -13,8 +13,9 @@ import {
 } from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
 import { tv } from 'tailwind-variants';
+
 import { Description, Label } from '../elements/Field';
-import { focusRing } from './utils';
+import { focusRing } from '../elements/utils';
 
 const colors = {
   gray: 'bg-gray-100 text-gray-600 border-gray-200 hover:border-gray-300 dark:bg-zinc-700 dark:text-zinc-300 dark:border-zinc-600 dark:hover:border-zinc-500',

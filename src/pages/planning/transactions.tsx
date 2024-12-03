@@ -5,7 +5,6 @@ import {
   type ColumnProps,
   Group,
   Header,
-  Key,
   type Selection
 } from 'react-aria-components';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
@@ -37,84 +36,66 @@ import {
   TableBody,
   TableHeader
 } from '~/src/components/Table.tsx';
+import { Tag, TagGroup } from '~/src/components/TagGroup';
 
 import { Button } from '~/src/elements/Button.tsx';
 
 const TransactionsFlow = () => {
-  const [activeTab, setActiveTab] = useState(0);
   const navigate = useNavigate();
+  const [transactionFilter, setTransactionFilter] = useState<Selection>('all');
   const [activeView, setActiveView] = useState<Selection>(new Set(['table']));
   const transactions = useSelector(transactionsWithAccounts);
 
   return (
     <>
-      <MenuTrigger>
-        <Button aria-label="Menu">...</Button>
-        <Menu>
-          <MenuSection>
-            <Header>Actions</Header>
-            <MenuItem onAction={() => navigate('/transactions/set')}>
-              Add...
-            </MenuItem>
-          </MenuSection>
-          <Separator />
-          <MenuSection
-            selectionMode="single"
-            selectedKeys={activeView}
-            onSelectionChange={setActiveView}
-          >
-            <Header>View</Header>
-            <MenuItem id="table">as Table</MenuItem>
-            <MenuItem id="cards">as Cards</MenuItem>
-          </MenuSection>
-        </Menu>
-      </MenuTrigger>
-      <TabView
-        id="transactions"
-        activeTab={activeTab}
-        tabClick={setActiveTab}
-        tabTitles={['All Transactions', 'Income', 'Expenses', 'Transfers']}
-        tabContents={[
-          <React.Fragment>
-            {/* <div className="buttons py-2">
-            {Object.keys(model.state.transactionCategories).map((category) => (
-              <button
-                key={category}
-                className="inline-flex items-center px-2 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-                onClick={model.filterTransactionsComputed.bind(this, category)}
+      <div className="flex py-2">
+        <TagGroup
+          selectionMode="multiple"
+          defaultSelectedKeys={'all'}
+          onSelectionChange={setTransactionFilter}
+        >
+          <Tag id="income" className="py-2 px-4">
+            Income
+          </Tag>
+          <Tag id="expense" className="py-2 px-4">
+            Expenses
+          </Tag>
+          <Tag id="transfer" className="py-2 px-4">
+            Transfers
+          </Tag>
+        </TagGroup>
+        <div className="grow flex justify-end">
+          <MenuTrigger>
+            <Button aria-label="Menu">...</Button>
+            <Menu>
+              <MenuSection>
+                <Header>Actions</Header>
+                <MenuItem onAction={() => navigate('/transactions/set')}>
+                  Add...
+                </MenuItem>
+              </MenuSection>
+              <Separator />
+              <MenuSection
+                selectionMode="single"
+                selectedKeys={activeView}
+                onSelectionChange={setActiveView}
               >
-                {category}
-              </button>
-            ))}
-          </div> */}
-            <TransactionTable
-              label="All Transactions"
-              transactions={transactions}
-              view={activeView}
-            />
-          </React.Fragment>,
-          <TransactionTable
-            label="Income"
-            transactions={transactions.filter(
-              (transaction) => transaction.type === 'income'
-            )}
-            view={activeView}
-          />,
-          <TransactionTable
-            label="Expense"
-            transactions={transactions.filter(
-              (transaction) => transaction.type === 'expense'
-            )}
-            view={activeView}
-          />,
-          <TransactionTable
-            label="Transfer"
-            transactions={transactions.filter(
-              (transaction) => transaction.type === 'transfer'
-            )}
-            view={activeView}
-          />
-        ]}
+                <Header>View</Header>
+                <MenuItem id="table">as Table</MenuItem>
+                <MenuItem id="cards">as Cards</MenuItem>
+              </MenuSection>
+            </Menu>
+          </MenuTrigger>
+        </div>
+      </div>
+      <TransactionTable
+        label="Transfer"
+        transactions={transactions.filter(
+          (transaction) =>
+            transactionFilter === 'all' ||
+            transactionFilter.has(transaction.type)
+        )}
+        view={activeView}
       />
     </>
   );
@@ -131,7 +112,6 @@ const TransactionCard = ({
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
 }) => {
-  console.log(transaction);
   return (
     <div>
       <div className="lg:col-start-3 lg:row-end-1">
@@ -223,17 +203,19 @@ const TransactionTable = ({
 
   if (view !== 'all' && view.has('cards'))
     return (
-      <div className="grid gap-4 grid-cols-3">
+      <>
         <h3 className="text-base font-semibold text-gray-900">Transactions</h3>
-        {transactions.map((transaction) => (
-          <TransactionCard
-            key={transaction.description}
-            transaction={transaction}
-            navigate={navigate}
-            dispatch={dispatch}
-          />
-        ))}
-      </div>
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+          {transactions.map((transaction) => (
+            <TransactionCard
+              key={transaction.id}
+              transaction={transaction}
+              navigate={navigate}
+              dispatch={dispatch}
+            />
+          ))}
+        </div>
+      </>
     );
 
   return (
