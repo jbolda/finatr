@@ -5,6 +5,7 @@ import {
   type ColumnProps,
   Group,
   Header,
+  Key,
   type Selection
 } from 'react-aria-components';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { useDispatch, useSelector } from 'starfx/react';
 
+import type { TransactionType } from '~/src/store/schema';
 import {
   transactionsWithAccounts,
   TransactionWithAccount
@@ -26,7 +28,6 @@ import {
   MenuSection
 } from '~/src/components/Menu';
 import { Separator } from '~/src/components/Separator';
-import { TabView } from '~/src/components/TabView.tsx';
 import {
   Cell,
   Column,
@@ -40,11 +41,52 @@ import { Tag, TagGroup } from '~/src/components/TagGroup';
 
 import { Button } from '~/src/elements/Button.tsx';
 
+const navigateToTransactionForm = (transaction: TransactionWithAccount) => {
+  return {
+    state: {
+      navigateTo: '/planning',
+      transaction: {
+        id: transaction.id,
+        raccount: transaction.raccountMeta.id,
+        transferIn: transaction.transferInMeta?.id,
+        description: transaction.description,
+        category: transaction.category,
+        type: transaction.type,
+        start: transaction.start.toString(),
+        ending: transaction.ending?.toString() ?? 'never',
+        rtype: transaction.rtype,
+        beginAfterOccurrences: transaction.beginAfterOccurrences ?? 0,
+        cycle: transaction.cycle,
+        value: parseFloat(toDecimal(transaction.value)),
+        valueType: transaction.valueType ?? 'static'
+      }
+    }
+  };
+};
+
+const determineTransactionTypeColor = (vehicle: TransactionType) => {
+  switch (vehicle) {
+    case 'income':
+      return 'green';
+    case 'transfer':
+      return 'purple';
+    case 'expense':
+    default:
+      return 'red';
+  }
+};
+
 const TransactionsFlow = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [transactionFilter, setTransactionFilter] = useState<Selection>('all');
   const [activeView, setActiveView] = useState<Selection>(new Set(['table']));
   const transactions = useSelector(transactionsWithAccounts);
+  const viewingTransactions = transactions.filter(
+    (transaction) =>
+      transactionFilter === 'all' || transactionFilter.has(transaction.type)
+  );
 
   return (
     <>
@@ -88,15 +130,25 @@ const TransactionsFlow = () => {
           </MenuTrigger>
         </div>
       </div>
-      <TransactionTable
-        label="Transfer"
-        transactions={transactions.filter(
-          (transaction) =>
-            transactionFilter === 'all' ||
-            transactionFilter.has(transaction.type)
-        )}
-        view={activeView}
-      />
+      {activeView !== 'all' && activeView.has('cards') ? (
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+          {viewingTransactions.map((transaction) => (
+            <TransactionCard
+              key={transaction.id}
+              transaction={transaction}
+              navigate={navigate}
+              dispatch={dispatch}
+            />
+          ))}
+        </div>
+      ) : (
+        <TransactionTable
+          label="Transactions"
+          transactions={viewingTransactions}
+          navigate={navigate}
+          dispatch={dispatch}
+        />
+      )}
     </>
   );
 };
@@ -112,6 +164,7 @@ const TransactionCard = ({
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
 }) => {
+  const ttColor = determineTransactionTypeColor(transaction.type);
   return (
     <div>
       <div className="lg:col-start-3 lg:row-end-1">
@@ -126,34 +179,56 @@ const TransactionCard = ({
                 {transaction.description}
               </dd>
             </div>
-            <div className="flex-none self-end px-6 pt-4">
-              <dt className="sr-only">Category</dt>
-              <dd className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+            <div className="flex-none self-end justify-items-end px-6 pt-4">
+              <dt className="text-sm/6 font-medium text-gray-500">
+                {transaction.type}
+              </dt>
+              <dd
+                className={`inline-flex items-center rounded-md bg-${ttColor}-50 px-2 py-1 text-xs font-medium text-${ttColor}-700 ring-1 ring-inset ring-${ttColor}-600/20`}
+              >
                 {transaction.category}
               </dd>
             </div>
             <div className="my-2 flex w-full flex-none gap-x-4 px-6">
-              <dt className="flex-none">
-                <span className="sr-only">Unknown</span>
-                {transaction.rtype}
-              </dt>
+              <dt className="flex-none">{transaction.rtype}</dt>
               <dd className="text-sm/6 text-gray-500">
                 <time dateTime="2023-01-31">{transaction.start}</time>
               </dd>
             </div>
 
-            <div className="my-2 flex w-full flex-none gap-x-4 px-6">
-              <dl className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 px-4 py-1 sm:px-2 xl:px-4">
-                <dt className="text-sm/6 font-medium text-gray-500">
-                  {transaction.type}
-                </dt>
-                <dd className="text-xs font-medium">
+            <div className="my-2 flex w-full flex-none justify-between px-6">
+              <dl className="flex flex-wrap items-baseline justify-between">
+                <dt className="sr-only">Amount With Daily Rate</dt>
+                <dd className="text-sm/6 font-medium text-gray-500">
                   {toHumanCurrency(transaction.dailyRate)} per day
                 </dd>
                 <dd className="w-full flex-none text-3xl/10 font-medium tracking-tight text-gray-900">
                   {toHumanCurrency(transaction.value)}
                 </dd>
               </dl>
+              <Group aria-label="Actions" className="space-x-1">
+                <Button
+                  aria-label="Modify"
+                  className="px-0.5"
+                  onPress={() =>
+                    navigate(
+                      '/transactions/set',
+                      navigateToTransactionForm(transaction)
+                    )
+                  }
+                >
+                  <Pencil className="max-h-3" />
+                </Button>
+                <Button
+                  aria-label="Delete"
+                  className="px-0.5"
+                  onPress={() =>
+                    dispatch(transactionRemove({ id: transaction.id }))
+                  }
+                >
+                  <Trash2 className="max-h-3" />
+                </Button>
+              </Group>
             </div>
           </dl>
         </div>
@@ -162,61 +237,21 @@ const TransactionCard = ({
   );
 };
 
-const navigateToTransactionForm = (transaction: TransactionWithAccount) => {
-  return {
-    state: {
-      navigateTo: '/planning',
-      transaction: {
-        id: transaction.id,
-        raccount: transaction.raccountMeta.id,
-        transferIn: transaction.transferInMeta?.id,
-        description: transaction.description,
-        category: transaction.category,
-        type: transaction.type,
-        start: transaction.start.toString(),
-        ending: transaction.ending?.toString() ?? 'never',
-        rtype: transaction.rtype,
-        beginAfterOccurrences: transaction.beginAfterOccurrences ?? 0,
-        cycle: transaction.cycle,
-        value: parseFloat(toDecimal(transaction.value)),
-        valueType: transaction.valueType ?? 'static'
-      }
-    }
-  };
-};
-
 const TransactionTable = ({
   label,
   transactions,
-  view
+  navigate,
+  dispatch
 }: {
   label: string;
   transactions: TransactionWithAccount[];
-  view: Selection;
+  navigate: NavigateFunction;
+  dispatch: Dispatch<AnyAction>;
 }) => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [sortable, setSetSortable] = useState<{
-    column: string;
+    column: Key;
     direction: 'ascending' | 'descending';
   }>({ column: 'type', direction: 'descending' });
-
-  if (view !== 'all' && view.has('cards'))
-    return (
-      <>
-        <h3 className="text-base font-semibold text-gray-900">Transactions</h3>
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
-          {transactions.map((transaction) => (
-            <TransactionCard
-              key={transaction.id}
-              transaction={transaction}
-              navigate={navigate}
-              dispatch={dispatch}
-            />
-          ))}
-        </div>
-      </>
-    );
 
   return (
     <Table
@@ -295,7 +330,6 @@ const TransactionRow = ({
               navigateToTransactionForm(transaction)
             )
           }
-          // isDisabled={transaction.fromAccount}
         >
           <Pencil className="max-h-3" />
         </Button>
@@ -303,7 +337,6 @@ const TransactionRow = ({
           aria-label="Delete"
           className="px-0.5"
           onPress={() => dispatch(transactionRemove({ id: transaction.id }))}
-          // isDisabled={transaction.fromAccount}
         >
           <Trash2 className="max-h-3" />
         </Button>
