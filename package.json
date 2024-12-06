@@ -34,12 +34,12 @@
     "lucide-react": "^0.460.0",
     "papaparse": "^5.4.1",
     "react": "18.3.1",
-    "react-aria": "^3.35.1",
-    "react-aria-components": "^1.4.1",
+    "react-aria": "^3.36.0",
+    "react-aria-components": "^1.5.0",
     "react-dom": "18.3.1",
     "react-router-dom": "^6.27.0",
     "starfx": "0.13.4",
-    "tailwindcss-react-aria-components": "^1.1.6",
+    "tailwindcss-react-aria-components": "^1.2.0",
     "zod": "^3.23.8"
   },
   "overrides": {
@@ -69,9 +69,9 @@
     "prettier": "^3.2.5",
     "process": "^0.11.10",
     "querystring-es3": "^0.2.1",
-    "tailwind-merge": "^2.5.4",
+    "tailwind-merge": "^2.5.5",
     "tailwind-variants": "^0.3.0",
-    "tailwindcss": "^3.4.14",
+    "tailwindcss": "^3.4.16",
     "tailwindcss-animate": "^1.0.7"
   },
   "volta": {

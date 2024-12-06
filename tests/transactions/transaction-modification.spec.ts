@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 import { navigateTo } from '../helpers/navigate';
 import { getRowWith } from '../helpers/tableHelpers';
-import { addDefaultAccount, addGenericTransaction } from './helper';
+import { addDefaultAccount, addGenericTransaction, selectOnly } from './helper';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -30,7 +30,6 @@ test('check income is listed in income tab after submit', async ({ page }) => {
   await page.getByLabel('value').first().fill('57');
   await page.keyboard.press('Enter');
 
-  await page.getByRole('tab').getByText('Income').click();
-
+  await selectOnly(page, 'Income');
   await expect(page.getByText('57.00').first()).toBeVisible();
 });

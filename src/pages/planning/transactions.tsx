@@ -1,11 +1,18 @@
 import { toDecimal } from 'dinero.js';
 import { Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
-import { type ColumnProps, Group } from 'react-aria-components';
+import {
+  type ColumnProps,
+  Group,
+  Header,
+  Key,
+  type Selection
+} from 'react-aria-components';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { useDispatch, useSelector } from 'starfx/react';
+import { tv } from 'tailwind-variants';
 
 import {
   transactionsWithAccounts,
@@ -13,8 +20,18 @@ import {
 } from '~/src/store/selectors/transactions';
 import { transactionRemove } from '~/src/store/thunks/transactions.ts';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
+import {
+  nextOccurrence,
+  toHumanReoccurrence
+} from '~/src/store/utils/reoccurrence';
 
-import { TabView } from '~/src/components/TabView.tsx';
+import {
+  MenuTrigger,
+  Menu,
+  MenuItem,
+  MenuSection
+} from '~/src/components/Menu';
+import { Separator } from '~/src/components/Separator';
 import {
   Cell,
   Column,
@@ -24,73 +41,220 @@ import {
   TableBody,
   TableHeader
 } from '~/src/components/Table.tsx';
+import { Tag, TagGroup } from '~/src/components/TagGroup';
 
 import { Button } from '~/src/elements/Button.tsx';
 
+const navigateToTransactionForm = (transaction: TransactionWithAccount) => {
+  return {
+    state: {
+      navigateTo: '/planning',
+      transaction: {
+        id: transaction.id,
+        raccount: transaction.raccountMeta.id,
+        transferIn: transaction.transferInMeta?.id,
+        description: transaction.description,
+        category: transaction.category,
+        type: transaction.type,
+        start: transaction.start.toString(),
+        ending: transaction.ending?.toString() ?? 'never',
+        rtype: transaction.rtype,
+        beginAfterOccurrences: transaction.beginAfterOccurrences ?? 0,
+        cycle: transaction.cycle,
+        value: parseFloat(toDecimal(transaction.value)),
+        valueType: transaction.valueType ?? 'static'
+      }
+    }
+  };
+};
+
 const TransactionsFlow = () => {
-  const [activeTab, setActiveTab] = useState(0);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [transactionFilter, setTransactionFilter] = useState<Selection>('all');
+  const [activeView, setActiveView] = useState<Selection>(new Set(['table']));
   const transactions = useSelector(transactionsWithAccounts);
+  const viewingTransactions = transactions.filter(
+    (transaction) =>
+      transactionFilter === 'all' || transactionFilter.has(transaction.type)
+  );
 
   return (
-    <TabView
-      id="transactions"
-      activeTab={activeTab}
-      tabClick={setActiveTab}
-      tabTitles={['All Transactions', 'Income', 'Expenses', 'Transfers']}
-      tabContents={[
-        <React.Fragment>
-          {/* <div className="buttons py-2">
-            {Object.keys(model.state.transactionCategories).map((category) => (
-              <button
-                key={category}
-                className="inline-flex items-center px-2 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-                onClick={model.filterTransactionsComputed.bind(this, category)}
+    <>
+      <div className="flex py-2">
+        <TagGroup
+          selectionMode="multiple"
+          defaultSelectedKeys={'all'}
+          onSelectionChange={setTransactionFilter}
+        >
+          <Tag id="income" className="py-2 px-4">
+            Income
+          </Tag>
+          <Tag id="expense" className="py-2 px-4">
+            Expenses
+          </Tag>
+          <Tag id="transfer" className="py-2 px-4">
+            Transfers
+          </Tag>
+        </TagGroup>
+        <div className="grow flex justify-end">
+          <MenuTrigger>
+            <Button aria-label="Menu">...</Button>
+            <Menu>
+              <MenuSection>
+                <Header>Actions</Header>
+                <MenuItem onAction={() => navigate('/transactions/set')}>
+                  Add...
+                </MenuItem>
+              </MenuSection>
+              <Separator />
+              <MenuSection
+                selectionMode="single"
+                selectedKeys={activeView}
+                onSelectionChange={setActiveView}
               >
-                {category}
-              </button>
-            ))}
-          </div> */}
-          <TransactionTable
-            label="All Transactions"
-            transactions={transactions}
-          />
-        </React.Fragment>,
+                <Header>View</Header>
+                <MenuItem id="table">as Table</MenuItem>
+                <MenuItem id="cards">as Cards</MenuItem>
+              </MenuSection>
+            </Menu>
+          </MenuTrigger>
+        </div>
+      </div>
+      {activeView !== 'all' && activeView.has('cards') ? (
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+          {viewingTransactions.map((transaction) => (
+            <TransactionCard
+              key={transaction.id}
+              transaction={transaction}
+              navigate={navigate}
+              dispatch={dispatch}
+            />
+          ))}
+        </div>
+      ) : (
         <TransactionTable
-          label="Income"
-          transactions={transactions.filter(
-            (transaction) => transaction.type === 'income'
-          )}
-        />,
-        <TransactionTable
-          label="Expense"
-          transactions={transactions.filter(
-            (transaction) => transaction.type === 'expense'
-          )}
-        />,
-        <TransactionTable
-          label="Transfer"
-          transactions={transactions.filter(
-            (transaction) => transaction.type === 'transfer'
-          )}
+          label="Transactions"
+          transactions={viewingTransactions}
+          navigate={navigate}
+          dispatch={dispatch}
         />
-      ]}
-    />
+      )}
+    </>
   );
 };
 
+const transactionTagCategory = tv({
+  base: 'inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset',
+  variants: {
+    type: {
+      income: 'bg-green-50 text-green-700 ring-green-600',
+      transfer: 'bg-purple-50 text-purple-700 ring-purple-600',
+      expense: 'bg-red-50 text-red-700 ring-red-600'
+    }
+  }
+});
+
 export default TransactionsFlow;
+
+const TransactionCard = ({
+  transaction,
+  navigate,
+  dispatch
+}: {
+  transaction: TransactionWithAccount;
+  navigate: NavigateFunction;
+  dispatch: Dispatch<AnyAction>;
+}) => {
+  return (
+    <div>
+      <div className="lg:col-start-3 lg:row-end-1">
+        <h2 className="sr-only">Transaction</h2>
+        <div className="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
+          <div className="flex flex-wrap">
+            <div className="flex-auto pl-6 pt-3">
+              <dt className="text-sm/6 font-semibold text-gray-900">
+                {transaction.raccount}
+              </dt>
+              <dd className="mt-1 text-base font-semibold text-gray-900">
+                {transaction.description}
+              </dd>
+            </div>
+            <div className="flex-none self-end justify-items-end px-6 pt-4">
+              <div className="text-sm/6 font-medium text-gray-500">
+                {transaction.type}
+              </div>
+              <div
+                className={transactionTagCategory({ type: transaction.type })}
+              >
+                {transaction.category}
+              </div>
+            </div>
+            <dl className="my-2 flex flex-wrap px-6">
+              <dt className="sr-only">Frequency Of Transaction</dt>
+              <dd className="flex-none w-full">
+                {toHumanReoccurrence(transaction)}
+              </dd>
+              <dd className="text-sm/6 font-medium text-gray-500">
+                {nextOccurrence(transaction)}
+              </dd>
+            </dl>
+
+            <div className="my-2 flex w-full flex-none justify-between px-6">
+              <dl className="flex flex-wrap items-baseline justify-between">
+                <dt className="sr-only">Amount With Daily Rate</dt>
+                <dd className="text-sm/6 font-medium text-gray-500">
+                  {toHumanCurrency(transaction.dailyRate)} per day
+                </dd>
+                <dd className="w-full flex-none text-3xl/10 font-medium tracking-tight text-gray-900">
+                  {toHumanCurrency(transaction.value)}
+                </dd>
+              </dl>
+              <Group aria-label="Actions" className="space-x-1">
+                <Button
+                  aria-label="Modify"
+                  className="px-0.5"
+                  onPress={() =>
+                    navigate(
+                      '/transactions/set',
+                      navigateToTransactionForm(transaction)
+                    )
+                  }
+                >
+                  <Pencil className="max-h-3" />
+                </Button>
+                <Button
+                  aria-label="Delete"
+                  className="px-0.5"
+                  onPress={() =>
+                    dispatch(transactionRemove({ id: transaction.id }))
+                  }
+                >
+                  <Trash2 className="max-h-3" />
+                </Button>
+              </Group>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const TransactionTable = ({
   label,
-  transactions
+  transactions,
+  navigate,
+  dispatch
 }: {
   label: string;
   transactions: TransactionWithAccount[];
+  navigate: NavigateFunction;
+  dispatch: Dispatch<AnyAction>;
 }) => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [sortable, setSetSortable] = useState<{
-    column: string;
+    column: Key;
     direction: 'ascending' | 'descending';
   }>({ column: 'type', direction: 'descending' });
 
@@ -166,28 +330,11 @@ const TransactionRow = ({
           aria-label="Modify"
           className="px-0.5"
           onPress={() =>
-            navigate('/transactions/set', {
-              state: {
-                navigateTo: '/planning',
-                transaction: {
-                  id: transaction.id,
-                  raccount: transaction.raccountMeta.id,
-                  transferIn: transaction.transferInMeta?.id,
-                  description: transaction.description,
-                  category: transaction.category,
-                  type: transaction.type,
-                  start: transaction.start.toString(),
-                  ending: transaction.ending?.toString() ?? 'never',
-                  rtype: transaction.rtype,
-                  beginAfterOccurrences: transaction.beginAfterOccurrences ?? 0,
-                  cycle: transaction.cycle,
-                  value: parseFloat(toDecimal(transaction.value)),
-                  valueType: transaction.valueType ?? 'static'
-                }
-              }
-            })
+            navigate(
+              '/transactions/set',
+              navigateToTransactionForm(transaction)
+            )
           }
-          // isDisabled={transaction.fromAccount}
         >
           <Pencil className="max-h-3" />
         </Button>
@@ -195,7 +342,6 @@ const TransactionRow = ({
           aria-label="Delete"
           className="px-0.5"
           onPress={() => dispatch(transactionRemove({ id: transaction.id }))}
-          // isDisabled={transaction.fromAccount}
         >
           <Trash2 className="max-h-3" />
         </Button>

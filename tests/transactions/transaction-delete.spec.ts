@@ -14,8 +14,12 @@ test.beforeEach(async ({ page }) => {
   await selectOption(page, 'Account', 'Test Account Submission');
   await page.getByLabel('value').first().fill('55');
   await page.getByLabel('ending').click();
-  await selectDate(page, 'start', '01/01/2025');
-  await selectOption(page, 'repeat type', 'No Repeating');
+  await selectDate(page, 'Start Date', {
+    month: '01',
+    day: '01',
+    year: '2024'
+  });
+  await selectOption(page, 'Repeat Type', 'No Repeating');
   await page.getByLabel('Category').fill('generic');
   await page.getByLabel('description').fill('test transaction');
   await page.keyboard.press('Enter');
@@ -27,6 +31,6 @@ test('deletes the recently added transaction', async ({ page }) => {
   await deleteButton.click();
 
   await expect(
-    page.getByTestId('transactions-all-transactions')
+    page.getByRole('grid', { name: 'Transactions' }).locator('tbody')
   ).not.toContainText('test transaction');
 });
