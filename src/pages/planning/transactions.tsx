@@ -12,14 +12,18 @@ import { NavigateFunction, useNavigate } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { useDispatch, useSelector } from 'starfx/react';
+import { tv } from 'tailwind-variants';
 
-import type { TransactionType } from '~/src/store/schema';
 import {
   transactionsWithAccounts,
   TransactionWithAccount
 } from '~/src/store/selectors/transactions';
 import { transactionRemove } from '~/src/store/thunks/transactions.ts';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
+import {
+  nextOccurrence,
+  toHumanReoccurrence
+} from '~/src/store/utils/reoccurrence';
 
 import {
   MenuTrigger,
@@ -62,18 +66,6 @@ const navigateToTransactionForm = (transaction: TransactionWithAccount) => {
       }
     }
   };
-};
-
-const determineTransactionTypeColor = (vehicle: TransactionType) => {
-  switch (vehicle) {
-    case 'income':
-      return 'green';
-    case 'transfer':
-      return 'purple';
-    case 'expense':
-    default:
-      return 'red';
-  }
 };
 
 const TransactionsFlow = () => {
@@ -153,6 +145,17 @@ const TransactionsFlow = () => {
   );
 };
 
+const transactionTagCategory = tv({
+  base: 'inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset',
+  variants: {
+    type: {
+      income: 'bg-green-50 text-green-700 ring-green-600',
+      transfer: 'bg-purple-50 text-purple-700 ring-purple-600',
+      expense: 'bg-red-50 text-red-700 ring-red-600'
+    }
+  }
+});
+
 export default TransactionsFlow;
 
 const TransactionCard = ({
@@ -164,13 +167,12 @@ const TransactionCard = ({
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
 }) => {
-  const ttColor = determineTransactionTypeColor(transaction.type);
   return (
     <div>
       <div className="lg:col-start-3 lg:row-end-1">
         <h2 className="sr-only">Transaction</h2>
         <div className="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
-          <dl className="flex flex-wrap">
+          <div className="flex flex-wrap">
             <div className="flex-auto pl-6 pt-3">
               <dt className="text-sm/6 font-semibold text-gray-900">
                 {transaction.raccount}
@@ -180,21 +182,24 @@ const TransactionCard = ({
               </dd>
             </div>
             <div className="flex-none self-end justify-items-end px-6 pt-4">
-              <dt className="text-sm/6 font-medium text-gray-500">
+              <div className="text-sm/6 font-medium text-gray-500">
                 {transaction.type}
-              </dt>
-              <dd
-                className={`inline-flex items-center rounded-md bg-${ttColor}-50 px-2 py-1 text-xs font-medium text-${ttColor}-700 ring-1 ring-inset ring-${ttColor}-600/20`}
+              </div>
+              <div
+                className={transactionTagCategory({ type: transaction.type })}
               >
                 {transaction.category}
-              </dd>
+              </div>
             </div>
-            <div className="my-2 flex w-full flex-none gap-x-4 px-6">
-              <dt className="flex-none">{transaction.rtype}</dt>
-              <dd className="text-sm/6 text-gray-500">
-                <time dateTime="2023-01-31">{transaction.start}</time>
+            <dl className="my-2 flex flex-wrap px-6">
+              <dt className="sr-only">Frequency Of Transaction</dt>
+              <dd className="flex-none w-full">
+                {toHumanReoccurrence(transaction)}
               </dd>
-            </div>
+              <dd className="text-sm/6 font-medium text-gray-500">
+                {nextOccurrence(transaction)}
+              </dd>
+            </dl>
 
             <div className="my-2 flex w-full flex-none justify-between px-6">
               <dl className="flex flex-wrap items-baseline justify-between">
@@ -230,7 +235,7 @@ const TransactionCard = ({
                 </Button>
               </Group>
             </div>
-          </dl>
+          </div>
         </div>
       </div>
     </div>

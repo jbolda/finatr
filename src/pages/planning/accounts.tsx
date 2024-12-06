@@ -2,17 +2,18 @@ import { Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
 import {
   type ColumnProps,
+  type Key,
+  type Selection,
   Group,
-  Header,
-  Key,
-  type Selection
+  Header
 } from 'react-aria-components';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { useDispatch, useSelector } from 'starfx/react';
+import { tv } from 'tailwind-variants';
 
-import { AmountVehicle, schema, type Account } from '~/src/store/schema.ts';
+import { schema, type Account } from '~/src/store/schema.ts';
 import { accountRemove } from '~/src/store/thunks/accounts.ts';
 import {
   floatFromDinero,
@@ -53,17 +54,6 @@ const navigateToAccountForm = (account: Account) => {
       }
     }
   };
-};
-
-const determineVehicleColor = (vehicle: AmountVehicle) => {
-  switch (vehicle) {
-    case 'operating':
-      return 'blue';
-    case 'investment':
-      return 'green';
-    default:
-      return 'amber';
-  }
 };
 
 const AccountFlow = () => {
@@ -150,6 +140,19 @@ const AccountFlow = () => {
 
 export default AccountFlow;
 
+const accountVehicleTag = tv({
+  base: `inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset`,
+  variants: {
+    vehicle: {
+      operating: 'bg-blue-50 text-blue-700 ring-blue-600/20',
+      investment: 'bg-green-50 text-green-700 ring-green-600/20',
+      debt: 'bg-amber-50 text-amber-700 ring-amber-600/20',
+      loan: 'bg-amber-50 text-amber-700 ring-amber-600/20',
+      'credit line': 'bg-amber-50 text-amber-700 ring-amber-600/20'
+    }
+  }
+});
+
 const AccountCard = ({
   account,
   navigate,
@@ -159,7 +162,6 @@ const AccountCard = ({
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
 }) => {
-  const vehicleColor = determineVehicleColor(account.vehicle);
   return (
     <div>
       <div className="lg:col-start-3 lg:row-end-1">
@@ -174,9 +176,7 @@ const AccountCard = ({
             </dl>
             <dl className="flex-none self-end px-6 pt-4">
               <dt className="sr-only">Vehicle</dt>
-              <dd
-                className={`inline-flex items-center rounded-md bg-${vehicleColor}-50 px-2 py-1 text-xs font-medium text-${vehicleColor}-700 ring-1 ring-inset ring-${vehicleColor}-600/20`}
-              >
+              <dd className={accountVehicleTag({ vehicle: account.vehicle })}>
                 {account.vehicle}
               </dd>
             </dl>
@@ -184,13 +184,10 @@ const AccountCard = ({
             <div className="my-2 flex w-full flex-none justify-between px-6">
               <dl className="flex flex-wrap items-baseline justify-between">
                 <dt className="w-full flex-none text-sm/6 font-medium text-gray-500">
-                  Balance
+                  Balance at {toHumanInterest(account.interest)}%
                 </dt>
                 <dd className="text-3xl/10 font-medium tracking-tight text-gray-900">
                   {toHumanCurrency(account.starting)}
-                </dd>
-                <dd className="text-sm font-medium">
-                  {toHumanInterest(account.interest)}%
                 </dd>
               </dl>
               <Group aria-label="Actions" className="space-x-1">

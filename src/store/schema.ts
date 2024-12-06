@@ -36,6 +36,15 @@ const defaultSettings = {
 
 export type TransactionType = 'income' | 'expense' | 'transfer';
 export type ValueType = 'static' | 'dynamic';
+export type RepeatType =
+  | 'none'
+  | 'day'
+  | 'day of week'
+  | 'day of month'
+  | 'bimonthly'
+  | 'quarterly'
+  | 'semiannually'
+  | 'annually';
 export interface Transaction {
   id: string;
   raccount: string; // account id
@@ -47,12 +56,13 @@ export interface Transaction {
   valueType: ValueType;
   start: string;
   ending: string;
-  rtype: string;
+  rtype: RepeatType;
   cycle: number;
   value: Dinero<number>;
   dailyRate: Dinero<number>;
   occurrences: number;
   beginAfterOccurrences: number;
+  nextOccurrence: { date: Date };
 }
 
 export type AmountVehicle =
