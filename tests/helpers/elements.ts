@@ -1,17 +1,33 @@
 import { test, expect, type Page } from '@playwright/test';
 
-export const selectDate = async (page: Page, label: string, value: string) => {
-  await page.getByRole('group', { name: label }).click();
-  await page.keyboard.insertText(value);
+export const selectDate = async (
+  page: Page,
+  label: string,
+  value: { day: string; month: string; year: string }
+) => {
+  const dateField = page.getByLabel(label);
+  await page.getByText(label).click();
+  await page.keyboard.type(value.month);
+  await page.waitForTimeout(50);
+  await page.keyboard.type(value.day);
+  await page.waitForTimeout(50);
+  await page.keyboard.type(value.year);
+  await page.waitForTimeout(50);
+  await expect(dateField.locator('input')).toHaveValue(
+    `${value.year}-${value.month}-${value.day}`
+  );
 };
 
 export const selectOption = (page: Page, label: string, option: string) =>
   test.step(`Select ${option} from ${label}`, async () => {
     const selectInput = page.getByLabel(label, { exact: true });
     await expect(selectInput).toBeVisible();
-    await selectInput.scrollIntoViewIfNeeded();
-    await selectInput.click();
-    await page.getByRole('option', { name: option }).click();
+    await expect(async () => {
+      await selectInput.scrollIntoViewIfNeeded();
+      await selectInput.click();
+      await expect(page.getByRole('option', { name: option })).toBeInViewport();
+      await page.getByRole('option', { name: option }).click();
+    }).toPass();
   });
 
 export const selectOnlyTag = (

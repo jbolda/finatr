@@ -14,7 +14,11 @@ test.beforeEach(async ({ page }) => {
   await selectOption(page, 'Account', 'Test Account Submission');
   await page.getByLabel('value').first().fill('55');
   await page.getByLabel('ending').click();
-  await selectDate(page, 'Start Date', '01/01/2025');
+  await selectDate(page, 'Start Date', {
+    month: '01',
+    day: '01',
+    year: '2024'
+  });
   await selectOption(page, 'Repeat Type', 'No Repeating');
   await page.getByLabel('Category').fill('generic');
   await page.getByLabel('description').fill('test transaction');

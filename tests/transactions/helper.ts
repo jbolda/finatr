@@ -26,12 +26,16 @@ export const addGenericTransaction = async (
 
     await expect(page.getByText('Add a Transaction')).toBeAttached();
 
+    await page.getByLabel('description').fill('test transaction');
+    await page.getByLabel('Category').fill('generic');
     await selectOption(page, 'Account', 'Test Account Submission');
     await selectOption(page, 'Repeat Type', 'No Repeating');
-    await page.getByLabel('Category').fill('generic');
-    await page.getByLabel('description').fill('test transaction');
 
-    await selectDate(page, 'start date', '01/01/2024');
+    await selectDate(page, 'start date', {
+      month: '01',
+      day: '01',
+      year: '2024'
+    });
 
     if (extraActions) {
       await test.step('Extra Actions', async () => {
