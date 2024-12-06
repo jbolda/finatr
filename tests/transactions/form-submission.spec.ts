@@ -1,8 +1,8 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 import { selectOption } from '../helpers/elements';
 import { navigateTo } from '../helpers/navigate';
-import { addDefaultAccount, addGenericTransaction } from './helper';
+import { addDefaultAccount, addGenericTransaction, selectOnly } from './helper';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -28,7 +28,7 @@ test('check income is listed in income tab after submit', async ({ page }) => {
     extraActions: [selectOption(page, 'Transaction Type', 'Income')]
   });
 
-  await page.getByRole('tab').getByText('Income').click();
+  await selectOnly(page, 'Income');
   // all transactions should be visible, so just check existence
   await expect(page.locator('table').getByText('55.00')).toBeVisible();
 });
@@ -41,7 +41,7 @@ test('check expense is listed in expense tab after submit', async ({
     extraActions: [selectOption(page, 'Transaction Type', 'Expense')]
   });
 
-  await page.getByRole('tab').getByText('Expenses').click();
+  await selectOnly(page, 'Expenses');
   // all transactions should be visible, so just check existence
   await expect(page.locator('table').getByText('67.00')).toBeVisible();
 });
@@ -54,7 +54,7 @@ test('check transfer is listed in transfer tab after submit', async ({
     extraActions: [selectOption(page, 'Transaction Type', 'Transfer')]
   });
 
-  await page.getByRole('tab').getByText('Transfers').click();
+  await selectOnly(page, 'Transfers');
   // all transactions should be visible, so just check existence
   await expect(page.locator('table').getByText('53.00')).toBeVisible();
 });

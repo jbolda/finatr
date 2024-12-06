@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 
-import { selectDate, selectOption } from '../helpers/elements';
+import { selectDate, selectOnlyTag, selectOption } from '../helpers/elements';
 import { navigateTo } from '../helpers/navigate';
 
 export const addDefaultAccount = async (page: Page) => {
@@ -46,3 +46,14 @@ export const addGenericTransaction = async (
     await expect(page.locator('table').getByText(value)).toBeVisible();
   });
 };
+
+const possibleTransactionTypes = ['Income', 'Expenses', 'Transfers'] as const;
+export const selectOnly = (
+  page: Page,
+  option: (typeof possibleTransactionTypes)[number]
+) =>
+  selectOnlyTag(
+    page,
+    option,
+    possibleTransactionTypes.filter((o) => o !== option)
+  );
