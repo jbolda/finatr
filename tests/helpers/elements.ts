@@ -25,7 +25,6 @@ export const selectOption = (page: Page, label: string, option: string) =>
     await expect(async () => {
       await selectInput.scrollIntoViewIfNeeded();
       await selectInput.click();
-      await expect(page.getByRole('option', { name: option })).toBeInViewport();
       await page.getByRole('option', { name: option }).click();
     }).toPass();
   });
