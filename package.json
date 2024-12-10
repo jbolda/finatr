@@ -14,9 +14,9 @@
     "test-e2e": "playwright test",
     "pretty": "prettier --write \"{src,__{tests,mocks}__}/**/*.js\"",
     "playwright": "playwright",
+    "playwright:install": "playwright install --with-deps",
     "tauri": "tauri",
-    "covector": "covector",
-    "postinstall": "playwright install"
+    "covector": "covector"
   },
   "dependencies": {
     "@dinero.js/currencies": "^2.0.0-alpha.14",
