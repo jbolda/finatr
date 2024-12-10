@@ -48,7 +48,7 @@
       "react-dom": "18.3.1"
     },
     "@estruyf/github-actions-reporter": {
-      "@playwright/test": "^1.43.0"
+      "@playwright/test": "^1.49.1"
     }
   },
   "@parcel/resolver-default": {
@@ -56,8 +56,8 @@
   },
   "devDependencies": {
     "@estruyf/github-actions-reporter": "^1.9.2",
-    "@playwright/experimental-ct-react17": "^1.49.0",
-    "@playwright/test": "^1.49.0",
+    "@playwright/experimental-ct-react17": "^1.49.1",
+    "@playwright/test": "^1.49.1",
     "@tauri-apps/cli": "2.1.0",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/d3": "^7.4.3",

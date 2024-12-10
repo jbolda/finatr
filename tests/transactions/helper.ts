@@ -38,11 +38,9 @@ export const addGenericTransaction = async (
     });
 
     if (extraActions) {
-      await test.step('Extra Actions', async () => {
-        for (let pageAction of extraActions) {
-          await pageAction;
-        }
-      });
+      for (let pageAction of extraActions) {
+        await pageAction;
+      }
     }
 
     await page.getByLabel('value').first().fill(value);
