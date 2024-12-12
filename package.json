@@ -31,7 +31,7 @@
     "date-fns": "^2.23.0",
     "dinero.js": "^2.0.0-alpha.14",
     "js-file-download": "0.4.12",
-    "lucide-react": "^0.460.0",
+    "lucide-react": "^0.468.0",
     "papaparse": "^5.4.1",
     "react": "18.3.1",
     "react-aria": "^3.36.0",
