@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 
-import { selectOption } from '../helpers/elements';
 import { navigateTo } from '../helpers/navigate';
 import { addDefaultAccount, addGenericTransaction, selectOnly } from './helper';
 
@@ -25,7 +24,7 @@ test('submits simple transaction', async ({ page }, testInfo) => {
 test('check income is listed in income tab after submit', async ({ page }) => {
   await addGenericTransaction(page, {
     value: '55.00',
-    extraActions: [selectOption(page, 'Transaction Type', 'Income')]
+    extraActions: [{ fn: 'selectOption', args: ['Transaction Type', 'Income'] }]
   });
 
   await selectOnly(page, 'Income');
@@ -38,7 +37,9 @@ test('check expense is listed in expense tab after submit', async ({
 }) => {
   await addGenericTransaction(page, {
     value: '67.00',
-    extraActions: [selectOption(page, 'Transaction Type', 'Expense')]
+    extraActions: [
+      { fn: 'selectOption', args: ['Transaction Type', 'Expense'] }
+    ]
   });
 
   await selectOnly(page, 'Expenses');
@@ -51,7 +52,9 @@ test('check transfer is listed in transfer tab after submit', async ({
 }) => {
   await addGenericTransaction(page, {
     value: '53',
-    extraActions: [selectOption(page, 'Transaction Type', 'Transfer')]
+    extraActions: [
+      { fn: 'selectOption', args: ['Transaction Type', 'Transfer'] }
+    ]
   });
 
   await selectOnly(page, 'Transfers');

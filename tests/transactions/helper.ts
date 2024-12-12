@@ -13,21 +13,33 @@ export const addDefaultAccount = async (page: Page) => {
   });
 };
 
-export const addGenericTransaction = async (
+type SelectOptionsParams = Parameters<typeof selectOption>;
+type ExtraActions = {
+  fn: 'selectOption';
+  args: [SelectOptionsParams[1], SelectOptionsParams[2]];
+}[];
+
+export const addGenericTransaction = (
   page: Page,
-  { value, extraActions }: { value: string; extraActions: Promise<any>[] } = {
+  {
+    value,
+    extraActions
+  }: {
+    value: string;
+    extraActions: ExtraActions;
+  } = {
     value: '55.00',
     extraActions: []
   }
-) => {
-  await test.step('Add Generic Transaction', async () => {
-    const addButton = page.getByText('Add Transaction');
-    await addButton.click();
-
+) =>
+  test.step('Add Generic Transaction', async () => {
+    await page.getByText('Add Transaction').click();
+    // confirms the form is loaded and stable
     await expect(page.getByText('Add a Transaction')).toBeAttached();
 
     await page.getByLabel('description').fill('test transaction');
     await page.getByLabel('Category').fill('generic');
+
     await selectOption(page, 'Account', 'Test Account Submission');
     await selectOption(page, 'Repeat Type', 'No Repeating');
 
@@ -39,7 +51,11 @@ export const addGenericTransaction = async (
 
     if (extraActions) {
       for (let pageAction of extraActions) {
-        await pageAction;
+        if (pageAction.fn === 'selectOption') {
+          // the tracing and actions gets real weird if we don't specifically
+          // pass it and call it here
+          await selectOption(page, pageAction.args[0], pageAction.args[1]);
+        }
       }
     }
 
@@ -47,7 +63,6 @@ export const addGenericTransaction = async (
     await page.keyboard.press('Enter');
     await expect(page.locator('table').getByText(value)).toBeVisible();
   });
-};
 
 const possibleTransactionTypes = ['Income', 'Expenses', 'Transfers'] as const;
 export const selectOnly = (
