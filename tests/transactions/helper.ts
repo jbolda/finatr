@@ -15,7 +15,13 @@ export const addDefaultAccount = async (page: Page) => {
 
 export const addGenericTransaction = async (
   page: Page,
-  { value, extraActions }: { value: string; extraActions: Promise<any>[] } = {
+  {
+    value,
+    extraActions
+  }: {
+    value: string;
+    extraActions: { fn: (...args: any) => Promise<any>; args: any[] }[];
+  } = {
     value: '55.00',
     extraActions: []
   }
@@ -39,7 +45,9 @@ export const addGenericTransaction = async (
 
     if (extraActions) {
       for (let pageAction of extraActions) {
-        await pageAction;
+        // the tracing and actions gets real weird if we don't specifically
+        // pass it and call it here
+        await pageAction.fn(...pageAction.args);
       }
     }
 
