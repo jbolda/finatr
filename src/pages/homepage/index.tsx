@@ -1,124 +1,183 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Homepage = () => <Hero />;
+const Homepage = () => (
+  <>
+    <Hero />
+    <Features />
+  </>
+);
 
 export default Homepage;
 
 function Hero() {
   return (
-    <div className="relative overflow-hidden">
-      <div
-        className="hidden sm:block sm:absolute sm:inset-y-0 sm:h-full sm:w-full"
-        aria-hidden="true"
-      >
-        <div className="relative h-full max-w-7xl mx-auto">
-          <svg
-            className="absolute right-full transform translate-y-1/4 translate-x-1/4 lg:translate-x-1/2"
-            width={404}
-            height={784}
-            fill="none"
-            viewBox="0 0 404 784"
-          >
-            <defs>
-              <pattern
-                id="f210dbf6-a58d-4871-961e-36d5016a0f49"
-                x={0}
-                y={0}
-                width={20}
-                height={20}
-                patternUnits="userSpaceOnUse"
-              >
-                <rect
-                  x={0}
-                  y={0}
-                  width={4}
-                  height={4}
-                  className="text-gray-200"
-                  fill="currentColor"
-                />
-              </pattern>
-            </defs>
-            <rect
-              width={404}
-              height={784}
-              fill="url(#f210dbf6-a58d-4871-961e-36d5016a0f49)"
-            />
-          </svg>
-          <svg
-            className="absolute left-full transform -translate-y-3/4 -translate-x-1/4 md:-translate-y-1/2 lg:-translate-x-1/2"
-            width={404}
-            height={784}
-            fill="none"
-            viewBox="0 0 404 784"
-          >
-            <defs>
-              <pattern
-                id="5d0dd344-b041-4d26-bec4-8d33ea57ec9b"
-                x={0}
-                y={0}
-                width={20}
-                height={20}
-                patternUnits="userSpaceOnUse"
-              >
-                <rect
-                  x={0}
-                  y={0}
-                  width={4}
-                  height={4}
-                  className="text-gray-200"
-                  fill="currentColor"
-                />
-              </pattern>
-            </defs>
-            <rect
-              width={404}
-              height={784}
-              fill="url(#5d0dd344-b041-4d26-bec4-8d33ea57ec9b)"
-            />
-          </svg>
+    <div className="bg-white">
+      <div className="relative isolate px-6 pt-14 lg:px-8">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+        >
+          <div
+            style={{
+              clipPath:
+                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)'
+            }}
+            className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-cyan-700 to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+          />
         </div>
-      </div>
-
-      <div className="relative pt-6 pb-16 sm:pb-24">
-        <div className="text-center">
-          <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-            <span className="block xl:inline">finatr: helping you</span>{' '}
-            <span className="block text-indigo-600 xl:inline">
-              analyze your future cash flows
-            </span>
-          </h1>
-          <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-            Most apps track your historical information and help you set up a
-            budget. Arguably, budgets don't work for everyone. Even if you
-            maintain a budget, it is still of great value to look to the future.
-            The first version focuses on the near future checking that the
-            inflows and outflows in your accounts are satisfactory. Essentially,
-            will my accounts stay above zero with the planned expenditures. Tied
-            into that, we need to understand a deal with variable debt payments
-            (see credit cards) as future flows are more involved then a simple
-            monthly payment you might see with a mortgage or a student loan
-            payment. The next step from this is returning information regarding
-            these flows such as a daily income and daily expenses. This type of
-            information can be built upon going forward to forecast
-            considerations like FI(RE).
-          </p>
-          <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-            <div className="rounded-md shadow">
-              <a
-                href="#"
-                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
+        <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+          <div className="text-center">
+            <h1 className="text-balance text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+              <span className="block xl:inline">helping you</span>{' '}
+              <span className="block text-indigo-600 xl:inline">
+                analyze your future
+              </span>
+            </h1>
+            <p className="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
+              Plan for your future financial events and adeptly route your path
+              forward.
+            </p>
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <Link
+                to="planning"
+                className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Get started
-              </a>
-            </div>
-            <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
-              <a
-                href="#"
-                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
+              </Link>
+              <Link
+                to="examples"
+                className="text-sm/6 font-semibold text-gray-900"
               >
-                Live demo
-              </a>
+                Examples <span aria-hidden="true">→</span>
+              </Link>
             </div>
+          </div>
+        </div>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+        >
+          <div
+            style={{
+              clipPath:
+                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)'
+            }}
+            className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-cyan-700 to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Features() {
+  return (
+    <div className="bg-white py-24 sm:py-32">
+      <div className="mx-auto max-w-2xl px-6 lg:max-w-7xl lg:px-8">
+        <h2 className="text-base/7 font-semibold text-indigo-600">
+          stop focusing on the past
+        </h2>
+        <p className="mt-2 max-w-lg text-pretty text-4xl font-semibold tracking-tight text-gray-950 sm:text-5xl">
+          Design your decisions to fund your future
+        </p>
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:mt-16 lg:grid-cols-6 lg:grid-rows-2">
+          <div className="relative lg:col-span-3">
+            <div className="absolute inset-px rounded-lg bg-white max-lg:rounded-t-[2rem] lg:rounded-tl-[2rem]" />
+            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)] max-lg:rounded-t-[calc(2rem+1px)] lg:rounded-tl-[calc(2rem+1px)]">
+              <div className="p-10 pt-4">
+                <h3 className="text-sm/4 font-semibold text-indigo-600">
+                  Plan
+                </h3>
+                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950">
+                  Lay Out Your Transactions
+                </p>
+                <p className="mt-2 max-w-lg text-sm/6 text-gray-600">
+                  List out your transactions and how often their occur. We can
+                  anticipate your future account balances and derive insights.
+                  That milestone coming up? Let's celebrate it! Oh, there may be
+                  a low balance, should we make an adjustment?
+                </p>
+              </div>
+            </div>
+            <div className="pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5 max-lg:rounded-t-[2rem] lg:rounded-tl-[2rem]" />
+          </div>
+          <div className="relative lg:col-span-3">
+            <div className="absolute inset-px rounded-lg bg-white lg:rounded-tr-[2rem]" />
+            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)] lg:rounded-tr-[calc(2rem+1px)]">
+              <div className="p-10 pt-4">
+                <h3 className="text-sm/4 font-semibold text-indigo-600">
+                  Update
+                </h3>
+                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950">
+                  View Expected Account Balances
+                </p>
+                <p className="mt-2 max-w-lg text-sm/6 text-gray-600">
+                  If we know your account balances and transactions, we can
+                  project your future balances as well! Imagine knowing early if
+                  your account will dip below zero. Let's fix that before you
+                  are charged fees.
+                </p>
+              </div>
+            </div>
+            <div className="pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5 lg:rounded-tr-[2rem]" />
+          </div>
+          <div className="relative lg:col-span-2">
+            <div className="absolute inset-px rounded-lg bg-white lg:rounded-bl-[2rem]" />
+            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)] lg:rounded-bl-[calc(2rem+1px)]">
+              <div className="p-10 pt-4">
+                <h3 className="text-sm/4 font-semibold text-indigo-600">
+                  Speed
+                </h3>
+                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950">
+                  Ready for power users
+                </p>
+                <p className="mt-2 max-w-lg text-sm/6 text-gray-600">
+                  Finatr is open-source. Interested in a feature? Let's discuss.
+                  Want customizable reports and views? Let's start hacking!
+                </p>
+              </div>
+            </div>
+            <div className="pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5 lg:rounded-bl-[2rem]" />
+          </div>
+          <div className="relative lg:col-span-2">
+            <div className="absolute inset-px rounded-lg bg-white" />
+            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)]">
+              <div className="p-10 pt-4">
+                <h3 className="text-sm/4 font-semibold text-indigo-600">
+                  Privacy
+                </h3>
+                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950">
+                  Own your data
+                </p>
+                <p className="mt-2 max-w-lg text-sm/6 text-gray-600">
+                  Finatr is being built with local-first principles. This
+                  includes offline support, and control of your data. Freely
+                  download and upload your data at any time. We don't save or
+                  access your data.
+                </p>
+              </div>
+            </div>
+            <div className="pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5" />
+          </div>
+          <div className="relative lg:col-span-2">
+            <div className="absolute inset-px rounded-lg bg-white max-lg:rounded-b-[2rem] lg:rounded-br-[2rem]" />
+            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)] max-lg:rounded-b-[calc(2rem+1px)] lg:rounded-br-[calc(2rem+1px)]">
+              <div className="p-10 pt-4">
+                <h3 className="text-sm/4 font-semibold text-indigo-600">FI</h3>
+                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950">
+                  Confidentally Build For Financial Independence (FI)
+                </p>
+                <p className="mt-2 max-w-lg text-sm/6 text-gray-600">
+                  The root ideals of "Financial Independence" point towards
+                  providing confience, leverage, and options. Knowing your
+                  future balances and investing to meet goals gives you
+                  confidence in your decisions, and leverage and options with
+                  your career.
+                </p>
+              </div>
+            </div>
+            <div className="pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5 max-lg:rounded-b-[2rem] lg:rounded-br-[2rem]" />
           </div>
         </div>
       </div>
