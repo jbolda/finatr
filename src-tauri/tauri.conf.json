@@ -31,8 +31,7 @@
       "deb": {
         "depends": []
       }
-    },
-    "createUpdaterArtifacts": "v1Compatible"
+    }
   },
   "build": {
     "beforeBuildCommand": "npm run build",
