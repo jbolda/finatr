@@ -5,7 +5,7 @@ import { Button } from '~/src/elements/Button.tsx';
 
 import Accounts from './accounts';
 import IcicleChart from './icicleChart';
-import Transactions from './transactions';
+import Transactions from '../../components/transactions';
 
 const Planning = (props) => {
   return (
