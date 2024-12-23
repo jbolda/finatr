@@ -6,17 +6,50 @@ import { createSelector } from 'starfx';
 import { schema, Transaction } from '../schema';
 import { nextTransaction } from '../thunks/transactionReoccurrence';
 
-export const barChartTransactions = createSelector(
+export const eachDay = createSelector(schema.chartRange.select, (chartRange) =>
+  eachDayOfInterval(chartRange)
+);
+
+export interface TransactionWithSeed extends Transaction {
+  seedDate: Date;
+  occurredInSeed: number;
+}
+export const transactionsWithSeed = createSelector(
   schema.chartRange.select,
   schema.transactions.selectTableAsList,
-  (chartRange, transactions) => {
-    const allChartData = transactions.map((transaction) => {
-      const data = resolveBarChartData({
+  (chartRange, transactions) =>
+    transactions.map((transaction) => {
+      const nextTransactionFn = nextTransaction(transaction.rtype);
+      const { date, occurred: occurredInSeed } = findSeed({
         transaction,
-        chartRange
+        y: transaction.value,
+        // back off one day to start outside the interval
+        date: parseISO(transaction.start),
+        nextTransactionFn,
+        interval: chartRange,
+        occurred: 0
       });
-      return { transaction, data };
+      return { ...transaction, seedDate: date, occurredInSeed };
+    })
+);
+
+export const chartableData = createSelector(
+  eachDay,
+  transactionsWithSeed,
+  (allDates, transactions) => {
+    return transactions.map((transaction) => {
+      const { data, allTransactionEvents } = resolveBarChartData({
+        transaction,
+        allDates
+      });
+      return { transaction, data, allTransactionEvents };
     });
+  }
+);
+
+export const barChartTransactions = createSelector(
+  chartableData,
+  (allChartData) => {
     const income = allChartData.filter((d) => d.transaction.type === 'income');
     const expenses = allChartData.filter(
       (d) => d.transaction.type === 'expense'
@@ -26,6 +59,7 @@ export const barChartTransactions = createSelector(
     );
 
     const incomeStacked = stackTransactions(income);
+    console.log({ incomeStacked });
     const expensesStacked = stackTransactions(expenses);
     const transfersStacked = stackTransactions(transfers);
     const maxValue = Math.max(
@@ -87,41 +121,29 @@ const stackTransactions = (
 };
 
 export function resolveBarChartData({
-  chartRange,
+  allDates,
   transaction
 }: {
-  chartRange: { start: Date; end: Date };
+  allDates: Date[];
   transaction: any;
 }) {
-  const allDates = eachDayOfInterval(chartRange);
   const nextTransactionFn = nextTransaction(transaction.rtype);
 
-  const {
-    date,
-    nextY,
-    occurred: occurredInSeed
-  } = findSeed({
-    transaction,
-    y: transaction.value,
-    // back off one day to start outside the interval
-    date: parseISO(transaction.start),
-    nextTransactionFn,
-    interval: chartRange,
-    occurred: 0
-  });
+  const allTransactionEvents = [] as Date[];
   const next = {
     transaction,
     occurrences: transaction.occurrences,
-    date,
-    nextY
+    date: transaction.seedDate,
+    nextY: transaction.value
   };
-  let occurred = occurredInSeed - 1; // we will capture once instance on first loop
+  let occurred = transaction.occurredInSeed - 1; // we will capture once instance on first loop
   const stack = allDates.map((day) => {
     let y = null;
     if (
       isSameDay(day, next.date) &&
       (transaction.occurrences === 0 || occurred < transaction.occurrences)
     ) {
+      allTransactionEvents.push(day);
       y = next.nextY;
 
       const { date, y: calculatedY } = nextTransactionFn({
@@ -140,7 +162,7 @@ export function resolveBarChartData({
     return { date: day, y };
   });
 
-  return stack;
+  return { data: stack, allTransactionEvents };
 }
 
 export const findSeed = ({

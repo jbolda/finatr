@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'starfx/react';
 import { tv } from 'tailwind-variants';
 
 import {
+  transactionsInTimeline,
   transactionsWithAccounts,
   TransactionWithAccount
 } from '~/src/store/selectors/transactions';
@@ -75,6 +76,8 @@ const TransactionsFlow = () => {
   const [transactionFilter, setTransactionFilter] = useState<Selection>('all');
   const [activeView, setActiveView] = useState<Selection>(new Set(['table']));
   const transactions = useSelector(transactionsWithAccounts);
+
+  const transactionsTimeline = useSelector(transactionsInTimeline);
   const viewingTransactions = transactions.filter(
     (transaction) =>
       transactionFilter === 'all' || transactionFilter.has(transaction.type)
@@ -117,6 +120,7 @@ const TransactionsFlow = () => {
                 <Header>View</Header>
                 <MenuItem id="table">as Table</MenuItem>
                 <MenuItem id="cards">as Cards</MenuItem>
+                <MenuItem id="timeline">as Timeline</MenuItem>
               </MenuSection>
             </Menu>
           </MenuTrigger>
@@ -131,6 +135,15 @@ const TransactionsFlow = () => {
               navigate={navigate}
               dispatch={dispatch}
             />
+          ))}
+        </div>
+      ) : activeView !== 'all' && activeView.has('timeline') ? (
+        <div>
+          {transactionsTimeline.map((d) => (
+            <div key={d.date.toISOString()}>
+              {d.date.toISOString()}{' '}
+              {d.transactions.map((t) => t.description).join(',')}
+            </div>
           ))}
         </div>
       ) : (
