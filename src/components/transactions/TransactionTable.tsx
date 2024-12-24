@@ -12,6 +12,7 @@ import {
 } from '~/src/store/selectors/transactions';
 import { transactionRemove } from '~/src/store/thunks/transactions.ts';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
+import { toHumanReoccurrence } from '~/src/store/utils/reoccurrence';
 
 import {
   Cell,
@@ -109,9 +110,7 @@ const TransactionRow = ({
         ? `${transaction.type === 'expense' ? ' paid' : ''} to ${transaction.transferIn}`
         : ``}
     </Cell>
-    <Cell>
-      {transaction.rtype} {transaction.cycle} at {transaction.start}
-    </Cell>
+    <Cell>{toHumanReoccurrence(transaction)}</Cell>
     <Cell>{toHumanCurrency(transaction.value)}</Cell>
     <Cell>{toHumanCurrency(transaction.dailyRate)}</Cell>
 

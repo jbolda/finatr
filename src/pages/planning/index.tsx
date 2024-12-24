@@ -1,11 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import Transactions from '~/src/components/transactions/index.tsx';
+
 import { Button } from '~/src/elements/Button.tsx';
 
 import Accounts from './accounts';
 import IcicleChart from './icicleChart';
-import Transactions from '../../components/transactions';
 
 const Planning = (props) => {
   return (
