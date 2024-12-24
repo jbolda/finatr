@@ -59,45 +59,50 @@ export const TransactionTimeline = ({
                         transactionFilter.has(transaction.type)
                     )
                     .map((t) => (
-                      <p className="flex gap-3 max-w-md text-gray-700">
-                        <span className="text-black flex-none">
-                          {t.raccount}
+                      <p className="flex gap-3 max-w-md text-gray-500 py-1 sm:py-0">
+                        <span className="flex-auto gap-3">
+                          <span className="text-black">{t.raccount}</span>
+                          <span>
+                            <span className="flex-none text-gray-800">
+                              {t.category ? ` ${t.category}` : ''}
+                            </span>
+                            {t.description ? ` ${t.description}` : ''}
+                          </span>
                         </span>
-                        <span className="flex-none text-gray-800">
-                          {t.category}
-                        </span>
-                        <span className="flex-auto">
-                          {t.description ? `${t.description}` : ''}
-                        </span>
-                        <span
-                          className={transactionTypeColor({ type: t.type })}
-                        >
-                          {transactionTypeToSymbol(t.type)}
-                          {toHumanCurrency(t.value)}
-                        </span>
-                        <Group aria-label="Actions" className="space-x-1">
-                          <Button
-                            aria-label="Modify"
-                            className="py-0.5 px-0.5"
-                            onPress={() =>
-                              navigate(
-                                '/transactions/set',
-                                navigateToTransactionForm(t)
-                              )
-                            }
+                        <span className="justify-end flex flex-wrap gap-x-3">
+                          <span
+                            className={transactionTypeColor({ type: t.type })}
                           >
-                            <Pencil className="max-h-3" />
-                          </Button>
-                          <Button
-                            aria-label="Delete"
-                            className="py-0.5 px-0.5"
-                            onPress={() =>
-                              dispatch(transactionRemove({ id: t.id }))
-                            }
+                            {transactionTypeToSymbol(t.type)}
+                            {toHumanCurrency(t.value)}
+                          </span>
+                          <Group
+                            aria-label="Actions"
+                            className="flex-none space-x-1"
                           >
-                            <Trash2 className="max-h-3" />
-                          </Button>
-                        </Group>
+                            <Button
+                              aria-label="Modify"
+                              className="py-0.5 px-0.5"
+                              onPress={() =>
+                                navigate(
+                                  '/transactions/set',
+                                  navigateToTransactionForm(t)
+                                )
+                              }
+                            >
+                              <Pencil className="max-h-3" />
+                            </Button>
+                            <Button
+                              aria-label="Delete"
+                              className="py-0.5 px-0.5"
+                              onPress={() =>
+                                dispatch(transactionRemove({ id: t.id }))
+                              }
+                            >
+                              <Trash2 className="max-h-3" />
+                            </Button>
+                          </Group>
+                        </span>
                       </p>
                     ))}
                 </div>
@@ -110,7 +115,7 @@ export const TransactionTimeline = ({
 };
 
 const transactionTypeColor = tv({
-  base: 'flex-none',
+  base: '',
   variants: {
     type: {
       income: 'text-green-700',
