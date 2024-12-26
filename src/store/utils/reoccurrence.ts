@@ -1,6 +1,6 @@
-import { type Transaction } from '../schema';
+import type { TransactionWithAccount } from '../selectors/transactions';
 
-export const toHumanReoccurrence = (transaction: Transaction) => {
+export const toHumanReoccurrence = (transaction: TransactionWithAccount) => {
   switch (transaction.rtype) {
     case 'none':
       return `On ${transaction.start}`;
@@ -23,6 +23,6 @@ export const toHumanReoccurrence = (transaction: Transaction) => {
   }
 };
 
-export const nextOccurrence = (transaction: Transaction) => {
-  return `Starting from ${transaction.start}`;
+export const nextOccurrence = (transaction: TransactionWithAccount) => {
+  return `Next on ${transaction.seedDate.toLocaleDateString()}`;
 };

@@ -44,7 +44,7 @@ export const addGenericTransaction = (
     await selectOption(page, 'Repeat Type', 'No Repeating');
 
     await selectDate(page, 'start date', {
-      month: '01',
+      month: '09',
       day: '01',
       year: '2024'
     });

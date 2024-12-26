@@ -1,15 +1,54 @@
+import { parseISO } from 'date-fns';
 import { createSelector } from 'starfx';
 
-import { schema, type Account, type Transaction } from '~/src/store/schema.ts';
+import { schema, Transaction, type Account } from '~/src/store/schema.ts';
 
-export interface TransactionWithAccount extends Transaction {
+import { nextTransaction } from '../thunks/transactionReoccurrence';
+import {
+  extrapolateTransactionOccurrences,
+  findSeed
+} from '../utils/extrapolateDates';
+import { eachDay } from './chartRange';
+
+export interface TransactionWithSeed extends Transaction {
+  seedDate: Date;
+  occurredInSeed: number;
+}
+export const transactionsWithSeed = createSelector(
+  schema.chartRange.select,
+  schema.transactions.selectTableAsList,
+  (chartRange, transactions) =>
+    transactions.map((transaction) => {
+      if (transaction.rtype === 'none') {
+        return {
+          ...transaction,
+          seedDate: parseISO(transaction.start),
+          occurredInSeed: 0
+        };
+      }
+
+      const nextTransactionFn = nextTransaction(transaction.rtype);
+
+      const { date, occurred: occurredInSeed } = findSeed({
+        transaction,
+        y: transaction.value,
+        date: parseISO(transaction.start),
+        nextTransactionFn,
+        interval: chartRange,
+        occurred: 0
+      });
+      return { ...transaction, seedDate: date, occurredInSeed };
+    })
+);
+
+export interface TransactionWithAccount extends TransactionWithSeed {
   raccountMeta: Account;
-  transferInMeta: Account;
+  transferInMeta?: Account;
 }
 
 export const transactionsWithAccounts = createSelector(
   schema.accounts.selectTable,
-  schema.transactions.selectTableAsList,
+  transactionsWithSeed,
   (accounts, transactions) => {
     const tA: TransactionWithAccount[] = transactions.map((t) => {
       const account = accounts?.[t.raccount] ?? { name: t.raccount };
@@ -30,5 +69,36 @@ export const transactionsWithAccounts = createSelector(
       return merged;
     });
     return tA;
+  }
+);
+
+export const chartableData = createSelector(
+  eachDay,
+  transactionsWithAccounts,
+  (allDates, transactions) => {
+    return transactions.map((transaction) => {
+      const { data, allTransactionEvents } = extrapolateTransactionOccurrences({
+        transaction,
+        allDates
+      });
+      return { transaction, data, allTransactionEvents };
+    });
+  }
+);
+
+export const transactionsInTimeline = createSelector(
+  eachDay,
+  chartableData,
+  (allDates, transactionsWithStacks) => {
+    const datesWithTransactions = allDates.map((date) => {
+      const thisDay = { date, transactions: [] as TransactionWithAccount[] };
+      for (const transaction of transactionsWithStacks) {
+        if (transaction.allTransactionEvents.includes(date)) {
+          thisDay.transactions.push(transaction.transaction);
+        }
+      }
+      return thisDay;
+    });
+    return datesWithTransactions;
   }
 );

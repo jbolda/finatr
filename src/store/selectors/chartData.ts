@@ -1,22 +1,12 @@
-import { parseISO, isSameDay, isWithinInterval, addDays } from 'date-fns';
-import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
-import { toDecimal, type Dinero } from 'dinero.js';
+import { toDecimal } from 'dinero.js';
 import { createSelector } from 'starfx';
 
-import { schema, Transaction } from '../schema';
-import { nextTransaction } from '../thunks/transactionReoccurrence';
+import { Transaction } from '../schema';
+import { chartableData } from './transactions';
 
 export const barChartTransactions = createSelector(
-  schema.chartRange.select,
-  schema.transactions.selectTableAsList,
-  (chartRange, transactions) => {
-    const allChartData = transactions.map((transaction) => {
-      const data = resolveBarChartData({
-        transaction,
-        chartRange
-      });
-      return { transaction, data };
-    });
+  chartableData,
+  (allChartData) => {
     const income = allChartData.filter((d) => d.transaction.type === 'income');
     const expenses = allChartData.filter(
       (d) => d.transaction.type === 'expense'
@@ -84,101 +74,4 @@ const stackTransactions = (
     return { ...item, stacked };
   });
   return { maxValue, stack: transactionStack };
-};
-
-export function resolveBarChartData({
-  chartRange,
-  transaction
-}: {
-  chartRange: { start: Date; end: Date };
-  transaction: any;
-}) {
-  const allDates = eachDayOfInterval(chartRange);
-  const nextTransactionFn = nextTransaction(transaction.rtype);
-
-  const {
-    date,
-    nextY,
-    occurred: occurredInSeed
-  } = findSeed({
-    transaction,
-    y: transaction.value,
-    // back off one day to start outside the interval
-    date: parseISO(transaction.start),
-    nextTransactionFn,
-    interval: chartRange,
-    occurred: 0
-  });
-  const next = {
-    transaction,
-    occurrences: transaction.occurrences,
-    date,
-    nextY
-  };
-  let occurred = occurredInSeed - 1; // we will capture once instance on first loop
-  const stack = allDates.map((day) => {
-    let y = null;
-    if (
-      isSameDay(day, next.date) &&
-      (transaction.occurrences === 0 || occurred < transaction.occurrences)
-    ) {
-      y = next.nextY;
-
-      const { date, y: calculatedY } = nextTransactionFn({
-        ...next,
-        seedDate: addDays(next.date, 1)
-      });
-      if (isSameDay(date, next.date))
-        throw new Error(
-          'same date, recursive calc, we should not hit this error'
-        );
-      // save data for next value
-      next.nextY = calculatedY;
-      next.date = date;
-      occurred += 1;
-    }
-    return { date: day, y };
-  });
-
-  return stack;
-}
-
-export const findSeed = ({
-  nextTransactionFn,
-  transaction,
-  date,
-  y,
-  interval,
-  occurred
-}: {
-  nextTransactionFn: any;
-  transaction: any;
-  date: Date;
-  y: Dinero<number>;
-  interval: Interval;
-  occurred: number;
-}): { date: Date; nextY: Dinero<number>; occurred: number } => {
-  // a transaction function has to run and mark an occurenace to have found the seed date
-  //  so we don't blindly use the transaction start date as the seed except for daily as
-  //  the start date dictates the start of a cycle
-  if (
-    isWithinInterval(date, interval) &&
-    (occurred !== 0 || transaction.rtype === 'day')
-  )
-    return { date, nextY: y, occurred };
-  const { date: nextDate, y: nextY } = nextTransactionFn({
-    transaction,
-    seedDate: date,
-    occurrences: transaction.occurrences
-  });
-
-  return findSeed({
-    nextTransactionFn,
-    transaction,
-    interval,
-    y: nextY,
-    // to avoid getting stuck generating the same day over and over
-    date: isSameDay(date, nextDate) ? addDays(nextDate, 1) : nextDate,
-    occurred: occurred + 1
-  });
 };

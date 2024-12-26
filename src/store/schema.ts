@@ -62,7 +62,6 @@ export interface Transaction {
   dailyRate: Dinero<number>;
   occurrences: number;
   beginAfterOccurrences: number;
-  nextOccurrence: { date: Date };
 }
 
 export type AmountVehicle =

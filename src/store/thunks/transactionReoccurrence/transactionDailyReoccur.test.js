@@ -7,7 +7,7 @@ import parseISO from 'date-fns/fp/parseISO/index.js';
 import startOfDay from 'date-fns/fp/startOfDay/index.js';
 import { dinero } from 'dinero.js';
 
-import { findSeed } from '../../selectors/chartData.ts';
+import { findSeed } from '../../utils/extrapolateDates.ts';
 import { transactionDailyReoccur } from './index.ts';
 
 test.describe(`check transactionDailyReoccur`, () => {

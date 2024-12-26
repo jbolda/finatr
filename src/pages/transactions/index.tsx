@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Transactions from '../planning/transactions.tsx';
+import Transactions from '~/src/components/transactions/index.tsx';
 
 const TransactionsOverview = (props) => {
   return (
