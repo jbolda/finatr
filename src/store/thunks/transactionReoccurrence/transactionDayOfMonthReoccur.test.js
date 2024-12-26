@@ -1,12 +1,31 @@
 import { USD } from '@dinero.js/currencies';
 import { test, expect } from '@playwright/experimental-ct-react17';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays/index.js';
+import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';
 import startOfDay from 'date-fns/fp/startOfDay/index.js';
 import { dinero } from 'dinero.js';
 
-import { resolveBarChartData } from '../../selectors/chartData.ts';
+import { nextTransaction } from '../../thunks/transactionReoccurrence';
+import {
+  extrapolateTransactionOccurrences,
+  findSeed
+} from '../../utils/extrapolateDates.ts';
 import { transactionDayOfMonthReoccur } from './index.ts';
+
+const addSeedDate = (transaction, chartRange) => {
+  const nextTransactionFn = nextTransaction(transaction.rtype);
+
+  const { date, occurred: occurredInSeed } = findSeed({
+    transaction,
+    y: transaction.value,
+    date: parseISO(transaction.start),
+    nextTransactionFn,
+    interval: chartRange,
+    occurred: 0
+  });
+  return { ...transaction, seedDate: date, occurredInSeed };
+};
 
 test.describe(`check transactionDayOfMonthReoccur`, () => {
   const transaction = {
@@ -124,93 +143,105 @@ test.describe(`check transactionDayOfMonthReoccur`, () => {
   });
 
   test(`returns correct number of modifications for range`, () => {
-    let testData = {
-      ...transaction,
-      start: '2018-01-16',
-      cycle: 17,
-      occurrences
-    };
-    let resolvedTestData = resolveBarChartData({
-      chartRange,
+    let testData = addSeedDate(
+      {
+        ...transaction,
+        start: '2018-01-16',
+        cycle: 17,
+        occurrences
+      },
+      chartRange
+    );
+    let resolvedTestData = extrapolateTransactionOccurrences({
+      allDates: eachDayOfInterval(chartRange),
       transaction: testData
     });
-    expect(resolvedTestData.filter((t) => t.y)).toHaveLength(3);
+    expect(resolvedTestData.data.filter((t) => t.y)).toHaveLength(3);
   });
 
   test(`returns correct number of modifications if start and cycle are the same`, () => {
-    let testData = {
-      id: 'the-id',
-      raccount: 'checking',
-      description: 'Electric',
-      category: 'Living',
-      type: 'expense',
-      start: '2017-08-22',
-      rtype: 'day of month',
-      cycle: 22,
-      value: dinero({ amount: 150, currency: USD }),
-      occurrences
-    };
     let testRange = {
       start: startOfDay(parseISO('2018-01-16')),
       end: startOfDay(parseISO('2018-08-01'))
     };
-    let resolvedTestData1 = resolveBarChartData({
-      chartRange: testRange,
+    let testData = addSeedDate(
+      {
+        id: 'the-id',
+        raccount: 'checking',
+        description: 'Electric',
+        category: 'Living',
+        type: 'expense',
+        start: '2017-08-22',
+        rtype: 'day of month',
+        cycle: 22,
+        value: dinero({ amount: 150, currency: USD }),
+        occurrences
+      },
+      testRange
+    );
+    let resolvedTestData1 = extrapolateTransactionOccurrences({
+      allDates: eachDayOfInterval(testRange),
       transaction: testData
     });
-    expect(resolvedTestData1.filter((t) => t.y)).toHaveLength(7);
+    expect(resolvedTestData1.data.filter((t) => t.y)).toHaveLength(7);
   });
 
   test(`returns correct number of modifications based on generated occurrences`, () => {
-    let testData1 = {
-      ...transaction,
-      id: `${transaction.id} genOc`,
-      start: '2018-01-14',
-      cycle: 17,
-      occurrences: 1
-    };
     let testRange = {
       start: chartRange.start,
       end: startOfDay(parseISO('2018-12-01'))
     };
+    let testData1 = addSeedDate(
+      {
+        ...transaction,
+        id: `${transaction.id} genOc`,
+        start: '2018-01-14',
+        cycle: 17,
+        occurrences: 1
+      },
+      testRange
+    );
 
-    let resolvedTestData1 = resolveBarChartData({
-      chartRange: testRange,
+    let resolvedTestData1 = extrapolateTransactionOccurrences({
+      allDates: eachDayOfInterval(testRange),
       transaction: testData1
     });
-    expect(resolvedTestData1.filter((t) => t.y)).toHaveLength(1);
+    expect(resolvedTestData1.data.filter((t) => t.y)).toHaveLength(1);
 
     let testData2 = { ...testData1, occurrences: 2 };
-    let resolvedTestData2 = resolveBarChartData({
-      chartRange: testRange,
+    let resolvedTestData2 = extrapolateTransactionOccurrences({
+      allDates: eachDayOfInterval(testRange),
       transaction: testData2
     });
-    expect(resolvedTestData2.filter((t) => t.y)).toHaveLength(2);
+    expect(resolvedTestData2.data.filter((t) => t.y)).toHaveLength(2);
   });
 
   test(`returns correct number of modifications based on visible occurrences`, () => {
-    let testData1 = {
-      ...transaction,
-      start: '2018-01-16',
-      cycle: 17,
-      occurrences: 1
-    };
     let testRange = {
       start: chartRange.start,
       end: startOfDay(parseISO('2018-12-01'))
     };
+    let testData1 = addSeedDate(
+      {
+        ...transaction,
+        start: '2018-01-16',
+        cycle: 17,
+        occurrences: 1
+      },
+      testRange
+    );
 
-    let resolvedTestData1 = resolveBarChartData({
-      chartRange: testRange,
+    let resolvedTestData1 = extrapolateTransactionOccurrences({
+      allDates: eachDayOfInterval(testRange),
       transaction: testData1
     });
-    expect(resolvedTestData1.filter((t) => t.y)).toHaveLength(1);
+    expect(resolvedTestData1.data.filter((t) => t.y)).toHaveLength(1);
 
     let testData2 = { ...testData1, occurrences: 2 };
-    let resolvedTestData2 = resolveBarChartData({
-      chartRange: testRange,
+    let resolvedTestData2 = extrapolateTransactionOccurrences({
+      allDates: eachDayOfInterval(testRange),
       transaction: testData2
     });
-    expect(resolvedTestData2.filter((t) => t.y)).toHaveLength(2);
+    expect(resolvedTestData2.data.filter((t) => t.y)).toHaveLength(2);
   });
 });
