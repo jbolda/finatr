@@ -1,6 +1,7 @@
 import { isSameDay, isWithinInterval, addDays } from 'date-fns';
 import { type Dinero } from 'dinero.js';
 
+import { type TransactionWithSeed } from '../selectors/transactions';
 import { nextTransaction } from '../thunks/transactionReoccurrence';
 
 export const findSeed = ({
@@ -18,7 +19,7 @@ export const findSeed = ({
   interval: Interval;
   occurred: number;
 }): { date: Date; nextY: Dinero<number>; occurred: number } => {
-  // a transaction function has to run and mark an occurenace to have found the seed date
+  // a transaction function has to run and mark an occurrence to have found the seed date
   //  so we don't blindly use the transaction start date as the seed except for daily as
   //  the start date dictates the start of a cycle
   if (
@@ -48,7 +49,7 @@ export function extrapolateTransactionOccurrences({
   transaction
 }: {
   allDates: Date[];
-  transaction: any;
+  transaction: TransactionWithSeed;
 }) {
   const nextTransactionFn = nextTransaction(transaction.rtype);
 

@@ -23,11 +23,19 @@ export const transactionsWithSeed = createSelector(
   schema.transactions.selectTableAsList,
   (chartRange, transactions) =>
     transactions.map((transaction) => {
+      if (transaction.rtype === 'none') {
+        return {
+          ...transaction,
+          seedDate: parseISO(transaction.start),
+          occurredInSeed: 0
+        };
+      }
+
       const nextTransactionFn = nextTransaction(transaction.rtype);
+
       const { date, occurred: occurredInSeed } = findSeed({
         transaction,
         y: transaction.value,
-        // back off one day to start outside the interval
         date: parseISO(transaction.start),
         nextTransactionFn,
         interval: chartRange,
