@@ -1,5 +1,4 @@
 import { parseISO } from 'date-fns';
-import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
 import { createSelector } from 'starfx';
 
 import { schema, Transaction, type Account } from '~/src/store/schema.ts';
@@ -9,10 +8,7 @@ import {
   extrapolateTransactionOccurrences,
   findSeed
 } from '../utils/extrapolateDates';
-
-export const eachDay = createSelector(schema.chartRange.select, (chartRange) =>
-  eachDayOfInterval(chartRange)
-);
+import { eachDay } from './chartRange';
 
 export interface TransactionWithSeed extends Transaction {
   seedDate: Date;
