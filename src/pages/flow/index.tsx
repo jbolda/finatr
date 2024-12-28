@@ -126,6 +126,7 @@ const AccountListFilter = ({
 }) => {
   return accounts.map((account) => (
     <span
+      key={account.name}
       className={`mx-1 inline-flex items-center gap-x-1.5 rounded-full px-4 py-1 text-xs font-medium text-gray-600${accountFilters.includes(account.name) ? '' : ' bg-gray-100'}`}
       onClick={() =>
         setAccountFilters((state) =>
