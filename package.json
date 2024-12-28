@@ -31,24 +31,20 @@
     "date-fns": "^2.23.0",
     "dinero.js": "^2.0.0-alpha.14",
     "js-file-download": "0.4.12",
-    "lucide-react": "^0.468.0",
+    "lucide-react": "^0.469.0",
     "papaparse": "^5.4.1",
-    "react": "18.3.1",
+    "react": "^18.3.1",
     "react-aria": "^3.36.0",
     "react-aria-components": "^1.5.0",
-    "react-dom": "18.3.1",
+    "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0",
     "starfx": "0.13.4",
     "tailwindcss-react-aria-components": "^1.2.0",
     "zod": "^3.23.8"
   },
   "overrides": {
-    "react-file-reader-input": {
-      "react": "18.3.1",
-      "react-dom": "18.3.1"
-    },
     "@estruyf/github-actions-reporter": {
-      "@playwright/test": "^1.49.1"
+      "@playwright/test": "^1.x.x"
     }
   },
   "@parcel/resolver-default": {
@@ -62,9 +58,10 @@
     "@trivago/prettier-plugin-sort-imports": "^5.0.0",
     "@types/d3": "^7.4.3",
     "@types/node": "^20.16.12",
+    "@types/react": "18.3.18",
     "buffer": "^6.0.3",
     "covector": "^0.12.0",
-    "parcel": "^2.11.0",
+    "parcel": "^2.13.3",
     "postcss": "^8.4.47",
     "prettier": "^3.2.5",
     "process": "^0.11.10",
@@ -76,6 +73,6 @@
   },
   "volta": {
     "node": "20.18.1",
-    "npm": "10.9.2"
+    "npm": "11.0.0"
   }
 }
