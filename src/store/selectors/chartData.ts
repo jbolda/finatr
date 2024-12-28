@@ -1,8 +1,7 @@
 import { toDecimal } from 'dinero.js';
 import { createSelector } from 'starfx';
 
-import { Transaction } from '../schema';
-import { chartableData } from './transactions';
+import { chartableData, type TransactionWithAccount } from './transactions';
 
 export const barChartTransactions = createSelector(
   chartableData,
@@ -37,7 +36,7 @@ export const barChartTransactions = createSelector(
 
 const getInitialY = (
   arr: {
-    transaction: Transaction;
+    transaction: TransactionWithAccount;
     data: {
       date: Date;
       y: any;
@@ -56,7 +55,7 @@ const getInitialY = (
 };
 
 const stackTransactions = (
-  transactions: { transaction: Transaction; data: any }[]
+  transactions: { transaction: TransactionWithAccount; data: any }[]
 ) => {
   let maxValue = 0;
   const transactionStack = transactions.map((item, transactionIndex) => {

@@ -5,6 +5,7 @@ import { createSelector } from 'starfx';
 import { Account, schema, Transaction } from '~/src/store/schema.ts';
 
 import { barChartTransactions } from './chartData';
+import type { TransactionWithAccount } from './transactions';
 
 export type ChartAccounts = {
   data: {
@@ -49,7 +50,7 @@ function resolveLineChartData({
         height: number;
         y0: number;
       }[];
-      transaction: Transaction;
+      transaction: TransactionWithAccount;
       data: {
         date: Date;
         y: Dinero<number> | null;
@@ -88,30 +89,35 @@ function resolveLineChartData({
         accountIndex++
       ) {
         const account = accounts[accountIndex];
-        const income = sumTotal(incomeStacked, index, account.id, 'raccount');
+        const income = sumTotal(
+          incomeStacked,
+          index,
+          account.id,
+          'raccountMeta'
+        );
         const expenses = sumTotal(
           expensesStacked,
           index,
           account.id,
-          'raccount'
+          'raccountMeta'
         );
         const transfersOut = sumTotal(
           transfersStacked,
           index,
           account.id,
-          'raccount'
+          'raccountMeta'
         );
         const transfersIn = sumTotal(
           transfersStacked,
           index,
           account.id,
-          'transferIn'
+          'transferInMeta'
         );
         const expenseTransfersIn = sumTotal(
           expensesStacked,
           index,
           account.id,
-          'transferIn'
+          'transferInMeta'
         );
 
         const prevValue =
@@ -145,17 +151,17 @@ function resolveLineChartData({
 const sumTotal = (
   transactions: Record<
     string,
-    { stacked: { height: number }[]; transaction: Transaction }
+    { stacked: { height: number }[]; transaction: TransactionWithAccount }
   >,
   index: number,
   accountId: string,
-  accountIdRefOnTransaction: 'raccount' | 'transferIn' = 'raccount'
+  accountIdRefOnTransaction: 'raccountMeta' | 'transferInMeta' = 'raccountMeta'
 ) =>
   Object.keys(transactions).reduce((finalValue, key) => {
     const d = transactions[key];
     if (
       accountIdRefOnTransaction in d.transaction &&
-      d.transaction[accountIdRefOnTransaction] === accountId
+      d.transaction?.[accountIdRefOnTransaction]?.id === accountId
     )
       return finalValue + d.stacked[index].height;
     return finalValue;
