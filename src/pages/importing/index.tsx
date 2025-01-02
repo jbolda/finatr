@@ -68,32 +68,28 @@ const Importing = () => {
   };
 
   return (
-    <div className="pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
-      <div className="relative max-w-lg mx-auto divide-y-2 divide-gray-200 lg:max-w-7xl">
-        <div className="pb-6">
-          <h2 className="text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl">
-            Importing and Exporting
-          </h2>
-          <p className="text-xl text-gray-500">The data is yours to own.</p>
+    <div className="divide-y-2 divide-gray-200">
+      <div className="pb-4">
+        <h1 className="text-3xl font-semibold">Importing and Exporting</h1>
+        <p className="text-xl text-gray-500">The data is yours to own.</p>
+      </div>
+      <div>
+        <div>
+          <p className="my-3 text-base text-gray-500">
+            Get your current data out
+          </p>
+          <Button onPress={() => handleDownload()}>Download</Button>
         </div>
         <div>
-          <div>
-            <p className="my-3 text-base text-gray-500">
-              Get your current data out
-            </p>
-            <Button onPress={() => handleDownload()}>Download</Button>
-          </div>
-          <div>
-            <p className="my-3 text-base text-gray-500">
-              Import data from your computer
-            </p>
-            <FileTrigger
-              acceptedFileTypes={['application/json', 'text/csv']}
-              onSelect={handleUpload}
-            >
-              <Button>Select file</Button>
-            </FileTrigger>
-          </div>
+          <p className="my-3 text-base text-gray-500">
+            Import data from your computer
+          </p>
+          <FileTrigger
+            acceptedFileTypes={['application/json', 'text/csv']}
+            onSelect={handleUpload}
+          >
+            <Button>Select file</Button>
+          </FileTrigger>
         </div>
       </div>
     </div>

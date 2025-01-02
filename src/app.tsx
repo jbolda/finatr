@@ -62,13 +62,15 @@ function App({
     <AppWrapper>
       <Sidebar />
 
-      <main className="py-10 lg:pl-56">
-        <div className="px-4 sm:px-6 lg:px-8">
-          <Routes supabase={supabase} settings={settings} />
-        </div>
-      </main>
+      <div className="flex flex-col min-h-screen">
+        <main className="grow py-10 lg:pl-56">
+          <div className="px-4 sm:px-6 lg:px-8">
+            <Routes supabase={supabase} settings={settings} />
+          </div>
+        </main>
 
-      <Footer settings={settings} />
+        <Footer settings={settings} />
+      </div>
     </AppWrapper>
   );
 }
