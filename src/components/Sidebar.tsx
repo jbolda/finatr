@@ -1,10 +1,13 @@
+import { set } from 'date-fns';
 import {
   ArrowRightLeft,
   Banknote,
   ChartColumnIncreasing,
+  ChartColumnStacked,
   HandCoins,
   Landmark,
   Menu as MenuIcon,
+  NotebookText,
   Presentation,
   SettingsIcon,
   TrendingUp
@@ -43,60 +46,9 @@ const navigation: NavItem[] = [
 ];
 
 const graphs: NavItem[] = [
-  { name: 'Planning', to: '/planning', icon: MenuIcon },
-  { name: 'Cash Flow', to: '/flow', icon: MenuIcon }
+  { name: 'Planning', to: '/planning', icon: NotebookText },
+  { name: 'Cash Flow', to: '/flow', icon: ChartColumnStacked }
 ];
-
-let fullNavigation = [
-  {
-    name: 'Records',
-    id: 'records',
-    children: navigation
-  },
-  {
-    name: 'Graphs',
-    id: 'graphs',
-    children: graphs
-  }
-];
-/* for using fullNavatiion, swap to this
-                <Menu
-                  className="outline-none"
-                  aria-label="navigation popover"
-                  selectionMode="single"
-                  items={fullNavigation}
-                  selectedKeys={[location.pathname]}
-                >
-                  {(section) => (
-                    <MenuSection>
-                      <Header className="text-xs/6 font-bold text-gray-400 mt-3">
-                        {section.name}
-                      </Header>
-                      <Collection items={section.children}>
-                        {(item) => (
-                          <MenuItem
-                            id={item.to}
-                            href={item.to}
-                            aria-label={item.name}
-                            className={() =>
-                              sidebarItem({
-                                link:
-                                  location.pathname === item.to
-                                    ? 'selected'
-                                    : 'default'
-                              })
-                            }
-                          >
-                            <span className="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium border-transparent">
-                              {item.name}{' '}
-                              {item?.tag ? <sup>{item.tag}</sup> : null}
-                            </span>
-                          </MenuItem>
-                        )}
-                      </Collection>
-                    </MenuSection>
-                  )}
-                </Menu> */
 
 /*
   This requires the follow classes in index.html
@@ -107,8 +59,6 @@ let fullNavigation = [
   ```
 */
 export default function Sidebar() {
-  const settings = useSelector(schema.settings.select);
-
   return (
     <>
       {/* Static sidebar for desktop */}
@@ -154,6 +104,19 @@ export default function Sidebar() {
 
 function SidebarContent({ withHeader = true }: { withHeader: boolean }) {
   const settings = useSelector(schema.settings.select);
+  const fullNavigation = [
+    {
+      name: null,
+      id: 'records',
+      children: navigation.filter((item) => settings[item.to.substring(1)])
+    },
+    {
+      name: 'Graphs',
+      id: 'graphs',
+      children: graphs.filter((item) => settings[item.to.substring(1)])
+    }
+  ];
+
   return (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6">
       {withHeader ? (
@@ -168,79 +131,54 @@ function SidebarContent({ withHeader = true }: { withHeader: boolean }) {
         </div>
       ) : null}
       <nav className="flex flex-1 flex-col py-1">
-        <ul role="list" className="flex flex-1 flex-col gap-y-7">
-          <li>
-            <Menu
-              className="-mx-2 space-y-1"
-              selectionMode="single"
-              aria-label="navigation"
-              items={navigation.filter(
-                (item) => settings[item.to.substring(1)] !== false
-              )}
-              selectedKeys={[location.pathname]}
-            >
-              {(item) => (
-                <MenuItem
-                  id={item.to}
-                  href={item.to}
-                  aria-label={item.name}
-                  className={() =>
-                    sidebarItem({
-                      link:
-                        location.pathname === item.to ? 'selected' : 'default'
-                    })
-                  }
-                >
-                  <item.icon aria-hidden="true" className="size-6 shrink-0" />
-                  {item.name}
-                  {item?.tag ? <sup>{item.tag}</sup> : null}
-                </MenuItem>
-              )}
-            </Menu>
-          </li>
-          <li>
-            <div className="text-xs/6 font-semibold text-gray-400">Graphs</div>
-            <Menu
-              className="-mx-2 mt-2 space-y-1"
-              selectionMode="single"
-              aria-label="graphs"
-              items={graphs.filter(
-                (item) => settings[item.to.substring(1)] !== false
-              )}
-              selectedKeys={[location.pathname]}
-            >
-              {(graph) => (
-                <MenuItem
-                  id={graph.to}
-                  href={graph.to}
-                  aria-label={graph.name}
-                  className={() =>
-                    sidebarItem({
-                      link:
-                        location.pathname === graph.to ? 'selected' : 'default'
-                    })
-                  }
-                >
-                  <span className="flex size-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white">
-                    {graph.name.substring(0, 1)}
-                  </span>
-                  <span className="truncate">{graph.name}</span>
-                </MenuItem>
-              )}
-            </Menu>
-          </li>
-          <li className="-mx-6 mt-auto">
-            <Link
-              href="/settings"
-              className={() =>
-                `flex items-center gap-x-4 px-6 py-3 text-sm/6 font-semibold text-white ${location.pathname === '/settings' ? 'bg-gray-800' : 'hover:bg-gray-800'}`
-              }
-            >
-              <SettingsIcon />
-              <span>Settings</span>
-            </Link>
-          </li>
-        </ul>
+        <Menu
+          className="-mx-2 space-y-1"
+          selectionMode="single"
+          aria-label="navigation"
+          items={fullNavigation ?? settings}
+          selectedKeys={[location.pathname]}
+        >
+          {(section) => (
+            <MenuSection>
+              {section?.name ? (
+                <Header className="text-xs/6 font-semibold text-gray-400">
+                  {section.name}
+                </Header>
+              ) : null}
+              <Collection items={section.children}>
+                {(item) => (
+                  <MenuItem
+                    id={item.to}
+                    href={item.to}
+                    aria-label={item.name}
+                    className={() =>
+                      sidebarItem({
+                        link:
+                          location.pathname === item.to ? 'selected' : 'default'
+                      })
+                    }
+                  >
+                    <item.icon aria-hidden="true" className="size-6 shrink-0" />
+                    {item.name}
+                    {item?.tag ? <sup>{item.tag}</sup> : null}
+                  </MenuItem>
+                )}
+              </Collection>
+            </MenuSection>
+          )}
+        </Menu>
+
+        <div className="-mx-6 mt-auto">
+          <Link
+            href="/settings"
+            className={() =>
+              `flex items-center gap-x-4 px-6 py-3 text-sm/6 font-semibold text-white ${location.pathname === '/settings' ? 'bg-gray-800' : 'hover:bg-gray-800'}`
+            }
+          >
+            <SettingsIcon />
+            <span>Settings</span>
+          </Link>
+        </div>
       </nav>
     </div>
   );
