@@ -99,7 +99,7 @@ let fullNavigation = [
                 </Menu> */
 
 /*
-  This example requires updating your template:
+  This requires the follow classes in index.html
 
   ```
   <html class="h-full bg-white">
@@ -127,12 +127,12 @@ export default function Sidebar() {
             <MenuIcon className="size-6" aria-hidden="true" />
           </Button>
           <Popover
-            className="relative z-50 lg:hidden"
+            className="relative z-50 lg:hidden transition-all duration-300 ease-linear"
             crossOffset={-100}
             containerPadding={0}
           >
             {/* visual shading */}
-            <div className="pointer-events-none fixed -z-40 inset-0 bg-gray-900/80 transition-opacity duration-3000 ease-linear data-[closed]:opacity-0" />
+            <div className="pointer-events-none fixed -z-40 inset-0 bg-gray-900/80 transition-opacity duration-300 ease-linear data-[closed]:opacity-0" />
             <SidebarContent withHeader={false} />
           </Popover>
         </MenuTrigger>
