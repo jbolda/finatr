@@ -5,8 +5,8 @@ import BarChart from './barChart';
 
 const AccountOverview = () => {
   return (
-    <React.Fragment>
-      <h1 className="text-3xl font-semibold py-3">Accounts</h1>
+    <>
+      <h1 className="text-3xl font-semibold">Accounts</h1>
       <Accounts />
       {/* <div className="my-2 py-1 overflow-hidden shadow rounded-lg divide-y divide-gray-200">
         <div className="px-4 py-5 sm:px-6">
@@ -16,7 +16,7 @@ const AccountOverview = () => {
           <BarChart data={model.charts.state} account={account} />
         </div>
       </div> */}
-    </React.Fragment>
+    </>
   );
 };
 

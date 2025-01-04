@@ -24,9 +24,7 @@ const Taxes = (props) => {
   return (
     <>
       <div className="pb-6">
-        <h1 className="text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl">
-          Taxes
-        </h1>
+        <h1 className="text-3xl font-semibold">Taxes</h1>
         <p className="text-xl text-gray-500">
           This is still in an alpha state.
         </p>

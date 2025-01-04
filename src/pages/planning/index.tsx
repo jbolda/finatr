@@ -10,8 +10,8 @@ import IcicleChart from './icicleChart';
 
 const Planning = (props) => {
   return (
-    <div className="container mx-auto my-2 px-4 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-semibold py-3">Cash Flow</h1>
+    <>
+      <h1 className="text-3xl font-semibold">Planning</h1>
       <div className="bg-white shadow rounded-lg divide-y divide-gray-200">
         <IcicleChart />
       </div>
@@ -19,7 +19,7 @@ const Planning = (props) => {
       <Transactions />
       <Divider text="Accounts" navigateTo="/accounts/set" />
       <Accounts />
-    </div>
+    </>
   );
 };
 

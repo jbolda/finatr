@@ -1,36 +1,40 @@
+import { Heart } from 'lucide-react';
 import React from 'react';
+import { useSelector } from 'starfx/react';
 
-const Heart = () => (
-  <span role="img" aria-label="heart symbol">
-    {' *❤️  * '}
-  </span>
-);
+import { schema } from '../store/schema';
 
 export const Footer = (props) => {
+  const settings = useSelector(schema.settings.select);
+
   return (
     <footer className="bg-gray-50">
       <div className="max-w-7xl mx-auto py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
         <div className="text-base text-gray-500 hover:text-gray-900 flex justify-center">
-          <p>
-            Made with
-            <Heart />
-            by <a href="https://www.jacobbolda.com">Jacob Bolda</a> and{' '}
-            <a href="https://github.com/jbolda/finatr/graphs/contributors">
-              all our contributors
-            </a>
-            .
-          </p>
+          Made with
+          <Heart className="px-1" />
+          by{' '}
+          <a href="https://www.jacobbolda.com" className="px-1">
+            Jacob Bolda
+          </a>{' '}
+          and
+          <a
+            href="https://github.com/jbolda/finatr/graphs/contributors"
+            className="px-1"
+          >
+            all our contributors
+          </a>
         </div>
         <nav
           className="-mx-5 my-2 flex flex-wrap justify-center"
           aria-label="Footer"
         >
           {navigation.main
-            .filter((item) => props.settings[item.to] !== false)
+            .filter((item) => settings[item.to] !== false)
             .map((item) => (
               <div key={item.name} className="px-5 py-2">
                 <a
-                  href={`/${item.to}`}
+                  href={item.to}
                   className="text-base text-gray-500 hover:text-gray-900"
                 >
                   {item.name}
@@ -51,7 +55,7 @@ export const Footer = (props) => {
           ))}
         </div>
         <div className="mt-8 flex justify-center space-x-6 text-base text-gray-500">
-          <a to="https://www.netlify.com">
+          <a href="https://www.netlify.com">
             <img
               src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"
               alt="Deploys by Netlify"
@@ -65,10 +69,10 @@ export const Footer = (props) => {
 
 const navigation = {
   main: [
-    { name: 'Home', to: '' },
-    { name: 'Planning', to: 'planning' },
-    { name: 'Cash Flow', to: 'flow' },
-    { name: 'Import', to: 'import' }
+    { name: 'Home', to: '/' },
+    { name: 'Planning', to: '/planning' },
+    { name: 'Cash Flow', to: '/flow' },
+    { name: 'Import', to: '/import' }
   ],
   social: [
     {

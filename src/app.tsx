@@ -1,14 +1,15 @@
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { type SupabaseClient } from '@supabase/supabase-js';
-import React from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { RouterProvider } from 'react-aria-components';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes as RoutesList, Route, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'starfx/react';
+import { tv } from 'tailwind-variants';
 
 import { Footer } from './components/Footer.tsx';
-import { Header } from './components/Header.tsx';
+import Sidebar, { SidebarContext } from './components/Sidebar.tsx';
 import Examples from './pages/examples';
 import Homepage from './pages/homepage';
 import TransactionsOverview from './pages/transactions/index.tsx';
@@ -34,158 +35,207 @@ const FinancialIndependence = React.lazy(
 const Importing = React.lazy(() => import('./pages/importing'));
 const Taxes = React.lazy(() => import('./pages/taxes'));
 
-const FeatureFlag = ({ flag, children }) => {
+function FeatureFlag({
+  flag,
+  children
+}: {
+  flag: boolean;
+  children: React.ReactNode;
+}) {
   if (flag) return children;
   return <NoMatch />;
-};
+}
 
-const App = ({
-  supabase
-}: {
-  supabase: SupabaseClient<any, 'public', any> | null;
-}) => {
-  const settings = useSelector(schema.settings.select);
-  const auth = useSelector(schema.auth.select);
-  let navigate = useNavigate();
+function AppWrapper({ children }: { children: React.ReactNode }) {
+  const [sidebar, setSidebarState] = React.useState<'wide' | 'collapsed'>(
+    'wide'
+  );
+  const navigate = useNavigate();
+
+  const setSidebar = useCallback((args: any) => setSidebarState(args), []);
+
+  const sidebarContextValue = useMemo(
+    () => ({
+      sidebar,
+      setSidebar
+    }),
+    [sidebar, setSidebar]
+  );
 
   return (
     <RouterProvider navigate={navigate}>
-      <div className="min-h-full">
-        <div className="flex flex-col h-screen">
-          <Header settings={settings} />
-
-          <main className="flex-grow -mt-32">
-            <div className="mx-auto container pb-12">
-              <div className="rounded-lg bg-white px-1 py-6 shadow sm:px-5">
-                <Routes>
-                  <Route index element={<Homepage />} />
-                  <Route path="examples" element={<Examples />} />
-                  <Route
-                    path="auth"
-                    element={
-                      supabase && !auth.user ? (
-                        <Auth
-                          supabaseClient={supabase}
-                          appearance={{ theme: ThemeSupa }}
-                        />
-                      ) : (
-                        <div>Logged in!</div>
-                      )
-                    }
-                  />
-                  <Route
-                    path="settings"
-                    element={
-                      <React.Suspense fallback={<>...</>}>
-                        <Settings />
-                      </React.Suspense>
-                    }
-                  />
-                  <Route
-                    path="flow"
-                    element={
-                      <FeatureFlag flag={settings.flow}>
-                        <React.Suspense fallback={<>...</>}>
-                          <Financial />
-                        </React.Suspense>
-                      </FeatureFlag>
-                    }
-                  />
-                  <Route
-                    path="accounts"
-                    element={
-                      <React.Suspense fallback={<>...</>}>
-                        <AccountsContainer />
-                      </React.Suspense>
-                    }
-                  >
-                    <Route
-                      index
-                      element={
-                        <React.Suspense fallback={<>...</>}>
-                          <Accounts />
-                        </React.Suspense>
-                      }
-                    />
-                    <Route
-                      path="set"
-                      element={
-                        <React.Suspense fallback={<>...</>}>
-                          <AccountInput />
-                        </React.Suspense>
-                      }
-                    />
-                  </Route>
-                  <Route
-                    path="transactions"
-                    element={
-                      <React.Suspense fallback={<>...</>}>
-                        <TransactionsContainer />
-                      </React.Suspense>
-                    }
-                  >
-                    <Route
-                      index
-                      element={
-                        <React.Suspense fallback={<>...</>}>
-                          <TransactionsOverview />
-                        </React.Suspense>
-                      }
-                    />
-                    <Route
-                      path="set"
-                      element={
-                        <React.Suspense fallback={<>...</>}>
-                          <TransactionInput />
-                        </React.Suspense>
-                      }
-                    />
-                  </Route>
-                  <Route
-                    path="planning"
-                    element={
-                      <React.Suspense fallback={<>...</>}>
-                        <Planning />
-                      </React.Suspense>
-                    }
-                  />
-                  <Route
-                    path="financialindependence"
-                    element={
-                      <React.Suspense fallback={<>...</>}>
-                        <FinancialIndependence />
-                      </React.Suspense>
-                    }
-                  />
-                  <Route
-                    path="import"
-                    element={
-                      <React.Suspense fallback={<>...</>}>
-                        <Importing />
-                      </React.Suspense>
-                    }
-                  />
-                  <Route
-                    path="taxes"
-                    element={
-                      <React.Suspense fallback={<>...</>}>
-                        <Taxes />
-                      </React.Suspense>
-                    }
-                  />
-
-                  <Route path="*" element={<NoMatch />} />
-                </Routes>
-              </div>
-            </div>
-          </main>
-
-          <Footer settings={settings} />
-        </div>
-      </div>
+      <SidebarContext.Provider value={sidebarContextValue}>
+        {children}
+      </SidebarContext.Provider>
     </RouterProvider>
   );
-};
+}
+
+const sidebarMain = tv({
+  base: 'grow py-10',
+  variants: {
+    sidebar: { wide: 'lg:pl-56', collapsed: 'lg:pl-16' }
+  }
+});
+
+function App({
+  supabase
+}: {
+  supabase: SupabaseClient<any, 'public', any> | null;
+}) {
+  return (
+    <AppWrapper>
+      <Sidebar />
+      <Main supabase={supabase} />
+    </AppWrapper>
+  );
+}
+
+function Main({
+  supabase
+}: {
+  supabase: SupabaseClient<any, 'public', any> | null;
+}) {
+  const { sidebar } = useContext(SidebarContext);
+  return (
+    <div className="flex flex-col min-h-screen">
+      <main className={sidebarMain({ sidebar })}>
+        <div className="px-4 sm:px-6 lg:px-8">
+          <Routes supabase={supabase} />
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+function Routes({
+  supabase
+}: {
+  supabase: SupabaseClient<any, 'public', any> | null;
+}) {
+  const auth = useSelector(schema.auth.select);
+  const settings = useSelector(schema.settings.select);
+
+  return (
+    <RoutesList>
+      <Route index element={<Homepage />} />
+      <Route path="examples" element={<Examples />} />
+      <Route
+        path="auth"
+        element={
+          supabase && !auth.user ? (
+            <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />
+          ) : (
+            <div>Logged in!</div>
+          )
+        }
+      />
+      <Route
+        path="settings"
+        element={
+          <React.Suspense fallback={<>...</>}>
+            <Settings />
+          </React.Suspense>
+        }
+      />
+      <Route
+        path="flow"
+        element={
+          <FeatureFlag flag={settings.flow}>
+            <React.Suspense fallback={<>...</>}>
+              <Financial />
+            </React.Suspense>
+          </FeatureFlag>
+        }
+      />
+      <Route
+        path="accounts"
+        element={
+          <React.Suspense fallback={<>...</>}>
+            <AccountsContainer />
+          </React.Suspense>
+        }
+      >
+        <Route
+          index
+          element={
+            <React.Suspense fallback={<>...</>}>
+              <Accounts />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path="set"
+          element={
+            <React.Suspense fallback={<>...</>}>
+              <AccountInput />
+            </React.Suspense>
+          }
+        />
+      </Route>
+      <Route
+        path="transactions"
+        element={
+          <React.Suspense fallback={<>...</>}>
+            <TransactionsContainer />
+          </React.Suspense>
+        }
+      >
+        <Route
+          index
+          element={
+            <React.Suspense fallback={<>...</>}>
+              <TransactionsOverview />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path="set"
+          element={
+            <React.Suspense fallback={<>...</>}>
+              <TransactionInput />
+            </React.Suspense>
+          }
+        />
+      </Route>
+      <Route
+        path="planning"
+        element={
+          <React.Suspense fallback={<>...</>}>
+            <Planning />
+          </React.Suspense>
+        }
+      />
+      <Route
+        path="financialindependence"
+        element={
+          <React.Suspense fallback={<>...</>}>
+            <FinancialIndependence />
+          </React.Suspense>
+        }
+      />
+      <Route
+        path="import"
+        element={
+          <React.Suspense fallback={<>...</>}>
+            <Importing />
+          </React.Suspense>
+        }
+      />
+      <Route
+        path="taxes"
+        element={
+          <React.Suspense fallback={<>...</>}>
+            <Taxes />
+          </React.Suspense>
+        }
+      />
+
+      <Route path="*" element={<NoMatch />} />
+    </RoutesList>
+  );
+}
 
 function NoMatch() {
   return (
