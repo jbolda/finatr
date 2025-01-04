@@ -13,7 +13,7 @@ import {
   SettingsIcon,
   TrendingUp
 } from 'lucide-react';
-import React from 'react';
+import React, { createContext, useContext } from 'react';
 import {
   Link,
   Menu,
@@ -58,6 +58,14 @@ const sidebarCollapse = tv({
   }
 });
 
+export const SidebarContext = createContext<{
+  sidebar: 'wide' | 'collapsed';
+  setSidebar: React.Dispatch<React.SetStateAction<'wide' | 'collapsed'>>;
+}>({
+  sidebar: 'wide',
+  setSidebar: () => {}
+});
+
 /*
   This requires the follow classes in index.html
 
@@ -67,18 +75,12 @@ const sidebarCollapse = tv({
   ```
 */
 export default function Sidebar() {
-  const [sidebarState, setSidebarState] = React.useState<'wide' | 'collapsed'>(
-    'wide'
-  );
+  const { sidebar } = useContext(SidebarContext);
   return (
     <>
       {/* Static sidebar for desktop */}
-      <div className={sidebarCollapse({ sidebar: sidebarState })}>
-        <SidebarContent
-          withHeader={true}
-          sidebarWidth={sidebarState}
-          setSidebarState={setSidebarState}
-        />
+      <div className={sidebarCollapse({ sidebar })}>
+        <SidebarContent withHeader={true} />
       </div>
 
       {/* Mobile menu */}
@@ -98,7 +100,7 @@ export default function Sidebar() {
           >
             {/* visual shading */}
             <div className="pointer-events-none fixed -z-40 inset-0 bg-gray-900/80 transition-opacity duration-300 ease-linear data-[closed]:opacity-0" />
-            <SidebarContent withHeader={false} sidebarWidth="wide" />
+            <SidebarContent withHeader={false} forceSidebarState="wide" />
           </Popover>
         </MenuTrigger>
         <Link href="/" className="flex-1 text-sm/6 font-semibold text-white">
@@ -129,13 +131,13 @@ const sidebarItem = tv({
 
 function SidebarContent({
   withHeader = true,
-  sidebarWidth = 'wide',
-  setSidebarState
+  forceSidebarState
 }: {
   withHeader: boolean;
-  sidebarWidth?: 'wide' | 'collapsed';
-  setSidebarState?: React.Dispatch<React.SetStateAction<'wide' | 'collapsed'>>;
+  forceSidebarState?: 'wide' | 'collapsed';
 }) {
+  const { sidebar, setSidebar } = useContext(SidebarContext);
+  const sidebarWidth = forceSidebarState ?? sidebar;
   const settings = useSelector(schema.settings.select);
   const fullNavigation = [
     {
@@ -165,13 +167,11 @@ function SidebarContent({
               </div>
             </>
           ) : null}
-          {setSidebarState ? (
+          {!forceSidebarState ? (
             <Button
               className="pr-1 text-white bg-gray-900"
               onPress={() =>
-                setSidebarState((state) =>
-                  state === 'wide' ? 'collapsed' : 'wide'
-                )
+                setSidebar((state) => (state === 'wide' ? 'collapsed' : 'wide'))
               }
             >
               {sidebarWidth === 'wide' ? (

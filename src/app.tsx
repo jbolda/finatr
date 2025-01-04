@@ -1,18 +1,19 @@
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { type SupabaseClient } from '@supabase/supabase-js';
-import React from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { RouterProvider } from 'react-aria-components';
 import { Routes as RoutesList, Route, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'starfx/react';
+import { tv } from 'tailwind-variants';
 
 import { Footer } from './components/Footer.tsx';
-import Sidebar from './components/Sidebar.tsx';
+import Sidebar, { SidebarContext } from './components/Sidebar.tsx';
 import Examples from './pages/examples';
 import Homepage from './pages/homepage';
 import TransactionsOverview from './pages/transactions/index.tsx';
-import { schema, type Settings as SettingsStore } from './store/schema.ts';
+import { schema } from './store/schema.ts';
 
 const Settings = React.lazy(() => import('./pages/settings'));
 const Financial = React.lazy(() => import('./pages/flow'));
@@ -46,43 +47,76 @@ function FeatureFlag({
 }
 
 function AppWrapper({ children }: { children: React.ReactNode }) {
+  const [sidebar, setSidebarState] = React.useState<'wide' | 'collapsed'>(
+    'wide'
+  );
   const navigate = useNavigate();
 
-  return <RouterProvider navigate={navigate}>{children} </RouterProvider>;
+  const setSidebar = useCallback((args: any) => setSidebarState(args), []);
+
+  const sidebarContextValue = useMemo(
+    () => ({
+      sidebar,
+      setSidebar
+    }),
+    [sidebar, setSidebar]
+  );
+
+  return (
+    <RouterProvider navigate={navigate}>
+      <SidebarContext.Provider value={sidebarContextValue}>
+        {children}
+      </SidebarContext.Provider>
+    </RouterProvider>
+  );
 }
+
+const sidebarMain = tv({
+  base: 'grow py-10',
+  variants: {
+    sidebar: { wide: 'lg:pl-56', collapsed: 'lg:pl-16' }
+  }
+});
 
 function App({
   supabase
 }: {
   supabase: SupabaseClient<any, 'public', any> | null;
 }) {
-  const settings = useSelector(schema.settings.select);
-
   return (
     <AppWrapper>
       <Sidebar />
-
-      <div className="flex flex-col min-h-screen">
-        <main className="grow py-10 lg:pl-56">
-          <div className="px-4 sm:px-6 lg:px-8">
-            <Routes supabase={supabase} settings={settings} />
-          </div>
-        </main>
-
-        <Footer settings={settings} />
-      </div>
+      <Main supabase={supabase} />
     </AppWrapper>
   );
 }
 
-function Routes({
-  supabase,
-  settings
+function Main({
+  supabase
 }: {
   supabase: SupabaseClient<any, 'public', any> | null;
-  settings: SettingsStore;
+}) {
+  const { sidebar } = useContext(SidebarContext);
+  return (
+    <div className="flex flex-col min-h-screen">
+      <main className={sidebarMain({ sidebar })}>
+        <div className="px-4 sm:px-6 lg:px-8">
+          <Routes supabase={supabase} />
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+function Routes({
+  supabase
+}: {
+  supabase: SupabaseClient<any, 'public', any> | null;
 }) {
   const auth = useSelector(schema.auth.select);
+  const settings = useSelector(schema.settings.select);
+
   return (
     <RoutesList>
       <Route index element={<Homepage />} />
