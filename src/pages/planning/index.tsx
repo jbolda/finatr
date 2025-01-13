@@ -1,14 +1,19 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'starfx/react';
 
+import { schema } from '~/src/store/schema';
+
+import Accounts from '~/src/components/accounts';
 import Transactions from '~/src/components/transactions/index.tsx';
 
 import { Button } from '~/src/elements/Button.tsx';
 
-import Accounts from './accounts';
 import IcicleChart from './icicleChart';
 
-const Planning = (props) => {
+const Planning = () => {
+  const accounts = useSelector(schema.accounts.selectTableAsList);
+
   return (
     <>
       <h1 className="text-3xl font-semibold">Planning</h1>
@@ -18,7 +23,7 @@ const Planning = (props) => {
       <Divider text="Transactions" navigateTo="/transactions/set" />
       <Transactions />
       <Divider text="Accounts" navigateTo="/accounts/set" />
-      <Accounts />
+      <Accounts accounts={accounts} />
     </>
   );
 };
