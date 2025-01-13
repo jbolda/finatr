@@ -10,6 +10,7 @@ import { tv } from 'tailwind-variants';
 
 import { Footer } from './components/Footer.tsx';
 import Sidebar, { SidebarContext } from './components/Sidebar.tsx';
+import AccountView from './pages/accounts/view.tsx';
 import Examples from './pages/examples';
 import Homepage from './pages/homepage';
 import TransactionsOverview from './pages/transactions/index.tsx';
@@ -170,6 +171,14 @@ function Routes({
           element={
             <React.Suspense fallback={<>...</>}>
               <AccountInput />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path="view/:id"
+          element={
+            <React.Suspense fallback={<>...</>}>
+              <AccountView />
             </React.Suspense>
           }
         />

@@ -1,5 +1,5 @@
 import { parseISO } from 'date-fns';
-import { createSelector } from 'starfx';
+import { AnyState, createSelector } from 'starfx';
 
 import { schema, Transaction, type Account } from '~/src/store/schema.ts';
 
@@ -100,5 +100,18 @@ export const transactionsInTimeline = createSelector(
       return thisDay;
     });
     return datesWithTransactions;
+  }
+);
+
+export const transactionsByAccountId = createSelector(
+  transactionsWithAccounts,
+  (_: AnyState, id: string) => id,
+  (transactions, accountId) => {
+    const transactionsByAccount = transactions.filter((t) => {
+      return (
+        t.raccountMeta.id === accountId || t.transferInMeta?.id === accountId
+      );
+    });
+    return transactionsByAccount;
   }
 );
