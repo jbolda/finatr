@@ -1,5 +1,11 @@
 # Changelog
 
+## \[0.3.1]
+
+### Dependencies
+
+- Upgraded to `web@0.6.0`
+
 ## \[0.3.0]
 
 - [`acdf454`](https://github.com/jbolda/finatr/commit/acdf45479494e55b7f83f1c502420f18c96a73f6) ([#755](https://github.com/jbolda/finatr/pull/755) by [@renovate](https://github.com/jbolda/finatr/../../renovate)) Update tauri monorepo to latest v1.5.

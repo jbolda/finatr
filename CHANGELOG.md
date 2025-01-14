@@ -1,5 +1,12 @@
 # Changelog
 
+## \[0.6.0]
+
+- [`eaa1d76`](https://github.com/jbolda/finatr/commit/eaa1d7668932f4cf51f4b8a8dbf0adbcb0b7680c) ([#898](https://github.com/jbolda/finatr/pull/898) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Accounts each have their own specific page. This allows for a simple "prefilter" of related data. It improves focus when drilling down into a specific subset of transactions.
+- [`8174428`](https://github.com/jbolda/finatr/commit/8174428c7cc125d3e6dcd5e3e04bd4393777fb4c) ([#887](https://github.com/jbolda/finatr/pull/887) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) The comparison for the account ID broke when we passed in the transactions with accounts wired up. The types were not sufficiently complete to catch. Fix the error and more of the types.
+- [`f9089d2`](https://github.com/jbolda/finatr/commit/f9089d222411ccdeb18b6263ef4b7c2ade9c94ab) ([#891](https://github.com/jbolda/finatr/pull/891) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Switch to sidebar navigation for larger displays. This helps with a better "app feel" and allows more freely adding new pages.
+- [`99b0699`](https://github.com/jbolda/finatr/commit/99b0699e0d7e7905f0b8532919f45ff8d6d659e6) ([#885](https://github.com/jbolda/finatr/pull/885) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Add transaction timeline view to see all transaction in a running list.
+
 ## \[0.5.0]
 
 - [`b7babe6`](https://github.com/jbolda/finatr/commit/b7babe63fd78adaf7129643500f286c1e787de3e) ([#652](https://github.com/jbolda/finatr/pull/652) by [@depfu](https://github.com/jbolda/finatr/../../depfu)) Update parcel 2.9.3 → 2.10.3 (minor)
