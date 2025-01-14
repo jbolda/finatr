@@ -4,13 +4,9 @@ import { Group } from 'react-aria-components';
 import { NavigateFunction } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
-import { useSelector } from 'starfx/react';
 import { tv } from 'tailwind-variants';
 
-import {
-  transactionsWithAccounts,
-  type TransactionWithAccount
-} from '~/src/store/selectors/transactions';
+import { type TransactionWithAccount } from '~/src/store/selectors/transactions';
 import { transactionRemove } from '~/src/store/thunks/transactions.ts';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
 import {
@@ -25,21 +21,22 @@ import { navigateToTransactionForm, TransactionFilter } from './utils';
 export const TransactionCards = ({
   navigate,
   dispatch,
+  transactions,
   transactionFilter
 }: {
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
+  transactions: TransactionWithAccount[];
   transactionFilter: TransactionFilter;
 }) => {
-  const allTransactions = useSelector(transactionsWithAccounts);
-  const transactions = allTransactions.filter(
+  const transactionsFiltered = transactions.filter(
     (transaction) =>
       transactionFilter === 'all' || transactionFilter.has(transaction.type)
   );
 
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-      {transactions.map((transaction) => (
+      {transactionsFiltered.map((transaction) => (
         <TransactionCard
           key={transaction.id}
           transaction={transaction}

@@ -1,5 +1,6 @@
 import { toDecimal } from 'dinero.js';
 import { Key } from 'react-aria';
+import { useLocation } from 'react-router-dom';
 
 import type { TransactionWithAccount } from '~/src/store/selectors/transactions';
 
@@ -8,7 +9,7 @@ export const navigateToTransactionForm = (
 ) => {
   return {
     state: {
-      navigateTo: '/planning',
+      navigateTo: location.pathname,
       transaction: {
         id: transaction.id,
         raccount: transaction.raccountMeta.id,

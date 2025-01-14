@@ -8,7 +8,10 @@ import type { AnyAction } from 'starfx';
 import { useSelector } from 'starfx/react';
 import { tv } from 'tailwind-variants';
 
-import { transactionsInTimeline } from '~/src/store/selectors/transactions';
+import {
+  transactionsInTimeline,
+  TransactionWithAccount
+} from '~/src/store/selectors/transactions';
 import { transactionRemove } from '~/src/store/thunks';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
 
@@ -19,10 +22,12 @@ import { navigateToTransactionForm, TransactionFilter } from './utils';
 export const TransactionTimeline = ({
   navigate,
   dispatch,
+  transactions,
   transactionFilter
 }: {
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
+  transactions: TransactionWithAccount[];
   transactionFilter: TransactionFilter;
 }) => {
   const transactionsTimeline = useSelector(transactionsInTimeline);

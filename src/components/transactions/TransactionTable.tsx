@@ -4,12 +4,8 @@ import { type ColumnProps, Group, Key } from 'react-aria-components';
 import { NavigateFunction } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
-import { useSelector } from 'starfx/react';
 
-import {
-  transactionsWithAccounts,
-  TransactionWithAccount
-} from '~/src/store/selectors/transactions';
+import { TransactionWithAccount } from '~/src/store/selectors/transactions';
 import { transactionRemove } from '~/src/store/thunks/transactions.ts';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
 import { toHumanReoccurrence } from '~/src/store/utils/reoccurrence';
@@ -30,17 +26,18 @@ import { navigateToTransactionForm, TransactionFilter } from './utils';
 
 export const TransactionTable = ({
   label,
+  transactions,
   transactionFilter,
   navigate,
   dispatch
 }: {
   label: string;
+  transactions: TransactionWithAccount[];
   transactionFilter: TransactionFilter;
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
 }) => {
-  const allTransactions = useSelector(transactionsWithAccounts);
-  const transactions = allTransactions.filter(
+  const transactionsFiltered = transactions.filter(
     (transaction) =>
       transactionFilter === 'all' || transactionFilter.has(transaction.type)
   );
@@ -78,7 +75,7 @@ export const TransactionTable = ({
         ))}
       </TableHeader>
       <TableBody renderEmptyState={() => 'No transactions.'}>
-        {transactions.sort(singleSort(sortable)).map((transaction) => (
+        {transactionsFiltered.sort(singleSort(sortable)).map((transaction) => (
           <TransactionRow
             key={transaction.id}
             transaction={transaction}
