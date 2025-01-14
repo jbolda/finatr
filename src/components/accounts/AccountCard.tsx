@@ -9,27 +9,13 @@ import { tv } from 'tailwind-variants';
 import { type Account } from '~/src/store/schema.ts';
 import { accountRemove } from '~/src/store/thunks/accounts.ts';
 import {
-  floatFromDinero,
-  floatFromScaled,
   toHumanCurrency,
   toHumanInterest
 } from '~/src/store/utils/dineroUtils.ts';
 
 import { Button } from '~/src/elements/Button.tsx';
 
-const navigateToAccountForm = (account: Account) => {
-  return {
-    state: {
-      account: {
-        id: account.id,
-        name: account.name,
-        starting: floatFromDinero(account.starting),
-        interest: floatFromScaled(account.interest),
-        vehicle: account.vehicle
-      }
-    }
-  };
-};
+import { navigateToAccountForm } from './utils';
 
 const accountVehicleTag = tv({
   base: `inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset`,

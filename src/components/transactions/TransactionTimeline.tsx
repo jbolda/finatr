@@ -8,7 +8,10 @@ import type { AnyAction } from 'starfx';
 import { useSelector } from 'starfx/react';
 import { tv } from 'tailwind-variants';
 
-import { transactionsInTimeline, TransactionWithAccount } from '~/src/store/selectors/transactions';
+import {
+  transactionsInTimeline,
+  TransactionWithAccount
+} from '~/src/store/selectors/transactions';
 import { transactionRemove } from '~/src/store/thunks';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
 
