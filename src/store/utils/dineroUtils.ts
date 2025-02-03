@@ -90,20 +90,24 @@ export const toHumanInterest = ({
 }) => {
   if (amount === 0) return `${leadingSymbol}0${trailingSymbol}`;
   const stringifiedArray = amount.toString().split('');
+  // so we don't splice out for percentages
+  if (trailingSymbol === '%') stringifiedArray.push('0', '0');
   // apply operations backwards
   stringifiedArray.reverse();
-  stringifiedArray.splice(-scale - 2, 0, '.');
+  stringifiedArray.splice(-scale, 0, '.');
 
   // remove trailing zeros
   let trailingZeros = 0;
   for (let v of stringifiedArray) {
-    if (v === '0' || v === '.') {
+    if (v === '0') {
       trailingZeros++;
     } else {
+      trailingZeros--;
       break;
     }
   }
   const finalStringArray = stringifiedArray.slice(trailingZeros).reverse();
+  // handles > 0 but < 1
   if (finalStringArray[0] === '.') finalStringArray.splice(0, 0, '0');
 
   // add symbols to final string
