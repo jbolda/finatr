@@ -94,6 +94,7 @@ export const toHumanInterest = ({
   if (trailingSymbol === '%') stringifiedArray.push('0', '0');
   // apply operations backwards
   stringifiedArray.reverse();
+  // percentage conversion happens with zero push above
   stringifiedArray.splice(-scale, 0, '.');
 
   // remove trailing zeros
@@ -102,12 +103,12 @@ export const toHumanInterest = ({
     if (v === '0') {
       trailingZeros++;
     } else {
-      trailingZeros--;
+      if (v === '.') trailingZeros++;
       break;
     }
   }
   const finalStringArray = stringifiedArray.slice(trailingZeros).reverse();
-  // handles > 0 but < 1
+  // handles > 0 but < 1, adds leading zero
   if (finalStringArray[0] === '.') finalStringArray.splice(0, 0, '0');
 
   // add symbols to final string
