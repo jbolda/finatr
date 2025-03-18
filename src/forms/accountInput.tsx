@@ -1,5 +1,4 @@
 import { useForm } from '@tanstack/react-form';
-import { zodValidator } from '@tanstack/zod-form-adapter';
 import React from 'react';
 import { ListBoxItem } from 'react-aria-components';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -40,8 +39,7 @@ function AccountInput() {
       reset();
       navigate(locationState?.navigateTo ?? '..', { relative: 'path' });
     },
-    validators: { onChange: AccountSchema },
-    validatorAdapter: zodValidator()
+    validators: { onChange: AccountSchema }
   });
 
   return (

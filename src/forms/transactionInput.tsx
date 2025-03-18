@@ -1,6 +1,5 @@
 import { parseDate, today, getLocalTimeZone } from '@internationalized/date';
-import { useForm } from '@tanstack/react-form';
-import { zodValidator } from '@tanstack/zod-form-adapter';
+import { useForm, useStore } from '@tanstack/react-form';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'starfx/react';
@@ -66,7 +65,7 @@ function TransactionInput() {
   const dispatch = useDispatch();
   const accountsList = useSelector(schema.accounts.selectTableAsList);
   const accounts = accountsList.sort((a, b) => (a.name > b.name ? 1 : -1));
-  const { Field, handleSubmit, Subscribe, reset, useStore } = useForm({
+  const { Field, handleSubmit, Subscribe, reset, store } = useForm({
     defaultValues: locationState?.transaction ?? {
       id: '',
       raccount: 'none',
@@ -91,10 +90,9 @@ function TransactionInput() {
       reset();
       navigate(locationState?.navigateTo ?? '..', { relative: 'path' });
     },
-    validators: { onChange: TransactionSchema },
-    validatorAdapter: zodValidator()
+    validators: { onChange: TransactionSchema }
   });
-  const ending = useStore((state) => state.values.ending);
+  const ending = useStore(store, (state) => state.values.ending);
 
   if (accounts.length === 0) {
     return <p>Make an account first...</p>;

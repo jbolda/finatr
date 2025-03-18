@@ -23,9 +23,8 @@
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/supabase-js": "^2.45.4",
-    "@tailwindcss/forms": "^0.5.9",
-    "@tanstack/react-form": "^0.34.0",
-    "@tanstack/zod-form-adapter": "^0.34.0",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tanstack/react-form": "^1.1.0",
     "@tauri-apps/api": "^2.1.1",
     "d3": "^7.9.0",
     "date-fns": "^2.23.0",
@@ -40,7 +39,7 @@
     "react-router-dom": "^6.27.0",
     "starfx": "0.13.4",
     "tailwindcss-react-aria-components": "^1.2.0",
-    "zod": "^3.23.8"
+    "zod": "^3.24.2"
   },
   "overrides": {
     "@estruyf/github-actions-reporter": {
