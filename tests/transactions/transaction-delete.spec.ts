@@ -23,7 +23,7 @@ test.beforeEach(async ({ page }) => {
     day: '01',
     year: '2024'
   });
-  await selectOption(page, 'Repeat Type', 'No Repeating'); //
+  await selectOption(page, 'How Often Does This Occur?', 'No Repeating'); //
   await page.getByLabel('Category').fill('generic'); //
   await page.getByLabel('description').fill('test transaction'); //
   await page.keyboard.press('Enter');
