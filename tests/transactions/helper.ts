@@ -41,7 +41,7 @@ export const addGenericTransaction = (
     await page.getByLabel('Category').fill('generic');
 
     await selectOption(page, 'Account', 'Test Account Submission');
-    await selectOption(page, 'Repeat Type', 'No Repeating');
+    await selectOption(page, 'How Often Does This Occur?', 'No Repeating');
 
     await selectDate(page, 'start date', {
       month: '09',

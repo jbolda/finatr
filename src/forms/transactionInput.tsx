@@ -1,6 +1,5 @@
 import { parseDate, today, getLocalTimeZone } from '@internationalized/date';
-import { useForm } from '@tanstack/react-form';
-import { zodValidator } from '@tanstack/zod-form-adapter';
+import { useForm, useStore } from '@tanstack/react-form';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'starfx/react';
@@ -8,6 +7,7 @@ import { z } from 'zod';
 
 import { schema } from '~/src/store/schema.ts';
 import { transactionAdd } from '~/src/store/thunks/transactions.ts';
+import { toHumanReoccurrence } from '~/src/store/utils/reoccurrence';
 
 import { DatePicker } from '~/src/components/DatePicker.tsx';
 import { ListBoxItem } from '~/src/components/ListBox.tsx';
@@ -66,7 +66,7 @@ function TransactionInput() {
   const dispatch = useDispatch();
   const accountsList = useSelector(schema.accounts.selectTableAsList);
   const accounts = accountsList.sort((a, b) => (a.name > b.name ? 1 : -1));
-  const { Field, handleSubmit, Subscribe, reset, useStore } = useForm({
+  const { Field, handleSubmit, Subscribe, reset, store, state } = useForm({
     defaultValues: locationState?.transaction ?? {
       id: '',
       raccount: 'none',
@@ -91,10 +91,9 @@ function TransactionInput() {
       reset();
       navigate(locationState?.navigateTo ?? '..', { relative: 'path' });
     },
-    validators: { onChange: TransactionSchema },
-    validatorAdapter: zodValidator()
+    validators: { onChange: TransactionSchema }
   });
-  const ending = useStore((state) => state.values.ending);
+  const ending = useStore(store, (state) => state.values.ending);
 
   if (accounts.length === 0) {
     return <p>Make an account first...</p>;
@@ -315,7 +314,7 @@ function TransactionInput() {
           name="rtype"
           children={(field) => (
             <Select
-              label="Repeat Type"
+              label="How Often Does This Occur?"
               isRequired={!TransactionSchema.shape.rtype.isOptional()}
               name={field.name}
               items={[
@@ -338,17 +337,26 @@ function TransactionInput() {
           )}
         />
 
-        <Field
-          name="cycle"
-          children={(field) => (
-            <NumberField
-              label="Cycle"
-              isRequired={!TransactionSchema.shape.cycle.isOptional()}
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e) => field.handleChange(e)}
-              errorMessage={field.state.meta.errors.join(', ')}
-            />
+        <Subscribe
+          selector={(state) => state}
+          children={(state) => (
+            <>
+              <Field
+                name="cycle"
+                children={(field) => (
+                  <NumberField
+                    label={cycleLabel(state.values.rtype)}
+                    isRequired={!TransactionSchema.shape.cycle.isOptional()}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    isDisabled={state.values.rtype === 'none'}
+                    description={toHumanReoccurrence(state.values)}
+                    onChange={(e) => field.handleChange(e)}
+                    errorMessage={field.state.meta.errors.join(', ')}
+                  />
+                )}
+              />
+            </>
           )}
         />
 
@@ -393,3 +401,34 @@ function TransactionInput() {
 }
 
 export default TransactionInput;
+
+const cycleLabel = (
+  rtype:
+    | 'none'
+    | 'day'
+    | 'day of week'
+    | 'day of month'
+    | 'bimonthly'
+    | 'quarterly'
+    | 'semiannually'
+    | 'annually'
+) => {
+  switch (rtype) {
+    case 'none':
+      return 'No Repeating';
+    case 'day':
+      return 'How Often?';
+    case 'day of week':
+      return 'On Which Day Of The Week?';
+    case 'day of month':
+      return 'Which Day Of The Month?';
+    case 'bimonthly':
+      return 'Which Day Every Other Month?';
+    case 'quarterly':
+      return 'On Which Day Of The Quarter?';
+    case 'semiannually':
+      return 'Which Day Within The 6 Months?';
+    case 'annually':
+      return 'Which Day Of The Year?';
+  }
+};
