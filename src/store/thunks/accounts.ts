@@ -1,3 +1,5 @@
+import { parse } from 'date-fns';
+
 import { schema, type Account } from '../schema';
 import { scaledFromFloat, redinero } from '../utils/dineroUtils.ts';
 import makeUUID from '../utils/makeUUID.ts';
@@ -27,6 +29,18 @@ export const accountRemove = thunks.create<{ id: string }>(
   'account:remove',
   function* (ctx, next) {
     yield* schema.update(schema.accounts.remove([ctx.payload.id]));
+    yield* next();
+  }
+);
+
+export const updateAccountSnapshotDate = thunks.create<string>(
+  'account:snapshot-date-update',
+  function* (ctx, next) {
+    const dateInput = ctx.payload;
+    const snapshotDate = parse(dateInput, 'yyyy-MM-dd', new Date());
+
+    yield* schema.update(schema.accountMeta.set({ snapshotDate }));
+
     yield* next();
   }
 );

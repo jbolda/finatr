@@ -34,5 +34,10 @@ export function reconcilerWithReconstitution(original: any, persisted: any) {
       end: parseJSON(reconstituted.chartRange.end)
     };
   }
+  if (reconstituted.accountMeta) {
+    reconstituted.accountMeta = {
+      snapshotDate: parseJSON(reconstituted.accountMeta.snapshotDate)
+    };
+  }
   return { ...original, ...reconstituted };
 }

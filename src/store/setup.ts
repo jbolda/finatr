@@ -52,6 +52,7 @@ export function setupStore({
       'settings',
       'chartRange',
       'accounts',
+      'accountMeta',
       'transactions',
       'incomeReceived',
       'incomeExpected'
