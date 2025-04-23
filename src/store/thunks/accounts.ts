@@ -1,3 +1,4 @@
+import { CalendarDate } from '@internationalized/date';
 import { parse } from 'date-fns';
 
 import { schema, type Account } from '../schema';
@@ -33,13 +34,15 @@ export const accountRemove = thunks.create<{ id: string }>(
   }
 );
 
-export const updateAccountSnapshotDate = thunks.create<string>(
+export const updateAccountSnapshotDate = thunks.create<CalendarDate | null>(
   'account:snapshot-date-update',
   function* (ctx, next) {
-    const dateInput = ctx.payload;
-    const snapshotDate = parse(dateInput, 'yyyy-MM-dd', new Date());
+    if (ctx.payload) {
+      const dateInput = ctx.payload.toString();
+      const snapshotDate = parse(dateInput, 'yyyy-MM-dd', new Date());
 
-    yield* schema.update(schema.accountMeta.set({ snapshotDate }));
+      yield* schema.update(schema.accountMeta.set({ snapshotDate }));
+    }
 
     yield* next();
   }

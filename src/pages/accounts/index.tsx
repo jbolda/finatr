@@ -1,5 +1,5 @@
 import { parseDate } from '@internationalized/date';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import React from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
@@ -9,7 +9,8 @@ import { updateAccountSnapshotDate } from '~/src/store/thunks/accounts.ts';
 import { DatePicker } from '~/src/components/DatePicker.tsx';
 
 import Accounts from '../../components/accounts/index.tsx';
-import BarChart from './barChart';
+
+// import BarChart from './barChart';
 
 const AccountOverview = () => {
   const dispatch = useDispatch();
@@ -18,14 +19,14 @@ const AccountOverview = () => {
 
   return (
     <>
-      <h1 className="text-3xl font-semibold">Accounts</h1>
-      <DatePicker
-        label="Starting Date"
-        value={parseDate(format(snapshotDate, 'yyyy-MM-dd'))}
-        onChange={(calendar) =>
-          dispatch(updateAccountSnapshotDate(calendar.toString()))
-        }
-      />
+      <div className="grid grid-cols-3 gap-4">
+        <h1 className="col-span-2 text-3xl font-semibold">Accounts</h1>
+        <DatePicker
+          label="Date Of Account Balances"
+          value={parseDate(format(snapshotDate, 'yyyy-MM-dd'))}
+          onChange={(calendar) => dispatch(updateAccountSnapshotDate(calendar))}
+        />
+      </div>
       <Accounts accounts={accounts} />
       {/* <div className="my-2 py-1 overflow-hidden shadow rounded-lg divide-y divide-gray-200">
         <div className="px-4 py-5 sm:px-6">

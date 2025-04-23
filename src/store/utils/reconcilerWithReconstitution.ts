@@ -1,6 +1,8 @@
 import { parseJSON } from 'date-fns';
 import { dinero } from 'dinero.js';
 
+import { defaultChartBarRange } from '../schema';
+
 function reconstitute(sliceName: string, item: unknown) {
   if (!item || (typeof item !== 'object' && Object.entries(item).length > 0))
     return item;
@@ -38,6 +40,19 @@ export function reconcilerWithReconstitution(original: any, persisted: any) {
     reconstituted.accountMeta = {
       snapshotDate: parseJSON(reconstituted.accountMeta.snapshotDate)
     };
+
+    // Ensure the chart range is not before the snapshot date
+    // for form ensures this, but the data here may not match this expectation
+    // reset the chart range off the snapshot date if it is before
+    if (
+      reconstituted.chartRange.start < reconstituted.accountMeta.snapshotDate
+    ) {
+      const floorDateRange = defaultChartBarRange(
+        reconstituted.accountMeta.snapshotDate
+      );
+      reconstituted.chartRange.start = floorDateRange.start;
+      reconstituted.chartRange.end = floorDateRange.end;
+    }
   }
   return { ...original, ...reconstituted };
 }

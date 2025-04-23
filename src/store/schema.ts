@@ -88,10 +88,11 @@ export interface ChartRange {
 }
 
 const referenceDate = new Date();
-const defaultChartBarRange: ChartRange = {
-  start: referenceDate,
-  end: addYear(referenceDate)
-};
+export const defaultChartBarRange = (refDate: Date) =>
+  ({
+    start: refDate,
+    end: addYear(refDate)
+  }) as ChartRange;
 const defaultAccountSnapshotData: AccountMeta = {
   snapshotDate: referenceDate
 };
@@ -123,7 +124,7 @@ const [schema, initialState] = createSchema({
   transactions: slice.table<Transaction>({ empty: emptyTransaction }),
   accounts: slice.table<Account>({ empty: emptyAccount }),
   accountMeta: slice.obj<AccountMeta>(defaultAccountSnapshotData),
-  chartRange: slice.obj(defaultChartBarRange),
+  chartRange: slice.obj(defaultChartBarRange(referenceDate)),
   incomeReceived: slice.table<IncomeReceived>(),
   incomeExpected: slice.table<IncomeExpected>()
 });
