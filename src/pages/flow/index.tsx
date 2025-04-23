@@ -35,7 +35,9 @@ const FinancialFlow = () => {
           label="Starting Date"
           value={parseDate(dateRange.startString)}
           minValue={parseDate(format(snapshotDate, 'yyyy-MM-dd'))}
-          onChange={(calendar) => dispatch(updateChartDateRange(calendar))}
+          onChange={(calendar) =>
+            dispatch(updateChartDateRange({ calendar, snapshotDate }))
+          }
         />
         <DataFilterSelector
           vehicleFilter={vehicleFilter}

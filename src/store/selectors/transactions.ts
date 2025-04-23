@@ -8,14 +8,14 @@ import {
   extrapolateTransactionOccurrences,
   findSeed
 } from '../utils/extrapolateDates';
-import { eachDay } from './chartRange';
+import { dateRangeConsideringAccountStart, eachDay } from './chartRange';
 
 export interface TransactionWithSeed extends Transaction {
   seedDate: Date;
   occurredInSeed: number;
 }
 export const transactionsWithSeed = createSelector(
-  schema.chartRange.select,
+  dateRangeConsideringAccountStart,
   schema.transactions.selectTableAsList,
   (chartRange, transactions) =>
     transactions.map((transaction) => {
