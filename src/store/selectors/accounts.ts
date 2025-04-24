@@ -5,6 +5,7 @@ import { createSelector } from 'starfx';
 import { Account, schema, Transaction } from '~/src/store/schema.ts';
 
 import { barChartTransactions } from './chartData';
+import { dateRangeConsideringAccountStart } from './chartRange';
 import type { TransactionWithAccount } from './transactions';
 
 export type ChartAccounts = {
@@ -23,7 +24,7 @@ export type ChartAccounts = {
 };
 
 export const lineChartAccounts = createSelector(
-  schema.chartRange.select,
+  dateRangeConsideringAccountStart,
   barChartTransactions,
   schema.accounts.selectTableAsList,
   (chartRange, transactions, accounts) => {

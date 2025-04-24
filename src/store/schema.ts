@@ -78,6 +78,9 @@ export interface Account {
   vehicle: AmountVehicle;
   payback?: Transaction[];
 }
+export interface AccountMeta {
+  snapshotDate: Date;
+}
 
 export interface ChartRange {
   start: Date;
@@ -85,9 +88,13 @@ export interface ChartRange {
 }
 
 const referenceDate = new Date();
-const defaultChartBarRange: ChartRange = {
-  start: referenceDate,
-  end: addYear(referenceDate)
+export const defaultChartBarRange = (refDate: Date) =>
+  ({
+    start: refDate,
+    end: addYear(refDate)
+  }) as ChartRange;
+const defaultAccountSnapshotData: AccountMeta = {
+  snapshotDate: referenceDate
 };
 
 interface IncomeReceived {
@@ -116,7 +123,8 @@ const [schema, initialState] = createSchema({
   settings: slice.obj<Settings>(defaultSettings),
   transactions: slice.table<Transaction>({ empty: emptyTransaction }),
   accounts: slice.table<Account>({ empty: emptyAccount }),
-  chartRange: slice.obj(defaultChartBarRange),
+  accountMeta: slice.obj<AccountMeta>(defaultAccountSnapshotData),
+  chartRange: slice.obj(defaultChartBarRange(referenceDate)),
   incomeReceived: slice.table<IncomeReceived>(),
   incomeExpected: slice.table<IncomeExpected>()
 });

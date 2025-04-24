@@ -1,7 +1,9 @@
 import { parseDate } from '@internationalized/date';
+import { format } from 'date-fns';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
+import { schema } from '~/src/store/schema.ts';
 import {
   ChartAccounts,
   lineChartAccounts
@@ -16,6 +18,7 @@ import BarChart from './barChart.tsx';
 const FinancialFlow = () => {
   const dispatch = useDispatch();
   const dateRange = useSelector(dateRangeWithStrings);
+  const { snapshotDate } = useSelector(schema.accountMeta.select);
   const [vehicleFilter, setVehicleFilter] = useState('all');
   const accountData = useSelector(lineChartAccounts);
   const [accountFilters, setAccountFilters] = useState<string[]>([]);
@@ -31,8 +34,9 @@ const FinancialFlow = () => {
         <DatePicker
           label="Starting Date"
           value={parseDate(dateRange.startString)}
+          minValue={parseDate(format(snapshotDate, 'yyyy-MM-dd'))}
           onChange={(calendar) =>
-            dispatch(updateChartDateRange(calendar.toString()))
+            dispatch(updateChartDateRange({ calendar, snapshotDate }))
           }
         />
         <DataFilterSelector
