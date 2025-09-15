@@ -37,7 +37,7 @@
     "react-aria-components": "^1.7.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0",
-    "starfx": "0.13.4",
+    "starfx": "0.15.0",
     "tailwindcss-react-aria-components": "^1.2.0",
     "zod": "^3.24.2"
   },
