@@ -1,5 +1,11 @@
 # Changelog
 
+## \[0.3.2]
+
+### Dependencies
+
+- Upgraded to `web@0.7.0`
+
 ## \[0.3.1]
 
 ### Dependencies
