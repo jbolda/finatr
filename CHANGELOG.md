@@ -1,5 +1,13 @@
 # Changelog
 
+## \[0.7.0]
+
+- [`80ed35c`](https://github.com/jbolda/finatr/commit/80ed35c2f1ded9d65f3d23f265d679cfafff21a5) ([#913](https://github.com/jbolda/finatr/pull/913) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Allow setting a date for account balances. This sets a lower limit on the cash flow analysis graph. It also separates the date from chart so we can freely adjust the date range in view within the chart. Additionally, it helps prevent users from hitting a memory overflow error caused by trying to view too far back into the past.
+- [`8936463`](https://github.com/jbolda/finatr/commit/89364639814eaf6a18c49749f0b0772225527a10) ([#906](https://github.com/jbolda/finatr/pull/906) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Fix rendering of percentages that we don't lose a decimal place and mis-render any percentages"
+- [`601a5b3`](https://github.com/jbolda/finatr/commit/601a5b322b376173c07309e71b471ea254f733ed) ([#909](https://github.com/jbolda/finatr/pull/909) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Label cycle input on transaction form to more clearly note the use as related to the repeat type.
+- [`73abff8`](https://github.com/jbolda/finatr/commit/73abff8d7fbc0b0e7dbac3e52c92395879e0e8ea) ([#914](https://github.com/jbolda/finatr/pull/914) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Upgrade starfx to v0.15.0.
+- [`601a5b3`](https://github.com/jbolda/finatr/commit/601a5b322b376173c07309e71b471ea254f733ed) ([#909](https://github.com/jbolda/finatr/pull/909) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Upgraded Tanstack Form to v1, and react-aria to v3.38.
+
 ## \[0.6.0]
 
 - [`eaa1d76`](https://github.com/jbolda/finatr/commit/eaa1d7668932f4cf51f4b8a8dbf0adbcb0b7680c) ([#898](https://github.com/jbolda/finatr/pull/898) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Accounts each have their own specific page. This allows for a simple "prefilter" of related data. It improves focus when drilling down into a specific subset of transactions.
