@@ -1,6 +1,6 @@
 import { select } from 'starfx';
 
-import { schema, type Settings } from '../schema.ts';
+import { schema, type Settings } from '../schema/index.ts';
 import { thunks } from './foundation.ts';
 
 export const changeSetting = thunks.create<{

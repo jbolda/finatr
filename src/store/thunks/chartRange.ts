@@ -2,7 +2,7 @@ import { CalendarDate } from '@internationalized/date';
 import { parse } from 'date-fns';
 import { addYears } from 'date-fns';
 
-import { schema } from '../schema.ts';
+import { schema } from '../schema/index.ts';
 import { thunks } from './foundation.ts';
 
 export const updateChartDateRange = thunks.create<{

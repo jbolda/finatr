@@ -6,7 +6,7 @@ import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { tv } from 'tailwind-variants';
 
-import { type Account } from '~/src/store/schema.ts';
+import { type Account } from '~/src/store/schema/index.ts';
 import { accountRemove } from '~/src/store/thunks/accounts.ts';
 import {
   toHumanCurrency,

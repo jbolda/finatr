@@ -1,9 +1,45 @@
 import { type Session } from '@supabase/supabase-js';
 import addDays from 'date-fns/fp/addDays/index.js';
 import { type Dinero } from 'dinero.js';
-import { createSchema, slice } from 'starfx';
+import {
+  type FxMap,
+  type FxSchema,
+  type StoreUpdater,
+  updateStore,
+  slice as sliceOG
+} from 'starfx';
 
-import { emptyAccount, emptyTransaction } from './factory.ts';
+import { emptyAccount, emptyTransaction } from '../factory.ts';
+import { obj as sliceObj } from './obj.ts';
+import { table as sliceTable } from './table.ts';
+
+const slice = { obj: sliceObj, table: sliceTable };
+
+export function createSchema<
+  O extends FxMap,
+  S extends { [key in keyof O]: ReturnType<O[key]>['initialState'] }
+>(slices: O): [FxSchema<S, O>, S] {
+  const db = Object.keys(slices).reduce<FxSchema<S, O>>(
+    (acc, key) => {
+      (acc as any)[key] = slices[key](key);
+      return acc;
+    },
+    {} as FxSchema<S, O>
+  );
+
+  const initialState = Object.keys(db).reduce((acc, key) => {
+    (acc as any)[key] = db[key].initialState;
+    return acc;
+  }, {}) as S;
+
+  function* update(ups: StoreUpdater<S> | StoreUpdater<S>[]) {
+    return yield* updateStore(ups);
+  }
+
+  db.update = update;
+
+  return [db, initialState];
+}
 
 const addYear = addDays(365);
 
@@ -117,8 +153,8 @@ interface IncomeExpected {
 }
 
 const [schema, initialState] = createSchema({
-  cache: slice.table({ empty: {} }),
-  loaders: slice.loaders(),
+  cache: sliceOG.table({ empty: {} }),
+  loaders: sliceOG.loaders(),
   auth: slice.obj<Session | { user: null }>({ user: null }),
   settings: slice.obj<Settings>(defaultSettings),
   transactions: slice.table<Transaction>({ empty: emptyTransaction }),

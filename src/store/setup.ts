@@ -28,10 +28,11 @@ import {
   schema,
   Transaction,
   Account
-} from './schema.ts';
+} from './schema/index.ts';
 import { updateAuth } from './thunks/auth.ts';
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
 import { tasks, thunks } from './thunks/index.ts';
+import { yjsStoreUpdater } from './updater.ts';
 import { reconcilerWithReconstitution } from './utils/reconcilerWithReconstitution.ts';
 
 const devtoolsEnabled = true;
@@ -64,7 +65,12 @@ export function setupStore({
       ...schemaInitialState,
       ...initialState
     },
-    middleware: [persistStoreMdw(localPersistor), persistDBMdw(supabase)]
+    setStoreUpdater: yjsStoreUpdater,
+    middleware: [
+      // TODO check on this, doesn't seem to work right now
+      persistStoreMdw(localPersistor)
+      // persistDBMdw(supabase)
+    ]
   });
 
   if (supabase)
@@ -121,29 +127,29 @@ export function setupStore({
     });
   }
   tsks.push(
-    function* auth() {
-      if (!supabase) return;
-      const auth = yield* call(supabase.auth.getSession());
-      if (auth.data?.session)
-        yield* put(updateAuth([schema.auth.set(auth.data.session)]));
+    // function* auth() {
+    //   if (!supabase) return;
+    //   const auth = yield* call(supabase.auth.getSession());
+    //   if (auth.data?.session)
+    //     yield* put(updateAuth([schema.auth.set(auth.data.session)]));
 
-      const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-        store.dispatch(
-          updateAuth([schema.auth.set(session ? session : { user: null })])
-        );
-      });
+    //   const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+    //     store.dispatch(
+    //       updateAuth([schema.auth.set(session ? session : { user: null })])
+    //     );
+    //   });
 
-      yield* ensure(() => data.subscription.unsubscribe());
+    //   yield* ensure(() => data.subscription.unsubscribe());
 
-      yield* take('auth:session');
-      // only on first auth, rehydrate
-      yield* dbRehydrate(supabase);
+    //   yield* take('auth:session');
+    //   // only on first auth, rehydrate
+    //   yield* dbRehydrate(supabase);
 
-      // really suspend, no other good way right now? need an effection upgrade?
-      while (true) {
-        yield* take('auth:session');
-      }
-    },
+    //   // really suspend, no other good way right now? need an effection upgrade?
+    //   while (true) {
+    //     yield* take('auth:session');
+    //   }
+    // },
     thunks.bootup,
     connectReduxDevToolsExtension({
       name: 'finatr',

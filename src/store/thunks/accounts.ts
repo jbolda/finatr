@@ -1,7 +1,7 @@
 import { CalendarDate } from '@internationalized/date';
 import { parse } from 'date-fns';
 
-import { schema, type Account } from '../schema';
+import { schema, type Account } from '../schema/index.ts';
 import { scaledFromFloat, redinero } from '../utils/dineroUtils.ts';
 import makeUUID from '../utils/makeUUID.ts';
 import { thunks } from './foundation.ts';

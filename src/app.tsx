@@ -14,7 +14,7 @@ import AccountView from './pages/accounts/view.tsx';
 import Examples from './pages/examples';
 import Homepage from './pages/homepage';
 import TransactionsOverview from './pages/transactions/index.tsx';
-import { schema } from './store/schema.ts';
+import { schema } from './store/schema/index.ts';
 
 const Settings = React.lazy(() => import('./pages/settings'));
 const Financial = React.lazy(() => import('./pages/flow'));
@@ -105,7 +105,7 @@ function Main({
           <Routes supabase={supabase} />
         </div>
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }
@@ -115,14 +115,14 @@ function Routes({
 }: {
   supabase: SupabaseClient<any, 'public', any> | null;
 }) {
-  const auth = useSelector(schema.auth.select);
+  // const auth = useSelector(schema.auth.select);
   const settings = useSelector(schema.settings.select);
 
   return (
     <RoutesList>
       <Route index element={<Homepage />} />
       <Route path="examples" element={<Examples />} />
-      <Route
+      {/* <Route
         path="auth"
         element={
           supabase && !auth.user ? (
@@ -131,7 +131,7 @@ function Routes({
             <div>Logged in!</div>
           )
         }
-      />
+      /> */}
       <Route
         path="settings"
         element={

@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'starfx/react';
 import { z } from 'zod';
 
-import { schema } from '~/src/store/schema.ts';
+import { schema } from '~/src/store/schema/index.ts';
 import { transactionAdd } from '~/src/store/thunks/transactions.ts';
 import { toHumanReoccurrence } from '~/src/store/utils/reoccurrence';
 

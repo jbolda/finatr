@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema } from '~/src/store/schema.ts';
+import { schema } from '~/src/store/schema/index.ts';
 import {
   ChartAccounts,
   lineChartAccounts

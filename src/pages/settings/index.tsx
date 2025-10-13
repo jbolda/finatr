@@ -1,14 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema } from '~/src/store/schema.ts';
+import { schema } from '~/src/store/schema/index.ts';
 import { changeSetting } from '~/src/store/thunks/settings.ts';
 
 import { Switch } from '~/src/elements/Switch.tsx';
 
 const Settings = (props) => {
   const settings = useSelector(schema.settings.select);
-
   return (
     <div className="relative max-w-lg mx-auto divide-y-2 divide-gray-200 lg:max-w-7xl">
       <div className="pb-6">

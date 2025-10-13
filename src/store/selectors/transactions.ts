@@ -1,7 +1,7 @@
 import { parseISO } from 'date-fns';
 import { AnyState, createSelector } from 'starfx';
 
-import { schema, Transaction, type Account } from '~/src/store/schema.ts';
+import { schema, Transaction, type Account } from '~/src/store/schema/index.ts';
 
 import { nextTransaction } from '../thunks/transactionReoccurrence';
 import {

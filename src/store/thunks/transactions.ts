@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-import { schema, type Transaction } from '../schema';
+import { schema, type Transaction } from '../schema/index.ts';
 import { redinero } from '../utils/dineroUtils.ts';
 import makeUUID from '../utils/makeUUID.ts';
 import { thunks } from './foundation.ts';

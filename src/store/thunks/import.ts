@@ -5,7 +5,7 @@ import {
   type Transaction,
   type Account,
   type ChartRange
-} from '../schema';
+} from '../schema/index.ts';
 import { reconcilerWithReconstitution } from '../utils/reconcilerWithReconstitution.ts';
 import { accountAdd } from './accounts.ts';
 import { thunks } from './foundation.ts';

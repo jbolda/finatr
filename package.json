@@ -7,7 +7,7 @@
   "type": "module",
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
-    "start": "parcel serve ./src/index.html",
+    "start": "parcel ./src/index.html",
     "build": "parcel build ./src/index.html",
     "size-report": "parcel build src/index.html --reporter @parcel/reporter-bundle-buddy",
     "test-ct": "playwright test -c playwright-ct.config.ts",
@@ -36,10 +36,11 @@
     "react-aria": "^3.38.1",
     "react-aria-components": "^1.7.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.27.0",
     "react-redux": "^9.2.0",
-    "starfx": "0.15.0",
+    "react-router-dom": "^6.27.0",
+    "starfx": "https://pkg.pr.new/neurosnap/starfx@f523c98",
     "tailwindcss-react-aria-components": "^1.2.0",
+    "yjs": "^13.6.27",
     "zod": "^3.24.2"
   },
   "overrides": {

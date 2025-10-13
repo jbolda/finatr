@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { TypedUseSelectorHook, useSelector as useSel } from 'starfx/react';
 
-import { AppState, schema } from '~/src/store/schema.ts';
+import { AppState, schema } from '~/src/store/schema/index.ts';
 import { transactionsByAccountId } from '~/src/store/selectors/transactions.ts';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
 
