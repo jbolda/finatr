@@ -1,11 +1,41 @@
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
 import { createSelector } from 'starfx';
 
-import { schema } from '~/src/store/schema/index.ts';
+import { defaultChartBarRange, schema } from '~/src/store/schema/index.ts';
+
+export const accountMetaFromSerialized = createSelector(
+  schema.accountMeta.select,
+  (accountMeta) => {
+    console.log('accountMeta', accountMeta);
+    const snapshotDate = parseISO(accountMeta.snapshotDate);
+    console.log('snapshotDate', snapshotDate, typeof snapshotDate);
+    return {
+      snapshotDate
+    };
+  }
+);
+
+export const chartRangeFromSerialized = createSelector(
+  schema.chartRange.select,
+  accountMetaFromSerialized,
+  (chartRange, accountMeta) => {
+    const parsed = {
+      start: parseISO(chartRange.start),
+      end: parseISO(chartRange.end)
+    };
+    if (accountMeta.snapshotDate && parsed.start < accountMeta.snapshotDate) {
+      const floorDateRange = defaultChartBarRange(accountMeta.snapshotDate);
+      parsed.start = parseISO(floorDateRange.start);
+      parsed.end = parseISO(floorDateRange.end);
+    }
+
+    return parsed;
+  }
+);
 
 export const dateRangeWithStrings = createSelector(
-  schema.chartRange.select,
+  chartRangeFromSerialized,
   (chartRange) => {
     const { start, end } = chartRange;
     return {
@@ -18,8 +48,8 @@ export const dateRangeWithStrings = createSelector(
 );
 
 export const dateRangeConsideringAccountStart = createSelector(
-  schema.chartRange.select,
-  schema.accountMeta.select,
+  chartRangeFromSerialized,
+  accountMetaFromSerialized,
   (chartRange, accountMeta) => {
     return {
       // start can't be earlier than the snapshot date

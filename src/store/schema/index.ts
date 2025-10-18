@@ -1,6 +1,6 @@
 import { type Session } from '@supabase/supabase-js';
+import { format } from 'date-fns';
 import addDays from 'date-fns/fp/addDays/index.js';
-import { type Dinero } from 'dinero.js';
 import {
   type FxMap,
   type FxSchema,
@@ -8,8 +8,11 @@ import {
   updateStore,
   slice as sliceOG
 } from 'starfx';
+import { z } from 'zod';
 
 import { emptyAccount, emptyTransaction } from '../factory.ts';
+import { redinero } from '../utils/dineroUtils.ts';
+import makeUUID from '../utils/makeUUID.ts';
 import { obj as sliceObj } from './obj.ts';
 import { table as sliceTable } from './table.ts';
 
@@ -43,114 +46,140 @@ export function createSchema<
 
 const addYear = addDays(365);
 
-export type ScaledNumber = {
-  amount: number;
-  scale: number;
-};
+const DineroNumberSchema = z.object({
+  amount: z.number(),
+  currency: z.object({
+    base: z.number(),
+    code: z.string(),
+    exponent: z.number()
+  }),
+  scale: z.number().default(0)
+});
+const DineroSchema = z.preprocess((val) => {
+  if (typeof val === 'number') {
+    const b = redinero(val).toJSON();
+    console.log(b);
+    return b;
+  }
+  return val;
+}, DineroNumberSchema);
 
-export interface Settings {
-  examples: boolean;
-  import: boolean;
-  accounts: boolean;
-  transactions: boolean;
-  planning: boolean;
-  financialindependence: boolean;
-  flow: boolean;
-  taxes: boolean;
-}
+export const ScaledNumberSchema = z.object({
+  amount: z.number(),
+  scale: z.number()
+});
+export type ScaledNumber = z.infer<typeof ScaledNumberSchema>;
 
-const defaultSettings = {
-  examples: false,
-  import: true,
-  accounts: false,
-  transactions: false,
-  planning: true,
-  financialindependence: false,
-  flow: false,
-  taxes: false
-};
+export const SettingsSchema = z.object({
+  examples: z.boolean().default(false),
+  import: z.boolean().default(true),
+  accounts: z.boolean().default(false),
+  transactions: z.boolean().default(false),
+  planning: z.boolean().default(true),
+  financialindependence: z.boolean().default(false),
+  flow: z.boolean().default(false),
+  taxes: z.boolean().default(false)
+});
+export type Settings = z.infer<typeof SettingsSchema>;
 
-export type TransactionType = 'income' | 'expense' | 'transfer';
-export type ValueType = 'static' | 'dynamic';
-export type RepeatType =
-  | 'none'
-  | 'day'
-  | 'day of week'
-  | 'day of month'
-  | 'bimonthly'
-  | 'quarterly'
-  | 'semiannually'
-  | 'annually';
-export interface Transaction {
-  id: string;
-  raccount: string; // account id
-  vaccount: string; // account id
-  transferIn?: string; // account id
-  description: string;
-  category: string;
-  type: TransactionType;
-  valueType: ValueType;
-  start: string;
-  ending: string;
-  rtype: RepeatType;
-  cycle: number;
-  value: Dinero<number>;
-  dailyRate: Dinero<number>;
-  occurrences: number;
-  beginAfterOccurrences: number;
-}
+const defaultSettings = SettingsSchema.parse({});
 
-export type AmountVehicle =
-  | 'operating'
-  | 'investment'
-  | 'debt'
-  | 'loan'
-  | 'credit line';
-export interface Account {
-  id: string;
-  name: string;
-  starting: Dinero<number>;
-  interest: ScaledNumber;
-  vehicle: AmountVehicle;
-  payback?: Transaction[];
-}
-export interface AccountMeta {
-  snapshotDate: Date;
-}
+export const TransactionTypeSchema = z.enum(['income', 'expense', 'transfer']);
+export const ValueTypeSchema = z.enum(['static', 'dynamic']).default('static');
+export const RepeatTypeSchema = z.enum([
+  'none',
+  'day',
+  'day of week',
+  'day of month',
+  'bimonthly',
+  'quarterly',
+  'semiannually',
+  'annually'
+]);
+export type TransactionType = z.infer<typeof TransactionTypeSchema>;
+export type ValueType = z.infer<typeof ValueTypeSchema>;
+export type RepeatType = z.infer<typeof RepeatTypeSchema>;
 
-export interface ChartRange {
-  start: Date;
-  end: Date;
-}
+export const TransactionSchema = z.object({
+  id: z.string().default(makeUUID),
+  raccount: z.string(), // account id
+  vaccount: z.string().optional(), // account id
+  transferIn: z.string().optional(), // account id
+  description: z.string(),
+  category: z.string(),
+  type: TransactionTypeSchema,
+  valueType: ValueTypeSchema,
+  start: z.iso.date(),
+  ending: z.iso.date().optional(),
+  rtype: RepeatTypeSchema,
+  cycle: z.number().default(0),
+  value: DineroSchema,
+  occurrences: z.number().default(0),
+  beginAfterOccurrences: z.number().optional()
+});
+export interface TransactionInput extends z.input<typeof TransactionSchema> {}
+export interface Transaction extends z.output<typeof TransactionSchema> {}
 
-const referenceDate = new Date();
+export const AmountVehicleSchema = z.enum([
+  'operating',
+  'investment',
+  'debt',
+  'loan',
+  'credit line'
+]);
+export type AmountVehicle = z.infer<typeof AmountVehicleSchema>;
+
+export const AccountSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  starting: DineroSchema,
+  interest: ScaledNumberSchema,
+  vehicle: AmountVehicleSchema,
+  payback: z.array(TransactionSchema).optional()
+});
+export interface Account extends z.infer<typeof AccountSchema> {}
+
+export const AccountMetaSchema = z.object({
+  snapshotDate: z.iso.date()
+});
+export interface AccountMeta extends z.infer<typeof AccountMetaSchema> {}
+
+export const ChartRangeSchema = z.object({
+  start: z.iso.date(),
+  end: z.iso.date()
+});
+
+export interface ChartRange extends z.infer<typeof ChartRangeSchema> {}
+
 export const defaultChartBarRange = (refDate: Date) =>
   ({
-    start: refDate,
-    end: addYear(refDate)
+    start: format(refDate, 'yyyy-MM-dd'),
+    end: format(addYear(refDate), 'yyyy-MM-dd')
   }) as ChartRange;
+const referenceDate = new Date();
 const defaultAccountSnapshotData: AccountMeta = {
-  snapshotDate: referenceDate
+  snapshotDate: format(referenceDate, 'yyyy-MM-dd')
 };
 
-interface IncomeReceived {
-  id: string;
-  date: string;
-  group: string;
-  gross: number;
-  pretaxInvestments: number;
-  hsa: number;
-  federalTax: number;
-  medicare: number;
-  socialSecurity: number;
-  stateTax: number;
-}
-
-interface IncomeExpected {
-  quarter: number;
-  group: string;
-  quantity: number;
-}
+export const IncomeReceivedSchema = z.object({
+  id: z.string(),
+  date: z.string(),
+  group: z.string(),
+  gross: z.number(),
+  pretaxInvestments: z.number(),
+  hsa: z.number(),
+  federalTax: z.number(),
+  medicare: z.number(),
+  socialSecurity: z.number(),
+  stateTax: z.number()
+});
+export interface IncomeReceived extends z.infer<typeof IncomeReceivedSchema> {}
+export const IncomeExpectedSchema = z.object({
+  quarter: z.number(),
+  group: z.string(),
+  quantity: z.number()
+});
+export interface IncomeExpected extends z.infer<typeof IncomeExpectedSchema> {}
 
 const [schema, initialState] = createSchema({
   cache: sliceOG.table({ empty: {} }),

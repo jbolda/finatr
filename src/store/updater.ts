@@ -1,5 +1,14 @@
-import type { AnyState, UpdaterCtx, Next, Operation } from 'starfx';
+import {
+  type AnyState,
+  type UpdaterCtx,
+  type Next,
+  type Operation,
+  createContext
+} from 'starfx';
+import { WebsocketProvider } from 'y-websocket';
 import * as Y from 'yjs';
+
+export const yjsWebsocket = createContext('yjs-ws');
 
 export const yjsStoreUpdater = <S extends AnyState>(
   setState: (state: S) => void,
@@ -9,6 +18,18 @@ export const yjsStoreUpdater = <S extends AnyState>(
   console.log('Creating Y.Doc');
   const ydoc = new Y.Doc({ autoLoad: true });
   const root = ydoc.getMap();
+
+  const wsProvider = new WebsocketProvider(
+    '',
+    // 'ws://localhost:1234',
+    'my-roomname',
+    ydoc,
+    { connect: true }
+  );
+
+  // wsProvider.on('status', (event) => {
+  //   console.log(event.status); // logs "connected" or "disconnected"
+  // });
 
   const initial = getInitialState();
   for (let objDoc of ['settings', 'auth', 'accountMeta', 'chartRange']) {
@@ -46,6 +67,7 @@ export const yjsStoreUpdater = <S extends AnyState>(
   }
 
   const initializeStore: () => Operation<void> = function* () {
+    yjsWebsocket.set(wsProvider);
     setState(root.toJSON() as S);
   };
   return { updateMdw, initializeStore };

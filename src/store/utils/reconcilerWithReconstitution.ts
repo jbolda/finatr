@@ -1,22 +1,39 @@
 import { parseJSON } from 'date-fns';
-import { dinero } from 'dinero.js';
 
 import { defaultChartBarRange } from '../schema';
+import { redinero } from './dineroUtils.ts';
 
-function reconstitute(sliceName: string, item: unknown) {
+export function reconstitute<Item>(sliceName: string, item: unknown): Item {
   if (!item || (typeof item !== 'object' && Object.entries(item).length > 0))
-    return item;
+    return item as Item;
 
   const reconstituted: Record<string, any> = { ...item };
   for (const [key, value] of Object.entries(item)) {
     if (value && typeof value === 'object') {
-      if ('amount' in value && 'currency' in value && 'scale' in value) {
-        reconstituted[key] = dinero(value);
+      if ('amount' in value) {
+        reconstituted[key] = redinero(value);
       }
     }
   }
-  return reconstituted;
+  return reconstituted as Item;
 }
+
+export function reconstituteField<Item>(item: unknown, fields: string[]): Item {
+  if (!item || typeof item !== 'object') return item as Item;
+
+  const source = item as Record<string, any>;
+  const reconstituted = { ...source };
+  for (const field of fields) {
+    const value = source[field];
+    if (value && typeof value === 'object') {
+      if ('amount' in value) {
+        reconstituted[field] = redinero(value);
+      }
+    }
+  }
+  return reconstituted as Item;
+}
+
 export function reconcilerWithReconstitution(original: any, persisted: any) {
   const reconstituted = { ...persisted };
   const sliceNames = ['accounts', 'transactions'];

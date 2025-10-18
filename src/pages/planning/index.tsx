@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'starfx/react';
 
-import { schema } from '~/src/store/schema';
+import { accountsFromSerialized } from '~/src/store/selectors/accounts';
 import { transactionsWithAccounts } from '~/src/store/selectors/transactions';
 
 import Accounts from '~/src/components/accounts';
@@ -14,7 +14,7 @@ import IcicleChart from './icicleChart';
 
 const Planning = () => {
   const transactions = useSelector(transactionsWithAccounts);
-  const accounts = useSelector(schema.accounts.selectTableAsList);
+  const accounts = useSelector(accountsFromSerialized);
 
   return (
     <>

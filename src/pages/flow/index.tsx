@@ -3,12 +3,14 @@ import { format } from 'date-fns';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema } from '~/src/store/schema/index.ts';
 import {
   ChartAccounts,
   lineChartAccounts
 } from '~/src/store/selectors/accounts';
-import { dateRangeWithStrings } from '~/src/store/selectors/chartRange.ts';
+import {
+  accountMetaFromSerialized,
+  dateRangeWithStrings
+} from '~/src/store/selectors/chartRange.ts';
 import { updateChartDateRange } from '~/src/store/thunks/chartRange.ts';
 
 import { DatePicker } from '~/src/components/DatePicker.tsx';
@@ -18,7 +20,7 @@ import BarChart from './barChart.tsx';
 const FinancialFlow = () => {
   const dispatch = useDispatch();
   const dateRange = useSelector(dateRangeWithStrings);
-  const { snapshotDate } = useSelector(schema.accountMeta.select);
+  const { snapshotDate } = useSelector(accountMetaFromSerialized);
   const [vehicleFilter, setVehicleFilter] = useState('all');
   const accountData = useSelector(lineChartAccounts);
   const [accountFilters, setAccountFilters] = useState<string[]>([]);

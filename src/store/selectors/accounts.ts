@@ -4,6 +4,7 @@ import { createSelector } from 'starfx';
 
 import { Account, schema, Transaction } from '~/src/store/schema/index.ts';
 
+import { reconstituteField } from '../utils/reconcilerWithReconstitution.ts';
 import { barChartTransactions } from './chartData';
 import { dateRangeConsideringAccountStart } from './chartRange';
 import type { TransactionWithAccount } from './transactions';
@@ -23,10 +24,20 @@ export type ChartAccounts = {
   max: number;
 };
 
+export const accountsFromSerialized = createSelector(
+  schema.accounts.selectTableAsList,
+  (accounts) => accounts.map((a) => reconstituteField<Account>(a, ['starting']))
+);
+
+export const accountsFromSerializedById = createSelector(
+  schema.accounts.selectById,
+  (account) => reconstituteField<Account>(account, ['starting'])
+);
+
 export const lineChartAccounts = createSelector(
   dateRangeConsideringAccountStart,
   barChartTransactions,
-  schema.accounts.selectTableAsList,
+  accountsFromSerialized,
   (chartRange, transactions, accounts) => {
     const lineChart = resolveLineChartData({
       chartRange,

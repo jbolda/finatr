@@ -1,6 +1,12 @@
 import { TransformerOptions } from '@dinero.js/core';
 import { USD, type Currency } from '@dinero.js/currencies';
-import { dinero, toDecimal, type Dinero, type DineroOptions } from 'dinero.js';
+import {
+  dinero,
+  toDecimal,
+  type Dinero,
+  type DineroOptions,
+  type DineroSnapshot
+} from 'dinero.js';
 
 export function dineroFromFloat({
   amount: float,
@@ -45,7 +51,11 @@ export function floatFromScaled(
 }
 
 export function redinero(
-  value: Dinero<number> | DineroOptions<number> | number
+  value:
+    | Dinero<number>
+    | DineroOptions<number>
+    | DineroSnapshot<number>
+    | number
 ): Dinero<number> {
   if (value === null || value === undefined)
     throw new Error(`value is ${value}`);

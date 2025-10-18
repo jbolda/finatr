@@ -5,7 +5,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'starfx/react';
 import { z } from 'zod';
 
-import { schema } from '~/src/store/schema/index.ts';
 import { transactionAdd } from '~/src/store/thunks/transactions.ts';
 import { toHumanReoccurrence } from '~/src/store/utils/reoccurrence';
 
@@ -17,6 +16,8 @@ import { Button } from '~/src/elements/Button.tsx';
 import { NumberField } from '~/src/elements/NumberField.tsx';
 import { Select } from '~/src/elements/Select.tsx';
 import { TextField } from '~/src/elements/TextField.tsx';
+
+import { accountsFromSerialized } from '../store/selectors/accounts.ts';
 
 // import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
@@ -64,7 +65,7 @@ function TransactionInput() {
   const navigate = useNavigate();
   const { state: locationState } = useLocation();
   const dispatch = useDispatch();
-  const accountsList = useSelector(schema.accounts.selectTableAsList);
+  const accountsList = useSelector(accountsFromSerialized);
   const accounts = accountsList.sort((a, b) => (a.name > b.name ? 1 : -1));
   const { Field, handleSubmit, Subscribe, reset, store, state } = useForm({
     defaultValues: locationState?.transaction ?? {

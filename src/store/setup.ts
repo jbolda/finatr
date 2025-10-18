@@ -68,7 +68,7 @@ export function setupStore({
     setStoreUpdater: yjsStoreUpdater,
     middleware: [
       // TODO check on this, doesn't seem to work right now
-      persistStoreMdw(localPersistor)
+      // persistStoreMdw(localPersistor)
       // persistDBMdw(supabase)
     ]
   });

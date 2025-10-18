@@ -14,7 +14,7 @@ export const accountAdd = thunks.create<Account>(
     if (!rawAccount.id) {
       account.id = makeUUID();
     }
-    account.starting = redinero(rawAccount.starting);
+    account.starting = redinero(rawAccount.starting).toJSON();
     console.log(rawAccount.interest);
     if (typeof rawAccount.interest === 'number') {
       account.interest = scaledFromFloat(rawAccount.interest, 5);

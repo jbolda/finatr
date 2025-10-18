@@ -12,7 +12,8 @@ import {
 } from 'dinero.js';
 import { createSelector } from 'starfx';
 
-import { schema } from '../schema';
+import { accountsFromSerialized } from './accounts';
+import { transactionsFromSerialized } from './transactions';
 
 const ratioAmounts = (r1, r2): number => {
   const [sc1, sc2] = normalizeScale([r1, r2]);
@@ -151,8 +152,8 @@ export const determineFI = ({
 };
 
 export const financialStats = createSelector(
-  schema.transactions.selectTableAsList,
-  schema.accounts.selectTableAsList,
+  transactionsFromSerialized,
+  accountsFromSerialized,
   (transactions, accounts) => {
     const zero = dinero({ amount: 0, currency: USD });
     const daily = deriveDailies(transactions);

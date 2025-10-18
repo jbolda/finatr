@@ -3,22 +3,41 @@ import { AnyState, createSelector } from 'starfx';
 
 import { schema, Transaction, type Account } from '~/src/store/schema/index.ts';
 
-import { nextTransaction } from '../thunks/transactionReoccurrence';
+import {
+  nextTransaction,
+  transactionCompute
+} from '../thunks/transactionReoccurrence';
 import {
   extrapolateTransactionOccurrences,
   findSeed
 } from '../utils/extrapolateDates';
+import { reconstituteField } from '../utils/reconcilerWithReconstitution';
 import { dateRangeConsideringAccountStart, eachDay } from './chartRange';
 
 export interface TransactionWithSeed extends Transaction {
   seedDate: Date;
   occurredInSeed: number;
 }
+
+export const transactionsFromSerialized = createSelector(
+  schema.transactions.selectTableAsList,
+  (transactions) =>
+    transactions.map((t) => {
+      const reconstituted = reconstituteField(t, ['value']) as Transaction;
+      // @ts-expect-error
+      reconstituted.dailyRate = transactionCompute({
+        transaction: reconstituted
+      });
+      return reconstituted;
+    })
+);
+
 export const transactionsWithSeed = createSelector(
   dateRangeConsideringAccountStart,
-  schema.transactions.selectTableAsList,
+  transactionsFromSerialized,
   (chartRange, transactions) =>
     transactions.map((transaction) => {
+      console.log('transaction', transaction);
       if (transaction.rtype === 'none') {
         return {
           ...transaction,
@@ -46,8 +65,20 @@ export interface TransactionWithAccount extends TransactionWithSeed {
   transferInMeta?: Account;
 }
 
-export const transactionsWithAccounts = createSelector(
+export const accountsFromSerializedMap = createSelector(
   schema.accounts.selectTable,
+  (accounts) => {
+    console.log('accountsSelect', accounts);
+    const map: Record<string, Account> = {};
+    for (const account of Object.values(accounts)) {
+      map[account.id] = reconstituteField<Account>(account, ['starting']);
+    }
+    return map;
+  }
+);
+
+export const transactionsWithAccounts = createSelector(
+  accountsFromSerializedMap,
   transactionsWithSeed,
   (accounts, transactions) => {
     const tA: TransactionWithAccount[] = transactions.map((t) => {
