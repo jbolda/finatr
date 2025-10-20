@@ -12,6 +12,7 @@
     "size-report": "parcel build src/index.html --reporter @parcel/reporter-bundle-buddy",
     "test-ct": "playwright test -c playwright-ct.config.ts",
     "test-e2e": "playwright test",
+    "tsc": "tsc",
     "pretty": "prettier --write \"{src,__{tests,mocks}__}/**/*.js\"",
     "playwright": "playwright",
     "playwright:install": "playwright install --with-deps",
@@ -71,7 +72,8 @@
     "tailwind-merge": "^2.5.5",
     "tailwind-variants": "^0.3.0",
     "tailwindcss": "^3.4.16",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.9.3"
   },
   "volta": {
     "node": "20.18.1",
