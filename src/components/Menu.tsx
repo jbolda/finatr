@@ -3,15 +3,18 @@ import React from 'react';
 import {
   Menu as AriaMenu,
   MenuItem as AriaMenuItem,
+  Separator,
+  composeRenderProps
+} from 'react-aria-components';
+import type {
   MenuProps as AriaMenuProps,
   MenuItemProps,
-  Separator,
-  SeparatorProps,
-  composeRenderProps
+  SeparatorProps
 } from 'react-aria-components';
 
 import { dropdownItemStyles } from './ListBox';
-import { Popover, PopoverProps } from './Popover';
+import { Popover } from './Popover';
+import type { PopoverProps } from './Popover';
 
 export { MenuTrigger, MenuSection } from 'react-aria-components';
 

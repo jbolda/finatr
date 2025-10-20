@@ -2,22 +2,21 @@ import format from 'date-fns/format';
 import { Pencil, Trash2 } from 'lucide-react';
 import React from 'react';
 import { Group } from 'react-aria-components';
-import { NavigateFunction } from 'react-router-dom';
+import type { NavigateFunction } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { useSelector } from 'starfx/react';
 import { tv } from 'tailwind-variants';
 
-import {
-  transactionsInTimeline,
-  TransactionWithAccount
-} from '~/src/store/selectors/transactions';
+import { transactionsInTimeline } from '~/src/store/selectors/transactions';
+import type { TransactionWithAccount } from '~/src/store/selectors/transactions';
 import { transactionRemove } from '~/src/store/thunks';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
 
 import { Button } from '~/src/elements/Button';
 
-import { navigateToTransactionForm, TransactionFilter } from './utils';
+import { navigateToTransactionForm } from './utils';
+import type { TransactionFilter } from './utils';
 
 export const TransactionTimeline = ({
   navigate,

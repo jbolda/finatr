@@ -10,7 +10,7 @@
     // See also https://aka.ms/tsconfig/module
     "module": "ESNext",
     "target": "esnext",
-    "jsx": "react-jsx",
+    "jsx": "react",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "moduleResolution": "Bundler",
 

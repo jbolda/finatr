@@ -3,15 +3,18 @@ import React from 'react';
 import {
   ListBox as AriaListBox,
   ListBoxItem as AriaListBoxItem,
-  ListBoxProps as AriaListBoxProps,
   Collection,
   Header,
-  ListBoxItemProps,
   Section,
-  SectionProps,
   composeRenderProps
 } from 'react-aria-components';
+import type {
+  ListBoxProps as AriaListBoxProps,
+  ListBoxItemProps,
+  SectionProps
+} from 'react-aria-components';
 import { tv } from 'tailwind-variants';
+
 import { composeTailwindRenderProps, focusRing } from '../elements/utils';
 
 interface ListBoxProps<T>

@@ -1,11 +1,12 @@
 import { Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
-import { type ColumnProps, Group, Key } from 'react-aria-components';
-import { NavigateFunction } from 'react-router-dom';
+import { Group } from 'react-aria-components';
+import type { ColumnProps, Key } from 'react-aria-components';
+import type { NavigateFunction } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 
-import { TransactionWithAccount } from '~/src/store/selectors/transactions';
+import type { TransactionWithAccount } from '~/src/store/selectors/transactions';
 import { transactionRemove } from '~/src/store/thunks/transactions.ts';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
 import { toHumanReoccurrence } from '~/src/store/utils/reoccurrence';
@@ -22,7 +23,8 @@ import {
 
 import { Button } from '~/src/elements/Button.tsx';
 
-import { navigateToTransactionForm, TransactionFilter } from './utils';
+import { navigateToTransactionForm } from './utils';
+import type { TransactionFilter } from './utils';
 
 export const TransactionTable = ({
   label,

@@ -1,8 +1,9 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { TypedUseSelectorHook, useSelector as useSel } from 'starfx/react';
+import { useSelector as useSel } from 'starfx/react';
+import type { TypedUseSelectorHook } from 'starfx/react';
 
-import { AppState } from '~/src/store/schema/index.ts';
+import type { AppState } from '~/src/store/schema/index.ts';
 import { accountsFromSerializedById } from '~/src/store/selectors/accounts.ts';
 import { transactionsByAccountId } from '~/src/store/selectors/transactions.ts';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';

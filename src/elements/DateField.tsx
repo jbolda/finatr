@@ -1,10 +1,12 @@
 import React from 'react';
 import {
   DateField as AriaDateField,
-  DateFieldProps as AriaDateFieldProps,
   DateInput as AriaDateInput,
+  DateSegment
+} from 'react-aria-components';
+import type {
+  DateFieldProps as AriaDateFieldProps,
   DateInputProps,
-  DateSegment,
   DateValue
 } from 'react-aria-components';
 import { tv } from 'tailwind-variants';

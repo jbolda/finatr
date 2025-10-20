@@ -2,11 +2,11 @@ import React from 'react';
 import {
   GridList as AriaGridList,
   GridListItem as AriaGridListItem,
-  Button,
-  GridListItemProps,
-  GridListProps
+  Button
 } from 'react-aria-components';
+import type { GridListItemProps, GridListProps } from 'react-aria-components';
 import { tv } from 'tailwind-variants';
+
 import { Checkbox } from './Checkbox';
 import { composeTailwindRenderProps, focusRing } from './utils';
 

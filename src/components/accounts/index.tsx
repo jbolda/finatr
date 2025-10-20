@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { type Selection, Header } from 'react-aria-components';
+import { Header } from 'react-aria-components';
+import type { Selection } from 'react-aria-components';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'starfx/react';
 
-import { Account } from '~/src/store/schema/index.ts';
+import type { Account } from '~/src/store/schema/index.ts';
 
 import {
   MenuTrigger,

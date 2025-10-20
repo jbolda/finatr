@@ -1,7 +1,10 @@
 import { parseISO } from 'date-fns';
-import { AnyState, createSelector } from 'starfx';
+import { createSelector } from 'starfx';
+import type { AnyState } from 'starfx';
 
-import { schema, Transaction, type Account } from '~/src/store/schema/index.ts';
+import { schema } from '~/src/store/schema/index.ts';
+import type { Transaction } from '~/src/store/schema/index.ts';
+import type { Account } from '~/src/store/schema/index.ts';
 
 import {
   nextTransaction,

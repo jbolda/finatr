@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Header, type Selection } from 'react-aria-components';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { Header } from 'react-aria-components';
+import type { Selection } from 'react-aria-components';
+import type { NavigateFunction } from 'react-router-dom';
 import { useDispatch } from 'starfx/react';
 
 import type { TransactionWithAccount } from '~/src/store/selectors/transactions';
@@ -19,7 +20,7 @@ import { Button } from '~/src/elements/Button.tsx';
 import { TransactionCards } from './TransactionCard';
 import { TransactionTable } from './TransactionTable';
 import { TransactionTimeline } from './TransactionTimeline';
-import { TransactionFilter } from './utils';
+import type { TransactionFilter } from './utils';
 
 const TransactionsFlow = ({
   transactions

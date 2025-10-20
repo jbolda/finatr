@@ -2,12 +2,15 @@ import { ChevronRight } from 'lucide-react';
 import React from 'react';
 import {
   Breadcrumb as AriaBreadcrumb,
-  Breadcrumbs as AriaBreadcrumbs,
+  Breadcrumbs as AriaBreadcrumbs
+} from 'react-aria-components';
+import type {
   BreadcrumbProps,
   BreadcrumbsProps,
   LinkProps
 } from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
+
 import { Link } from './Link';
 
 export function Breadcrumbs<T extends object>(props: BreadcrumbsProps<T>) {

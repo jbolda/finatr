@@ -1,6 +1,5 @@
 import { type SupabaseClient } from '@supabase/supabase-js';
 import {
-  Callable,
   createStore,
   createLocalStorageAdapter,
   createPersistor,
@@ -8,27 +7,25 @@ import {
   PERSIST_LOADER_ID,
   persistStoreMdw,
   take,
-  AnyState,
   Ok,
   Err,
   select,
-  UpdaterCtx,
-  Next,
   call,
-  Operation,
-  Result,
   updateStore,
   put,
   ensure
 } from 'starfx';
+import type {
+  Callable,
+  AnyState,
+  UpdaterCtx,
+  Next,
+  Operation,
+  Result
+} from 'starfx';
 
-import {
-  AppState,
-  initialState as schemaInitialState,
-  schema,
-  Transaction,
-  Account
-} from './schema/index.ts';
+import { initialState as schemaInitialState, schema } from './schema/index.ts';
+import type { AppState, Transaction, Account } from './schema/index.ts';
 import { updateAuth } from './thunks/auth.ts';
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
 import { tasks, thunks } from './thunks/index.ts';

@@ -1,9 +1,8 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import React from 'react';
-import {
-  NumberField as AriaNumberField,
+import { NumberField as AriaNumberField, Button } from 'react-aria-components';
+import type {
   NumberFieldProps as AriaNumberFieldProps,
-  Button,
   ButtonProps
 } from 'react-aria-components';
 

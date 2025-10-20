@@ -3,13 +3,15 @@ import React, { createContext, useContext } from 'react';
 import {
   Tag as AriaTag,
   TagGroup as AriaTagGroup,
-  TagGroupProps as AriaTagGroupProps,
-  TagProps as AriaTagProps,
   Button,
   TagList,
-  TagListProps,
   Text,
   composeRenderProps
+} from 'react-aria-components';
+import type {
+  TagGroupProps as AriaTagGroupProps,
+  TagProps as AriaTagProps,
+  TagListProps
 } from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
 import { tv } from 'tailwind-variants';

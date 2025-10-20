@@ -1,21 +1,22 @@
-import React, { ReactNode } from 'react';
-import {
-  FieldErrorProps,
-  Group,
+import React from 'react';
+import type { ReactNode } from 'react';
+import type {
   GroupProps,
   InputProps,
   LabelProps,
-  FieldError as RACFieldError,
+  TextProps
+} from 'react-aria-components';
+import {
+  Group,
   Input as RACInput,
   Label as RACLabel,
   Text,
-  TextProps,
   composeRenderProps
 } from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
 import { tv } from 'tailwind-variants';
 
-import { composeTailwindRenderProps, focusRing } from './utils.ts';
+import { composeTailwindRenderProps, focusRing } from './utils';
 
 export function Label(props: LabelProps) {
   return (

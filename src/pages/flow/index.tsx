@@ -3,10 +3,8 @@ import { format } from 'date-fns';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import {
-  ChartAccounts,
-  lineChartAccounts
-} from '~/src/store/selectors/accounts';
+import { lineChartAccounts } from '~/src/store/selectors/accounts';
+import type { ChartAccounts } from '~/src/store/selectors/accounts';
 import {
   accountMetaFromSerialized,
   dateRangeWithStrings

@@ -1,7 +1,8 @@
 import { Pencil, Search, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
-import { type ColumnProps, type Key, Group } from 'react-aria-components';
-import { NavigateFunction } from 'react-router-dom';
+import { Group } from 'react-aria-components';
+import type { ColumnProps, Key } from 'react-aria-components';
+import type { NavigateFunction } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 

@@ -9,13 +9,13 @@ test.beforeEach(async ({ page }) => {
   await navigateTo(page, 'Planning');
 });
 
-test('tab switches to the form', async ({ page }, testInfo) => {
+test('tab switches to the form', async ({ page }) => {
   const addButton = page.getByText('Add Transaction');
   await addButton.click();
   await expect(page.getByText('Add a Transaction')).toBeAttached();
 });
 
-test('submits simple transaction', async ({ page }, testInfo) => {
+test('submits simple transaction', async ({ page }) => {
   const addButton = page.getByText('Add Transaction');
   await addButton.click();
   await addGenericTransaction(page);

@@ -1,9 +1,7 @@
 import { SearchIcon, XIcon } from 'lucide-react';
 import React from 'react';
-import {
-  SearchField as AriaSearchField,
-  SearchFieldProps as AriaSearchFieldProps
-} from 'react-aria-components';
+import { SearchField as AriaSearchField } from 'react-aria-components';
+import type { SearchFieldProps as AriaSearchFieldProps } from 'react-aria-components';
 
 import { Button } from './Button.ts';
 import { Description, FieldError, FieldGroup, Input, Label } from './Field.tsx';

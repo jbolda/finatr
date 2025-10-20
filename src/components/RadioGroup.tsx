@@ -1,7 +1,10 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
+import type { ReactNode } from 'react';
 import {
   Radio as RACRadio,
-  RadioGroup as RACRadioGroup,
+  RadioGroup as RACRadioGroup
+} from 'react-aria-components';
+import type {
   RadioGroupProps as RACRadioGroupProps,
   RadioProps,
   ValidationResult

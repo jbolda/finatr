@@ -1,14 +1,17 @@
 import React from 'react';
 import {
   RangeCalendar as AriaRangeCalendar,
-  RangeCalendarProps as AriaRangeCalendarProps,
   CalendarCell,
   CalendarGrid,
   CalendarGridBody,
-  DateValue,
   Text
 } from 'react-aria-components';
+import type {
+  RangeCalendarProps as AriaRangeCalendarProps,
+  DateValue
+} from 'react-aria-components';
 import { tv } from 'tailwind-variants';
+
 import { CalendarGridHeader, CalendarHeader } from './Calendar';
 import { focusRing } from './utils';
 

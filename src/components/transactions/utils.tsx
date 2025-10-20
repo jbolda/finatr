@@ -1,5 +1,5 @@
 import { toDecimal } from 'dinero.js';
-import { Key } from 'react-aria';
+import type { Key } from 'react-aria';
 import { useLocation } from 'react-router-dom';
 
 import type { TransactionWithAccount } from '~/src/store/selectors/transactions';
