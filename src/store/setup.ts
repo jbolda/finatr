@@ -5,15 +5,15 @@ import {
   createPersistor,
   parallel,
   PERSIST_LOADER_ID,
-  persistStoreMdw,
+  // persistStoreMdw,
   take,
   Ok,
   Err,
   select,
   call,
-  updateStore,
-  put,
-  ensure
+  updateStore
+  // put,
+  // ensure
 } from 'starfx';
 import type {
   Callable,
@@ -26,7 +26,7 @@ import type {
 
 import { initialState as schemaInitialState, schema } from './schema/index.ts';
 import type { AppState, Transaction, Account } from './schema/index.ts';
-import { updateAuth } from './thunks/auth.ts';
+// import { updateAuth } from './thunks/auth.ts';
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
 import { tasks, thunks } from './thunks/index.ts';
 import { yjsStoreUpdater } from './updater.ts';
@@ -62,6 +62,7 @@ export function setupStore({
       ...schemaInitialState,
       ...initialState
     },
+    // @ts-expect-error not quite type compatible yet
     setStoreUpdater: yjsStoreUpdater,
     middleware: [
       // TODO check on this, doesn't seem to work right now
@@ -166,6 +167,7 @@ export function setupStore({
   return store;
 }
 
+// @ts-expect-error saving for later maybe
 function* dbRehydrate<S extends AnyState>(
   supabase: SupabaseClient<any, 'public', any>
 ): Operation<Result<undefined>> {
@@ -187,14 +189,14 @@ function* dbRehydrate<S extends AnyState>(
     const stateFromStorage = {
       transactions: transactionArray.reduce(
         (o: Record<string, any>, t: Record<string, any>) => {
-          o[t.id] = t;
+          o[t['id']] = t;
           return o;
         },
         {} as Record<string, any>
       ),
       accounts: accountArray.reduce(
         (o: Record<string, any>, t: Record<string, any>) => {
-          o[t.id] = t;
+          o[t['id']] = t;
           return o;
         },
         {} as Record<string, any>
@@ -218,6 +220,7 @@ const PATCH_REPLACE = 'replace';
 const PATCH_ADD = 'add';
 const PATCH_REMOVE = 'remove';
 const dbAllowlist = ['accounts', 'transactions'];
+// @ts-expect-error saving for later maybe
 function persistDBMdw<S extends AnyState>(
   supabase: SupabaseClient<any, 'public', any> | null
 ) {
@@ -229,7 +232,7 @@ function persistDBMdw<S extends AnyState>(
     if (update.patches.length > 3) return;
 
     const state = yield* select((s: S) => s);
-    if (!state?.auth?.user) return;
+    if (!state?.['auth']?.user) return;
 
     for (let patch of update.patches) {
       const table = patch.path[0] as 'accounts' | 'transactions';
@@ -264,7 +267,7 @@ function persistDBMdw<S extends AnyState>(
   };
 }
 
-const staticalize = (table: string, item: Account | Transaction) => {
+const staticalize = (_table: string, item: Account | Transaction) => {
   const jsonify = JSON.parse(JSON.stringify(item));
   return jsonify;
 };

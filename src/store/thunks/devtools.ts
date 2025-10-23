@@ -6,7 +6,7 @@ interface ReduxDevtoolsExtensionConnectResponse {
     state: S,
     liftedData?: ReturnType<FxStore<any>['getState']>
   ) => void;
-  send: <A extends Action<string>>(
+  send: <A extends Action>(
     action: A,
     state: ReturnType<FxStore<any>['getState']>
   ) => void;

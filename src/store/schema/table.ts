@@ -1,4 +1,3 @@
-import { ta } from 'date-fns/locale';
 import { createSelector } from 'reselect';
 import { type AnyState, type IdProp, type BaseSchema, Err } from 'starfx';
 

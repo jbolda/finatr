@@ -4,7 +4,7 @@ import type { Selection } from 'react-aria-components';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'starfx/react';
 
-import type { Account } from '~/src/store/schema/index.ts';
+import type { AccountWithDinero } from '~/src/store/selectors/accounts.ts';
 
 import {
   MenuTrigger,
@@ -20,7 +20,7 @@ import { Button } from '~/src/elements/Button.tsx';
 import { AccountCard } from './AccountCard';
 import { AccountTable } from './AccountTable';
 
-const AccountFlow = ({ accounts }: { accounts: Account[] }) => {
+const AccountFlow = ({ accounts }: { accounts: AccountWithDinero[] }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

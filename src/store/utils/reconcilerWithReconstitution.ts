@@ -3,7 +3,7 @@ import { parseJSON } from 'date-fns';
 import { defaultChartBarRange } from '../schema';
 import { redinero } from './dineroUtils.ts';
 
-export function reconstitute<Item>(sliceName: string, item: unknown): Item {
+export function reconstitute<Item>(_sliceName: string, item: unknown): Item {
   if (!item || (typeof item !== 'object' && Object.entries(item).length > 0))
     return item as Item;
 

@@ -13,7 +13,24 @@ import parseISO from 'date-fns/fp/parseISO/index.js';
 import setDate from 'date-fns/fp/setDate/index.js';
 import { dinero, allocate, type Dinero } from 'dinero.js';
 
-export const nextTransaction = (rtype) => {
+import type { RepeatType } from '~/src/store/schema/index.ts';
+
+import type {
+  TransactionWithDinero,
+  TransactionWithSeed
+} from '../../selectors/transactions';
+
+type NextTransactionArgs = {
+  transaction: TransactionWithSeed;
+  seedDate: Date;
+  occurrences?: number;
+};
+type NextTransactionFn = (args: NextTransactionArgs) => {
+  date: Date;
+  y: Dinero<number>;
+};
+
+export const nextTransaction = (rtype: RepeatType): NextTransactionFn => {
   switch (rtype) {
     case 'none':
       return transactionNoReoccur;
@@ -23,7 +40,7 @@ export const nextTransaction = (rtype) => {
       return transactionDayOfWeekReoccur;
     case 'day of month':
       return transactionDayOfMonthReoccur;
-    case 'bimonthy':
+    case 'bimonthly':
       return transactionBimonthlyReoccur;
     case 'quarterly':
       return transactionQuarterlyReoccur;
@@ -36,7 +53,13 @@ export const nextTransaction = (rtype) => {
   }
 };
 
-export const transactionCompute = ({ transaction }) => {
+type TransactionComputeArgs = { transaction: TransactionWithDinero };
+
+export const transactionCompute = ({
+  transaction
+}: {
+  transaction: TransactionWithDinero;
+}) => {
   switch (transaction.rtype) {
     case 'none':
       return transactionNoReoccurCompute({ transaction });
@@ -46,7 +69,7 @@ export const transactionCompute = ({ transaction }) => {
       return transactionDayOfWeekReoccurCompute({ transaction });
     case 'day of month':
       return transactionDayOfMonthReoccurCompute({ transaction });
-    case 'bimonthy':
+    case 'bimonthly':
       return transactionBimonthlyReoccurCompute({ transaction });
     case 'quarterly':
       return transactionQuarterlyReoccurCompute({ transaction });
@@ -60,7 +83,7 @@ export const transactionCompute = ({ transaction }) => {
 };
 
 // when transaction.rtype === 'none'
-export const transactionNoReoccur = ({ transaction, seedDate }) => {
+export const transactionNoReoccur = ({ transaction }: NextTransactionArgs) => {
   if (!transaction.start) {
     throw new Error('transactionNoReoccur expects transaction.start');
   }
@@ -74,7 +97,7 @@ export const transactionNoReoccur = ({ transaction, seedDate }) => {
     y: transaction.value
   };
 };
-const transactionNoReoccurCompute = ({ transaction }) =>
+const transactionNoReoccurCompute = (_args: TransactionComputeArgs) =>
   dinero({ amount: 0, currency: USD });
 
 // when transaction.rtype === 'day'
@@ -82,7 +105,7 @@ export const transactionDailyReoccur = ({
   transaction,
   seedDate,
   occurrences
-}) => {
+}: NextTransactionArgs) => {
   if (!transaction.value) {
     throw new Error('transactionDailyReoccur expects transaction.value');
   }
@@ -104,15 +127,16 @@ export const transactionDailyReoccur = ({
     y: transaction.value
   };
 };
-const transactionDailyReoccurCompute = ({ transaction }) =>
-  allocate(transaction.value, [1, 6])[0];
+const transactionDailyReoccurCompute = ({
+  transaction
+}: TransactionComputeArgs) => allocate(transaction.value, [1, 6])[0];
 
 // when transaction.rtype === 'day of week'
 export const transactionDayOfWeekReoccur = ({
   transaction,
   seedDate,
   occurrences
-}) => {
+}: NextTransactionArgs) => {
   if (!transaction.value) {
     throw new Error('transactionDayOfWeekReoccur expects transaction.value');
   }
@@ -160,16 +184,14 @@ export const transactionDayOfWeekReoccur = ({
 };
 const transactionDayOfWeekReoccurCompute = ({
   transaction
-}: {
-  transaction: { value: Dinero<number> };
-}) => allocate(transaction.value, [1, 6])[0];
+}: TransactionComputeArgs) => allocate(transaction.value, [1, 6])[0];
 
 // when transaction.rtype === 'day of month'
 export const transactionDayOfMonthReoccur = ({
   transaction,
   seedDate,
   occurrences
-}) => {
+}: NextTransactionArgs) => {
   if (!transaction.value) {
     throw new Error('transactionDayOfMonthReoccur expects transaction.value');
   }
@@ -198,11 +220,15 @@ export const transactionDayOfMonthReoccur = ({
     y: transaction.value
   };
 };
-const transactionDayOfMonthReoccurCompute = ({ transaction }) =>
-  allocate(transaction.value, [1, 29])[0];
+const transactionDayOfMonthReoccurCompute = ({
+  transaction
+}: TransactionComputeArgs) => allocate(transaction.value, [1, 29])[0];
 
 // when transaction.rtype === 'bimonthly'
-export const transactionBimonthlyReoccur = ({ transaction, seedDate }) => {
+export const transactionBimonthlyReoccur = ({
+  transaction,
+  seedDate
+}: NextTransactionArgs) => {
   if (!transaction.value) {
     throw new Error('transactionBimonthlyReoccur expects transaction.value');
   }
@@ -216,11 +242,15 @@ export const transactionBimonthlyReoccur = ({ transaction, seedDate }) => {
     y: transaction.value
   };
 };
-const transactionBimonthlyReoccurCompute = ({ transaction }) =>
-  allocate(transaction.value, [1, 59])[0];
+const transactionBimonthlyReoccurCompute = ({
+  transaction
+}: TransactionComputeArgs) => allocate(transaction.value, [1, 59])[0];
 
 // when transaction.rtype === 'quarterly'
-export const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
+export const transactionQuarterlyReoccur = ({
+  transaction,
+  seedDate
+}: NextTransactionArgs) => {
   if (!transaction.value) {
     throw new Error('transactionQuarterlyReoccur expects transaction.value');
   }
@@ -234,15 +264,16 @@ export const transactionQuarterlyReoccur = ({ transaction, seedDate }) => {
     y: transaction.value
   };
 };
-const transactionQuarterlyReoccurCompute = ({ transaction }) =>
-  allocate(transaction.value, [1, 89])[0];
+const transactionQuarterlyReoccurCompute = ({
+  transaction
+}: TransactionComputeArgs) => allocate(transaction.value, [1, 89])[0];
 
 // when transaction.rtype === 'semiannually'
 export const transactionSemiannuallyReoccur = ({
   transaction,
   seedDate,
   occurrences
-}) => {
+}: NextTransactionArgs) => {
   if (!transaction.value) {
     throw new Error('transactionSemiannuallyReoccur expects transaction.value');
   }
@@ -276,7 +307,9 @@ export const transactionSemiannuallyReoccur = ({
     y: transaction.value
   };
 };
-const transactionSemiannuallyReoccurCompute = ({ transaction }) =>
+const transactionSemiannuallyReoccurCompute = ({
+  transaction
+}: TransactionComputeArgs) =>
   allocate(transaction.value, [
     { amount: 1825, scale: 1 },
     { amount: 1825, scale: 1 }
@@ -287,7 +320,7 @@ export const transactionAnnuallyReoccur = ({
   transaction,
   seedDate,
   occurrences
-}) => {
+}: NextTransactionArgs) => {
   if (!transaction.value) {
     throw new Error('transactionAnnuallyReoccur expects transaction.value');
   }
@@ -317,5 +350,6 @@ export const transactionAnnuallyReoccur = ({
     y: transaction.value
   };
 };
-const transactionAnnuallyReoccurCompute = ({ transaction }) =>
-  allocate(transaction.value, [1, 364])[0];
+const transactionAnnuallyReoccurCompute = ({
+  transaction
+}: TransactionComputeArgs) => allocate(transaction.value, [1, 364])[0];

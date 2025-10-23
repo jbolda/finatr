@@ -31,7 +31,7 @@ function AccountInput() {
       name: '',
       starting: 0.0,
       interest: 0.0,
-      vehicle: AccountSchema.shape.vehicle._def.defaultValue()
+      vehicle: AccountSchema.shape.vehicle.def.defaultValue
     },
     onSubmit: ({ value }) => {
       console.log(value);

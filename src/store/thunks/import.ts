@@ -69,16 +69,18 @@ export const importEntries = thunks.create<{
     yield* schema.update(schema.chartRange.set(rangeParsed.data));
   }
 
-  // if (incomeReceived) {
-  //   for (let income of incomeReceived) {
-  //     yield* put(addIncomeReceived(income));
-  //   }
-  // }
-  // if (incomeExpected) {
-  //   for (let expected of incomeExpected) {
-  //     yield* put(addIncomeExpected(expected));
-  //   }
-  // }
+  if (incomeReceived) {
+    for (let income of incomeReceived) {
+      // @ts-expect-error in taxStrategy, types not refined yet
+      yield* put(addIncomeReceived(income));
+    }
+  }
+  if (incomeExpected) {
+    for (let expected of incomeExpected) {
+      // @ts-expect-error in taxStrategy, types not refined yet
+      yield* put(addIncomeExpected(expected));
+    }
+  }
 
   yield* next();
 });

@@ -1,10 +1,12 @@
+import { USD } from '@dinero.js/currencies';
 import { parseISO } from 'date-fns';
+import { dinero } from 'dinero.js';
+import type { Dinero } from 'dinero.js';
 import { createSelector } from 'starfx';
 import type { AnyState } from 'starfx';
 
 import { schema } from '~/src/store/schema/index.ts';
 import type { Transaction } from '~/src/store/schema/index.ts';
-import type { Account } from '~/src/store/schema/index.ts';
 
 import {
   nextTransaction,
@@ -15,22 +17,32 @@ import {
   findSeed
 } from '../utils/extrapolateDates';
 import { reconstituteField } from '../utils/reconcilerWithReconstitution';
+import type { AccountWithDinero } from './accounts';
 import { dateRangeConsideringAccountStart, eachDay } from './chartRange';
 
-export interface TransactionWithSeed extends Transaction {
+export type TransactionWithDinero = Transaction & {
+  value: Dinero<number>;
+  dailyRate: Dinero<number>;
+};
+
+export type TransactionWithSeed = TransactionWithDinero & {
   seedDate: Date;
   occurredInSeed: number;
-}
+};
 
 export const transactionsFromSerialized = createSelector(
   schema.transactions.selectTableAsList,
-  (transactions) =>
+  (transactions: Transaction[]) =>
     transactions.map((t) => {
-      const reconstituted = reconstituteField(t, ['value']) as Transaction;
-      // @ts-expect-error
-      reconstituted.dailyRate = transactionCompute({
-        transaction: reconstituted
-      });
+      const reconstituted = reconstituteField<TransactionWithDinero>(t, [
+        'value'
+      ]);
+      const maybeDaily = transactionCompute({ transaction: reconstituted });
+      // Always provide a Dinero instance for dailyRate so downstream code can
+      // safely assume a Dinero<number> (selector-first reconstitution
+      // invariant). Use zero as a safe default when computation yields nothing.
+      reconstituted.dailyRate =
+        maybeDaily ?? dinero({ amount: 0, currency: USD, scale: 2 });
       return reconstituted;
     })
 );
@@ -38,7 +50,7 @@ export const transactionsFromSerialized = createSelector(
 export const transactionsWithSeed = createSelector(
   dateRangeConsideringAccountStart,
   transactionsFromSerialized,
-  (chartRange, transactions) =>
+  (chartRange, transactions: TransactionWithDinero[]) =>
     transactions.map((transaction) => {
       console.log('transaction', transaction);
       if (transaction.rtype === 'none') {
@@ -63,18 +75,20 @@ export const transactionsWithSeed = createSelector(
     })
 );
 
-export interface TransactionWithAccount extends TransactionWithSeed {
-  raccountMeta: Account;
-  transferInMeta?: Account;
-}
+export type TransactionWithAccount = TransactionWithSeed & {
+  raccountMeta: AccountWithDinero;
+  transferInMeta?: AccountWithDinero;
+};
 
 export const accountsFromSerializedMap = createSelector(
   schema.accounts.selectTable,
   (accounts) => {
     console.log('accountsSelect', accounts);
-    const map: Record<string, Account> = {};
+    const map: Record<string, AccountWithDinero> = {};
     for (const account of Object.values(accounts)) {
-      map[account.id] = reconstituteField<Account>(account, ['starting']);
+      map[account.id] = reconstituteField<AccountWithDinero>(account, [
+        'starting'
+      ]);
     }
     return map;
   }
@@ -85,10 +99,25 @@ export const transactionsWithAccounts = createSelector(
   transactionsWithSeed,
   (accounts, transactions) => {
     const tA: TransactionWithAccount[] = transactions.map((t) => {
-      const account = accounts?.[t.raccount] ?? { name: t.raccount };
+      const account =
+        accounts?.[t.raccount] ??
+        ({
+          id: `missing:${t.raccount}`,
+          name: t.raccount,
+          starting: dinero({ amount: 0, currency: USD, scale: 2 }),
+          interest: { amount: 0, scale: 2 },
+          vehicle: 'operating'
+        } as const as AccountWithDinero);
       const accountTransferIn = !t.transferIn
         ? null
-        : (accounts?.[t.transferIn] ?? { name: t.transferIn });
+        : (accounts?.[t.transferIn] ??
+          ({
+            id: `missing:${t.transferIn}`,
+            name: t.transferIn,
+            starting: dinero({ amount: 0, currency: USD, scale: 2 }),
+            interest: { amount: 0, scale: 2 },
+            vehicle: 'operating'
+          } as const as AccountWithDinero));
       const merged = {
         ...t,
         raccount: account.name,

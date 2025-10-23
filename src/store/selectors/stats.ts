@@ -14,24 +14,32 @@ import { createSelector } from 'starfx';
 
 import { accountsFromSerialized } from './accounts';
 import { transactionsFromSerialized } from './transactions';
+import type { TransactionWithDinero } from './transactions';
 
-const ratioAmounts = (r1, r2): number => {
-  const [sc1, sc2] = normalizeScale([r1, r2]);
+const ratioAmounts = (r1: Dinero<number>, r2: Dinero<number>): number => {
+  // Defensive: ensure values are defined and avoid division by zero.
+  if (!r1 || !r2) return 0;
+  const normalized = normalizeScale([r1, r2]) as [
+    Dinero<number>,
+    Dinero<number>
+  ];
+  const [sc1, sc2] = normalized;
   const sc1s = toSnapshot(sc1);
   const sc2s = toSnapshot(sc2);
+  if (!sc2s || sc2s.amount === 0) return sc1s.amount === 0 ? 0 : Infinity;
   return sc1s.amount / sc2s.amount;
 };
 
-export const deriveDailies = (transactions) => {
+export const deriveDailies = (transactions: TransactionWithDinero[]) => {
   const zero = dinero({ amount: 0, currency: USD });
 
-  const income = transactions.reduce(
+  const income = transactions.reduce<Dinero<number>>(
     (accumulator, d) =>
       d.type === 'income' ? add(d.dailyRate, accumulator) : accumulator,
     zero
   );
 
-  const expense = transactions.reduce(
+  const expense = transactions.reduce<Dinero<number>>(
     (accumulator, d) =>
       d.type === 'expense' ? add(d.dailyRate, accumulator) : accumulator,
     zero

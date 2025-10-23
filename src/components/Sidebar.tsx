@@ -143,12 +143,16 @@ function SidebarContent({
     {
       name: null,
       id: 'records',
-      children: navigation.filter((item) => settings[item.to.substring(1)])
+      children: navigation.filter(
+        (item) => (settings as Record<string, boolean>)[item.to.substring(1)]
+      )
     },
     {
       name: 'Graphs',
       id: 'graphs',
-      children: graphs.filter((item) => settings[item.to.substring(1)])
+      children: graphs.filter(
+        (item) => (settings as Record<string, boolean>)[item.to.substring(1)]
+      )
     }
   ];
 

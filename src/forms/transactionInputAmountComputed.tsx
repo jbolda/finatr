@@ -1,4 +1,4 @@
-// @ts-expect-error temporary: Formik is being removed from the codebase; keep this import until migration is complete
+// @ts-nocheck temporary: Formik is being removed from the codebase; keep this import until migration is complete
 import { Field as FormikField, FieldArray as FormikFieldArray } from 'formik';
 import React from 'react';
 

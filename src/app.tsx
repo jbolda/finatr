@@ -1,5 +1,5 @@
-import { Auth } from '@supabase/auth-ui-react';
-import { ThemeSupa } from '@supabase/auth-ui-shared';
+// import { Auth } from '@supabase/auth-ui-react';
+// import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { type SupabaseClient } from '@supabase/supabase-js';
 import React, { useCallback, useContext, useMemo } from 'react';
 import { RouterProvider } from 'react-aria-components';
@@ -105,13 +105,13 @@ function Main({
           <Routes supabase={supabase} />
         </div>
       </main>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }
 
 function Routes({
-  supabase
+  supabase: _
 }: {
   supabase: SupabaseClient<any, 'public', any> | null;
 }) {

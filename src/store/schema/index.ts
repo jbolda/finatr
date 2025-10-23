@@ -48,8 +48,10 @@ const addYear = addDays(365);
 
 const DineroNumberSchema = z.object({
   amount: z.number(),
+  // @dinero/currencies sometimes types `base` as number | readonly number[]
+  // Accept both shapes here for validation of persisted snapshots.
   currency: z.object({
-    base: z.number(),
+    base: z.union([z.number(), z.array(z.number())]),
     code: z.string(),
     exponent: z.number()
   }),
@@ -130,13 +132,14 @@ export const AmountVehicleSchema = z.enum([
 export type AmountVehicle = z.infer<typeof AmountVehicleSchema>;
 
 export const AccountSchema = z.object({
-  id: z.string(),
+  id: z.string().default(makeUUID),
   name: z.string(),
   starting: DineroSchema,
   interest: ScaledNumberSchema,
   vehicle: AmountVehicleSchema,
   payback: z.array(TransactionSchema).optional()
 });
+export type AccountInput = z.input<typeof AccountSchema>;
 export interface Account extends z.infer<typeof AccountSchema> {}
 
 export const AccountMetaSchema = z.object({
@@ -186,8 +189,14 @@ const [schema, initialState] = createSchema({
   loaders: sliceOG.loaders(),
   auth: slice.obj<Session | { user: null }>({ user: null }),
   settings: slice.obj<Settings>(defaultSettings),
-  transactions: slice.table<Transaction>({ empty: emptyTransaction }),
-  accounts: slice.table<Account>({ empty: emptyAccount }),
+  // emptyTransaction / emptyAccount come from dinero().toJSON() and may
+  // include readonly arrays on currency.base. Cast them to the expected
+  // generic types here to avoid a wide readonly vs mutable array type
+  // incompatibility during schema construction.
+  transactions: slice.table<Transaction>({
+    empty: emptyTransaction as unknown as Transaction
+  }),
+  accounts: slice.table<Account>({ empty: emptyAccount as unknown as Account }),
   accountMeta: slice.obj<AccountMeta>(defaultAccountSnapshotData),
   chartRange: slice.obj(defaultChartBarRange(referenceDate)),
   incomeReceived: slice.table<IncomeReceived>(),

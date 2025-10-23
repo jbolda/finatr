@@ -1,4 +1,5 @@
 import { toDecimal } from 'dinero.js';
+import type { Dinero } from 'dinero.js';
 import { createSelector } from 'starfx';
 
 import { chartableData, type TransactionWithAccount } from './transactions';
@@ -37,32 +38,33 @@ export const barChartTransactions = createSelector(
 const getInitialY = (
   arr: {
     transaction: TransactionWithAccount;
-    data: {
-      date: Date;
-      y: any;
-    }[];
+    data: { date: Date; y: Dinero<number> | null }[];
   }[],
   transactionIndex: number,
   dataIndex: number
-) => {
+): number => {
   let bottom = 0;
   for (let i = 0; i < transactionIndex; i++) {
-    const { data } = arr[i];
-    const value = data[dataIndex].y;
+    const entry = arr[i];
+    if (!entry) continue;
+    const value = entry.data?.[dataIndex]?.y;
     if (value) bottom += Number(toDecimal(value));
   }
   return bottom;
 };
-
 const stackTransactions = (
-  transactions: { transaction: TransactionWithAccount; data: any }[]
+  transactions: {
+    transaction: TransactionWithAccount;
+    data: { date: Date; y: Dinero<number> | null }[];
+  }[]
 ) => {
   let maxValue = 0;
   const transactionStack = transactions.map((item, transactionIndex) => {
     const stacked = item.data.map((d, i) => {
+      const height = d.y ? Number(toDecimal(d.y)) : 0;
       const stack = {
         date: d.date,
-        height: d?.y ? Number(toDecimal(d.y)) : 0,
+        height,
         y0: getInitialY(transactions, transactionIndex, i)
       };
       // side effect: find max chart value

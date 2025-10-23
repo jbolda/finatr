@@ -6,7 +6,7 @@ import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { tv } from 'tailwind-variants';
 
-import { type Account } from '~/src/store/schema/index.ts';
+import type { AccountWithDinero } from '~/src/store/selectors/accounts.ts';
 import { accountRemove } from '~/src/store/thunks/accounts.ts';
 import {
   toHumanCurrency,
@@ -35,7 +35,7 @@ export const AccountCard = ({
   navigate,
   dispatch
 }: {
-  account: Account;
+  account: AccountWithDinero;
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
 }) => {

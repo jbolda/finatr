@@ -1,12 +1,18 @@
 import { USD } from '@dinero.js/currencies';
 import { dinero } from 'dinero.js';
 
-import type { AmountVehicle, TransactionType, ValueType } from './schema';
+import type {
+  AmountVehicle,
+  RepeatType,
+  TransactionType,
+  ValueType
+} from './schema';
 
 export const emptyAccount = {
   id: 'initial',
   name: 'initial',
-  starting: dinero({ amount: 0, currency: USD }),
+  // store serializable snapshots in the persisted state
+  starting: dinero({ amount: 0, currency: USD }).toJSON(),
   interest: { amount: 0, scale: 1 },
   vehicle: 'operating' as AmountVehicle
 };
@@ -20,10 +26,11 @@ export const emptyTransaction = {
   type: 'income' as TransactionType,
   start: '',
   ending: '',
-  rtype: '',
+  rtype: 'none' as RepeatType,
   cycle: 0,
-  value: dinero({ amount: 0, currency: USD }),
+  // serializable snapshots
+  value: dinero({ amount: 0, currency: USD }).toJSON(),
   occurrences: 0,
   beginAfterOccurrences: 0,
-  dailyRate: dinero({ amount: 0, currency: USD })
+  dailyRate: dinero({ amount: 0, currency: USD }).toJSON()
 };

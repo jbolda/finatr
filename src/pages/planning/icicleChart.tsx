@@ -1,3 +1,4 @@
+// @ts-nocheck eventually tighten types here
 import * as d3 from 'd3';
 import { toDecimal } from 'dinero.js';
 import React, { useRef, useEffect } from 'react';

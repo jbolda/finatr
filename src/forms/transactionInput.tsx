@@ -67,24 +67,24 @@ function TransactionInput() {
   const dispatch = useDispatch();
   const accountsList = useSelector(accountsFromSerialized);
   const accounts = accountsList.sort((a, b) => (a.name > b.name ? 1 : -1));
-  const { Field, handleSubmit, Subscribe, reset, store, state } = useForm({
+  const { Field, handleSubmit, Subscribe, reset, store } = useForm({
     defaultValues: locationState?.transaction ?? {
       id: '',
       raccount: 'none',
       transferIn: 'none',
       description: '',
       category: '',
-      type: TransactionSchema.shape.type._def.defaultValue(),
+      type: TransactionSchema.shape.type.def.defaultValue,
       start: today(getLocalTimeZone()).toString(),
       end: undefined,
-      occurrences: TransactionSchema.shape.occurrences._def.defaultValue(),
+      occurrences: TransactionSchema.shape.occurrences.def.defaultValue,
       beginAfterOccurrences:
-        TransactionSchema.shape.beginAfterOccurrences._def.defaultValue(),
-      ending: TransactionSchema.shape.ending._def.defaultValue(),
-      rtype: TransactionSchema.shape.rtype._def.defaultValue(),
-      cycle: TransactionSchema.shape.cycle._def.defaultValue(),
-      value: TransactionSchema.shape.value._def.defaultValue(),
-      valueType: TransactionSchema.shape.valueType._def.defaultValue()
+        TransactionSchema.shape.beginAfterOccurrences.def.defaultValue,
+      ending: TransactionSchema.shape.ending.def.defaultValue,
+      rtype: TransactionSchema.shape.rtype.def.defaultValue,
+      cycle: TransactionSchema.shape.cycle.def.defaultValue,
+      value: TransactionSchema.shape.value.def.defaultValue,
+      valueType: TransactionSchema.shape.valueType.def.defaultValue
     },
     onSubmit: ({ value }) => {
       console.log(value);
@@ -236,7 +236,7 @@ function TransactionInput() {
               shouldForceLeadingZeros
               value={parseDate(field.state.value)}
               onBlur={field.handleBlur}
-              onChange={(e) => field.handleChange(e.toString())}
+              onChange={(e) => field.handleChange(e?.toString() ?? '')}
               errorMessage={field.state.meta.errors.join(', ')}
             />
           )}
@@ -304,7 +304,7 @@ function TransactionInput() {
                 shouldForceLeadingZeros
                 value={parseDate(field.state.value)}
                 onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.toString())}
+                onChange={(e) => field.handleChange(e?.toString() ?? '')}
                 errorMessage={field.state.meta.errors.join(', ')}
               />
             )}

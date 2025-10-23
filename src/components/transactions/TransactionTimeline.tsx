@@ -9,7 +9,6 @@ import { useSelector } from 'starfx/react';
 import { tv } from 'tailwind-variants';
 
 import { transactionsInTimeline } from '~/src/store/selectors/transactions';
-import type { TransactionWithAccount } from '~/src/store/selectors/transactions';
 import { transactionRemove } from '~/src/store/thunks';
 import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
 
@@ -21,12 +20,10 @@ import type { TransactionFilter } from './utils';
 export const TransactionTimeline = ({
   navigate,
   dispatch,
-  transactions,
   transactionFilter
 }: {
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
-  transactions: TransactionWithAccount[];
   transactionFilter: TransactionFilter;
 }) => {
   const transactionsTimeline = useSelector(transactionsInTimeline);
@@ -63,7 +60,10 @@ export const TransactionTimeline = ({
                         transactionFilter.has(transaction.type)
                     )
                     .map((t) => (
-                      <p className="flex gap-3 max-w-md text-gray-500 py-1 sm:py-0">
+                      <p
+                        key={t.id}
+                        className="flex gap-3 max-w-md text-gray-500 py-1 sm:py-0"
+                      >
                         <span className="flex-auto gap-3">
                           <span className="text-black">{t.raccount}</span>
                           <span>

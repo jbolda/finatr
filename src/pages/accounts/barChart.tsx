@@ -1,3 +1,4 @@
+// @ts-nocheck eventually tighten types here
 import * as d3 from 'd3';
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';

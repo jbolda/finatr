@@ -6,7 +6,6 @@ import {
   type TransactionInput
 } from '../schema/index.ts';
 import { thunks } from './foundation.ts';
-import { transactionCompute } from './transactionReoccurrence/index.ts';
 
 export const transactionAdd = thunks.create<TransactionInput>(
   'transaction:add',

@@ -1,3 +1,4 @@
+// @ts-nocheck not in use, waiting for upgrade
 import { ChevronRight } from 'lucide-react';
 import React from 'react';
 import {

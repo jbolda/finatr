@@ -25,14 +25,19 @@ export type ChartAccounts = {
   max: number;
 };
 
+export type AccountWithDinero = Account & {
+  starting: Dinero<number>;
+};
+
 export const accountsFromSerialized = createSelector(
   schema.accounts.selectTableAsList,
-  (accounts) => accounts.map((a) => reconstituteField<Account>(a, ['starting']))
+  (accounts) =>
+    accounts.map((a) => reconstituteField<AccountWithDinero>(a, ['starting']))
 );
 
 export const accountsFromSerializedById = createSelector(
   schema.accounts.selectById,
-  (account) => reconstituteField<Account>(account, ['starting'])
+  (account) => reconstituteField<AccountWithDinero>(account, ['starting'])
 );
 
 export const lineChartAccounts = createSelector(
@@ -49,48 +54,59 @@ export const lineChartAccounts = createSelector(
   }
 );
 
+type TransactionForChart = {
+  stacked: {
+    date: Date;
+    height: number;
+    y0: number;
+  }[];
+  transaction: TransactionWithAccount;
+  data: {
+    date: Date;
+    y: Dinero<number> | null;
+  }[];
+};
+
 function resolveLineChartData({
   chartRange,
   accounts,
   transactions
 }: {
-  chartRange: any;
-  accounts: Account[];
+  chartRange: { start: Date; end: Date };
+  accounts: AccountWithDinero[];
   transactions: {
-    data: {
-      stacked: {
-        date: Date;
-        height: number;
-        y0: number;
-      }[];
-      transaction: TransactionWithAccount;
-      data: {
-        date: Date;
-        y: Dinero<number> | null;
-      }[];
-    }[];
+    data: TransactionForChart[];
     max: number;
   };
 }) {
   const allDates = eachDayOfInterval(chartRange);
   const incomeStacked = transactions.data
     .filter((t) => t.transaction.type === 'income')
-    .reduce((o, t) => {
-      o[t.transaction.id] = t;
-      return o;
-    }, {});
+    .reduce(
+      (o, t) => {
+        o[t.transaction.id] = t;
+        return o;
+      },
+      {} as Record<string, TransactionForChart>
+    );
   const expensesStacked = transactions.data
     .filter((t) => t.transaction.type === 'expense')
-    .reduce((o, t) => {
-      o[t.transaction.id] = t;
-      return o;
-    }, {});
+    .reduce(
+      (o, t) => {
+        o[t.transaction.id] = t;
+        return o;
+      },
+      {} as Record<string, TransactionForChart>
+    );
   const transfersStacked = transactions.data
     .filter((t) => t.transaction.type === 'transfer')
-    .reduce((o, t) => {
-      o[t.transaction.id] = t;
-      return o;
-    }, {});
+    .reduce(
+      (o, t) => {
+        o[t.transaction.id] = t;
+        return o;
+      },
+      {} as Record<string, TransactionForChart>
+    );
 
   let max = 0;
   const stack = allDates.reduce(
@@ -102,6 +118,10 @@ function resolveLineChartData({
         accountIndex++
       ) {
         const account = accounts[accountIndex];
+        if (!account) continue;
+        const d = data[accountIndex];
+        if (!d) continue;
+
         const income = sumTotal(
           incomeStacked,
           index,
@@ -141,7 +161,7 @@ function resolveLineChartData({
           throw new Error(`nulled`);
         }
         const firstStep = prevValue - expenses - transfersOut;
-        data[accountIndex].data[dateIndex] = [day, firstStep];
+        d.data[dateIndex] = [day, firstStep];
         const secondStep =
           firstStep +
           income +
@@ -152,11 +172,11 @@ function resolveLineChartData({
             ? -expenseTransfersIn
             : expenseTransfersIn);
         if (secondStep > max) max = secondStep;
-        data[accountIndex].data[dateIndex + 1] = [day, secondStep];
+        d.data[dateIndex + 1] = [day, secondStep];
       }
       return data;
     },
-    accounts.map((a) => ({ ...a, data: [] as [any, number][] }))
+    accounts.map((a) => ({ ...a, data: [] as [Date, number][] }))
   );
   return { data: stack, max };
 }
@@ -173,9 +193,10 @@ const sumTotal = (
   Object.keys(transactions).reduce((finalValue, key) => {
     const d = transactions[key];
     if (
+      d &&
       accountIdRefOnTransaction in d.transaction &&
       d.transaction?.[accountIdRefOnTransaction]?.id === accountId
     )
-      return finalValue + d.stacked[index].height;
+      return finalValue + (d?.stacked?.[index]?.height ?? 0);
     return finalValue;
   }, 0);

@@ -7,7 +7,13 @@ import { importEntries } from '~/src/store/thunks/import.ts';
 import example_highRents from './high_rents.json';
 import example_simple from './simple.json';
 
-const listOfExamples = [
+type Example = {
+  name: string;
+  content: string;
+  file: any;
+};
+
+const listOfExamples: Example[] = [
   {
     name: 'Simple Example',
     content: `
@@ -52,21 +58,21 @@ const ExampleHeading = () => (
   </div>
 );
 
-const ExampleList = ({ listOfExamples }) => {
+const ExampleList = ({ listOfExamples }: { listOfExamples: Example[] }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const loadExample = async (json) => {
+  const loadExample = async (json: any) => {
     const today = new Date();
     const jsonModified = {
       accounts: json.accounts,
-      transactions: json.transactions.map((d) => ({
+      transactions: (json.transactions as any[]).map((d: any) => ({
         ...d,
-        start: d.start.replace('YYYY', today.getFullYear())
+        start: String(d.start).replace('YYYY', String(today.getFullYear()))
       }))
     };
     console.log('example loaded', jsonModified);
-    dispatch(importEntries(jsonModified));
+    dispatch(importEntries(jsonModified as any));
     navigate(`/planning`);
   };
 
@@ -88,7 +94,7 @@ const ExampleList = ({ listOfExamples }) => {
           <div className="mt-3">
             <button
               className="text-base font-semibold text-indigo-600 hover:text-indigo-500"
-              onClick={(event) => loadExample(example.file)}
+              onClick={() => loadExample(example.file)}
             >
               {`Load Example ->`}
             </button>

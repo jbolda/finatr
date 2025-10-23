@@ -1,12 +1,7 @@
-import { TransformerOptions } from '@dinero.js/core';
-import { USD, type Currency } from '@dinero.js/currencies';
-import {
-  dinero,
-  toDecimal,
-  type Dinero,
-  type DineroOptions,
-  type DineroSnapshot
-} from 'dinero.js';
+import type { DineroSnapshot, TransformerOptions } from '@dinero.js/core';
+import { type Currency } from '@dinero.js/currencies';
+import { USD } from '@dinero.js/currencies';
+import { dinero, toDecimal, type Dinero } from 'dinero.js';
 
 export function dineroFromFloat({
   amount: float,
@@ -25,44 +20,58 @@ export function dineroFromFloat({
   return dinero({ amount, currency, scale });
 }
 
-export function floatFromDinero(d: Dinero<number>) {
+export function floatFromDinero(d: Dinero<number>): number {
   return parseFloat(toDecimal(d));
 }
 
 export function scaledFromFloat(value: number, scale: number) {
   const factor = 10 ** scale;
   const amount = Math.round(value * factor);
-
-  return { amount, scale: -scale };
+  return { amount, scale: -scale } as const;
 }
 
 export function floatFromScaled(
-  {
-    amount,
-    scale
-  }: {
-    amount: number;
-    scale: number;
-  },
+  { amount, scale }: { amount: number; scale: number },
   additionalScale?: number
-) {
+): number {
   const factor = Math.pow(10, scale + (additionalScale ?? 0));
   return amount * factor;
 }
 
+// Narrow helper: assert that the incoming value is a Dinero instance.
+export function assertDinero(value: unknown): asserts value is Dinero<number> {
+  if (!value || typeof value !== 'object') {
+    throw new TypeError('Expected a Dinero instance');
+  }
+  // crude duck-typing: Dinero instances expose `getAmount`/`toJSON`/`scale`
+  if (!('toJSON' in (value as any)) || !('getAmount' in (value as any))) {
+    throw new TypeError('Expected a Dinero instance');
+  }
+}
+
+// Convert a JSON-serializable Dinero snapshot into a true Dinero instance.
+export function dineroFromSnapshot(
+  snapshot: DineroSnapshot<number>
+): Dinero<number> {
+  if (!snapshot || typeof snapshot !== 'object') {
+    throw new TypeError('Expected a Dinero snapshot object');
+  }
+  // rely on dinero() factory to create an instance
+  return dinero(snapshot);
+}
+
+// Flexible helper used by thunks/schema: accept a number, a DineroOptions
+// object (snapshot-like) or a Dinero instance and return a Dinero<number>.
 export function redinero(
-  value:
-    | Dinero<number>
-    | DineroOptions<number>
-    | DineroSnapshot<number>
-    | number
+  value: Dinero<number> | DineroSnapshot<number> | number
 ): Dinero<number> {
   if (value === null || value === undefined)
     throw new Error(`value is ${value}`);
   if (typeof value === 'number') {
+    // default to USD when only a plain number is provided, TODO more dynamic default
     return dineroFromFloat({ amount: value, currency: USD });
   } else if (typeof value === 'object' && 'amount' in value) {
-    return dinero(value);
+    return dineroFromSnapshot(value);
   }
   return value;
 }

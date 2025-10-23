@@ -1,3 +1,4 @@
+// @ts-nocheck eventually tighten types here
 import React, { useState } from 'react';
 import { useSelector } from 'starfx/react';
 

@@ -1,4 +1,4 @@
-import { isSameDay, isWithinInterval, addDays } from 'date-fns';
+import { isSameDay, isWithinInterval, addDays, type Interval } from 'date-fns';
 import { type Dinero } from 'dinero.js';
 
 import { type TransactionWithSeed } from '../selectors/transactions';
@@ -54,7 +54,14 @@ export function extrapolateTransactionOccurrences({
   const nextTransactionFn = nextTransaction(transaction.rtype);
 
   const allTransactionEvents = [] as Date[];
-  const next = {
+  type NextState = {
+    transaction: TransactionWithSeed;
+    occurrences?: number | undefined;
+    date: Date;
+    nextY: Dinero<number>;
+  };
+
+  const next: NextState = {
     transaction,
     occurrences: transaction.occurrences,
     date: transaction.seedDate,

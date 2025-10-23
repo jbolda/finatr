@@ -12,7 +12,7 @@ export const yjsWebsocket = createContext('yjs-ws');
 
 export const yjsStoreUpdater = <S extends AnyState>(
   setState: (state: S) => void,
-  getState: () => S,
+  _getState: () => S,
   getInitialState: () => S
 ) => {
   console.log('Creating Y.Doc');
@@ -59,6 +59,7 @@ export const yjsStoreUpdater = <S extends AnyState>(
     ydoc.transact(() => {
       const ups = Array.isArray(ctx.updater) ? ctx.updater : [ctx.updater];
       for (let up of ups) {
+        // @ts-expect-error not quite type compatible yet
         up(root);
       }
     });

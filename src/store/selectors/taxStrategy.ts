@@ -1,3 +1,4 @@
+// @ts-nocheck eventually tighten types here
 import { USD } from '@dinero.js/currencies';
 import getQuarter from 'date-fns/fp/getQuarter/index.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';

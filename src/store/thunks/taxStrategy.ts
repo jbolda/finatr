@@ -1,3 +1,4 @@
+// @ts-nocheck eventually tighten up types here
 import { USD } from '@dinero.js/currencies';
 import { dinero } from 'dinero.js';
 

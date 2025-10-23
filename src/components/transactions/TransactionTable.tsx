@@ -1,7 +1,7 @@
 import { Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
 import { Group } from 'react-aria-components';
-import type { ColumnProps, Key } from 'react-aria-components';
+import type { ColumnProps } from 'react-aria-components';
 import type { NavigateFunction } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
@@ -45,7 +45,7 @@ export const TransactionTable = ({
   );
 
   const [sortable, setSetSortable] = useState<{
-    column: Key;
+    column: string;
     direction: 'ascending' | 'descending';
   }>({ column: 'type', direction: 'descending' });
 
@@ -53,7 +53,12 @@ export const TransactionTable = ({
     <Table
       aria-label={label}
       selectionMode="none"
-      onSortChange={(item) => setSetSortable(item)}
+      onSortChange={(item) =>
+        setSetSortable({
+          column: String(item.column),
+          direction: item.direction
+        })
+      }
       sortDescriptor={sortable}
     >
       <TableHeader>

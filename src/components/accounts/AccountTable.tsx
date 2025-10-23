@@ -1,12 +1,12 @@
 import { Pencil, Search, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
 import { Group } from 'react-aria-components';
-import type { ColumnProps, Key } from 'react-aria-components';
+import type { ColumnProps } from 'react-aria-components';
 import type { NavigateFunction } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 
-import { type Account } from '~/src/store/schema/index.ts';
+import { type AccountWithDinero } from '~/src/store/selectors/accounts.ts';
 import { accountRemove } from '~/src/store/thunks/accounts.ts';
 import {
   toHumanCurrency,
@@ -34,12 +34,12 @@ export const AccountTable = ({
   dispatch
 }: {
   label: string;
-  accounts: Account[];
+  accounts: AccountWithDinero[];
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
 }) => {
   const [sortable, setSetSortable] = useState<{
-    column: Key;
+    column: string;
     direction: 'ascending' | 'descending';
   }>({ column: 'Vehicle', direction: 'descending' });
 
@@ -47,7 +47,12 @@ export const AccountTable = ({
     <Table
       aria-label={label}
       selectionMode="none"
-      onSortChange={(item) => setSetSortable(item)}
+      onSortChange={(item) =>
+        setSetSortable({
+          column: String(item.column),
+          direction: item.direction
+        })
+      }
       sortDescriptor={sortable}
     >
       <TableHeader>
@@ -86,7 +91,7 @@ const AccountRow = ({
   navigate,
   dispatch
 }: {
-  account: Account;
+  account: AccountWithDinero;
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
 }) => (

@@ -1,12 +1,12 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema } from '~/src/store/schema/index.ts';
+import { schema, type Settings } from '~/src/store/schema/index.ts';
 import { changeSetting } from '~/src/store/thunks/settings.ts';
 
 import { Switch } from '~/src/elements/Switch.tsx';
 
-const Settings = (props) => {
+const Settings = () => {
   const settings = useSelector(schema.settings.select);
   return (
     <div className="relative max-w-lg mx-auto divide-y-2 divide-gray-200 lg:max-w-7xl">
@@ -21,18 +21,23 @@ const Settings = (props) => {
   );
 };
 
-const SettingsToggle = ({ settings }) => {
+type SettingsAll = keyof Settings | 'all';
+const SettingsToggle = ({ settings }: { settings: Settings }) => {
   const dispatch = useDispatch();
-  const settingsList = ['all'].concat(Object.keys(settings));
-  const allValue = Object.keys(settings).reduce((finalValue, setting) => {
-    if (settings[setting] && finalValue) return true;
-    return false;
-  }, true);
+  const settingsList = ['all'].concat(Object.keys(settings)) as SettingsAll[];
+  const allValue = (Object.keys(settings) as (keyof Settings)[]).reduce(
+    (finalValue, setting) => {
+      if (settings[setting] && finalValue) return true;
+      return false;
+    },
+    true
+  );
 
   return (
     <>
       {settingsList.map((setting) => {
-        const value = settings[setting] ?? allValue;
+        // but technically SettingsAll which includes 'all' so fallback
+        const value = settings?.[setting as keyof Settings] ?? allValue;
         return (
           <Switch
             key={setting}
