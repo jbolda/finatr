@@ -22,12 +22,14 @@ export function createObj<V extends AnyState, S extends AnyState = AnyState>({
     name: name as string,
     initialState,
     set: (value) => (state) => {
+      // @ts-expect-error need to generically match yjs object types
       const item = state.get(name);
       for (const [k, v] of Object.entries(value)) {
         item.set(k, v);
       }
     },
     reset: () => (state) => {
+      // @ts-expect-error need to generically match yjs object types
       const item = state.get(name);
       for (const [k, v] of Object.entries(initialState)) {
         item.set(k, v);
@@ -36,6 +38,7 @@ export function createObj<V extends AnyState, S extends AnyState = AnyState>({
     update:
       <P extends keyof V>(prop: { key: P; value: V[P] }) =>
       (state) => {
+        // @ts-expect-error need to generically match yjs object types
         const item = state.get(name);
         item.set(prop.key, prop.value);
       },

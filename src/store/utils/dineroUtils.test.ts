@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/experimental-ct-react17';
 
 import { toHumanInterest } from './dineroUtils';
 
-test.describe(`toHumaan`, () => {
+test.describe(`toHuman`, () => {
   test.describe('toHumanInterest', () => {
     test(`leading zero on only decimals`, () => {
       const humanInterest = toHumanInterest({

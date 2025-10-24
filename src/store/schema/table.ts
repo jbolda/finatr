@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { type AnyState, type IdProp, type BaseSchema, Err } from 'starfx';
+import { type AnyState, type IdProp, type BaseSchema } from 'starfx';
 
 interface PropId {
   id: IdProp;
@@ -54,6 +54,7 @@ function tableSelectors<
     { id }: PropId
   ): typeof empty extends undefined ? Entity | undefined : Entity => {
     const data = selectTable(state);
+    // @ts-expect-error need to generically match yjs object types
     return findById(data, { id });
   };
 
@@ -88,7 +89,6 @@ export interface TableOutput<
   set: (e: Record<IdProp, Entity>) => (s: S) => void;
   remove: (ids: IdProp[]) => (s: S) => void;
   patch: (e: PatchEntity<Record<IdProp, Entity>>) => (s: S) => void;
-  merge: (e: PatchEntity<Record<IdProp, Entity>>) => (s: S) => void;
   reset: () => (s: S) => void;
   findById: (d: Record<IdProp, Entity>, { id }: PropId) => Empty;
   findByIds: (d: Record<IdProp, Entity>, { ids }: PropIds) => Entity[];
@@ -135,12 +135,14 @@ export function createTable<
     initialState,
     empty: typeof empty === 'function' ? empty() : empty,
     add: (entities) => (s) => {
+      // @ts-expect-error need to generically match yjs object types
       const table = s.get(name);
       Object.keys(entities).forEach((id) => {
         table.set(id, entities[id]);
       });
     },
     set: (entities) => (s) => {
+      // @ts-expect-error need to generically match yjs object types
       const table = s.get(name);
       table.clear();
       Object.keys(entities).forEach((id) => {
@@ -148,6 +150,7 @@ export function createTable<
       });
     },
     remove: (ids) => (s) => {
+      // @ts-expect-error need to generically match yjs object types
       const table = s.get(name);
       ids.forEach((id) => {
         table.delete(id);
@@ -155,12 +158,14 @@ export function createTable<
     },
     patch: (entities) => (s) => {
       const state = selectors.selectTable(s);
+      // @ts-expect-error need to generically match yjs object types
       const table = s.get(name);
       Object.keys(entities).forEach((id) => {
         table.set(id, { ...state[id], ...entities[id] });
       });
     },
     reset: () => (s) => {
+      // @ts-expect-error need to generically match yjs object types
       const table = s.get(name);
       table.clear();
       Object.keys(initialState).forEach((id) => {

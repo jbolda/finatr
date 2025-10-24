@@ -22,18 +22,20 @@ export function createSchema<
   O extends FxMap,
   S extends { [key in keyof O]: ReturnType<O[key]>['initialState'] }
 >(slices: O): [FxSchema<S, O>, S] {
-  const db = Object.keys(slices).reduce<FxSchema<S, O>>(
-    (acc, key) => {
-      (acc as any)[key] = slices[key](key);
-      return acc;
-    },
-    {} as FxSchema<S, O>
-  );
+  const db = {} as FxSchema<S, O>;
+  // iterate with `in` so we can preserve key types and use non-null assertions
+  for (const k in slices) {
+    const key = k as keyof O;
+    const factory = slices[key]!;
+    // call the factory with the string key and assign into the typed db
+    db[key] = factory(String(key)) as unknown as FxSchema<S, O>[typeof key];
+  }
 
-  const initialState = Object.keys(db).reduce((acc, key) => {
-    (acc as any)[key] = db[key].initialState;
-    return acc;
-  }, {}) as S;
+  const initialState = {} as S;
+  for (const k in db) {
+    const key = k as keyof O;
+    initialState[key] = db[key]!.initialState as S[typeof key];
+  }
 
   function* update(ups: StoreUpdater<S> | StoreUpdater<S>[]) {
     return yield* updateStore(ups);
