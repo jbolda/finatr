@@ -6,12 +6,12 @@ import {
   parallel,
   PERSIST_LOADER_ID,
   // persistStoreMdw,
-  take,
   Ok,
   Err,
   select,
   call,
-  updateStore
+  updateStore,
+  takeEvery
   // put,
   // ensure
 } from 'starfx';
@@ -117,12 +117,11 @@ export function setupStore({
   const tsks: Callable<unknown>[] = [];
   if (logs) {
     // log all actions dispatched
-    tsks.push(function* logActions() {
-      while (true) {
-        const action = yield* take('*');
+    tsks.push(
+      takeEvery('*', function* logActions(action) {
         console.log(action);
-      }
-    });
+      })
+    );
   }
   tsks.push(
     // function* auth() {

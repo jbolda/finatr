@@ -16,8 +16,6 @@ test('tab switches to the form', async ({ page }) => {
 });
 
 test('submits simple transaction', async ({ page }) => {
-  const addButton = page.getByText('Add Transaction');
-  await addButton.click();
   await addGenericTransaction(page);
 });
 

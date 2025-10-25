@@ -18,7 +18,6 @@ const AccountOverview = () => {
   const { snapshotDate } = useSelector(schema.accountMeta.select);
   const accounts = useSelector(accountsFromSerialized);
 
-  console.log({ snapshotDate, accounts });
   return (
     <>
       <div className="grid grid-cols-3 gap-4">

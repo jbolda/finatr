@@ -46,8 +46,6 @@ const Importing = () => {
   const transactions = useSelector(schema.transactions.selectTableAsList);
   const chartRange = useSelector(schema.chartRange.select);
   const handleDownload = () => {
-    console.log({ accounts, transactions });
-
     let outputData = {
       accounts,
       transactions,

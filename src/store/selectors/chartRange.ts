@@ -7,9 +7,7 @@ import { defaultChartBarRange, schema } from '~/src/store/schema/index.ts';
 export const accountMetaFromSerialized = createSelector(
   schema.accountMeta.select,
   (accountMeta) => {
-    console.log('accountMeta', accountMeta);
     const snapshotDate = parseISO(accountMeta.snapshotDate);
-    console.log('snapshotDate', snapshotDate, typeof snapshotDate);
     return {
       snapshotDate
     };

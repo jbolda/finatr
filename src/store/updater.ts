@@ -15,7 +15,6 @@ export const yjsStoreUpdater = <S extends AnyState>(
   _getState: () => S,
   getInitialState: () => S
 ) => {
-  console.log('Creating Y.Doc');
   const ydoc = new Y.Doc({ autoLoad: true });
   const root = ydoc.getMap();
 
@@ -50,12 +49,10 @@ export const yjsStoreUpdater = <S extends AnyState>(
   }
 
   root.observeDeep((events, transaction) => {
-    console.log('Y.Doc changed', { events, transaction });
     setState(root.toJSON() as S);
   });
 
   function* updateMdw(ctx: UpdaterCtx<S>, next: Next) {
-    console.log({ ctx, next });
     ydoc.transact(() => {
       const ups = Array.isArray(ctx.updater) ? ctx.updater : [ctx.updater];
       for (let up of ups) {

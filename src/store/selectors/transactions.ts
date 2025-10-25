@@ -52,7 +52,6 @@ export const transactionsWithSeed = createSelector(
   transactionsFromSerialized,
   (chartRange, transactions: TransactionWithDinero[]) =>
     transactions.map((transaction) => {
-      console.log('transaction', transaction);
       if (transaction.rtype === 'none') {
         return {
           ...transaction,
@@ -83,7 +82,6 @@ export type TransactionWithAccount = TransactionWithSeed & {
 export const accountsFromSerializedMap = createSelector(
   schema.accounts.selectTable,
   (accounts) => {
-    console.log('accountsSelect', accounts);
     const map: Record<string, AccountWithDinero> = {};
     for (const account of Object.values(accounts)) {
       map[account.id] = reconstituteField<AccountWithDinero>(account, [
