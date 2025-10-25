@@ -5,10 +5,12 @@ import { NavigateFunction } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { tv } from 'tailwind-variants';
-import { Button } from '~/elements/Button.tsx';
+
 import { type Account } from '~/store/schema.ts';
 import { accountRemove } from '~/store/thunks/accounts.ts';
 import { toHumanCurrency, toHumanInterest } from '~/store/utils/dineroUtils.ts';
+
+import { Button } from '~/elements/Button.tsx';
 
 import { navigateToAccountForm } from './utils';
 
@@ -38,7 +40,7 @@ export const AccountCard = ({
     <div>
       <div className="lg:col-start-3 lg:row-end-1">
         <h2 className="sr-only">Account</h2>
-        <div className="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
+        <div className="rounded-lg bg-gray-50 dark:bg-gray-700 shadow-sm ring-1 ring-gray-900/5">
           <div className="flex flex-wrap">
             <dl className="flex-auto pl-6 pt-3">
               <dt className="sr-only">Account Name</dt>

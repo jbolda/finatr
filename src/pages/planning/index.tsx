@@ -19,7 +19,7 @@ const Planning = () => {
   return (
     <>
       <h1 className="text-3xl font-semibold">Planning</h1>
-      <div className="bg-white shadow rounded-lg divide-y divide-gray-200">
+      <div className="shadow rounded-lg divide-y divide-gray-200">
         <IcicleChart />
       </div>
       <Divider text="Transactions" navigateTo="/transactions/set" />
@@ -47,9 +47,7 @@ const Divider = ({
       </div>
       <div className="relative flex justify-between">
         <span />
-        <span className="px-3 bg-white text-lg font-medium text-gray-900">
-          {text}
-        </span>
+        <span className="px-3 text-lg font-medium text-gray-900">{text}</span>
         <Button onPress={() => navigate(navigateTo)}>
           Add {text.slice(0, text.length - 1)}
         </Button>

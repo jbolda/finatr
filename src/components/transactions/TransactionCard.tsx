@@ -72,7 +72,7 @@ const TransactionCard = ({
     <div>
       <div className="lg:col-start-3 lg:row-end-1">
         <h2 className="sr-only">Transaction</h2>
-        <div className="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
+        <div className="rounded-lg bg-gray-50 dark:bg-gray-700 shadow-sm ring-1 ring-gray-900/5">
           <div className="flex flex-wrap">
             <div className="flex-auto pl-6 pt-3">
               <dt className="text-sm/6 font-semibold text-gray-900">

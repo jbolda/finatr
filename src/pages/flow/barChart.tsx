@@ -32,7 +32,7 @@ const BarChart = ({
     <>
       <div className="absolute pointer-events-none">
         <div
-          className="bg-slate-700 dark:bg-slate-600 border border-slate-800 dark:border-white/10 shadow-[inset_0_1px_0_0_theme(colors.gray.600)] dark:shadow-none text-white text-xs rounded-lg drop-shadow-lg will-change-transform px-3 py-1"
+          className="bg-slate-700 dark:bg-slate-600 border border-slate-800 dark:border-white/10 shadow-[inset_0_1px_0_0_var(--color-gray-600)] dark:shadow-none text-white text-xs rounded-lg drop-shadow-lg will-change-transform px-3 py-1"
           id="tooltipTarget"
         />
       </div>
@@ -78,7 +78,7 @@ const BarChart = ({
               <rect
                 id="mouseArea"
                 width="11550"
-                fill="white"
+                fill="none"
                 height={bar.height() - bar.margin().top - bar.margin().bottom}
               />
             </g>

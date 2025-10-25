@@ -50,7 +50,7 @@ export function Column(props: ColumnProps) {
       {...props}
       className={composeTailwindRenderProps(
         props.className,
-        '[&:hover]:z-20 [&:focus-within]:z-20 text-start text-sm font-semibold text-gray-700 dark:text-zinc-300 cursor-default'
+        '[&:hover]:z-20 focus-within:z-20 text-start text-sm font-semibold text-gray-700 dark:text-zinc-300 cursor-default'
       )}
     >
       {composeRenderProps(
@@ -141,7 +141,7 @@ export function Row<T extends object>({
 
 const cellStyles = tv({
   extend: focusRing,
-  base: 'border-b dark:border-b-zinc-700 group-last/row:border-b-0 [--selected-border:theme(colors.blue.200)] dark:[--selected-border:theme(colors.blue.900)] group-selected/row:border-[--selected-border] [:has(+[data-selected])_&]:border-[--selected-border] p-2 truncate -outline-offset-2'
+  base: 'border-b dark:border-b-zinc-700 group-last/row:border-b-0 [--selected-border:var(--color-blue-200)] dark:[--selected-border:var(--color-blue-900)] group-selected/row:border-[--selected-border] in-[:has(+[data-selected])]:border-(--selected-border) p-2 truncate -outline-offset-2'
 });
 
 export function Cell(props: CellProps) {

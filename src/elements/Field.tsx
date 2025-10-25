@@ -67,7 +67,7 @@ export const fieldBorderStyles = tv({
 
 export const fieldGroupStyles = tv({
   extend: focusRing,
-  base: 'group flex items-center h-9 bg-white dark:bg-zinc-900 forced-colors:bg-[Field] border-2 rounded-lg overflow-hidden',
+  base: 'group flex items-center h-9 dark:bg-zinc-900 forced-colors:bg-[Field] border-2 rounded-lg overflow-hidden',
   variants: fieldBorderStyles.variants
 });
 
@@ -88,7 +88,7 @@ export function Input(props: InputProps) {
       {...props}
       className={composeTailwindRenderProps(
         props.className,
-        'px-2 py-1.5 flex-1 min-w-0 outline outline-0 bg-white dark:bg-zinc-900 text-sm text-gray-800 dark:text-zinc-200 disabled:text-gray-200 dark:disabled:text-zinc-600'
+        'px-2 py-1.5 flex-1 min-w-0 outline outline-0 dark:bg-zinc-900 text-sm text-gray-800 dark:text-zinc-200 disabled:text-gray-200 dark:disabled:text-zinc-600'
       )}
     />
   );
