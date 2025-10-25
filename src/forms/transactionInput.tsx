@@ -17,13 +17,12 @@ import { NumberField } from '~/src/elements/NumberField.tsx';
 import { Select } from '~/src/elements/Select.tsx';
 import { TextField } from '~/src/elements/TextField.tsx';
 
-import { schema } from '../store/schema/index.ts';
 import { accountsFromSerialized } from '../store/selectors/accounts.ts';
 import { getSchemaBase } from './helpers.ts';
 
 // import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
-const TransactionSchema = z.object({
+const TransactionFormSchema = z.object({
   id: z.string().optional(),
   raccount: z.string().default('none'),
   transferIn: z.string().default('none').nullable(),
@@ -63,7 +62,7 @@ const TransactionSchema = z.object({
   // })
 });
 
-const baseTransaction = getSchemaBase(TransactionSchema);
+const baseTransaction = getSchemaBase(TransactionFormSchema);
 
 function TransactionInput() {
   const navigate = useNavigate();
@@ -79,7 +78,7 @@ function TransactionInput() {
       reset();
       navigate(locationState?.navigateTo ?? '..', { relative: 'path' });
     },
-    validators: { onChange: TransactionSchema }
+    validators: { onChange: TransactionFormSchema }
   });
   const ending = useStore(store, (state) => state.values.ending);
 

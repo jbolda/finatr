@@ -48,7 +48,7 @@ export function createSchema<
 
 const addYear = addDays(365);
 
-const DineroNumberSchema = z.object({
+const DineroSnapshotSchema = z.object({
   amount: z.number(),
   // @dinero/currencies sometimes types `base` as number | readonly number[]
   // Accept both shapes here for validation of persisted snapshots.
@@ -62,16 +62,23 @@ const DineroNumberSchema = z.object({
 const DineroSchema = z.preprocess((val) => {
   if (typeof val === 'number') {
     const b = redinero(val).toJSON();
-    console.log(b);
     return b;
   }
   return val;
-}, DineroNumberSchema);
+}, DineroSnapshotSchema);
 
-export const ScaledNumberSchema = z.object({
-  amount: z.number(),
-  scale: z.number()
-});
+export const ScaledNumberSchema = z.preprocess(
+  (val) => {
+    if (typeof val === 'number') {
+      return { amount: val, scale: 0 };
+    }
+    return val;
+  },
+  z.object({
+    amount: z.number(),
+    scale: z.number()
+  })
+);
 export type ScaledNumber = z.infer<typeof ScaledNumberSchema>;
 
 export const SettingsSchema = z.object({
@@ -114,7 +121,7 @@ export const TransactionSchema = z.object({
   type: TransactionTypeSchema,
   valueType: ValueTypeSchema,
   start: z.iso.date(),
-  ending: z.iso.date().optional(),
+  end: z.iso.date().optional(),
   rtype: RepeatTypeSchema,
   cycle: z.number().default(0),
   value: DineroSchema,
