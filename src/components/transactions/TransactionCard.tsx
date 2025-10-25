@@ -6,15 +6,15 @@ import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { tv } from 'tailwind-variants';
 
-import { type TransactionWithAccount } from '~/src/store/selectors/transactions';
-import { transactionRemove } from '~/src/store/thunks/transactions.ts';
-import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
+import { type TransactionWithAccount } from '~/store/selectors/transactions.ts';
+import { transactionRemove } from '~/store/thunks/transactions.ts';
+import { toHumanCurrency } from '~/store/utils/dineroUtils.ts';
 import {
   nextOccurrence,
   toHumanReoccurrence
-} from '~/src/store/utils/reoccurrence';
+} from '~/store/utils/reoccurrence.ts';
 
-import { Button } from '~/src/elements/Button.tsx';
+import { Button } from '~/elements/Button.tsx';
 
 import { navigateToTransactionForm, TransactionFilter } from './utils';
 

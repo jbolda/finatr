@@ -3,15 +3,15 @@ import { format } from 'date-fns';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema } from '~/src/store/schema.ts';
+import { schema } from '~/store/schema.ts';
 import {
   ChartAccounts,
   lineChartAccounts
-} from '~/src/store/selectors/accounts';
-import { dateRangeWithStrings } from '~/src/store/selectors/chartRange.ts';
-import { updateChartDateRange } from '~/src/store/thunks/chartRange.ts';
+} from '~/store/selectors/accounts.ts';
+import { dateRangeWithStrings } from '~/store/selectors/chartRange.ts';
+import { updateChartDateRange } from '~/store/thunks/chartRange.ts';
 
-import { DatePicker } from '~/src/components/DatePicker.tsx';
+import { DatePicker } from '~/components/DatePicker.tsx';
 
 import BarChart from './barChart.tsx';
 

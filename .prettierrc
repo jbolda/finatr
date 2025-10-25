@@ -10,9 +10,9 @@
   "importOrderSeparation": true,
   "importOrder": [
     "<THIRD_PARTY_MODULES>",
-    "^~/src/store/(.*)$",
-    "^~/src/components/(.*)$",
-    "^~/src/elements/(.*)$",
+    "^~/store/(.*)$",
+    "^~/components/(.*)$",
+    "^~/elements/(.*)$",
     "^[./]"
   ],
   "plugins": ["@trivago/prettier-plugin-sort-imports"]

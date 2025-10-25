@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector } from 'starfx/react';
 
-import { transactionsWithAccounts } from '~/src/store/selectors/transactions';
+import { transactionsWithAccounts } from '~/store/selectors/transactions.ts';
 
-import Transactions from '~/src/components/transactions/index.tsx';
+import Transactions from '~/components/transactions/index.tsx';
 
 const TransactionsOverview = () => {
   const transactions = useSelector(transactionsWithAccounts);

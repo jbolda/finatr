@@ -11,11 +11,11 @@ import { tv } from 'tailwind-variants';
 import {
   transactionsInTimeline,
   TransactionWithAccount
-} from '~/src/store/selectors/transactions';
-import { transactionRemove } from '~/src/store/thunks';
-import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
+} from '~/store/selectors/transactions.ts';
+import { transactionRemove } from '~/store/thunks/transactions.ts';
+import { toHumanCurrency } from '~/store/utils/dineroUtils.ts';
 
-import { Button } from '~/src/elements/Button';
+import { Button } from '~/elements/Button.tsx';
 
 import { navigateToTransactionForm, TransactionFilter } from './utils';
 

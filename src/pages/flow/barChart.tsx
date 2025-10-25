@@ -3,9 +3,9 @@ import { closestIndexTo, eachDayOfInterval } from 'date-fns';
 import React, { useEffect } from 'react';
 import { useSelector } from 'starfx/react';
 
-import { type ChartAccounts } from '~/src/store/selectors/accounts';
-import { barChartTransactions } from '~/src/store/selectors/chartData';
-import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
+import { type ChartAccounts } from '~/store/selectors/accounts.ts';
+import { barChartTransactions } from '~/store/selectors/chartData.ts';
+import { toHumanCurrency } from '~/store/utils/dineroUtils.ts';
 
 const BarChart = ({
   dateRange,

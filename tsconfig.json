@@ -23,7 +23,7 @@
     "noEmit": true,
     "jsx": "react",
     "paths": {
-      "~/*": ["./*"]
+      "~/*": ["./src/*"]
     }
   },
   "include": ["src"]

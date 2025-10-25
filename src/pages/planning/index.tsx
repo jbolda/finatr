@@ -2,15 +2,15 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'starfx/react';
 
-import { schema } from '~/src/store/schema';
-import { transactionsWithAccounts } from '~/src/store/selectors/transactions';
+import { schema } from '~/store/schema.ts';
+import { transactionsWithAccounts } from '~/store/selectors/transactions.ts';
 
-import Accounts from '~/src/components/accounts';
-import Transactions from '~/src/components/transactions/index.tsx';
+import Accounts from '~/components/accounts/index.tsx';
+import Transactions from '~/components/transactions/index.tsx';
 
-import { Button } from '~/src/elements/Button.tsx';
+import { Button } from '~/elements/Button.tsx';
 
-import IcicleChart from './icicleChart';
+import IcicleChart from './icicleChart.tsx';
 
 const Planning = () => {
   const transactions = useSelector(transactionsWithAccounts);

@@ -1,8 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'starfx/react';
-
-import { importEntries } from '~/src/store/thunks/import.ts';
+import { importEntries } from '~/store/thunks/import.ts';
 
 import example_highRents from './high_rents.json';
 import example_simple from './simple.json';

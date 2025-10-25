@@ -2,7 +2,7 @@ import { toDecimal } from 'dinero.js';
 import React from 'react';
 import { useSelector } from 'starfx/react';
 
-import { financialStats } from '~/src/store/selectors/stats';
+import { financialStats } from '~/store/selectors/stats.ts';
 
 const inifinitySymbol = '∞';
 

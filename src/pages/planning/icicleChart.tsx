@@ -3,7 +3,7 @@ import { toDecimal } from 'dinero.js';
 import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'starfx/react';
 
-import { schema } from '~/src/store/schema';
+import { schema } from '~/store/schema.ts';
 
 export const IcicleChart = () => {
   const d3Container = useRef(null);
