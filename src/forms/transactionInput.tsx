@@ -17,7 +17,9 @@ import { NumberField } from '~/src/elements/NumberField.tsx';
 import { Select } from '~/src/elements/Select.tsx';
 import { TextField } from '~/src/elements/TextField.tsx';
 
+import { schema } from '../store/schema/index.ts';
 import { accountsFromSerialized } from '../store/selectors/accounts.ts';
+import { getSchemaBase } from './helpers.ts';
 
 // import TransactionInputAmountComputed from './transactionInputAmountComputed';
 
@@ -28,8 +30,8 @@ const TransactionSchema = z.object({
   description: z.string().default(''),
   category: z.string().min(1),
   type: z.enum(['income', 'expense', 'transfer']).default('expense'),
-  start: z.string().date(),
-  end: z.string().date().optional(),
+  start: z.iso.date().default(today(getLocalTimeZone()).toString()),
+  end: z.iso.date().optional(),
   occurrences: z.number().default(0),
   beginAfterOccurrences: z.number().optional().default(0),
   ending: z
@@ -61,6 +63,8 @@ const TransactionSchema = z.object({
   // })
 });
 
+const baseTransaction = getSchemaBase(TransactionSchema);
+
 function TransactionInput() {
   const navigate = useNavigate();
   const { state: locationState } = useLocation();
@@ -68,24 +72,7 @@ function TransactionInput() {
   const accountsList = useSelector(accountsFromSerialized);
   const accounts = accountsList.sort((a, b) => (a.name > b.name ? 1 : -1));
   const { Field, handleSubmit, Subscribe, reset, store } = useForm({
-    defaultValues: locationState?.transaction ?? {
-      id: '',
-      raccount: 'none',
-      transferIn: 'none',
-      description: '',
-      category: '',
-      type: TransactionSchema.shape.type.def.defaultValue,
-      start: today(getLocalTimeZone()).toString(),
-      end: undefined,
-      occurrences: TransactionSchema.shape.occurrences.def.defaultValue,
-      beginAfterOccurrences:
-        TransactionSchema.shape.beginAfterOccurrences.def.defaultValue,
-      ending: TransactionSchema.shape.ending.def.defaultValue,
-      rtype: TransactionSchema.shape.rtype.def.defaultValue,
-      cycle: TransactionSchema.shape.cycle.def.defaultValue,
-      value: TransactionSchema.shape.value.def.defaultValue,
-      valueType: TransactionSchema.shape.valueType.def.defaultValue
-    },
+    defaultValues: locationState?.transaction ?? baseTransaction.defaults,
     onSubmit: ({ value }) => {
       console.log(value);
       dispatch(transactionAdd(value));
@@ -106,7 +93,6 @@ function TransactionInput() {
       <form
         className="flex flex-col gap-4"
         onSubmit={(e) => {
-          console.log(e);
           e.preventDefault();
           e.stopPropagation();
           handleSubmit();
@@ -117,7 +103,7 @@ function TransactionInput() {
           children={(field) => (
             <TextField
               label="ID"
-              isRequired={!TransactionSchema.shape.id.isOptional()}
+              isRequired={baseTransaction.required.id}
               className="hidden"
               type="text"
               value={field.state.value}
@@ -133,7 +119,7 @@ function TransactionInput() {
           children={(field) => (
             <Select
               label="Account"
-              isRequired={!TransactionSchema.shape.raccount.isOptional()}
+              isRequired={baseTransaction.required.raccount}
               items={accounts}
               selectedKey={field.state.value}
               onBlur={field.handleBlur}
@@ -150,7 +136,7 @@ function TransactionInput() {
           children={(field) => (
             <TextField
               label="Description"
-              isRequired={!TransactionSchema.shape.description.isOptional()}
+              isRequired={baseTransaction.required.description}
               type="text"
               value={field.state.value}
               onBlur={field.handleBlur}
@@ -165,7 +151,7 @@ function TransactionInput() {
           children={(field) => (
             <TextField
               label="Category"
-              isRequired={!TransactionSchema.shape.category.isOptional()}
+              isRequired={baseTransaction.required.category}
               type="text"
               value={field.state.value}
               onBlur={field.handleBlur}
@@ -180,7 +166,7 @@ function TransactionInput() {
           children={(field) => (
             <Select
               label="Transaction Type"
-              isRequired={!TransactionSchema.shape.type.isOptional()}
+              isRequired={baseTransaction.required.type}
               name={field.name}
               items={[
                 { id: 'income', name: 'Income' },
@@ -206,9 +192,7 @@ function TransactionInput() {
                 transactionType !== 'income' ? (
                   <Select
                     label="Account Target"
-                    isRequired={
-                      !TransactionSchema.shape.transferIn.isOptional()
-                    }
+                    isRequired={!baseTransaction.required.transferIn}
                     items={[{ id: 'none', name: 'none' }].concat(accounts)}
                     selectedKey={field.state.value}
                     onBlur={field.handleBlur}
@@ -232,7 +216,7 @@ function TransactionInput() {
           children={(field) => (
             <DatePicker
               label="Start Date"
-              isRequired={!TransactionSchema.shape.start.isOptional()}
+              isRequired={baseTransaction.required.start}
               shouldForceLeadingZeros
               value={parseDate(field.state.value)}
               onBlur={field.handleBlur}
@@ -247,9 +231,7 @@ function TransactionInput() {
           children={(field) => (
             <NumberField
               label="Begin After Specified Occurences"
-              isRequired={
-                !TransactionSchema.shape.beginAfterOccurrences.isOptional()
-              }
+              isRequired={!baseTransaction.required.beginAfterOccurrences}
               value={field.state.value}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e)}
@@ -263,10 +245,10 @@ function TransactionInput() {
           children={(field) => (
             <RadioGroup
               label="Ending"
-              isRequired={!TransactionSchema.shape.ending.isOptional()}
+              isRequired={baseTransaction.required.ending}
               value={field.state.value}
               onBlur={field.handleBlur}
-              onChange={(e) => field.handleChange(e)}
+              onChange={(e) => field.handleChange(e?.toString() ?? '')}
               errorMessage={field.state.meta.errors.join(', ')}
             >
               <Radio value="never">Never</Radio>
@@ -284,7 +266,7 @@ function TransactionInput() {
             children={(field) => (
               <NumberField
                 label="Occurences"
-                isRequired={!TransactionSchema.shape.occurrences.isOptional()}
+                isRequired={baseTransaction.required.occurrences}
                 value={field.state.value}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e)}
@@ -300,7 +282,7 @@ function TransactionInput() {
             children={(field) => (
               <DatePicker
                 label="End Date"
-                isRequired={!TransactionSchema.shape.end.isOptional()}
+                isRequired={baseTransaction.required.end}
                 shouldForceLeadingZeros
                 value={parseDate(field.state.value)}
                 onBlur={field.handleBlur}
@@ -316,7 +298,7 @@ function TransactionInput() {
           children={(field) => (
             <Select
               label="How Often Does This Occur?"
-              isRequired={!TransactionSchema.shape.rtype.isOptional()}
+              isRequired={baseTransaction.required.rtype}
               name={field.name}
               items={[
                 { id: 'none', name: 'No Repeating' },
@@ -347,7 +329,7 @@ function TransactionInput() {
                 children={(field) => (
                   <NumberField
                     label={cycleLabel(state.values.rtype)}
-                    isRequired={!TransactionSchema.shape.cycle.isOptional()}
+                    isRequired={baseTransaction.required.cycle}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     isDisabled={state.values.rtype === 'none'}
@@ -366,7 +348,7 @@ function TransactionInput() {
           children={(field) => (
             <NumberField
               label="Value"
-              isRequired={!TransactionSchema.shape.value.isOptional()}
+              isRequired={baseTransaction.required.value}
               formatOptions={{
                 style: 'currency',
                 currency: 'USD',
