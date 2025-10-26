@@ -25,7 +25,7 @@ import { getSchemaBase } from './helpers.ts';
 const TransactionFormSchema = z.object({
   id: z.string().optional(),
   raccount: z.string().default('none'),
-  transferIn: z.string().default('none').nullable(),
+  transferIn: z.string().nullish().default('none'),
   description: z.string().default(''),
   category: z.string().min(1),
   type: z.enum(['income', 'expense', 'transfer']).default('expense'),
@@ -67,14 +67,19 @@ const baseTransaction = getSchemaBase(TransactionFormSchema);
 function TransactionInput() {
   const navigate = useNavigate();
   const { state: locationState } = useLocation();
+  console.log('locationState', locationState?.transaction);
   const dispatch = useDispatch();
   const accountsList = useSelector(accountsFromSerialized);
   const accounts = accountsList.sort((a, b) => (a.name > b.name ? 1 : -1));
   const { Field, handleSubmit, Subscribe, reset, store } = useForm({
     defaultValues: locationState?.transaction ?? baseTransaction.defaults,
     onSubmit: ({ value }) => {
-      console.log(value);
-      dispatch(transactionAdd(value));
+      const submitting = { ...value };
+      console.log('submitting', submitting);
+      if (submitting.type === 'income') {
+        submitting.transferIn = null;
+      }
+      dispatch(transactionAdd(submitting));
       reset();
       navigate(locationState?.navigateTo ?? '..', { relative: 'path' });
     },
@@ -196,7 +201,9 @@ function TransactionInput() {
                     selectedKey={field.state.value}
                     onBlur={field.handleBlur}
                     onSelectionChange={(e) =>
-                      field.handleChange(e === 'none' ? null : e)
+                      field.handleChange(
+                        e === 'none' || e === 'missing:none' ? null : e
+                      )
                     }
                     errorMessage={field.state.meta.errors.join(', ')}
                   >

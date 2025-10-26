@@ -115,7 +115,7 @@ export const TransactionSchema = z.object({
   id: z.string().default(makeUUID),
   raccount: z.string(), // account id
   vaccount: z.string().optional(), // account id
-  transferIn: z.string().optional(), // account id
+  transferIn: z.string().nullish(), // account id
   description: z.string(),
   category: z.string(),
   type: TransactionTypeSchema,
