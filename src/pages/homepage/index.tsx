@@ -12,7 +12,7 @@ export default Homepage;
 
 function Hero() {
   return (
-    <div className="bg-white">
+    <div>
       <div className="relative isolate px-6 pt-14 lg:px-8">
         <div
           aria-hidden="true"
@@ -23,7 +23,7 @@ function Hero() {
               clipPath:
                 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)'
             }}
-            className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-cyan-700 to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+            className="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-cyan-700 to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75"
           />
         </div>
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
@@ -63,7 +63,7 @@ function Hero() {
               clipPath:
                 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)'
             }}
-            className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-cyan-700 to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+            className="relative left-[calc(50%+3rem)] aspect-1155/678 w-144.5 -translate-x-1/2 bg-linear-to-tr from-cyan-700 to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-288.75"
           />
         </div>
       </div>
@@ -73,26 +73,26 @@ function Hero() {
 
 function Features() {
   return (
-    <div className="bg-white py-24 sm:py-32">
+    <div className="py-24 sm:py-32">
       <div className="mx-auto max-w-2xl px-6 lg:max-w-7xl lg:px-8">
         <h2 className="text-base/7 font-semibold text-indigo-600">
           stop focusing on the past
         </h2>
-        <p className="mt-2 max-w-lg text-pretty text-4xl font-semibold tracking-tight text-gray-950 sm:text-5xl">
+        <p className="mt-2 max-w-lg text-pretty text-4xl font-semibold tracking-tight text-gray-950 dark:text-gray-200 sm:text-5xl">
           Design your decisions to fund your future
         </p>
         <div className="mt-10 grid grid-cols-1 gap-4 sm:mt-16 lg:grid-cols-6 lg:grid-rows-2">
           <div className="relative lg:col-span-3">
-            <div className="absolute inset-px rounded-lg bg-white max-lg:rounded-t-[2rem] lg:rounded-tl-[2rem]" />
-            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)] max-lg:rounded-t-[calc(2rem+1px)] lg:rounded-tl-[calc(2rem+1px)]">
+            <div className="absolute inset-px rounded-lg max-lg:rounded-t-4xl lg:rounded-tl-4xl" />
+            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] max-lg:rounded-t-[calc(2rem+1px)] lg:rounded-tl-[calc(2rem+1px)]">
               <div className="p-10 pt-4">
                 <h3 className="text-sm/4 font-semibold text-indigo-600">
                   Plan
                 </h3>
-                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950">
+                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950 dark:text-gray-200">
                   Lay Out Your Transactions
                 </p>
-                <p className="mt-2 max-w-lg text-sm/6 text-gray-600">
+                <p className="mt-2 max-w-lg text-sm/6 text-gray-600 dark:text-gray-300">
                   List out your transactions and how often their occur. We can
                   anticipate your future account balances and derive insights.
                   That milestone coming up? Let's celebrate it! Oh, there may be
@@ -100,19 +100,19 @@ function Features() {
                 </p>
               </div>
             </div>
-            <div className="pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5 max-lg:rounded-t-[2rem] lg:rounded-tl-[2rem]" />
+            <div className="pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5 max-lg:rounded-t-4xl lg:rounded-tl-4xl" />
           </div>
           <div className="relative lg:col-span-3">
-            <div className="absolute inset-px rounded-lg bg-white lg:rounded-tr-[2rem]" />
-            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)] lg:rounded-tr-[calc(2rem+1px)]">
+            <div className="absolute inset-px rounded-lg lg:rounded-tr-4xl" />
+            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] lg:rounded-tr-[calc(2rem+1px)]">
               <div className="p-10 pt-4">
                 <h3 className="text-sm/4 font-semibold text-indigo-600">
                   Update
                 </h3>
-                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950">
+                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950 dark:text-gray-200">
                   View Expected Account Balances
                 </p>
-                <p className="mt-2 max-w-lg text-sm/6 text-gray-600">
+                <p className="mt-2 max-w-lg text-sm/6 text-gray-600 dark:text-gray-300">
                   If we know your account balances and transactions, we can
                   project your future balances as well! Imagine knowing early if
                   your account will dip below zero. Let's fix that before you
@@ -120,37 +120,37 @@ function Features() {
                 </p>
               </div>
             </div>
-            <div className="pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5 lg:rounded-tr-[2rem]" />
+            <div className="pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5 lg:rounded-tr-4xl" />
           </div>
           <div className="relative lg:col-span-2">
-            <div className="absolute inset-px rounded-lg bg-white lg:rounded-bl-[2rem]" />
-            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)] lg:rounded-bl-[calc(2rem+1px)]">
+            <div className="absolute inset-px rounded-lg lg:rounded-bl-4xl" />
+            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] lg:rounded-bl-[calc(2rem+1px)]">
               <div className="p-10 pt-4">
                 <h3 className="text-sm/4 font-semibold text-indigo-600">
                   Speed
                 </h3>
-                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950">
+                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950 dark:text-gray-200">
                   Ready for power users
                 </p>
-                <p className="mt-2 max-w-lg text-sm/6 text-gray-600">
+                <p className="mt-2 max-w-lg text-sm/6 text-gray-600 dark:text-gray-300">
                   Finatr is open-source. Interested in a feature? Let's discuss.
                   Want customizable reports and views? Let's start hacking!
                 </p>
               </div>
             </div>
-            <div className="pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5 lg:rounded-bl-[2rem]" />
+            <div className="pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5 lg:rounded-bl-4xl" />
           </div>
           <div className="relative lg:col-span-2">
-            <div className="absolute inset-px rounded-lg bg-white" />
-            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)]">
+            <div className="absolute inset-px rounded-lg" />
+            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)]">
               <div className="p-10 pt-4">
                 <h3 className="text-sm/4 font-semibold text-indigo-600">
                   Privacy
                 </h3>
-                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950">
+                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950 dark:text-gray-200">
                   Own your data
                 </p>
-                <p className="mt-2 max-w-lg text-sm/6 text-gray-600">
+                <p className="mt-2 max-w-lg text-sm/6 text-gray-600 dark:text-gray-300">
                   Finatr is being built with local-first principles. This
                   includes offline support, and control of your data. Freely
                   download and upload your data at any time. We don't save or
@@ -161,14 +161,14 @@ function Features() {
             <div className="pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5" />
           </div>
           <div className="relative lg:col-span-2">
-            <div className="absolute inset-px rounded-lg bg-white max-lg:rounded-b-[2rem] lg:rounded-br-[2rem]" />
-            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)] max-lg:rounded-b-[calc(2rem+1px)] lg:rounded-br-[calc(2rem+1px)]">
+            <div className="absolute inset-px rounded-lg max-lg:rounded-b-4xl lg:rounded-br-4xl" />
+            <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] max-lg:rounded-b-[calc(2rem+1px)] lg:rounded-br-[calc(2rem+1px)]">
               <div className="p-10 pt-4">
                 <h3 className="text-sm/4 font-semibold text-indigo-600">FI</h3>
-                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950">
+                <p className="mt-2 text-lg font-medium tracking-tight text-gray-950 dark:text-gray-200">
                   Confidentally Build For Financial Independence (FI)
                 </p>
-                <p className="mt-2 max-w-lg text-sm/6 text-gray-600">
+                <p className="mt-2 max-w-lg text-sm/6 text-gray-600 dark:text-gray-300">
                   The root ideals of "Financial Independence" point towards
                   providing confience, leverage, and options. Knowing your
                   future balances and investing to meet goals gives you
@@ -177,7 +177,7 @@ function Features() {
                 </p>
               </div>
             </div>
-            <div className="pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5 max-lg:rounded-b-[2rem] lg:rounded-br-[2rem]" />
+            <div className="pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5 max-lg:rounded-b-4xl lg:rounded-br-4xl" />
           </div>
         </div>
       </div>

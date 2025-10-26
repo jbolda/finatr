@@ -1,8 +1,5 @@
-import type { Account } from '~/src/store/schema';
-import {
-  floatFromDinero,
-  floatFromScaled
-} from '~/src/store/utils/dineroUtils.ts';
+import type { Account } from '~/store/schema';
+import { floatFromDinero, floatFromScaled } from '~/store/utils/dineroUtils.ts';
 
 export const navigateToAccountForm = (account: Account) => {
   return {

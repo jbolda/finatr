@@ -7,9 +7,8 @@
   "type": "module",
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
-    "start": "parcel serve ./src/index.html",
-    "build": "parcel build ./src/index.html",
-    "size-report": "parcel build src/index.html --reporter @parcel/reporter-bundle-buddy",
+    "start": "vite",
+    "build": "vite build",
     "test-ct": "playwright test -c playwright-ct.config.ts",
     "test-e2e": "playwright test",
     "pretty": "prettier --write \"{src,__{tests,mocks}__}/**/*.js\"",
@@ -24,7 +23,8 @@
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/supabase-js": "^2.45.4",
     "@tailwindcss/forms": "^0.5.10",
-    "@tanstack/react-form": "^1.1.0",
+    "@tailwindcss/vite": "^4.1.16",
+    "@tanstack/react-form": "^1.23.8",
     "@tauri-apps/api": "^2.1.1",
     "d3": "^7.9.0",
     "date-fns": "^2.23.0",
@@ -32,47 +32,37 @@
     "js-file-download": "0.4.12",
     "lucide-react": "^0.482.0",
     "papaparse": "^5.4.1",
-    "react": "^18.3.1",
-    "react-aria": "^3.38.1",
-    "react-aria-components": "^1.7.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.27.0",
+    "react": "^19.2.0",
+    "react-aria": "^3.44.0",
+    "react-aria-components": "^1.13.0",
+    "react-dom": "^19.2.0",
     "react-redux": "^9.2.0",
+    "react-router-dom": "^6.27.0",
     "starfx": "0.15.0",
-    "tailwindcss-react-aria-components": "^1.2.0",
+    "tailwindcss-react-aria-components": "^2.0.1",
     "zod": "^3.24.2"
-  },
-  "overrides": {
-    "@estruyf/github-actions-reporter": {
-      "@playwright/test": "^1.x.x"
-    }
-  },
-  "@parcel/resolver-default": {
-    "packageExports": true
   },
   "devDependencies": {
     "@estruyf/github-actions-reporter": "^1.9.2",
-    "@playwright/experimental-ct-react17": "^1.49.1",
-    "@playwright/test": "^1.49.1",
+    "@playwright/experimental-ct-react": "^1.56.1",
+    "@playwright/test": "^1.56.1",
     "@tauri-apps/cli": "2.1.0",
-    "@trivago/prettier-plugin-sort-imports": "^5.0.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/d3": "^7.4.3",
-    "@types/node": "^20.16.12",
-    "@types/react": "18.3.18",
-    "buffer": "^6.0.3",
-    "covector": "^0.12.0",
-    "parcel": "^2.13.3",
-    "postcss": "^8.4.47",
-    "prettier": "^3.2.5",
-    "process": "^0.11.10",
-    "querystring-es3": "^0.2.1",
-    "tailwind-merge": "^2.5.5",
-    "tailwind-variants": "^0.3.0",
-    "tailwindcss": "^3.4.16",
-    "tailwindcss-animate": "^1.0.7"
+    "@types/node": "^24.9.1",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^5.1.0",
+    "covector": "^0.12.4",
+    "prettier": "^3.6.2",
+    "tailwind-merge": "^3.3.1",
+    "tailwind-variants": "^3.1.1",
+    "tailwindcss": "^4.1.16",
+    "tailwindcss-animate": "^1.0.7",
+    "vite": "^7.1.12"
   },
   "volta": {
-    "node": "20.18.1",
-    "npm": "11.0.0"
+    "node": "24.10.0",
+    "npm": "11.6.2"
   }
 }

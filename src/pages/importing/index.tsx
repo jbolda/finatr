@@ -5,10 +5,10 @@ import { FileTrigger } from 'react-aria-components';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema } from '~/src/store/schema';
-import { importEntries } from '~/src/store/thunks/import';
+import { schema } from '~/store/schema.ts';
+import { importEntries } from '~/store/thunks/import.ts';
 
-import { Button } from '~/src/elements/Button.tsx';
+import { Button } from '~/elements/Button.tsx';
 
 const Importing = () => {
   const dispatch = useDispatch();

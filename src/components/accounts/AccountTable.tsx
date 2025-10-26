@@ -5,12 +5,9 @@ import { NavigateFunction } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 
-import { type Account } from '~/src/store/schema.ts';
-import { accountRemove } from '~/src/store/thunks/accounts.ts';
-import {
-  toHumanCurrency,
-  toHumanInterest
-} from '~/src/store/utils/dineroUtils.ts';
+import { type Account } from '~/store/schema.ts';
+import { accountRemove } from '~/store/thunks/accounts.ts';
+import { toHumanCurrency, toHumanInterest } from '~/store/utils/dineroUtils.ts';
 
 import {
   Cell,
@@ -20,9 +17,9 @@ import {
   Table,
   TableBody,
   TableHeader
-} from '~/src/components/Table';
+} from '~/components/Table.tsx';
 
-import { Button } from '~/src/elements/Button.tsx';
+import { Button } from '~/elements/Button.tsx';
 
 import { navigateToAccountForm } from './utils';
 

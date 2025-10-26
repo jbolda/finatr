@@ -3,18 +3,18 @@ import { Header, type Selection } from 'react-aria-components';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'starfx/react';
 
-import type { TransactionWithAccount } from '~/src/store/selectors/transactions';
+import type { TransactionWithAccount } from '~/store/selectors/transactions';
 
 import {
   MenuTrigger,
   Menu,
   MenuItem,
   MenuSection
-} from '~/src/components/Menu';
-import { Separator } from '~/src/components/Separator';
-import { Tag, TagGroup } from '~/src/components/TagGroup';
+} from '~/components/Menu.tsx';
+import { Separator } from '~/components/Separator.tsx';
+import { Tag, TagGroup } from '~/components/TagGroup.tsx';
 
-import { Button } from '~/src/elements/Button.tsx';
+import { Button } from '~/elements/Button.tsx';
 
 import { TransactionCards } from './TransactionCard';
 import { TransactionTable } from './TransactionTable';

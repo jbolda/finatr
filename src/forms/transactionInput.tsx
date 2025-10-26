@@ -5,18 +5,18 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'starfx/react';
 import { z } from 'zod';
 
-import { schema } from '~/src/store/schema.ts';
-import { transactionAdd } from '~/src/store/thunks/transactions.ts';
-import { toHumanReoccurrence } from '~/src/store/utils/reoccurrence';
+import { schema } from '~/store/schema.ts';
+import { transactionAdd } from '~/store/thunks/transactions.ts';
+import { toHumanReoccurrence } from '~/store/utils/reoccurrence.ts';
 
-import { DatePicker } from '~/src/components/DatePicker.tsx';
-import { ListBoxItem } from '~/src/components/ListBox.tsx';
-import { Radio, RadioGroup } from '~/src/components/RadioGroup.tsx';
+import { DatePicker } from '~/components/DatePicker.tsx';
+import { ListBoxItem } from '~/components/ListBox.tsx';
+import { Radio, RadioGroup } from '~/components/RadioGroup.tsx';
 
-import { Button } from '~/src/elements/Button.tsx';
-import { NumberField } from '~/src/elements/NumberField.tsx';
-import { Select } from '~/src/elements/Select.tsx';
-import { TextField } from '~/src/elements/TextField.tsx';
+import { Button } from '~/elements/Button.tsx';
+import { NumberField } from '~/elements/NumberField.tsx';
+import { Select } from '~/elements/Select.tsx';
+import { TextField } from '~/elements/TextField.tsx';
 
 // import TransactionInputAmountComputed from './transactionInputAmountComputed';
 

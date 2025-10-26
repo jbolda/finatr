@@ -1,11 +1,10 @@
 import { Field, FieldArray } from 'formik';
 import React from 'react';
-
-// import { FieldGroup, Label } from '~/src/components/Form.js';
-import { Button } from '~/src/elements/Button';
-import { Input } from '~/src/elements/Input';
-import { Radio } from '~/src/elements/Radio';
-import { Select } from '~/src/elements/Select';
+// import { FieldGroup, Label } from '~/components/Form.js';
+import { Button } from '~/elements/Button';
+import { Input } from '~/elements/Input';
+import { Radio } from '~/elements/Radio';
+import { Select } from '~/elements/Select';
 
 const TransactionInputAmountComputed = ({
   errors,

@@ -1,8 +1,7 @@
 import { eachDayOfInterval } from 'date-fns';
 import { toDecimal, type Dinero } from 'dinero.js';
 import { createSelector } from 'starfx';
-
-import { Account, schema, Transaction } from '~/src/store/schema.ts';
+import { Account, schema, Transaction } from '~/store/schema.ts';
 
 import { barChartTransactions } from './chartData';
 import { dateRangeConsideringAccountStart } from './chartRange';
