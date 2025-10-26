@@ -259,8 +259,8 @@ function NoMatch() {
 
 /*
 Sticky footer relies on flex where the default is 0 1 auto
-for flex-grow, flex-shrink and flex-basis, respectively.
-We set flex-grow=1 for the center div at a minHeight flexbox
+for flex-grow, shrink and flex-basis, respectively.
+We set grow=1 for the center div at a minHeight flexbox
 98vh (account for browser margins) which sticks the footer
 to the bottom of the page.
 */

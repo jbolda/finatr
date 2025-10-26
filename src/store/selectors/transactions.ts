@@ -5,8 +5,8 @@ import type { Dinero } from 'dinero.js';
 import { createSelector } from 'starfx';
 import type { AnyState } from 'starfx';
 
-import { schema } from '~/src/store/schema/index.ts';
-import type { Transaction } from '~/src/store/schema/index.ts';
+import { schema } from '~/store/schema/index.ts';
+import type { Transaction } from '~/store/schema/index.ts';
 
 import {
   nextTransaction,

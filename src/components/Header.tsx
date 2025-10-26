@@ -51,7 +51,7 @@ function renderMenuItem(
 export const Header = ({ settings }: { settings: Settings }) => {
   let location = useLocation();
   return (
-    <nav className="bg-gradient-to-r to-gray-800 from-cyan-700 pb-36">
+    <nav className="bg-linear-to-r to-gray-800 from-cyan-700 pb-36">
       <div className="mx-auto container py-3 px-4 sm:px-6 lg:px-8">
         <div className="lg:flex hidden justify-start h-12">
           <Menu
@@ -83,7 +83,7 @@ export const Header = ({ settings }: { settings: Settings }) => {
           >
             <MenuIcon className="block h-6 w-6" aria-hidden="true" />
           </Button>
-          <Popover className="p-1 w-56 overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 entering:animate-in entering:fade-in entering:zoom-in-95 exiting:animate-out exiting:fade-out exiting:zoom-out-95 fill-mode-forwards origin-top-left">
+          <Popover className="p-1 w-56 overflow-auto rounded-md shadow-lg ring-1 ring-black ring-opacity-5 entering:animate-in entering:fade-in entering:zoom-in-95 exiting:animate-out exiting:fade-out exiting:zoom-out-95 fill-mode-forwards origin-top-left">
             <Menu
               className="outline-none"
               aria-label="navigation popover"

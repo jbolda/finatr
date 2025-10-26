@@ -2,8 +2,8 @@ import { eachDayOfInterval } from 'date-fns';
 import { toDecimal, type Dinero } from 'dinero.js';
 import { createSelector } from 'starfx';
 
-import type { Account, Transaction } from '~/src/store/schema/index.ts';
-import { schema } from '~/src/store/schema/index.ts';
+import type { Account, Transaction } from '~/store/schema/index.ts';
+import { schema } from '~/store/schema/index.ts';
 
 import { reconstituteField } from '../utils/reconcilerWithReconstitution.ts';
 import { barChartTransactions } from './chartData';

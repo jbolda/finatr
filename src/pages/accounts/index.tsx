@@ -2,11 +2,11 @@ import { parseDate } from '@internationalized/date';
 import React from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema } from '~/src/store/schema/index.ts';
-import { accountsFromSerialized } from '~/src/store/selectors/accounts.ts';
-import { updateAccountSnapshotDate } from '~/src/store/thunks/accounts.ts';
+import { schema } from '~/store/schema/index.ts';
+import { accountsFromSerialized } from '~/store/selectors/accounts.ts';
+import { updateAccountSnapshotDate } from '~/store/thunks/accounts.ts';
 
-import { DatePicker } from '~/src/components/DatePicker.tsx';
+import { DatePicker } from '~/components/DatePicker.tsx';
 
 import Accounts from '../../components/accounts/index.tsx';
 

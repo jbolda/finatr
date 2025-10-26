@@ -1,7 +1,7 @@
 import { toDecimal } from 'dinero.js';
 import type { Key } from 'react-aria';
 
-import type { TransactionWithAccount } from '~/src/store/selectors/transactions';
+import type { TransactionWithAccount } from '~/store/selectors/transactions';
 
 export const navigateToTransactionForm = (
   transaction: TransactionWithAccount

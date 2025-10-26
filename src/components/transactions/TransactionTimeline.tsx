@@ -8,11 +8,11 @@ import type { AnyAction } from 'starfx';
 import { useSelector } from 'starfx/react';
 import { tv } from 'tailwind-variants';
 
-import { transactionsInTimeline } from '~/src/store/selectors/transactions';
-import { transactionRemove } from '~/src/store/thunks';
-import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
+import { transactionsInTimeline } from '~/store/selectors/transactions';
+import { transactionRemove } from '~/store/thunks';
+import { toHumanCurrency } from '~/store/utils/dineroUtils';
 
-import { Button } from '~/src/elements/Button';
+import { Button } from '~/elements/Button.tsx';
 
 import { navigateToTransactionForm } from './utils';
 import type { TransactionFilter } from './utils';

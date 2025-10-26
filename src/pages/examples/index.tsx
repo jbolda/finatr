@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'starfx/react';
 
-import { importEntries } from '~/src/store/thunks/import.ts';
+import { importEntries } from '~/store/thunks/import.ts';
 
 import example_highRents from './high_rents.json';
 import example_simple from './simple.json';
@@ -48,7 +48,7 @@ const ExampleHeading = () => (
   <div>
     <h1 className="text-3xl font-semibold">Examples</h1>
     <div className="mt-3 sm:mt-4 lg:grid lg:grid-cols-2 lg:gap-5 lg:items-center">
-      <p className="text-xl text-gray-500">
+      <p className="text-xl text-gray-500 dark:text-gray-400">
         The following are various examples that you can test out. They are even
         valuable as a template to get you jump-started. Find one that seems to
         match your current situation? Give it a shot and see what it looks like.
@@ -85,10 +85,12 @@ const ExampleList = ({ listOfExamples }: { listOfExamples: Example[] }) => {
             onClick={(event) => loadExample(event)}
           >
             <div>
-              <p className="text-xl font-semibold text-gray-900">
+              <p className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                 {example.name}
               </p>
-              <p className="mt-3 text-base text-gray-500">{example.content}</p>
+              <p className="mt-3 text-base text-gray-500 dark:text-gray-400">
+                {example.content}
+              </p>
             </div>
           </button>
           <div className="mt-3">

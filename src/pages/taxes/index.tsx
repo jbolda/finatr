@@ -5,9 +5,9 @@ import { useSelector } from 'starfx/react';
 import {
   taxStrategy,
   taxStrategyAsList
-} from '~/src/store/selectors/taxStrategy.ts';
+} from '~/store/selectors/taxStrategy.ts';
 
-import { TabView } from '~/src/components/TabView.jsx';
+import { TabView } from '~/components/TabView.tsx';
 import {
   Table,
   TableHeader,
@@ -15,9 +15,9 @@ import {
   Column,
   Row,
   Cell
-} from '~/src/components/Table.tsx';
+} from '~/components/Table.tsx';
 
-import { Button } from '~/src/elements/Button';
+import { Button } from '~/elements/Button.tsx';
 
 const Taxes = (props) => {
   const [activeTab, tabClick] = useState(0);

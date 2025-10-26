@@ -2,8 +2,7 @@
 import * as d3 from 'd3';
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
-
-import { toHumanCurrency } from '~/src/store/utils/dineroUtils';
+import { toHumanCurrency } from '~/store/utils/dineroUtils';
 
 export class BarChartSpecific extends PureComponent {
   componentDidMount() {

@@ -1,5 +1,5 @@
 import { USD } from '@dinero.js/currencies';
-import { test, expect } from '@playwright/experimental-ct-react17';
+import { test, expect } from '@playwright/experimental-ct-react';
 import parseISO from 'date-fns/fp/parseISO/index.js';
 import startOfDay from 'date-fns/fp/startOfDay/index.js';
 import { dinero, toUnits } from 'dinero.js';

@@ -8,7 +8,7 @@ export const Footer = () => {
   const settings = useSelector(schema.settings.select);
 
   return (
-    <footer className="bg-gray-50">
+    <footer>
       <div className="max-w-7xl mx-auto py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
         <div className="text-base text-gray-500 hover:text-gray-900 flex justify-center">
           Made with

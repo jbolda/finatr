@@ -4,21 +4,21 @@ import type { Selection } from 'react-aria-components';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'starfx/react';
 
-import type { AccountWithDinero } from '~/src/store/selectors/accounts.ts';
+import type { AccountWithDinero } from '~/store/selectors/accounts.ts';
 
 import {
   MenuTrigger,
   Menu,
   MenuItem,
   MenuSection
-} from '~/src/components/Menu';
-import { Separator } from '~/src/components/Separator';
-import { Tag, TagGroup } from '~/src/components/TagGroup';
+} from '~/components/Menu.tsx';
+import { Separator } from '~/components/Separator.tsx';
+import { Tag, TagGroup } from '~/components/TagGroup.tsx';
 
-import { Button } from '~/src/elements/Button.tsx';
+import { Button } from '~/elements/Button.tsx';
 
-import { AccountCard } from './AccountCard';
-import { AccountTable } from './AccountTable';
+import { AccountCard } from './AccountCard.tsx';
+import { AccountTable } from './AccountTable.tsx';
 
 const AccountFlow = ({ accounts }: { accounts: AccountWithDinero[] }) => {
   const navigate = useNavigate();

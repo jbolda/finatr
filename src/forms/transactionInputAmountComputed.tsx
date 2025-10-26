@@ -2,11 +2,11 @@
 import { Field as FormikField, FieldArray as FormikFieldArray } from 'formik';
 import React from 'react';
 
-import { Button } from '~/src/elements/Button';
-import { FieldGroup, Label } from '~/src/elements/Field';
-import { Input } from '~/src/elements/Input';
-import { Radio } from '~/src/elements/Radio';
-import { Select } from '~/src/elements/Select';
+import { Button } from '~/elements/Button';
+import { FieldGroup, Label } from '~/elements/Field';
+import { Input } from '~/elements/Input';
+import { Radio } from '~/elements/Radio';
+import { Select } from '~/elements/Select';
 
 const TransactionInputAmountComputed = ({
   errors,

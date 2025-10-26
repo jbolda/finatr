@@ -6,10 +6,10 @@ import type { NavigateFunction } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 
-import type { TransactionWithAccount } from '~/src/store/selectors/transactions';
-import { transactionRemove } from '~/src/store/thunks/transactions.ts';
-import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
-import { toHumanReoccurrence } from '~/src/store/utils/reoccurrence';
+import type { TransactionWithAccount } from '~/store/selectors/transactions';
+import { transactionRemove } from '~/store/thunks/transactions.ts';
+import { toHumanCurrency } from '~/store/utils/dineroUtils.ts';
+import { toHumanReoccurrence } from '~/store/utils/reoccurrence';
 
 import {
   Cell,
@@ -19,9 +19,9 @@ import {
   Table,
   TableBody,
   TableHeader
-} from '~/src/components/Table.tsx';
+} from '~/components/Table.tsx';
 
-import { Button } from '~/src/elements/Button.tsx';
+import { Button } from '~/elements/Button.tsx';
 
 import { navigateToTransactionForm } from './utils';
 import type { TransactionFilter } from './utils';

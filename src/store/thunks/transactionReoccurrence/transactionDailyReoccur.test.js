@@ -1,5 +1,5 @@
 import { USD } from '@dinero.js/currencies';
-import { test, expect } from '@playwright/experimental-ct-react17';
+import { test, expect } from '@playwright/experimental-ct-react';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays/index.js';
 import getDate from 'date-fns/fp/getDate/index.js';
 import getMonth from 'date-fns/fp/getMonth/index.js';

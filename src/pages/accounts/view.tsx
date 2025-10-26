@@ -3,12 +3,12 @@ import { useParams } from 'react-router-dom';
 import { useSelector as useSel } from 'starfx/react';
 import type { TypedUseSelectorHook } from 'starfx/react';
 
-import type { AppState } from '~/src/store/schema/index.ts';
-import { accountsFromSerializedById } from '~/src/store/selectors/accounts.ts';
-import { transactionsByAccountId } from '~/src/store/selectors/transactions.ts';
-import { toHumanCurrency } from '~/src/store/utils/dineroUtils.ts';
+import type { AppState } from '~/store/schema/index.ts';
+import { accountsFromSerializedById } from '~/store/selectors/accounts.ts';
+import { transactionsByAccountId } from '~/store/selectors/transactions.ts';
+import { toHumanCurrency } from '~/store/utils/dineroUtils.ts';
 
-import Transactions from '~/src/components/transactions';
+import Transactions from '~/components/transactions/index.tsx';
 
 const useSelector: TypedUseSelectorHook<AppState> = useSel;
 

@@ -2,7 +2,7 @@ import { format, parseISO } from 'date-fns';
 import eachDayOfInterval from 'date-fns/fp/eachDayOfInterval/index.js';
 import { createSelector } from 'starfx';
 
-import { defaultChartBarRange, schema } from '~/src/store/schema/index.ts';
+import { defaultChartBarRange, schema } from '~/store/schema/index.ts';
 
 export const accountMetaFromSerialized = createSelector(
   schema.accountMeta.select,

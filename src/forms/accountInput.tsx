@@ -5,12 +5,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'starfx/react';
 import { z } from 'zod';
 
-import { accountAdd } from '~/src/store/thunks/accounts';
+import { accountAdd } from '~/store/thunks/accounts.ts';
 
-import { Button } from '~/src/elements/Button.tsx';
-import { NumberField } from '~/src/elements/NumberField.tsx';
-import { Select } from '~/src/elements/Select.tsx';
-import { TextField } from '~/src/elements/TextField.tsx';
+import { Button } from '~/elements/Button.tsx';
+import { NumberField } from '~/elements/NumberField.tsx';
+import { Select } from '~/elements/Select.tsx';
+import { TextField } from '~/elements/TextField.tsx';
 
 import { getSchemaBase } from './helpers';
 

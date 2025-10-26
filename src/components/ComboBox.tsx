@@ -25,6 +25,7 @@ export interface ComboBoxProps<T extends object>
   extends Omit<AriaComboBoxProps<T>, 'children'> {
   label?: string;
   description?: string | null;
+  // TODO see how react-aria handles this in the future
   errorMessage?: string | ((validation: ValidationResult) => string);
   children: ReactNode | ((item: T) => ReactNode);
 }
@@ -53,8 +54,8 @@ export function ComboBox<T extends object>({
         </Button>
       </FieldGroup>
       {description && <Description>{description}</Description>}
-      <FieldError>{errorMessage as unknown as React.ReactNode}</FieldError>
-      <Popover className="w-[--trigger-width]">
+      <FieldError>{errorMessage as string}</FieldError>
+      <Popover className="w-(--trigger-width)">
         <ListBox
           items={items}
           className="outline-0 p-1 max-h-[inherit] overflow-auto [clip-path:inset(0_0_0_0_round_.75rem)]"

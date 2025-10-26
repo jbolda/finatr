@@ -4,7 +4,7 @@ import { toDecimal } from 'dinero.js';
 import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'starfx/react';
 
-import { transactionsFromSerialized } from '~/src/store/selectors/transactions';
+import { transactionsFromSerialized } from '~/store/selectors/transactions';
 
 export const IcicleChart = () => {
   const d3Container = useRef(null);

@@ -3,15 +3,15 @@ import { format } from 'date-fns';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { lineChartAccounts } from '~/src/store/selectors/accounts';
-import type { ChartAccounts } from '~/src/store/selectors/accounts';
+import { lineChartAccounts } from '~/store/selectors/accounts';
+import type { ChartAccounts } from '~/store/selectors/accounts';
 import {
   accountMetaFromSerialized,
   dateRangeWithStrings
-} from '~/src/store/selectors/chartRange.ts';
-import { updateChartDateRange } from '~/src/store/thunks/chartRange.ts';
+} from '~/store/selectors/chartRange.ts';
+import { updateChartDateRange } from '~/store/thunks/chartRange.ts';
 
-import { DatePicker } from '~/src/components/DatePicker.tsx';
+import { DatePicker } from '~/components/DatePicker.tsx';
 
 import BarChart from './barChart.tsx';
 
@@ -58,7 +58,7 @@ const FinancialFlow = () => {
         setAccountFilters={setAccountFilters}
         accounts={accounts}
       />
-      <div className="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+      <div className="overflow-hidden shadow rounded-lg divide-y divide-gray-200">
         <div className="px-4 py-5 sm:p-6">
           <BarChart
             dateRange={dateRange}

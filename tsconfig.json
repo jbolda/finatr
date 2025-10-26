@@ -3,7 +3,7 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "~/*": ["./*"]
+      "~/*": ["./src/*"]
     },
     "noEmit": true,
 
@@ -30,5 +30,6 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true
-  }
+  },
+  "include": ["src", "tests"]
 }
