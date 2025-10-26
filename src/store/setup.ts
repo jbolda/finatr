@@ -157,7 +157,7 @@ export function setupStore({
   );
 
   store.run(function* () {
-    yield* localPersistor.rehydrate();
+    // yield* localPersistor.rehydrate();
     const group = yield* parallel(tsks);
     yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID }));
     yield* group;

@@ -5,10 +5,12 @@ import {
   type Operation,
   createContext
 } from 'starfx';
+import { IndexeddbPersistence } from 'y-indexeddb';
 import { WebsocketProvider } from 'y-websocket';
 import * as Y from 'yjs';
 
 export const yjsWebsocket = createContext('yjs-ws');
+export const yjsIndexedDB = createContext('yjs-idb');
 
 export const yjsStoreUpdater = <S extends AnyState>(
   setState: (state: S) => void,
@@ -23,11 +25,15 @@ export const yjsStoreUpdater = <S extends AnyState>(
     // 'ws://localhost:1234',
     'my-roomname',
     ydoc,
-    { connect: true }
+    { connect: false }
   );
+  const idbProvider = new IndexeddbPersistence('finatr', ydoc);
 
   // wsProvider.on('status', (event) => {
   //   console.log(event.status); // logs "connected" or "disconnected"
+  // });
+  // idbProvider.on('synced', () => {
+  //   console.log('content from the database is loaded');
   // });
 
   const initial = getInitialState();
@@ -65,7 +71,8 @@ export const yjsStoreUpdater = <S extends AnyState>(
   }
 
   const initializeStore: () => Operation<void> = function* () {
-    yjsWebsocket.set(wsProvider);
+    yield* yjsWebsocket.set(wsProvider);
+    yield* yjsIndexedDB.set(idbProvider);
     setState(root.toJSON() as S);
   };
   return { updateMdw, initializeStore };
