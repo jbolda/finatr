@@ -42,11 +42,6 @@
     "tailwindcss-react-aria-components": "^2.0.1",
     "zod": "^3.24.2"
   },
-  "overrides": {
-    "@estruyf/github-actions-reporter": {
-      "@playwright/test": "^1.x.x"
-    }
-  },
   "devDependencies": {
     "@estruyf/github-actions-reporter": "^1.9.2",
     "@playwright/experimental-ct-react": "^1.56.1",
