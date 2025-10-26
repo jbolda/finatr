@@ -122,6 +122,9 @@ export const TransactionSchema = z.object({
   valueType: ValueTypeSchema,
   start: z.iso.date(),
   end: z.iso.date().optional(),
+  ending: z
+    .enum(['never', 'at date', 'after number of occurrences'])
+    .default('never'),
   rtype: RepeatTypeSchema,
   cycle: z.number().default(0),
   value: DineroSchema,

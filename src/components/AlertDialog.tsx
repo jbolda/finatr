@@ -5,9 +5,9 @@ import { chain } from 'react-aria';
 import type { DialogProps } from 'react-aria-components';
 import { Heading } from 'react-aria-components';
 
-import { Dialog } from '~/src/components/Dialog';
+import { Dialog } from '~/components/Dialog.tsx';
 
-import { Button } from '~/src/elements/Button';
+import { Button } from '~/elements/Button.tsx';
 
 interface AlertDialogProps extends Omit<DialogProps, 'children'> {
   title: string;

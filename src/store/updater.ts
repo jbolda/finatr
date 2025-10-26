@@ -48,7 +48,7 @@ export const yjsStoreUpdater = <S extends AnyState>(
     root.set(objTable, itemMap);
   }
 
-  root.observeDeep((events, transaction) => {
+  root.observeDeep((_events, _transaction) => {
     setState(root.toJSON() as S);
   });
 

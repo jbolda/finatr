@@ -5,7 +5,7 @@ import { FileTrigger } from 'react-aria-components';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema } from '~/store/schema.ts';
+import { schema } from '~/store/schema/index.ts';
 import { importEntries } from '~/store/thunks/import.ts';
 
 import { Button } from '~/elements/Button.tsx';

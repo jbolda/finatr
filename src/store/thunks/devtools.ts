@@ -1,5 +1,11 @@
-import { type Action } from 'redux';
-import { take, ensure, resource, type FxStore, type Operation } from 'starfx';
+import {
+  take,
+  ensure,
+  resource,
+  type FxStore,
+  type Operation,
+  type Action
+} from 'starfx';
 
 interface ReduxDevtoolsExtensionConnectResponse {
   init: <S>(

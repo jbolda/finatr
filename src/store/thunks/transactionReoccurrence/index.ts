@@ -13,7 +13,7 @@ import parseISO from 'date-fns/fp/parseISO/index.js';
 import setDate from 'date-fns/fp/setDate/index.js';
 import { dinero, allocate, type Dinero } from 'dinero.js';
 
-import type { RepeatType } from '~/src/store/schema/index.ts';
+import type { RepeatType } from '~/store/schema/index.ts';
 
 import type {
   TransactionWithDinero,
