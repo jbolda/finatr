@@ -4,7 +4,7 @@ import {
   createLocalStorageAdapter,
   createPersistor,
   parallel,
-  PERSIST_LOADER_ID,
+  // PERSIST_LOADER_ID,
   // persistStoreMdw,
   Ok,
   Err,
@@ -147,7 +147,7 @@ export function setupStore({
     //     yield* take('auth:session');
     //   }
     // },
-    thunks.bootup,
+    thunks.register,
     connectReduxDevToolsExtension({
       name: 'finatr',
       store,
@@ -156,10 +156,10 @@ export function setupStore({
     ...tasks
   );
 
-  store.run(function* () {
+  store.initialize(function* () {
     // yield* localPersistor.rehydrate();
     const group = yield* parallel(tsks);
-    yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID }));
+    // yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID }));
     yield* group;
   });
 
