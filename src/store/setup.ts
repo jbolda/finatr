@@ -1,8 +1,8 @@
 import { type SupabaseClient } from '@supabase/supabase-js';
 import {
   createStore,
-  createLocalStorageAdapter,
-  createPersistor,
+  // createLocalStorageAdapter,
+  // createPersistor,
   parallel,
   // PERSIST_LOADER_ID,
   // persistStoreMdw,
@@ -24,8 +24,8 @@ import type {
   Result
 } from 'starfx';
 
-import { initialState as schemaInitialState, schema } from './schema/index.ts';
-import type { AppState, Transaction, Account } from './schema/index.ts';
+import { initialState as schemaInitialState } from './schema/index.ts';
+import type { Transaction, Account } from './schema/index.ts';
 // import { updateAuth } from './thunks/auth.ts';
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
 import { tasks, thunks } from './thunks/index.ts';
@@ -42,20 +42,20 @@ export function setupStore({
   initialState: AnyState;
   supabase: SupabaseClient<any, 'public', any> | null;
 }) {
-  const localPersistor = createPersistor({
-    key: 'finatr',
-    adapter: createLocalStorageAdapter<AppState>(),
-    reconciler: reconcilerWithReconstitution,
-    allowlist: [
-      'settings',
-      'chartRange',
-      'accounts',
-      'accountMeta',
-      'transactions',
-      'incomeReceived',
-      'incomeExpected'
-    ]
-  });
+  // const localPersistor = createPersistor({
+  //   key: 'finatr',
+  //   adapter: createLocalStorageAdapter<AppState>(),
+  //   reconciler: reconcilerWithReconstitution,
+  //   allowlist: [
+  //     'settings',
+  //     'chartRange',
+  //     'accounts',
+  //     'accountMeta',
+  //     'transactions',
+  //     'incomeReceived',
+  //     'incomeExpected'
+  //   ]
+  // });
 
   const store = createStore({
     initialState: {
