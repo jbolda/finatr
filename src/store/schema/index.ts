@@ -83,13 +83,13 @@ export const ScaledNumberSchema = z.preprocess(
 export type ScaledNumber = z.infer<typeof ScaledNumberSchema>;
 
 export const SettingsSchema = z.object({
-  examples: z.boolean().default(false),
+  examples: z.boolean().default(true),
   import: z.boolean().default(true),
-  accounts: z.boolean().default(false),
-  transactions: z.boolean().default(false),
+  accounts: z.boolean().default(true),
+  transactions: z.boolean().default(true),
   planning: z.boolean().default(true),
-  financialindependence: z.boolean().default(false),
-  flow: z.boolean().default(false),
+  financialindependence: z.boolean().default(true),
+  flow: z.boolean().default(true),
   taxes: z.boolean().default(false)
 });
 export type Settings = z.infer<typeof SettingsSchema>;
