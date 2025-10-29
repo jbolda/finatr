@@ -24,7 +24,7 @@ import type {
   Result
 } from 'starfx';
 
-import { initialState as schemaInitialState } from './schema/index.ts';
+import { initialState as schemaInitialState, schema } from './schema/index.ts';
 import type { Transaction, Account } from './schema/index.ts';
 // import { updateAuth } from './thunks/auth.ts';
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';

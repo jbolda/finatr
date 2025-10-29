@@ -13,10 +13,11 @@ import { z } from 'zod';
 import { emptyAccount, emptyTransaction } from '../factory.ts';
 import { redinero } from '../utils/dineroUtils.ts';
 import makeUUID from '../utils/makeUUID.ts';
+import { loaders as sliceLoaders } from './loader.ts';
 import { obj as sliceObj } from './obj.ts';
 import { table as sliceTable } from './table.ts';
 
-const slice = { obj: sliceObj, table: sliceTable };
+const slice = { obj: sliceObj, table: sliceTable, loaders: sliceLoaders };
 
 export function createSchema<
   O extends FxMap,
@@ -131,8 +132,8 @@ export const TransactionSchema = z.object({
   occurrences: z.number().default(0),
   beginAfterOccurrences: z.number().optional()
 });
-export interface TransactionInput extends z.input<typeof TransactionSchema> {}
-export interface Transaction extends z.output<typeof TransactionSchema> {}
+export type TransactionInput = z.input<typeof TransactionSchema>;
+export type Transaction = z.output<typeof TransactionSchema>;
 
 export const AmountVehicleSchema = z.enum([
   'operating',
@@ -152,19 +153,19 @@ export const AccountSchema = z.object({
   payback: z.array(TransactionSchema).optional()
 });
 export type AccountInput = z.input<typeof AccountSchema>;
-export interface Account extends z.infer<typeof AccountSchema> {}
+export type Account = z.infer<typeof AccountSchema>;
 
 export const AccountMetaSchema = z.object({
   snapshotDate: z.iso.date()
 });
-export interface AccountMeta extends z.infer<typeof AccountMetaSchema> {}
+export type AccountMeta = z.infer<typeof AccountMetaSchema>;
 
 export const ChartRangeSchema = z.object({
   start: z.iso.date(),
   end: z.iso.date()
 });
 
-export interface ChartRange extends z.infer<typeof ChartRangeSchema> {}
+export type ChartRange = z.infer<typeof ChartRangeSchema>;
 
 export const defaultChartBarRange = (refDate: Date) =>
   ({
@@ -188,17 +189,17 @@ export const IncomeReceivedSchema = z.object({
   socialSecurity: z.number(),
   stateTax: z.number()
 });
-export interface IncomeReceived extends z.infer<typeof IncomeReceivedSchema> {}
+export type IncomeReceived = z.infer<typeof IncomeReceivedSchema>;
 export const IncomeExpectedSchema = z.object({
   quarter: z.number(),
   group: z.string(),
   quantity: z.number()
 });
-export interface IncomeExpected extends z.infer<typeof IncomeExpectedSchema> {}
+export type IncomeExpected = z.infer<typeof IncomeExpectedSchema>;
 
 const [schema, initialState] = createSchema({
   cache: sliceOG.table({ empty: {} }),
-  loaders: sliceOG.loaders(),
+  loaders: slice.loaders(),
   auth: slice.obj<Session | { user: null }>({ user: null }),
   settings: slice.obj<Settings>(defaultSettings),
   // emptyTransaction / emptyAccount come from dinero().toJSON() and may

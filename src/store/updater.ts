@@ -66,14 +66,14 @@ export const yjsStoreUpdater = <S extends AnyState>(
         up(root);
       }
     });
-    setState(root.toJSON() as S);
+    // we don't need to set the state as the observer will take care of it
     yield* next();
   }
 
-  const initializeStore: () => Operation<void> = function* () {
+  function* initializeStore(): Operation<void> {
     yield* yjsWebsocket.set(wsProvider);
     yield* yjsIndexedDB.set(idbProvider);
     setState(root.toJSON() as S);
-  };
+  }
   return { updateMdw, initializeStore };
 };
