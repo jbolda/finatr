@@ -11,7 +11,7 @@ import {
 import { z } from 'zod';
 
 import { emptyAccount, emptyTransaction } from '../factory.ts';
-import { redinero } from '../utils/dineroUtils.ts';
+import { redinero, scaledFromFloat } from '../utils/dineroUtils.ts';
 import makeUUID from '../utils/makeUUID.ts';
 import { loaders as sliceLoaders } from './loader.ts';
 import { obj as sliceObj } from './obj.ts';
@@ -71,7 +71,7 @@ const DineroSchema = z.preprocess((val) => {
 export const ScaledNumberSchema = z.preprocess(
   (val) => {
     if (typeof val === 'number') {
-      return { amount: val, scale: 0 };
+      return scaledFromFloat(val, 4);
     }
     return val;
   },

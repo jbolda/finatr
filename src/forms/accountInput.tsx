@@ -95,7 +95,7 @@ function AccountInput() {
               formatOptions={{
                 style: 'percent',
                 minimumFractionDigits: 2,
-                maximumFractionDigits: 4
+                maximumFractionDigits: 6
               }}
               step={0.0001}
               value={field.state.value}
