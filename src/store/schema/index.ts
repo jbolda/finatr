@@ -117,7 +117,7 @@ export const TransactionSchema = z.object({
   raccount: z.string(), // account id
   vaccount: z.string().optional(), // account id
   transferIn: z.string().nullish(), // account id
-  description: z.string(),
+  description: z.string().optional(),
   category: z.string(),
   type: TransactionTypeSchema,
   valueType: ValueTypeSchema,
@@ -144,13 +144,20 @@ export const AmountVehicleSchema = z.enum([
 ]);
 export type AmountVehicle = z.infer<typeof AmountVehicleSchema>;
 
+const AccountPaybackSchema = z.object({
+  references: z.record(z.string(), DineroSchema).optional(),
+  category: z.string(),
+  description: z.string().optional(),
+  transactions: z.array(TransactionSchema.omit({ category: true, type: true }))
+});
+
 export const AccountSchema = z.object({
   id: z.string().default(makeUUID),
   name: z.string(),
   starting: DineroSchema,
   interest: ScaledNumberSchema,
   vehicle: AmountVehicleSchema,
-  payback: z.array(TransactionSchema).optional()
+  payback: AccountPaybackSchema.optional()
 });
 export type AccountInput = z.input<typeof AccountSchema>;
 export type Account = z.infer<typeof AccountSchema>;
