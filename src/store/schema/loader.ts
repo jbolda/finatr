@@ -139,8 +139,7 @@ export const createLoaders = <
     name: name as string,
     initialState,
     start: (e) => (s) => {
-      const table = selectors.selectTable(s);
-      const loader = s.get(name);
+      const loader = s?.['get'](name);
       loader.set(
         e.id,
         defaultLoaderItem({
@@ -152,8 +151,7 @@ export const createLoaders = <
       );
     },
     success: (e) => (s) => {
-      const table = selectors.selectTable(s);
-      const loader = s.get(name);
+      const loader = s['get'](name);
       loader.set(
         e.id,
         defaultLoaderItem({
@@ -165,8 +163,7 @@ export const createLoaders = <
       );
     },
     error: (e) => (s) => {
-      const table = selectors.selectTable(s);
-      const loader = s.get(name);
+      const loader = s['get'](name);
       loader.set(
         e.id,
         defaultLoaderItem({
