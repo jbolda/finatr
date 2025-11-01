@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { type Selection, Header } from 'react-aria-components';
+import { Header } from 'react-aria-components';
+import type { Selection } from 'react-aria-components';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'starfx/react';
 
-import { Account } from '~/store/schema.ts';
+import type { AccountWithDinero } from '~/store/selectors/accounts.ts';
 
 import {
   MenuTrigger,
@@ -19,7 +20,7 @@ import { Button } from '~/elements/Button.tsx';
 import { AccountCard } from './AccountCard.tsx';
 import { AccountTable } from './AccountTable.tsx';
 
-const AccountFlow = ({ accounts }: { accounts: Account[] }) => {
+const AccountFlow = ({ accounts }: { accounts: AccountWithDinero[] }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

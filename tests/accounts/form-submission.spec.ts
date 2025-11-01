@@ -23,8 +23,14 @@ test('check debt is listed in debt tab after submit', async ({ page }) => {
   await page.getByLabel('name').fill('Test Debt Account');
   await page.getByLabel('vehicle').click();
   await page.getByRole('option', { name: 'Loan' }).click();
+  await page.getByLabel('starting').first().fill('33');
+  await page.getByLabel('interest').first().fill('8.25');
   await page.getByRole('button', { name: 'Add Account' }).click();
 
   await page.getByLabel('Debt', { exact: true }).click();
   await expect(page.getByText('Test Debt Account')).toBeVisible();
+  await expect(page.getByText('33.00').first()).toBeVisible();
+  await expect(
+    page.getByRole('gridcell').filter({ hasText: '8.25%' })
+  ).toBeVisible();
 });

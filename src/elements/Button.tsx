@@ -1,10 +1,8 @@
 import React from 'react';
-import {
-  composeRenderProps,
-  Button as RACButton,
-  ButtonProps as RACButtonProps
-} from 'react-aria-components';
+import { composeRenderProps, Button as RACButton } from 'react-aria-components';
+import type { ButtonProps as RACButtonProps } from 'react-aria-components';
 import { tv } from 'tailwind-variants';
+
 import { focusRing } from './utils.ts';
 
 export interface ButtonProps extends RACButtonProps {

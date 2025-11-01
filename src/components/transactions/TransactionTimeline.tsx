@@ -2,32 +2,28 @@ import format from 'date-fns/format';
 import { Pencil, Trash2 } from 'lucide-react';
 import React from 'react';
 import { Group } from 'react-aria-components';
-import { NavigateFunction } from 'react-router-dom';
+import type { NavigateFunction } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { useSelector } from 'starfx/react';
 import { tv } from 'tailwind-variants';
 
-import {
-  transactionsInTimeline,
-  TransactionWithAccount
-} from '~/store/selectors/transactions.ts';
-import { transactionRemove } from '~/store/thunks/transactions.ts';
-import { toHumanCurrency } from '~/store/utils/dineroUtils.ts';
+import { transactionsInTimeline } from '~/store/selectors/transactions';
+import { transactionRemove } from '~/store/thunks';
+import { toHumanCurrency } from '~/store/utils/dineroUtils';
 
 import { Button } from '~/elements/Button.tsx';
 
-import { navigateToTransactionForm, TransactionFilter } from './utils';
+import { navigateToTransactionForm } from './utils';
+import type { TransactionFilter } from './utils';
 
 export const TransactionTimeline = ({
   navigate,
   dispatch,
-  transactions,
   transactionFilter
 }: {
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
-  transactions: TransactionWithAccount[];
   transactionFilter: TransactionFilter;
 }) => {
   const transactionsTimeline = useSelector(transactionsInTimeline);
@@ -64,7 +60,10 @@ export const TransactionTimeline = ({
                         transactionFilter.has(transaction.type)
                     )
                     .map((t) => (
-                      <p className="flex gap-3 max-w-md text-gray-500 py-1 sm:py-0">
+                      <p
+                        key={t.id}
+                        className="flex gap-3 max-w-md text-gray-500 py-1 sm:py-0"
+                      >
                         <span className="flex-auto gap-3">
                           <span className="text-black">{t.raccount}</span>
                           <span>

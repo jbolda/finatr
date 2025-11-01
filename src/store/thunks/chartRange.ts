@@ -1,8 +1,9 @@
 import { CalendarDate } from '@internationalized/date';
 import { parse } from 'date-fns';
 import { addYears } from 'date-fns';
+import { format } from 'date-fns';
 
-import { schema } from '../schema.ts';
+import { schema } from '../schema/index.ts';
 import { thunks } from './foundation.ts';
 
 export const updateChartDateRange = thunks.create<{
@@ -15,8 +16,13 @@ export const updateChartDateRange = thunks.create<{
     const end = addYears(start, 1);
 
     // check minimum date here rather than in the component
-    if (start > ctx.payload.snapshotDate)
-      yield* schema.update(schema.chartRange.set({ start, end }));
+    if (start > ctx.payload.snapshotDate) {
+      const startStr = format(start, 'yyyy-MM-dd');
+      const endStr = format(end, 'yyyy-MM-dd');
+      yield* schema.update(
+        schema.chartRange.set({ start: startStr, end: endStr })
+      );
+    }
   }
   yield* next();
 });

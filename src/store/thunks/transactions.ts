@@ -1,25 +1,27 @@
-import { format } from 'date-fns';
+import { z } from 'zod';
 
-import { schema, type Transaction } from '../schema';
-import { redinero } from '../utils/dineroUtils.ts';
-import makeUUID from '../utils/makeUUID.ts';
+import {
+  schema,
+  TransactionSchema,
+  type TransactionInput
+} from '../schema/index.ts';
 import { thunks } from './foundation.ts';
-import { transactionCompute } from './transactionReoccurrence/index.ts';
 
-export const transactionAdd = thunks.create<Transaction>(
+export const transactionAdd = thunks.create<TransactionInput>(
   'transaction:add',
   function* (ctx, next) {
-    const transaction = { ...ctx.payload };
-    if (!transaction?.id) transaction.id = makeUUID();
-    if (typeof transaction.start === 'object')
-      transaction.start = format(transaction.start, 'yyyy-MM-dd');
-    transaction.value = redinero(transaction.value);
-    transaction.cycle = ctx.payload?.cycle ?? 0;
-    transaction.occurrences = ctx.payload?.occurrences ?? 0;
-    transaction.dailyRate = transactionCompute({ transaction });
+    const transaction = TransactionSchema.safeParse(ctx.payload);
+    if (!transaction.success) {
+      console.error(
+        'Invalid transaction payload\n',
+        z.prettifyError(transaction.error)
+      );
+      throw new Error('Invalid transaction payload');
+    }
 
+    console.log('Adding transaction', transaction);
     yield* schema.update(
-      schema.transactions.add({ [transaction.id]: transaction })
+      schema.transactions.add({ [transaction.data.id]: transaction.data })
     );
     yield* next();
   }

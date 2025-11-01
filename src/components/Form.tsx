@@ -1,5 +1,6 @@
 import React from 'react';
-import { FormProps, Form as RACForm } from 'react-aria-components';
+import { Form as RACForm } from 'react-aria-components';
+import type { FormProps } from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
 
 export function Form(props: FormProps) {

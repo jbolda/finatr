@@ -1,7 +1,10 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
+import type { PropsWithChildren, ReactNode } from 'react';
 import {
   Radio as RACRadio,
-  RadioGroup as RACRadioGroup,
+  RadioGroup as RACRadioGroup
+} from 'react-aria-components';
+import type {
   RadioGroupProps as RACRadioGroupProps,
   RadioProps,
   ValidationResult
@@ -32,7 +35,7 @@ export function RadioGroup(props: RadioGroupProps) {
         {props.children}
       </div>
       {props.description && <Description>{props.description}</Description>}
-      <FieldError>{props.errorMessage}</FieldError>
+      <FieldError>{props.errorMessage?.toString()}</FieldError>
     </RACRadioGroup>
   );
 }
@@ -55,7 +58,7 @@ const styles = tv({
   }
 });
 
-export function Radio(props: RadioProps) {
+export function Radio(props: PropsWithChildren<RadioProps>) {
   return (
     <RACRadio
       {...props}

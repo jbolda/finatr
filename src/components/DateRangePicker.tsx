@@ -1,15 +1,17 @@
+// @ts-nocheck not in use, waiting for upgrade
 import { CalendarIcon } from 'lucide-react';
 import React from 'react';
-import {
-  DateRangePicker as AriaDateRangePicker,
+import { DateRangePicker as AriaDateRangePicker } from 'react-aria-components';
+import type {
   DateRangePickerProps as AriaDateRangePickerProps,
   DateValue,
   ValidationResult
 } from 'react-aria-components';
-import { Button } from './Button';
-import { DateInput } from './DateField';
-import { Dialog } from './Dialog';
+
+import { DateInput } from '../elements/DateField';
 import { Description, FieldError, FieldGroup, Label } from '../elements/Field';
+import { Button } from './Button';
+import { Dialog } from './Dialog';
 import { Popover } from './Popover';
 import { RangeCalendar } from './RangeCalendar';
 import { composeTailwindRenderProps } from './utils';

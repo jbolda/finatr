@@ -1,15 +1,21 @@
 import { XIcon } from 'lucide-react';
-import React, { createContext, useContext } from 'react';
+import React, {
+  createContext,
+  useContext,
+  type PropsWithChildren
+} from 'react';
 import {
   Tag as AriaTag,
   TagGroup as AriaTagGroup,
-  TagGroupProps as AriaTagGroupProps,
-  TagProps as AriaTagProps,
   Button,
   TagList,
-  TagListProps,
   Text,
   composeRenderProps
+} from 'react-aria-components';
+import type {
+  TagGroupProps as AriaTagGroupProps,
+  TagProps as AriaTagProps,
+  TagListProps
 } from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
 import { tv } from 'tailwind-variants';
@@ -108,7 +114,11 @@ const removeButtonStyles = tv({
   base: 'cursor-default rounded-full transition-[background-color] p-0.5 flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 pressed:bg-black/20 dark:pressed:bg-white/20'
 });
 
-export function Tag({ children, color, ...props }: TagProps) {
+export function Tag({
+  children,
+  color,
+  ...props
+}: PropsWithChildren<TagProps>) {
   let textValue = typeof children === 'string' ? children : undefined;
   let groupColor = useContext(ColorContext);
   return (

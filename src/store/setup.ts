@@ -1,37 +1,35 @@
 import { type SupabaseClient } from '@supabase/supabase-js';
 import {
-  Callable,
   createStore,
-  createLocalStorageAdapter,
-  createPersistor,
+  // createLocalStorageAdapter,
+  // createPersistor,
   parallel,
-  PERSIST_LOADER_ID,
-  persistStoreMdw,
-  take,
-  AnyState,
+  // PERSIST_LOADER_ID,
+  // persistStoreMdw,
   Ok,
   Err,
   select,
+  call,
+  updateStore,
+  takeEvery
+  // put,
+  // ensure
+} from 'starfx';
+import type {
+  Callable,
+  AnyState,
   UpdaterCtx,
   Next,
-  call,
   Operation,
-  Result,
-  updateStore,
-  put,
-  ensure
+  Result
 } from 'starfx';
 
-import {
-  AppState,
-  initialState as schemaInitialState,
-  schema,
-  Transaction,
-  Account
-} from './schema.ts';
-import { updateAuth } from './thunks/auth.ts';
+import { initialState as schemaInitialState } from './schema/index.ts';
+import type { Transaction, Account } from './schema/index.ts';
+// import { updateAuth } from './thunks/auth.ts';
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
 import { tasks, thunks } from './thunks/index.ts';
+import { yjsStoreUpdater } from './updater.ts';
 import { reconcilerWithReconstitution } from './utils/reconcilerWithReconstitution.ts';
 
 const devtoolsEnabled = true;
@@ -44,27 +42,33 @@ export function setupStore({
   initialState: AnyState;
   supabase: SupabaseClient<any, 'public', any> | null;
 }) {
-  const localPersistor = createPersistor({
-    key: 'finatr',
-    adapter: createLocalStorageAdapter<AppState>(),
-    reconciler: reconcilerWithReconstitution,
-    allowlist: [
-      'settings',
-      'chartRange',
-      'accounts',
-      'accountMeta',
-      'transactions',
-      'incomeReceived',
-      'incomeExpected'
-    ]
-  });
+  // const localPersistor = createPersistor({
+  //   key: 'finatr',
+  //   adapter: createLocalStorageAdapter<AppState>(),
+  //   reconciler: reconcilerWithReconstitution,
+  //   allowlist: [
+  //     'settings',
+  //     'chartRange',
+  //     'accounts',
+  //     'accountMeta',
+  //     'transactions',
+  //     'incomeReceived',
+  //     'incomeExpected'
+  //   ]
+  // });
 
   const store = createStore({
     initialState: {
       ...schemaInitialState,
       ...initialState
     },
-    middleware: [persistStoreMdw(localPersistor), persistDBMdw(supabase)]
+    // @ts-expect-error not quite type compatible yet
+    setStoreUpdater: yjsStoreUpdater,
+    middleware: [
+      // TODO check on this, doesn't seem to work right now
+      // persistStoreMdw(localPersistor)
+      // persistDBMdw(supabase)
+    ]
   });
 
   if (supabase)
@@ -113,38 +117,37 @@ export function setupStore({
   const tsks: Callable<unknown>[] = [];
   if (logs) {
     // log all actions dispatched
-    tsks.push(function* logActions() {
-      while (true) {
-        const action = yield* take('*');
+    tsks.push(
+      takeEvery('*', function* logActions(action) {
         console.log(action);
-      }
-    });
+      })
+    );
   }
   tsks.push(
-    function* auth() {
-      if (!supabase) return;
-      const auth = yield* call(supabase.auth.getSession());
-      if (auth.data?.session)
-        yield* put(updateAuth([schema.auth.set(auth.data.session)]));
+    // function* auth() {
+    //   if (!supabase) return;
+    //   const auth = yield* call(supabase.auth.getSession());
+    //   if (auth.data?.session)
+    //     yield* put(updateAuth([schema.auth.set(auth.data.session)]));
 
-      const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-        store.dispatch(
-          updateAuth([schema.auth.set(session ? session : { user: null })])
-        );
-      });
+    //   const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+    //     store.dispatch(
+    //       updateAuth([schema.auth.set(session ? session : { user: null })])
+    //     );
+    //   });
 
-      yield* ensure(() => data.subscription.unsubscribe());
+    //   yield* ensure(() => data.subscription.unsubscribe());
 
-      yield* take('auth:session');
-      // only on first auth, rehydrate
-      yield* dbRehydrate(supabase);
+    //   yield* take('auth:session');
+    //   // only on first auth, rehydrate
+    //   yield* dbRehydrate(supabase);
 
-      // really suspend, no other good way right now? need an effection upgrade?
-      while (true) {
-        yield* take('auth:session');
-      }
-    },
-    thunks.bootup,
+    //   // really suspend, no other good way right now? need an effection upgrade?
+    //   while (true) {
+    //     yield* take('auth:session');
+    //   }
+    // },
+    thunks.register,
     connectReduxDevToolsExtension({
       name: 'finatr',
       store,
@@ -153,16 +156,17 @@ export function setupStore({
     ...tasks
   );
 
-  store.run(function* () {
-    yield* localPersistor.rehydrate();
+  store.initialize(function* () {
+    // yield* localPersistor.rehydrate();
     const group = yield* parallel(tsks);
-    yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID }));
+    // yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID }));
     yield* group;
   });
 
   return store;
 }
 
+// @ts-expect-error saving for later maybe
 function* dbRehydrate<S extends AnyState>(
   supabase: SupabaseClient<any, 'public', any>
 ): Operation<Result<undefined>> {
@@ -184,14 +188,14 @@ function* dbRehydrate<S extends AnyState>(
     const stateFromStorage = {
       transactions: transactionArray.reduce(
         (o: Record<string, any>, t: Record<string, any>) => {
-          o[t.id] = t;
+          o[t['id']] = t;
           return o;
         },
         {} as Record<string, any>
       ),
       accounts: accountArray.reduce(
         (o: Record<string, any>, t: Record<string, any>) => {
-          o[t.id] = t;
+          o[t['id']] = t;
           return o;
         },
         {} as Record<string, any>
@@ -215,6 +219,7 @@ const PATCH_REPLACE = 'replace';
 const PATCH_ADD = 'add';
 const PATCH_REMOVE = 'remove';
 const dbAllowlist = ['accounts', 'transactions'];
+// @ts-expect-error saving for later maybe
 function persistDBMdw<S extends AnyState>(
   supabase: SupabaseClient<any, 'public', any> | null
 ) {
@@ -226,7 +231,7 @@ function persistDBMdw<S extends AnyState>(
     if (update.patches.length > 3) return;
 
     const state = yield* select((s: S) => s);
-    if (!state?.auth?.user) return;
+    if (!state?.['auth']?.user) return;
 
     for (let patch of update.patches) {
       const table = patch.path[0] as 'accounts' | 'transactions';
@@ -261,7 +266,7 @@ function persistDBMdw<S extends AnyState>(
   };
 }
 
-const staticalize = (table: string, item: Account | Transaction) => {
+const staticalize = (_table: string, item: Account | Transaction) => {
   const jsonify = JSON.parse(JSON.stringify(item));
   return jsonify;
 };

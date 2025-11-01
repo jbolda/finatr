@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { TableBody } from 'react-aria-components';
+
 import { Cell, Column, Row, Table, TableHeader } from '../Table.tsx';
 
 let rows = [
@@ -21,12 +22,12 @@ export const Example = (args: any) => {
   });
 
   let items = useMemo(() => {
-    // @ts-ignore
-    let items = rows
-      .slice()
-      .sort((a, b) =>
-        a[sortDescriptor.column].localeCompare(b[sortDescriptor.column])
-      );
+    let items = rows.slice().sort((a, b) => {
+      const col = sortDescriptor.column as keyof typeof a;
+      const va = String(a[col] ?? '');
+      const vb = String(b[col] ?? '');
+      return va.localeCompare(vb);
+    });
     if (sortDescriptor.direction === 'descending') {
       items.reverse();
     }

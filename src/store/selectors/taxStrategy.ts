@@ -1,9 +1,11 @@
+// @ts-nocheck eventually tighten types here
 import { USD } from '@dinero.js/currencies';
 import getQuarter from 'date-fns/fp/getQuarter/index.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';
 import { dinero } from 'dinero.js';
 import { createSelector } from 'starfx';
-import { schema } from '~/store/schema.ts';
+
+import { schema } from '~/store/schema/index.ts';
 
 export const taxedIncomeGrouped = createSelector(
   schema.incomeReceived.selectTableAsList,

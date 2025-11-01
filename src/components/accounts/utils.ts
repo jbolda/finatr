@@ -1,7 +1,7 @@
-import type { Account } from '~/store/schema';
+import type { AccountWithDinero } from '~/store/selectors/accounts.ts';
 import { floatFromDinero, floatFromScaled } from '~/store/utils/dineroUtils.ts';
 
-export const navigateToAccountForm = (account: Account) => {
+export const navigateToAccountForm = (account: AccountWithDinero) => {
   return {
     state: {
       account: {

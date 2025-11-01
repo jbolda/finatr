@@ -1,11 +1,14 @@
 import { Check, Minus } from 'lucide-react';
-import React, { ReactNode } from 'react';
+import React, { type PropsWithChildren } from 'react';
+import type { ReactNode } from 'react';
 import {
   Checkbox as AriaCheckbox,
   CheckboxGroup as AriaCheckboxGroup,
-  CheckboxGroupProps as AriaCheckboxGroupProps,
-  CheckboxProps,
   composeRenderProps
+} from 'react-aria-components';
+import type {
+  CheckboxGroupProps as AriaCheckboxGroupProps,
+  CheckboxProps
 } from 'react-aria-components';
 import { tv } from 'tailwind-variants';
 
@@ -68,7 +71,7 @@ const boxStyles = tv({
 const iconStyles =
   'w-4 h-4 text-white group-disabled:text-gray-400 dark:text-slate-900 dark:group-disabled:text-slate-600 forced-colors:text-[HighlightText]';
 
-export function Checkbox(props: CheckboxProps) {
+export function Checkbox(props: PropsWithChildren<CheckboxProps>) {
   return (
     <AriaCheckbox
       {...props}

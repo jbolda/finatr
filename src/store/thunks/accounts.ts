@@ -1,27 +1,26 @@
 import { CalendarDate } from '@internationalized/date';
 import { parse } from 'date-fns';
+import { z } from 'zod';
 
-import { schema, type Account } from '../schema';
-import { scaledFromFloat, redinero } from '../utils/dineroUtils.ts';
-import makeUUID from '../utils/makeUUID.ts';
+import { schema, AccountSchema, type AccountInput } from '../schema/index.ts';
 import { thunks } from './foundation.ts';
 
-export const accountAdd = thunks.create<Account>(
+export const accountAdd = thunks.create<AccountInput>(
   'account:add',
   function* (ctx, next) {
-    const rawAccount = { ...ctx.payload };
-    const account = { ...rawAccount };
-    if (!rawAccount.id) {
-      account.id = makeUUID();
+    const account = AccountSchema.safeParse(ctx.payload);
+    if (!account.success) {
+      console.error(
+        'Invalid account payload\n',
+        z.prettifyError(account.error)
+      );
+      throw new Error('Invalid account payload');
     }
-    account.starting = redinero(rawAccount.starting);
-    console.log(rawAccount.interest);
-    if (typeof rawAccount.interest === 'number') {
-      account.interest = scaledFromFloat(rawAccount.interest, 5);
-    }
-    console.log(rawAccount.interest);
 
-    yield* schema.update(schema.accounts.add({ [account.id]: account }));
+    // store as-is (AccountSchema normalizes starting into a serializable snapshot)
+    yield* schema.update(
+      schema.accounts.add({ [account.data.id]: account.data })
+    );
     yield* next();
   }
 );
@@ -39,9 +38,11 @@ export const updateAccountSnapshotDate = thunks.create<CalendarDate | null>(
   function* (ctx, next) {
     if (ctx.payload) {
       const dateInput = ctx.payload.toString();
+      // store as an ISO-formatted yyyy-MM-dd string to match schema
       const snapshotDate = parse(dateInput, 'yyyy-MM-dd', new Date());
+      const formatted = snapshotDate.toISOString().slice(0, 10);
 
-      yield* schema.update(schema.accountMeta.set({ snapshotDate }));
+      yield* schema.update(schema.accountMeta.set({ snapshotDate: formatted }));
     }
 
     yield* next();

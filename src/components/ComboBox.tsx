@@ -1,12 +1,13 @@
 import { ChevronDown } from 'lucide-react';
 import React from 'react';
-import {
-  ComboBox as AriaComboBox,
+import type { ReactNode } from 'react';
+import { ComboBox as AriaComboBox, ListBox } from 'react-aria-components';
+import type {
   ComboBoxProps as AriaComboBoxProps,
-  ListBox,
   ListBoxItemProps,
   ValidationResult
 } from 'react-aria-components';
+
 import { Button } from '../elements/Button.tsx';
 import {
   Description,
@@ -15,20 +16,18 @@ import {
   Input,
   Label
 } from '../elements/Field.tsx';
-import {
-  DropdownItem,
-  DropdownSection,
-  DropdownSectionProps
-} from './ListBox.tsx';
-import { Popover } from './Popover.tsx';
 import { composeTailwindRenderProps } from '../elements/utils.ts';
+import { DropdownItem, DropdownSection } from './ListBox.tsx';
+import type { DropdownSectionProps } from './ListBox.tsx';
+import { Popover } from './Popover.tsx';
 
 export interface ComboBoxProps<T extends object>
   extends Omit<AriaComboBoxProps<T>, 'children'> {
   label?: string;
   description?: string | null;
+  // TODO see how react-aria handles this in the future
   errorMessage?: string | ((validation: ValidationResult) => string);
-  children: React.ReactNode | ((item: T) => React.ReactNode);
+  children: ReactNode | ((item: T) => ReactNode);
 }
 
 export function ComboBox<T extends object>({
@@ -55,7 +54,7 @@ export function ComboBox<T extends object>({
         </Button>
       </FieldGroup>
       {description && <Description>{description}</Description>}
-      <FieldError>{errorMessage}</FieldError>
+      <FieldError>{errorMessage as string}</FieldError>
       <Popover className="w-(--trigger-width)">
         <ListBox
           items={items}

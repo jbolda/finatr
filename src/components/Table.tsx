@@ -8,17 +8,19 @@ import {
   TableHeader as AriaTableHeader,
   TableBody,
   Button,
-  CellProps,
   Collection,
-  ColumnProps,
   ColumnResizer,
   Group,
   ResizableTableContainer,
-  RowProps,
-  TableHeaderProps,
-  TableProps,
   composeRenderProps,
   useTableOptions
+} from 'react-aria-components';
+import type {
+  CellProps,
+  ColumnProps,
+  RowProps,
+  TableHeaderProps,
+  TableProps
 } from 'react-aria-components';
 import { tv } from 'tailwind-variants';
 

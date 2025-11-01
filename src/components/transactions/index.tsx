@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Header, type Selection } from 'react-aria-components';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { Header } from 'react-aria-components';
+import type { Selection } from 'react-aria-components';
+import type { NavigateFunction } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'starfx/react';
 
 import type { TransactionWithAccount } from '~/store/selectors/transactions';
@@ -19,7 +21,56 @@ import { Button } from '~/elements/Button.tsx';
 import { TransactionCards } from './TransactionCard';
 import { TransactionTable } from './TransactionTable';
 import { TransactionTimeline } from './TransactionTimeline';
-import { TransactionFilter } from './utils';
+import type { TransactionFilter } from './utils';
+
+type DisplayTransactionsProps = {
+  navigate: NavigateFunction;
+  activeView: 'all' | 'table' | 'cards' | 'timeline' | string | object;
+  transactions: TransactionWithAccount[];
+  transactionFilter: TransactionFilter;
+};
+
+const DisplayTransactions: React.FC<DisplayTransactionsProps> = ({
+  navigate,
+  activeView,
+  transactions,
+  transactionFilter
+}) => {
+  const dispatch = useDispatch();
+
+  switch (activeView) {
+    case 'all':
+    case 'table':
+      return (
+        <TransactionTable
+          label="Transactions"
+          transactions={transactions}
+          transactionFilter={transactionFilter}
+          navigate={navigate}
+          dispatch={dispatch}
+        />
+      );
+    case 'cards':
+      return (
+        <TransactionCards
+          transactions={transactions}
+          transactionFilter={transactionFilter}
+          navigate={navigate}
+          dispatch={dispatch}
+        />
+      );
+    case 'timeline':
+      return (
+        <TransactionTimeline
+          transactionFilter={transactionFilter}
+          navigate={navigate}
+          dispatch={dispatch}
+        />
+      );
+    default:
+      return null;
+  }
+};
 
 const TransactionsFlow = ({
   transactions
@@ -30,6 +81,22 @@ const TransactionsFlow = ({
   const [transactionFilter, setTransactionFilter] =
     useState<TransactionFilter>('all');
   const [activeView, setActiveView] = useState<Selection>(new Set(['table']));
+
+  const selectedKey = [...activeView][0] as string | undefined;
+  const selectedView = (selectedKey ?? 'table') as
+    | 'all'
+    | 'table'
+    | 'cards'
+    | 'timeline'
+    | string
+    | object;
+
+  const displayProps: DisplayTransactionsProps = {
+    navigate,
+    activeView: selectedView,
+    transactions,
+    transactionFilter
+  };
 
   return (
     <>
@@ -74,61 +141,9 @@ const TransactionsFlow = ({
           </MenuTrigger>
         </div>
       </div>
-      <DisplayTransactions
-        navigate={navigate}
-        // @ts-expect-error just pulling it out of a Set
-        activeView={[...activeView.entries()][0][0]}
-        transactions={transactions}
-        transactionFilter={transactionFilter}
-      />
+      <DisplayTransactions {...displayProps} />
     </>
   );
 };
 
 export default TransactionsFlow;
-
-const DisplayTransactions = ({
-  navigate,
-  activeView,
-  transactions,
-  transactionFilter
-}: {
-  navigate: NavigateFunction;
-  activeView: 'all' | 'table' | 'cards' | 'timeline' | string | object;
-  transactions: TransactionWithAccount[];
-  transactionFilter: TransactionFilter;
-}) => {
-  const dispatch = useDispatch();
-
-  switch (activeView) {
-    case 'all':
-    case 'table':
-      return (
-        <TransactionTable
-          label="Transactions"
-          transactions={transactions}
-          transactionFilter={transactionFilter}
-          navigate={navigate}
-          dispatch={dispatch}
-        />
-      );
-    case 'cards':
-      return (
-        <TransactionCards
-          transactions={transactions}
-          transactionFilter={transactionFilter}
-          navigate={navigate}
-          dispatch={dispatch}
-        />
-      );
-    case 'timeline':
-      return (
-        <TransactionTimeline
-          transactions={transactions}
-          transactionFilter={transactionFilter}
-          navigate={navigate}
-          dispatch={dispatch}
-        />
-      );
-  }
-};

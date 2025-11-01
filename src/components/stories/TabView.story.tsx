@@ -1,9 +1,20 @@
 import React from 'react';
+
 import { TabView } from '../TabView.jsx';
 
-export const TabViewContentTest = ({ tabTitles, tabContentStrings }) => {
-  const tabContents = tabContentStrings.map((tabContent) => (
-    <div>{tabContent}</div>
+type TabViewContentTestProps = {
+  tabTitles: string[];
+  tabContentStrings: string[];
+};
+
+export const TabViewContentTest: React.FC<TabViewContentTestProps> = ({
+  tabTitles,
+  tabContentStrings
+}) => {
+  const tabContents = tabContentStrings.map((tabContent, i) => (
+    <div key={i}>{tabContent}</div>
   ));
-  return <TabView tabTitles={tabTitles} tabContents={tabContents} />;
+  // TabView is a JS file with loose typing; cast to any for stories
+  const Tv: any = TabView as any;
+  return <Tv tabTitles={tabTitles} tabContents={tabContents} />;
 };

@@ -12,6 +12,8 @@ import { NumberField } from '~/elements/NumberField.tsx';
 import { Select } from '~/elements/Select.tsx';
 import { TextField } from '~/elements/TextField.tsx';
 
+import { getSchemaBase } from './helpers';
+
 const AccountSchema = z.object({
   name: z.string().min(1),
   starting: z.number().nonnegative().step(0.01).default(0.0),
@@ -21,18 +23,14 @@ const AccountSchema = z.object({
     .default('operating')
 });
 
+const accountBase = getSchemaBase(AccountSchema);
+
 function AccountInput() {
   const navigate = useNavigate();
   const { state: locationState } = useLocation();
-  console.log({ locationState });
   const dispatch = useDispatch();
   const { Field, handleSubmit, Subscribe, reset } = useForm({
-    defaultValues: locationState?.account ?? {
-      name: '',
-      starting: 0.0,
-      interest: 0.0,
-      vehicle: AccountSchema.shape.vehicle._def.defaultValue()
-    },
+    defaultValues: locationState?.account ?? accountBase.defaults,
     onSubmit: ({ value }) => {
       console.log(value);
       dispatch(accountAdd(value));
@@ -58,7 +56,7 @@ function AccountInput() {
           children={(field) => (
             <TextField
               label="Name"
-              isRequired={!AccountSchema.shape.name.isOptional()}
+              isRequired={accountBase.required.name}
               type="text"
               value={field.state.value}
               onBlur={field.handleBlur}
@@ -73,7 +71,7 @@ function AccountInput() {
           children={(field) => (
             <NumberField
               label="Starting"
-              isRequired={!AccountSchema.shape.starting.isOptional()}
+              isRequired={accountBase.required.starting}
               formatOptions={{
                 style: 'currency',
                 currency: 'USD',
@@ -93,11 +91,11 @@ function AccountInput() {
           children={(field) => (
             <NumberField
               label="Interest"
-              isRequired={!AccountSchema.shape.interest.isOptional()}
+              isRequired={accountBase.required.interest}
               formatOptions={{
                 style: 'percent',
                 minimumFractionDigits: 2,
-                maximumFractionDigits: 4
+                maximumFractionDigits: 6
               }}
               step={0.0001}
               value={field.state.value}
@@ -113,7 +111,7 @@ function AccountInput() {
           children={(field) => (
             <Select
               label="Account Vehicle"
-              isRequired={!AccountSchema.shape.vehicle.isOptional()}
+              isRequired={accountBase.required.vehicle}
               items={[
                 { id: 'operating', name: 'Operating' },
                 { id: 'loan', name: 'Loan' },

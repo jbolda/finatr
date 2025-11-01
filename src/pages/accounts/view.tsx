@@ -1,8 +1,10 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { TypedUseSelectorHook, useSelector as useSel } from 'starfx/react';
+import { useSelector as useSel } from 'starfx/react';
+import type { TypedUseSelectorHook } from 'starfx/react';
 
-import { AppState, schema } from '~/store/schema.ts';
+import type { AppState } from '~/store/schema/index.ts';
+import { accountsFromSerializedById } from '~/store/selectors/accounts.ts';
 import { transactionsByAccountId } from '~/store/selectors/transactions.ts';
 import { toHumanCurrency } from '~/store/utils/dineroUtils.ts';
 
@@ -14,7 +16,7 @@ const AccountView = () => {
   const { id } = useParams();
 
   const account = id
-    ? useSelector((s) => schema.accounts.selectById(s, { id }))
+    ? useSelector((s) => accountsFromSerializedById(s, { id }))
     : undefined;
   const transactions = id
     ? useSelector((s) => transactionsByAccountId(s, id))

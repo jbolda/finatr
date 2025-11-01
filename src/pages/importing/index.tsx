@@ -5,7 +5,7 @@ import { FileTrigger } from 'react-aria-components';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema } from '~/store/schema.ts';
+import { schema } from '~/store/schema/index.ts';
 import { importEntries } from '~/store/thunks/import.ts';
 
 import { Button } from '~/elements/Button.tsx';
@@ -21,16 +21,16 @@ const Importing = () => {
     if (file) {
       const content = await file.text();
       if (file.name.endsWith('.json')) {
-        const result = JSON.parse(content);
+        const result = JSON.parse(content) as any;
         console.log('file upload result', result);
-        dispatch(importEntries(result));
+        dispatch(importEntries(result as any));
         navigate(`/planning`);
       } else if (file.name.endsWith('.csv')) {
         const result = {
           accounts: Papa.parse(content, { header: true }).data
-        };
+        } as any;
         console.log('file upload result', result);
-        dispatch(importEntries(result));
+        dispatch(importEntries(result as any));
         navigate(`/planning`);
       } else {
         console.warn(
@@ -46,8 +46,6 @@ const Importing = () => {
   const transactions = useSelector(schema.transactions.selectTableAsList);
   const chartRange = useSelector(schema.chartRange.select);
   const handleDownload = () => {
-    console.log({ accounts, transactions });
-
     let outputData = {
       accounts,
       transactions,

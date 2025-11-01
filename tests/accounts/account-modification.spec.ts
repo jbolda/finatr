@@ -9,12 +9,14 @@ test.beforeEach(async ({ page }) => {
   await page.getByText('Add Account').click();
 
   await page.getByLabel('starting').first().fill('550');
+  await page.getByLabel('interest').first().fill('11');
   await page.getByLabel('name').fill('test account');
   await page.keyboard.press('Enter');
 
   const row = getRowWith(page, 'accounts', 'test account');
   const modifyButton = row.getByRole('button', { name: 'modify' });
   await modifyButton.click();
+  await expect(page.getByText('550.00')).toBeVisible();
 });
 
 test('switches back to the form', async ({ page }) => {
@@ -23,9 +25,13 @@ test('switches back to the form', async ({ page }) => {
 
 test('submits modified account', async ({ page }) => {
   await page.getByLabel('starting').first().fill('5996');
+  await page.getByLabel('interest').first().fill('3.75');
   await page.keyboard.press('Enter');
 
   await expect(page.getByText('5996.00')).toBeVisible();
+  await expect(
+    page.getByRole('gridcell').filter({ hasText: '3.75%' })
+  ).toBeVisible();
 });
 
 test('check debt is listed in debt tab after submit', async ({ page }) => {

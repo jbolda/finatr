@@ -1,9 +1,13 @@
 import { AlertCircleIcon, InfoIcon } from 'lucide-react';
-import React, { ReactNode } from 'react';
+import React from 'react';
+import type { ReactNode } from 'react';
 import { chain } from 'react-aria';
-import { DialogProps, Heading } from 'react-aria-components';
-import { Button } from '../src/Button';
-import { Dialog } from '../src/Dialog';
+import type { DialogProps } from 'react-aria-components';
+import { Heading } from 'react-aria-components';
+
+import { Dialog } from '~/components/Dialog.tsx';
+
+import { Button } from '~/elements/Button.tsx';
 
 interface AlertDialogProps extends Omit<DialogProps, 'children'> {
   title: string;

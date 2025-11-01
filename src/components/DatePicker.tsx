@@ -1,10 +1,10 @@
 import { CalendarIcon } from 'lucide-react';
 import React from 'react';
-import {
-  DatePicker as AriaDatePicker,
-  DatePickerProps as AriaDatePickerProps,
+import { DatePicker as AriaDatePicker } from 'react-aria-components';
+import type {
   DateValue,
-  ValidationResult
+  ValidationResult,
+  DatePickerProps as AriaDatePickerProps
 } from 'react-aria-components';
 
 import { Button } from '../elements/Button.tsx';
@@ -49,7 +49,7 @@ export function DatePicker<T extends DateValue>({
         </Button>
       </FieldGroup>
       {description && <Description>{description}</Description>}
-      <FieldError>{errorMessage}</FieldError>
+      <FieldError>{errorMessage as unknown as React.ReactNode}</FieldError>
       <Popover>
         <Dialog>
           <Calendar />

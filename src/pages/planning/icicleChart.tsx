@@ -1,14 +1,14 @@
+// @ts-nocheck eventually tighten types here
 import * as d3 from 'd3';
 import { toDecimal } from 'dinero.js';
 import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'starfx/react';
 
-import { schema } from '~/store/schema.ts';
+import { transactionsFromSerialized } from '~/store/selectors/transactions';
 
 export const IcicleChart = () => {
   const d3Container = useRef(null);
-  const transactions = useSelector(schema.transactions.selectTableAsList);
-
+  const transactions = useSelector(transactionsFromSerialized);
   useEffect(() => {
     if (!!transactions && d3Container.current) draw(d3Container, transactions);
   }, [transactions]);

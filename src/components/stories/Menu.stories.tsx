@@ -1,6 +1,7 @@
 import { MoreHorizontal } from 'lucide-react';
 import React from 'react';
 import { MenuTrigger } from 'react-aria-components';
+
 import { Button } from '../../elements/Button.tsx';
 import { Menu, MenuItem, MenuSection, MenuSeparator } from '../Menu.tsx';
 
@@ -32,14 +33,14 @@ export const Sections = (args: any) => (
       <MoreHorizontal className="w-5 h-5" />
     </Button>
     <Menu {...args}>
-      <MenuSection title="Your Content">
+      <MenuSection {...({ title: 'Your Content' } as any)}>
         <MenuItem id="repos">Repositories</MenuItem>
         <MenuItem id="projects">Projects</MenuItem>
         <MenuItem id="organizations">Organizations</MenuItem>
         <MenuItem id="stars">Stars</MenuItem>
         <MenuItem id="sponsors">Sponsors</MenuItem>
       </MenuSection>
-      <MenuSection title="Your Account">
+      <MenuSection {...({ title: 'Your Account' } as any)}>
         <MenuItem id="profile">Profile</MenuItem>
         <MenuItem id="status">Set status</MenuItem>
         <MenuItem id="sign-out">Sign out</MenuItem>

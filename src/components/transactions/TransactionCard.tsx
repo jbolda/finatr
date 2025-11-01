@@ -1,7 +1,7 @@
 import { Pencil, Trash2 } from 'lucide-react';
 import React from 'react';
 import { Group } from 'react-aria-components';
-import { NavigateFunction } from 'react-router-dom';
+import type { NavigateFunction } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { tv } from 'tailwind-variants';
@@ -16,7 +16,8 @@ import {
 
 import { Button } from '~/elements/Button.tsx';
 
-import { navigateToTransactionForm, TransactionFilter } from './utils';
+import { navigateToTransactionForm } from './utils';
+import type { TransactionFilter } from './utils';
 
 export const TransactionCards = ({
   navigate,

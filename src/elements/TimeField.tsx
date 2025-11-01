@@ -1,6 +1,6 @@
 import React from 'react';
-import {
-  TimeField as AriaTimeField,
+import { TimeField as AriaTimeField } from 'react-aria-components';
+import type {
   TimeFieldProps as AriaTimeFieldProps,
   TimeValue
 } from 'react-aria-components';

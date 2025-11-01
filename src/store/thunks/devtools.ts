@@ -1,12 +1,18 @@
-import { type Action } from 'redux';
-import { take, ensure, resource, type FxStore, type Operation } from 'starfx';
+import {
+  take,
+  ensure,
+  resource,
+  type FxStore,
+  type Operation,
+  type Action
+} from 'starfx';
 
 interface ReduxDevtoolsExtensionConnectResponse {
   init: <S>(
     state: S,
     liftedData?: ReturnType<FxStore<any>['getState']>
   ) => void;
-  send: <A extends Action<string>>(
+  send: <A extends Action>(
     action: A,
     state: ReturnType<FxStore<any>['getState']>
   ) => void;

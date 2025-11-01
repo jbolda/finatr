@@ -1,14 +1,15 @@
 import { Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
-import { type ColumnProps, Group, Key } from 'react-aria-components';
-import { NavigateFunction } from 'react-router-dom';
+import { Group } from 'react-aria-components';
+import type { ColumnProps } from 'react-aria-components';
+import type { NavigateFunction } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 
-import { TransactionWithAccount } from '~/store/selectors/transactions.ts';
+import type { TransactionWithAccount } from '~/store/selectors/transactions';
 import { transactionRemove } from '~/store/thunks/transactions.ts';
 import { toHumanCurrency } from '~/store/utils/dineroUtils.ts';
-import { toHumanReoccurrence } from '~/store/utils/reoccurrence.ts';
+import { toHumanReoccurrence } from '~/store/utils/reoccurrence';
 
 import {
   Cell,
@@ -22,7 +23,8 @@ import {
 
 import { Button } from '~/elements/Button.tsx';
 
-import { navigateToTransactionForm, TransactionFilter } from './utils';
+import { navigateToTransactionForm } from './utils';
+import type { TransactionFilter } from './utils';
 
 export const TransactionTable = ({
   label,
@@ -43,7 +45,7 @@ export const TransactionTable = ({
   );
 
   const [sortable, setSetSortable] = useState<{
-    column: Key;
+    column: string;
     direction: 'ascending' | 'descending';
   }>({ column: 'type', direction: 'descending' });
 
@@ -51,7 +53,12 @@ export const TransactionTable = ({
     <Table
       aria-label={label}
       selectionMode="none"
-      onSortChange={(item) => setSetSortable(item)}
+      onSortChange={(item) =>
+        setSetSortable({
+          column: String(item.column),
+          direction: item.direction
+        })
+      }
       sortDescriptor={sortable}
     >
       <TableHeader>

@@ -3,15 +3,17 @@ import React from 'react';
 import {
   Calendar as AriaCalendar,
   CalendarGridHeader as AriaCalendarGridHeader,
-  CalendarProps as AriaCalendarProps,
   CalendarCell,
   CalendarGrid,
   CalendarGridBody,
   CalendarHeaderCell,
-  DateValue,
   Heading,
   Text,
   useLocale
+} from 'react-aria-components';
+import type {
+  CalendarProps as AriaCalendarProps,
+  DateValue
 } from 'react-aria-components';
 import { tv } from 'tailwind-variants';
 

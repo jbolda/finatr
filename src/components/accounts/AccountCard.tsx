@@ -1,12 +1,12 @@
 import { Pencil, Search, Trash2 } from 'lucide-react';
 import React from 'react';
 import { Group } from 'react-aria-components';
-import { NavigateFunction } from 'react-router-dom';
+import type { NavigateFunction } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import type { AnyAction } from 'starfx';
 import { tv } from 'tailwind-variants';
 
-import { type Account } from '~/store/schema.ts';
+import type { AccountWithDinero } from '~/store/selectors/accounts.ts';
 import { accountRemove } from '~/store/thunks/accounts.ts';
 import { toHumanCurrency, toHumanInterest } from '~/store/utils/dineroUtils.ts';
 
@@ -32,7 +32,7 @@ export const AccountCard = ({
   navigate,
   dispatch
 }: {
-  account: Account;
+  account: AccountWithDinero;
   navigate: NavigateFunction;
   dispatch: Dispatch<AnyAction>;
 }) => {

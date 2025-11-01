@@ -5,11 +5,12 @@ import {
   Menu,
   MenuItem,
   MenuTrigger,
-  Popover,
-  Text
+  Popover
 } from 'react-aria-components';
 import { useLocation } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
+
+import type Settings from '../pages/settings';
 
 const navigation = [
   { name: 'Home', to: '/' },
@@ -47,7 +48,7 @@ function renderMenuItem(
   );
 }
 
-export const Header = ({ settings }) => {
+export const Header = ({ settings }: { settings: Settings }) => {
   let location = useLocation();
   return (
     <nav className="bg-linear-to-r to-gray-800 from-cyan-700 pb-36">
@@ -58,7 +59,8 @@ export const Header = ({ settings }) => {
             selectionMode="single"
             aria-label="navigation"
             items={navigation.filter(
-              (item) => settings[item.to.substring(1)] !== false
+              (item) =>
+                (settings as Settings)[item.to as keyof Settings] !== false
             )}
             selectedKeys={[location.pathname]}
           >
@@ -87,7 +89,8 @@ export const Header = ({ settings }) => {
               aria-label="navigation popover"
               selectionMode="single"
               items={navigation.filter(
-                (item) => settings[item.to.substring(1)] !== false
+                (item) =>
+                  (settings as Settings)[item.to as keyof Settings] !== false
               )}
               selectedKeys={[location.pathname]}
             >

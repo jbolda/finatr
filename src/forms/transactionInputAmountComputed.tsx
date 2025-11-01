@@ -1,7 +1,9 @@
-import { Field, FieldArray } from 'formik';
+// @ts-nocheck temporary: Formik is being removed from the codebase; keep this import until migration is complete
+import { Field as FormikField, FieldArray as FormikFieldArray } from 'formik';
 import React from 'react';
-// import { FieldGroup, Label } from '~/components/Form.js';
+
 import { Button } from '~/elements/Button';
+import { FieldGroup, Label } from '~/elements/Field';
 import { Input } from '~/elements/Input';
 import { Radio } from '~/elements/Radio';
 import { Select } from '~/elements/Select';
@@ -15,7 +17,7 @@ const TransactionInputAmountComputed = ({
 }) => (
   <FieldGroup name="valueType" prettyName="amount" id={`${prefixID}valueType`}>
     <Label id={`${prefixID}valueType-static`} prettyName="Static">
-      <Field
+      <FormikField
         as={Radio}
         type="radio"
         name="valueType"
@@ -25,7 +27,7 @@ const TransactionInputAmountComputed = ({
       />
     </Label>
     <Label id={`${prefixID}valueType-dynamic`} prettyName="Dynamic">
-      <Field
+      <FormikField
         as={Radio}
         type="radio"
         name="valueType"
@@ -52,7 +54,7 @@ const TransactionInputAmountComputed = ({
           id={`${prefixID}value`}
           touched={touched}
         >
-          <Field
+          <FormikField
             as={Input}
             name="value"
             id={`${prefixID}value`}
@@ -102,7 +104,7 @@ const References = ({
                     prettyName={`reference name`}
                     id={`${prefixID}referencesArray[${index}].name`}
                   >
-                    <Field
+                    <FormikField
                       as={Input}
                       name={`referencesArray[${index}].name`}
                       id={`${prefixID}referencesArray[${index}].name`}
@@ -113,7 +115,7 @@ const References = ({
                     prettyName={`reference value`}
                     id={`${prefixID}referencesArray[${index}].value`}
                   >
-                    <Field
+                    <FormikField
                       as={Input}
                       name={`referencesArray[${index}].value`}
                       id={`${prefixID}referencesArray[${index}].value`}
@@ -180,7 +182,7 @@ const RecursiveAmountComputed = ({
       prettyName="reference"
       id={`${prefixID}computedAmount${'.on'.repeat(level)}.reference`}
     >
-      <Field
+      <FormikField
         as={Select}
         name={`computedAmount${'.on'.repeat(level)}.reference`}
         id={`${prefixID}computedAmount${'.on'.repeat(level)}.reference`}
@@ -195,7 +197,7 @@ const RecursiveAmountComputed = ({
                 {reference.name}
               </option>
             ))}
-      </Field>
+      </FormikField>
     </FieldGroup>
 
     <FieldGroup
@@ -261,7 +263,7 @@ const Operation = ({
 }) => (
   <React.Fragment>
     <Label>
-      <Field
+      <FormikField
         as={Input}
         name={`computedAmount${'.on'.repeat(level)}.operation`}
         id={`${prefixID}computedAmount${'.on'.repeat(level)}.operation`}
