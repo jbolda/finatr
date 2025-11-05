@@ -39,7 +39,7 @@
     "react-dom": "^19.2.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.27.0",
-    "starfx": "https://pkg.pr.new/neurosnap/starfx@f523c98",
+    "starfx": "https://pkg.pr.new/fxforge/starfx@ab499db",
     "tailwindcss-react-aria-components": "^2.0.1",
     "y-indexeddb": "^9.0.12",
     "y-websocket": "^3.0.0",
