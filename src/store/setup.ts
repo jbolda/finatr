@@ -15,14 +15,7 @@ import {
   // put,
   // ensure
 } from 'starfx';
-import type {
-  Callable,
-  AnyState,
-  UpdaterCtx,
-  Next,
-  Operation,
-  Result
-} from 'starfx';
+import type { AnyState, UpdaterCtx, Next, Operation, Result } from 'starfx';
 
 import { initialState as schemaInitialState } from './schema/index.ts';
 import type { Transaction, Account } from './schema/index.ts';
@@ -114,13 +107,13 @@ export function setupStore({
       )
       .subscribe();
 
-  const tsks: Callable<unknown>[] = [];
+  const tsks: (() => Operation<void>)[] = [];
   if (logs) {
     // log all actions dispatched
     tsks.push(
       takeEvery('*', function* logActions(action) {
         console.log(action);
-      })
+      }) as unknown as () => Operation<void>
     );
   }
   tsks.push(
