@@ -94,7 +94,7 @@ export const SettingsSchema = z.object({
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 
-const defaultSettings = SettingsSchema.parse({});
+export const defaultSettings = SettingsSchema.parse({});
 
 export const TransactionTypeSchema = z.enum(['income', 'expense', 'transfer']);
 export const ValueTypeSchema = z.enum(['static', 'dynamic']).default('static');
@@ -207,7 +207,6 @@ export type IncomeExpected = z.infer<typeof IncomeExpectedSchema>;
 const [schema, initialState] = createSchema({
   cache: sliceOG.table({ empty: {} }),
   loaders: slice.loaders(),
-  auth: slice.obj<Session | { user: null }>({ user: null }),
   settings: slice.obj<Settings>(defaultSettings),
   // emptyTransaction / emptyAccount come from dinero().toJSON() and may
   // include readonly arrays on currency.base. Cast them to the expected

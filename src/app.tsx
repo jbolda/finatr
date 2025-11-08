@@ -14,7 +14,7 @@ import AccountView from './pages/accounts/view.tsx';
 import Examples from './pages/examples';
 import Homepage from './pages/homepage';
 import TransactionsOverview from './pages/transactions/index.tsx';
-import { schema } from './store/schema/index.ts';
+import { defaultSettings, schema } from './store/schema/index.ts';
 
 const Settings = React.lazy(() => import('./pages/settings'));
 const Financial = React.lazy(() => import('./pages/flow'));
@@ -116,7 +116,7 @@ function Routes({
   supabase: SupabaseClient<any, 'public', any> | null;
 }) {
   // const auth = useSelector(schema.auth.select);
-  const settings = useSelector(schema.settings.select);
+  const settings = useSelector(schema.settings.select) ?? defaultSettings;
 
   return (
     <RoutesList>

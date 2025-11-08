@@ -2,10 +2,10 @@ import { Heart } from 'lucide-react';
 import React from 'react';
 import { useSelector } from 'starfx/react';
 
-import { schema, type Settings } from '../store/schema';
+import { defaultSettings, schema, type Settings } from '../store/schema';
 
 export const Footer = () => {
-  const settings = useSelector(schema.settings.select);
+  const settings = useSelector(schema.settings.select) ?? defaultSettings;
 
   return (
     <footer>

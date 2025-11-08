@@ -28,7 +28,7 @@ import {
 import { useSelector } from 'starfx/react';
 import { tv } from 'tailwind-variants';
 
-import { schema } from '../store/schema';
+import { defaultSettings, schema } from '../store/schema';
 
 type NavItem = {
   name: string;
@@ -138,7 +138,7 @@ function SidebarContent({
 }) {
   const { sidebar, setSidebar } = useContext(SidebarContext);
   const sidebarWidth = forceSidebarState ?? sidebar;
-  const settings = useSelector(schema.settings.select);
+  const settings = useSelector(schema.settings.select) ?? defaultSettings;
   const fullNavigation = [
     {
       name: null,
