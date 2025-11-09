@@ -22,7 +22,7 @@ import type { Transaction, Account } from './schema/index.ts';
 // import { updateAuth } from './thunks/auth.ts';
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
 import { tasks, thunks } from './thunks/index.ts';
-import { yjsStoreUpdater } from './updater.ts';
+import { loroStoreUpdater } from './updater.ts';
 import { reconcilerWithReconstitution } from './utils/reconcilerWithReconstitution.ts';
 
 const devtoolsEnabled = true;
@@ -56,7 +56,7 @@ export function setupStore({
       ...initialState
     },
     // @ts-expect-error not quite type compatible yet
-    setStoreUpdater: yjsStoreUpdater,
+    setStoreUpdater: loroStoreUpdater,
     middleware: [
       // TODO check on this, doesn't seem to work right now
       // persistStoreMdw(localPersistor)

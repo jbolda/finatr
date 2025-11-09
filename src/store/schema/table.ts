@@ -1,3 +1,4 @@
+import type { LoroMap } from 'loro-crdt';
 import { createSelector } from 'reselect';
 import { type AnyState, type IdProp, type BaseSchema } from 'starfx';
 
@@ -144,10 +145,12 @@ export function createTable<
     set: (entities) => (s) => {
       // @ts-expect-error need to generically match yjs object types
       const table = s.get(name);
-      table.clear();
-      Object.keys(entities).forEach((id) => {
+      console.log(table);
+
+      for (let id of Object.keys(entities)) {
+        console.log('setting', id, entities[id]);
         table.set(id, entities[id]);
-      });
+      }
     },
     remove: (ids) => (s) => {
       // @ts-expect-error need to generically match yjs object types
@@ -167,10 +170,10 @@ export function createTable<
     reset: () => (s) => {
       // @ts-expect-error need to generically match yjs object types
       const table = s.get(name);
+      // @ts-expect-error need to generically match yjs object types
+      const kind = table.kind();
+      // @ts-expect-error need to generically match yjs object types
       table.clear();
-      Object.keys(initialState).forEach((id) => {
-        table.set(id, initialState[id]);
-      });
     },
     ...selectors
   };

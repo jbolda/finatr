@@ -1,79 +1,64 @@
+import { LoroDoc, LoroMap } from 'loro-crdt';
 import {
   type AnyState,
   type UpdaterCtx,
   type Next,
-  type Operation,
-  createContext
+  type Operation
 } from 'starfx';
-import { IndexeddbPersistence } from 'y-indexeddb';
-import { WebsocketProvider } from 'y-websocket';
-import * as Y from 'yjs';
 
-export const yjsWebsocket = createContext('yjs-ws');
-export const yjsIndexedDB = createContext('yjs-idb');
+export const buildDocSubtree = ({
+  initial,
+  parent
+}: {
+  initial: AnyState;
+  parent: LoroMap;
+}) => {
+  for (let [key, value] of Object.entries(initial)) {
+    console.log('building subtree key', key, value);
+    if (Object.keys(value).length !== 0) {
+      parent.set(key, value);
+    } else if (['accounts', 'transactions'].includes(key)) {
+      parent.setContainer(key, new LoroMap());
+    }
+  }
+};
 
-export const yjsStoreUpdater = <S extends AnyState>(
+export const loroStoreUpdater = <S extends AnyState>(
   setState: (state: S) => void,
   _getState: () => S,
   getInitialState: () => S
 ) => {
-  const ydoc = new Y.Doc({ autoLoad: true });
-  const root = ydoc.getMap();
-
-  const wsProvider = new WebsocketProvider(
-    '',
-    // 'ws://localhost:1234',
-    'my-roomname',
-    ydoc,
-    { connect: false }
-  );
-  const idbProvider = new IndexeddbPersistence('finatr', ydoc);
-
-  // wsProvider.on('status', (event) => {
-  //   console.log(event.status); // logs "connected" or "disconnected"
-  // });
-  // idbProvider.on('synced', () => {
-  //   console.log('content from the database is loaded');
-  // });
+  const ldoc = new LoroDoc();
+  const root = ldoc.getMap('root');
 
   const initial = getInitialState();
-  for (let objDoc of ['settings', 'auth', 'accountMeta', 'chartRange']) {
-    const item = initial[objDoc];
-    const itemMap = new Y.Map(Object.entries(item));
-    root.set(objDoc, itemMap);
-  }
+  root.set('settings', Object.entries(initial['settings']));
 
-  for (let objTable of [
-    'transactions',
-    'accounts',
-    'incomeReceived',
-    'incomeExpected'
-  ]) {
-    const item = initial[objTable];
-    const itemMap = new Y.Map(Object.entries(item));
-    root.set(objTable, itemMap);
-  }
+  // set up a map for all sources
+  root.setContainer('sources', new LoroMap());
+  // then a default subdoc for local data
+  const local = root.setContainer('local', new LoroMap());
+  const plan = local.setContainer('plan', new LoroMap());
+  buildDocSubtree({ initial, parent: plan });
+  ldoc.commit();
 
-  root.observeDeep((_events, _transaction) => {
-    setState(root.toJSON() as S);
+  root.subscribe(() => {
+    const data = plan.toJSON() as S;
+    console.log('loro doc updated', data);
+    setState(data);
   });
 
   function* updateMdw(ctx: UpdaterCtx<S>, next: Next) {
-    ydoc.transact(() => {
-      const ups = Array.isArray(ctx.updater) ? ctx.updater : [ctx.updater];
-      for (let up of ups) {
-        // @ts-expect-error not quite type compatible yet
-        up(root);
-      }
-    });
-    // we don't need to set the state as the observer will take care of it
+    const ups = Array.isArray(ctx.updater) ? ctx.updater : [ctx.updater];
+    for (let up of ups) {
+      up(plan as unknown as S);
+    }
+    ldoc.commit();
     yield* next();
   }
 
   function* initializeStore(): Operation<void> {
-    yield* yjsWebsocket.set(wsProvider);
-    yield* yjsIndexedDB.set(idbProvider);
-    setState(root.toJSON() as S);
+    // setState(root.toJSON() as S);
   }
   return { updateMdw, initializeStore };
 };
