@@ -3,8 +3,12 @@ import {
   type AnyState,
   type UpdaterCtx,
   type Next,
-  type Operation
+  type Operation,
+  createContext,
+  type Scope
 } from 'starfx';
+
+export const RootDoc = createContext<LoroDoc>('starfx:loroDoc');
 
 export const buildDocSubtree = ({
   initial,
@@ -26,39 +30,34 @@ export const buildDocSubtree = ({
 export const loroStoreUpdater = <S extends AnyState>(
   setState: (state: S) => void,
   _getState: () => S,
-  getInitialState: () => S
+  getScope: () => Scope,
+  _getInitialState: () => S
 ) => {
-  const ldoc = new LoroDoc();
-  const root = ldoc.getMap('root');
-
-  const initial = getInitialState();
-  root.set('settings', Object.entries(initial['settings']));
-
-  // set up a map for all sources
-  root.setContainer('sources', new LoroMap());
-  // then a default subdoc for local data
-  const local = root.setContainer('local', new LoroMap());
-  const plan = local.setContainer('plan', new LoroMap());
-  buildDocSubtree({ initial, parent: plan });
-  ldoc.commit();
-
-  root.subscribe(() => {
-    const data = plan.toJSON() as S;
-    console.log('loro doc updated', data);
-    setState(data);
-  });
-
   function* updateMdw(ctx: UpdaterCtx<S>, next: Next) {
+    const root = yield* RootDoc.get();
+    if (!root) {
+      console.error('LoroDoc not found in context');
+      throw new Error('LoroDoc not found in context');
+    }
+    const plan = root
+      .getMap('root')
+      .getOrCreateContainer('sources', new LoroMap())!
+      .getOrCreateContainer('local', new LoroMap())!
+      .getOrCreateContainer('plan', new LoroMap())!;
     const ups = Array.isArray(ctx.updater) ? ctx.updater : [ctx.updater];
     for (let up of ups) {
       up(plan as unknown as S);
     }
-    ldoc.commit();
+    root.commit();
+    setState(plan.toJSON() as S);
     yield* next();
   }
 
   function* initializeStore(): Operation<void> {
-    // setState(root.toJSON() as S);
+    const ldoc = new LoroDoc();
+
+    const scope = getScope();
+    scope.set(RootDoc, ldoc);
   }
   return { updateMdw, initializeStore };
 };
