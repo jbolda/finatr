@@ -16,7 +16,7 @@ import { buildDocSubtree, RootDoc } from './updater';
 export const PERSIST_LOADER_ID = '@@starfx/persist';
 
 export interface PersistAdapter<S extends AnyState> {
-  getItem(key: string): Operation<Result<Partial<S>>>;
+  getItem(key: string): Operation<Result<Partial<S> | undefined>>;
   setItem(key: string, item: Partial<S>): Operation<Result<unknown>>;
   removeItem(key: string): Operation<Result<unknown>>;
 }
@@ -43,9 +43,7 @@ export function createLocalStorageAdapter<
         // Convert the regular array back to a Uint8Array
         const retrievedSnapshot = new Uint8Array(retrievedArray);
 
-        console.log(retrievedSnapshot);
-
-        return Ok(retrievedSnapshot);
+        return Ok(retrievedSnapshot as unknown as Partial<S>);
       } catch (err: any) {
         return Err(err);
       }
