@@ -22,25 +22,21 @@ export function createObj<V extends AnyState, S extends AnyState = AnyState>({
     name: name as string,
     initialState,
     set: (value) => (state) => {
-      // @ts-expect-error need to generically match yjs object types
-      const item = state.get(name);
-      for (const [k, v] of Object.entries(value)) {
-        item.set(k, v);
-      }
+      // @ts-expect-error need to generically match loro object types
+      state.set(name, value);
     },
     reset: () => (state) => {
-      // @ts-expect-error need to generically match yjs object types
-      const item = state.get(name);
-      for (const [k, v] of Object.entries(initialState)) {
-        item.set(k, v);
-      }
+      // @ts-expect-error need to generically match loro object types
+      state.set(name, initialState);
     },
     update:
       <P extends keyof V>(prop: { key: P; value: V[P] }) =>
       (state) => {
-        // @ts-expect-error need to generically match yjs object types
+        // @ts-expect-error need to generically match loro object types
         const item = state.get(name);
-        item.set(prop.key, prop.value);
+        const newItem = { ...item, ...{ [prop.key]: prop.value } };
+        // @ts-expect-error need to generically match loro object types
+        state.set(name, newItem);
       },
     select: (state) => {
       return (state as any)[name];

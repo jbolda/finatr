@@ -31,6 +31,7 @@
     "date-fns": "^2.23.0",
     "dinero.js": "^2.0.0-alpha.14",
     "js-file-download": "0.4.12",
+    "loro-crdt": "^1.8.9",
     "lucide-react": "^0.482.0",
     "papaparse": "^5.4.1",
     "react": "^19.2.0",
@@ -39,11 +40,8 @@
     "react-dom": "^19.2.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.27.0",
-    "starfx": "https://pkg.pr.new/fxforge/starfx@ab499db",
+    "starfx": "https://pkg.pr.new/fxforge/starfx@ef94711",
     "tailwindcss-react-aria-components": "^2.0.1",
-    "y-indexeddb": "^9.0.12",
-    "y-websocket": "^3.0.0",
-    "yjs": "^13.6.27",
     "zod": "^4.1.12"
   },
   "devDependencies": {
@@ -65,7 +63,9 @@
     "tailwindcss": "^4.1.16",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.9.3",
-    "vite": "^7.1.12"
+    "vite": "^7.1.12",
+    "vite-plugin-top-level-await": "^1.6.0",
+    "vite-plugin-wasm": "^3.5.0"
   },
   "volta": {
     "node": "24.10.0",

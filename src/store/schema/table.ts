@@ -144,10 +144,12 @@ export function createTable<
     set: (entities) => (s) => {
       // @ts-expect-error need to generically match yjs object types
       const table = s.get(name);
-      table.clear();
-      Object.keys(entities).forEach((id) => {
+      console.log(table);
+
+      for (let id of Object.keys(entities)) {
+        console.log('setting', id, entities[id]);
         table.set(id, entities[id]);
-      });
+      }
     },
     remove: (ids) => (s) => {
       // @ts-expect-error need to generically match yjs object types
@@ -168,9 +170,6 @@ export function createTable<
       // @ts-expect-error need to generically match yjs object types
       const table = s.get(name);
       table.clear();
-      Object.keys(initialState).forEach((id) => {
-        table.set(id, initialState[id]);
-      });
     },
     ...selectors
   };

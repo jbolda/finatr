@@ -14,8 +14,7 @@ const supabase =
   !supabaseUrl || !supabaseKey ? null : createClient(supabaseUrl, supabaseKey);
 const store = setupStore({
   logs: true,
-  initialState: {},
-  supabase
+  initialState: {}
 });
 async function init() {
   ReactDOM.createRoot(document.getElementById('root')!).render(
