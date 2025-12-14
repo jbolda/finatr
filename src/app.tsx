@@ -13,6 +13,7 @@ import Sidebar, { SidebarContext } from './components/Sidebar.tsx';
 import AccountView from './pages/accounts/view.tsx';
 import Examples from './pages/examples';
 import Homepage from './pages/homepage';
+import PlanOverview from './pages/plan/index.tsx';
 import TransactionsOverview from './pages/transactions/index.tsx';
 import { schema } from './store/schema/index.ts';
 
@@ -115,23 +116,20 @@ function Routes({
 }: {
   supabase: SupabaseClient<any, 'public', any> | null;
 }) {
-  // const auth = useSelector(schema.auth.select);
   const settings = useSelector(schema.settings.select);
 
   return (
     <RoutesList>
       <Route index element={<Homepage />} />
       <Route path="examples" element={<Examples />} />
-      {/* <Route
-        path="auth"
+      <Route
+        path="plan"
         element={
-          supabase && !auth.user ? (
-            <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />
-          ) : (
-            <div>Logged in!</div>
-          )
+          <React.Suspense fallback={<>...</>}>
+            <PlanOverview />
+          </React.Suspense>
         }
-      /> */}
+      />
       <Route
         path="settings"
         element={

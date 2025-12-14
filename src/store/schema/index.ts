@@ -209,6 +209,23 @@ const [schema, initialState] = createSchema({
   loaders: slice.loaders(),
   auth: slice.obj<Session | { user: null }>({ user: null }),
   settings: slice.obj<Settings>(defaultSettings),
+  metadata: slice.obj({ name: 'Default', lastUpdated: '' }),
+  sync: slice.obj({
+    service: 'http://localhost:8787',
+    // whether the current websocket is connected
+    connected: false,
+    // last message received from the sync websocket
+    lastMessage: ''
+  }),
+  persist: slice.obj({
+    // string keys/names for the available storage adapters
+    localStorage: 'finatr|default',
+    fileStorage: 'finatr-default',
+    // preferred sync service endpoint (not necessarily active)
+    syncService: 'http://localhost:8787',
+    // active mode indicates which storage adapter is used by the UI
+    mode: 'local' as 'local' | 'file'
+  }),
   // emptyTransaction / emptyAccount come from dinero().toJSON() and may
   // include readonly arrays on currency.base. Cast them to the expected
   // generic types here to avoid a wide readonly vs mutable array type
