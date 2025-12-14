@@ -1,5 +1,10 @@
 # system
 .DS_Store
+.vscode
+*.log
+
+# Local Netlify folder
+.netlify
 
 # javascript
 node_modules
@@ -9,6 +14,9 @@ dist
 
 .vscode
 *.log
+
+# rust
+target
 
 # Local Netlify folder
 .netlify
@@ -21,3 +29,6 @@ dist
 
 # Playwright
 /playwright/.auth/
+
+# Loro contents
+loro.db

@@ -1,0 +1,43 @@
+[package]
+name = "sync-server"
+version = "0.1.0"
+edition = "2021"
+authors = ["Finatr Contributors <devnull@example.com>"]
+description = "A lightweight WebSocket server used for LoroDoc sync in development"
+
+[dependencies]
+futures = "0.3"
+futures-util = "0.3"
+base64 = "0.21"
+sha1 = "0.6"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tracing = "0.1"
+loro = "1"
+# Loro protocol crate (CRDT wire protocol parsing)
+loro-protocol = { git = "https://github.com/loro-dev/protocol.git", package = "loro-protocol" }
+# LWS wrapper is implemented locally (src/lws_wrapper.rs) and provides small management features (peer hooks and broadcast)
+# Use upstream protocol repo to fetch the websocket server package rather than a vendored path
+# If the websocket server package lives in another repo, replace git URL accordingly.
+tokio-tungstenite = "0.27"
+tokio = { version = "1", features = [
+    "rt",
+    "macros",
+    "net",
+    "sync",
+    "time",
+    "process",
+] }
+rusqlite = { version = "0.31", features = ["bundled"] }
+clap = { version = "4", features = ["derive"] }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+url = "2"
+futures-util = "0.3"
+reqwest = { version = "0.11", default-features = false, features = [
+    "json",
+    "rustls-tls",
+] }
+serial_test = "0.5"
+once_cell = "1.20"
