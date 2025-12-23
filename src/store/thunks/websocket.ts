@@ -17,7 +17,7 @@ import { schema } from '~/store/schema/index.ts';
 import { thunks } from './foundation.ts';
 
 export const receiveSyncMessage = thunks.create<string>(
-  'sync.receive',
+  'sync:receive',
   function* (ctx, next) {
     const message = ctx.payload as string;
     console.log('[receiveSyncMessage] invoked with message ->', message);
@@ -68,7 +68,7 @@ type WebsocketProvided = {
   close?: () => Operation<void>;
 };
 
-function useWebsocket() {
+function useWebsocket(): Operation<WebsocketProvided> {
   return resource(function* (provide) {
     const outbound = createSignal<string>();
     let socket: any = null;
@@ -124,7 +124,9 @@ function useWebsocket() {
               typeof ev.data === 'string' ? ev.data : JSON.stringify(ev.data);
             inbound.send(s);
           });
-          socket.addEventListener('error', () => {});
+          socket.addEventListener('error', (error: Error) => {
+            console.error(error);
+          });
 
           console.log(
             '[wsResource] setup socket, readyState=',
@@ -222,6 +224,8 @@ function useWebsocket() {
 
     try {
       yield* provide(provided);
+    } catch (err) {
+      console.error('[wsResource] provide caught error', err);
     } finally {
       console.log('[wsResource] provide finally block reached');
       socket.close(1000, 'released');
@@ -232,15 +236,13 @@ function useWebsocket() {
 }
 
 // Register the managed resource on the thunks manager so it's supervised and started
-export const WebsocketContext = thunks.manage('sync.websocket', useWebsocket());
+export const WebsocketContext = thunks.manage('sync:websocket', useWebsocket());
 
-export const sendSyncMessage = thunks.create<unknown>(
-  'sync.send',
+export const sendSyncMessage = thunks.create<any>(
+  'sync:send',
   function* (ctx, next) {
     const ws = (yield* WebsocketContext.expect()) as WebsocketProvided;
     yield* ws.send(ctx.payload);
     yield* next();
   }
 );
-
-export default WebsocketContext;

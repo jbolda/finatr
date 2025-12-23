@@ -24,7 +24,7 @@ export const updatePersist = thunks.create<{ key: string; value: unknown }>(
 );
 
 export const applySyncService = thunks.create(
-  'sync.apply',
+  'sync:apply',
   function* (ctx, next) {
     const { service } = ctx.payload || ({} as { service?: string });
     const persist = yield* select(schema.persist.select);
@@ -46,7 +46,7 @@ export const applySyncService = thunks.create(
   }
 );
 
-export const toggleSync = thunks.create('sync.toggle', function* (_ctx, next) {
+export const toggleSync = thunks.create('sync:toggle', function* (_ctx, next) {
   const current = yield* select(schema.sync.select);
   console.log('[toggleSync] current.service=', current.service);
   // toggle: if service is set, disable it, otherwise enable using the preferred service
