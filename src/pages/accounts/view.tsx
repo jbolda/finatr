@@ -1,25 +1,24 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector as useSel } from 'starfx/react';
-import type { TypedUseSelectorHook } from 'starfx/react';
+import { useSelector } from 'starfx/react';
 
-import type { AppState } from '~/store/schema/index.ts';
 import { accountsFromSerializedById } from '~/store/selectors/accounts.ts';
 import { transactionsByAccountId } from '~/store/selectors/transactions.ts';
 import { toHumanCurrency } from '~/store/utils/dineroUtils.ts';
 
 import Transactions from '~/components/transactions/index.tsx';
 
-const useSelector: TypedUseSelectorHook<AppState> = useSel;
+// TODO get this back
+// const useSelector: TypedUseSelectorHook<AppState> = useSel;
 
 const AccountView = () => {
   const { id } = useParams();
 
   const account = id
-    ? useSelector((s) => accountsFromSerializedById(s, { id }))
+    ? useSelector((s: any) => accountsFromSerializedById(s, { id }))
     : undefined;
   const transactions = id
-    ? useSelector((s) => transactionsByAccountId(s, id))
+    ? useSelector((s: any) => transactionsByAccountId(s, id))
     : undefined;
   if (!account || !transactions) {
     return <div>Account not found</div>;

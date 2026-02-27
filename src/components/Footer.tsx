@@ -2,7 +2,7 @@ import { Heart } from 'lucide-react';
 import React from 'react';
 import { useSelector } from 'starfx/react';
 
-import { schema, type Settings } from '../store/schema';
+import { metaSchema as schema, type Settings } from '../store/schema';
 
 export const Footer = () => {
   const settings = useSelector(schema.settings.select);

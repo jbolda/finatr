@@ -28,7 +28,7 @@ import {
 import { useSelector } from 'starfx/react';
 import { tv } from 'tailwind-variants';
 
-import { schema } from '../store/schema';
+import { metaSchema as schema } from '../store/schema';
 
 type NavItem = {
   name: string;

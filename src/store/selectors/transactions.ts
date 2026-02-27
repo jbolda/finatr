@@ -5,7 +5,7 @@ import type { Dinero } from 'dinero.js';
 import { createSelector } from 'starfx';
 import type { AnyState } from 'starfx';
 
-import { schema } from '~/store/schema/index.ts';
+import { loroSchema as schema } from '~/store/schema/index.ts';
 import type { Transaction } from '~/store/schema/index.ts';
 
 import {

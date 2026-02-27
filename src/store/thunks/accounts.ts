@@ -2,7 +2,11 @@ import { CalendarDate } from '@internationalized/date';
 import { parse } from 'date-fns';
 import { z } from 'zod';
 
-import { schema, AccountSchema, type AccountInput } from '../schema/index.ts';
+import {
+  loroSchema as schema,
+  AccountSchema,
+  type AccountInput
+} from '../schema/index.ts';
 import { thunks } from './foundation.ts';
 
 export const accountAdd = thunks.create<AccountInput>(

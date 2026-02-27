@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema, type Settings } from '~/store/schema/index.ts';
+import { metaSchema as schema, type Settings } from '~/store/schema/index.ts';
 import { changeSetting } from '~/store/thunks/settings.ts';
 
 import { Switch } from '~/elements/Switch.tsx';

@@ -2,7 +2,7 @@ import { put } from 'starfx';
 import { z } from 'zod';
 
 import {
-  schema,
+  loroSchema as schema,
   type Transaction,
   type Account,
   type ChartRange,

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import {
-  schema,
+  loroSchema as schema,
   TransactionSchema,
   type TransactionInput
 } from '../schema/index.ts';

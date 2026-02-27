@@ -14,7 +14,7 @@ import AccountView from './pages/accounts/view.tsx';
 import Examples from './pages/examples';
 import Homepage from './pages/homepage';
 import TransactionsOverview from './pages/transactions/index.tsx';
-import { schema } from './store/schema/index.ts';
+import { metaSchema as schema } from './store/schema/index.ts';
 
 const Settings = React.lazy(() => import('./pages/settings'));
 const Financial = React.lazy(() => import('./pages/flow'));
