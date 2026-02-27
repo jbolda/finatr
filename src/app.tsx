@@ -1,6 +1,3 @@
-// import { Auth } from '@supabase/auth-ui-react';
-// import { ThemeSupa } from '@supabase/auth-ui-shared';
-import { type SupabaseClient } from '@supabase/supabase-js';
 import React, { useCallback, useContext, useMemo } from 'react';
 import { RouterProvider } from 'react-aria-components';
 import { Routes as RoutesList, Route, Link } from 'react-router-dom';
@@ -79,30 +76,22 @@ const sidebarMain = tv({
   }
 });
 
-function App({
-  supabase
-}: {
-  supabase: SupabaseClient<any, 'public', any> | null;
-}) {
+function App() {
   return (
     <AppWrapper>
       <Sidebar />
-      <Main supabase={supabase} />
+      <Main />
     </AppWrapper>
   );
 }
 
-function Main({
-  supabase
-}: {
-  supabase: SupabaseClient<any, 'public', any> | null;
-}) {
+function Main() {
   const { sidebar } = useContext(SidebarContext);
   return (
     <div className="flex flex-col min-h-screen">
       <main className={sidebarMain({ sidebar })}>
         <div className="px-4 sm:px-6 lg:px-8">
-          <Routes supabase={supabase} />
+          <Routes />
         </div>
       </main>
       <Footer />
@@ -110,28 +99,13 @@ function Main({
   );
 }
 
-function Routes({
-  supabase: _
-}: {
-  supabase: SupabaseClient<any, 'public', any> | null;
-}) {
-  // const auth = useSelector(schema.auth.select);
+function Routes() {
   const settings = useSelector(schema.settings.select);
 
   return (
     <RoutesList>
       <Route index element={<Homepage />} />
       <Route path="examples" element={<Examples />} />
-      {/* <Route
-        path="auth"
-        element={
-          supabase && !auth.user ? (
-            <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />
-          ) : (
-            <div>Logged in!</div>
-          )
-        }
-      /> */}
       <Route
         path="settings"
         element={

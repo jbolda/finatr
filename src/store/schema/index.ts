@@ -1,4 +1,3 @@
-import { type Session } from '@supabase/supabase-js';
 import { format } from 'date-fns';
 import addDays from 'date-fns/fp/addDays/index.js';
 import { lift } from 'effection';
@@ -192,7 +191,7 @@ export type IncomeExpected = z.infer<typeof IncomeExpectedSchema>;
 export const metaSchema = createSchema({
   cache: sliceOG.table(),
   loaders: sliceOG.loaders(),
-  auth: sliceOG.obj<Session | { user: null }>({ user: null }),
+  auth: sliceOG.obj({ user: null }),
   settings: sliceOG.obj<Settings>(defaultSettings)
 });
 
