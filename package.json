@@ -28,7 +28,7 @@
     "date-fns": "^2.23.0",
     "dinero.js": "^2.0.0-alpha.14",
     "js-file-download": "0.4.12",
-    "loro-crdt": "^1.8.9",
+    "loro-crdt": "^1.10.6",
     "lucide-react": "^0.482.0",
     "papaparse": "^5.4.1",
     "react": "^19.2.0",
