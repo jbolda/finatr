@@ -1,7 +1,12 @@
 import { createStore, parallel, takeEvery } from 'starfx';
 import type { AnyState, Operation } from 'starfx';
 
-import { localPersistor, schemas } from './schema/index.ts';
+import { PERSIST_LOADER_ID } from './persist.ts';
+import {
+  localPersistor,
+  schemas,
+  metaSchema as schema
+} from './schema/index.ts';
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
 import { tasks, thunks } from './thunks/index.ts';
 
@@ -36,7 +41,7 @@ export function setupStore({
   store.initialize(function* () {
     yield* localPersistor.rehydrate();
     const group = yield* parallel(tsks);
-    // yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID }));
+    yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID }));
     yield* group;
   });
 

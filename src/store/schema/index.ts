@@ -1,6 +1,5 @@
 import { format } from 'date-fns';
 import addDays from 'date-fns/fp/addDays/index.js';
-import { lift } from 'effection';
 import { LoroDoc, LoroMap } from 'loro-crdt';
 import {
   slice as sliceOG,
@@ -28,7 +27,6 @@ import { buildDocSubtree } from '../updater.ts';
 import { redinero, scaledFromFloat } from '../utils/dineroUtils.ts';
 import makeUUID from '../utils/makeUUID.ts';
 import { obj as sliceObj } from './obj.ts';
-import type { LoroWriteState } from './table.ts';
 import { table as sliceTable } from './table.ts';
 
 const addYear = addDays(365);
@@ -275,12 +273,12 @@ export const loroSchema = createLoroSchema(
     incomeExpected: sliceTable<IncomeExpected>()
   },
   {
-    name: 'loro'
-    // middleware: [
-    //   persistDocMdw(localPersistor) as unknown as BaseMiddleware<
-    //     UpdaterCtx<SliceFromSchema<any>>
-    //   >
-    // ]
+    name: 'loro',
+    middleware: [
+      persistDocMdw(localPersistor) as unknown as BaseMiddleware<
+        UpdaterCtx<SliceFromSchema<any>>
+      >
+    ]
   }
 );
 
