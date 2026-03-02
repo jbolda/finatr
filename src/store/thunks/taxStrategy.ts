@@ -2,7 +2,7 @@
 import { USD } from '@dinero.js/currencies';
 import { dinero } from 'dinero.js';
 
-import { schema } from '../schema/index.ts';
+import { loroSchema as schema } from '../schema/index.ts';
 import makeUUID from '../utils/makeUUID.ts';
 import { thunks } from './foundation.ts';
 

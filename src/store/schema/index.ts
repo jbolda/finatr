@@ -1,51 +1,31 @@
-import { type Session } from '@supabase/supabase-js';
 import { format } from 'date-fns';
 import addDays from 'date-fns/fp/addDays/index.js';
+import { LoroMap } from 'loro-crdt';
 import {
+  slice as sliceOG,
+  createSchema,
+  createSchemaWithUpdater,
+  expectStore,
+  type UpdaterCtx,
+  type Next,
+  type SliceFromSchema,
   type FxMap,
   type FxSchema,
-  type StoreUpdater,
-  updateStore,
-  slice as sliceOG
+  type BaseMiddleware,
+  StoreContext,
+  persistStoreMdw
 } from 'starfx';
+import { createLocalStorageAdapter, createPersistor } from 'starfx';
 import { z } from 'zod';
 
 import { emptyAccount, emptyTransaction } from '../factory.ts';
+import { createDocPersistor, persistDocMdw } from '../persist.ts';
+import { buildDocSubtree } from '../updater.ts';
 import { redinero, scaledFromFloat } from '../utils/dineroUtils.ts';
 import makeUUID from '../utils/makeUUID.ts';
-import { loaders as sliceLoaders } from './loader.ts';
+import { RootDoc } from './context.ts';
 import { obj as sliceObj } from './obj.ts';
 import { table as sliceTable } from './table.ts';
-
-const slice = { obj: sliceObj, table: sliceTable, loaders: sliceLoaders };
-
-export function createSchema<
-  O extends FxMap,
-  S extends { [key in keyof O]: ReturnType<O[key]>['initialState'] }
->(slices: O): [FxSchema<S, O>, S] {
-  const db = {} as FxSchema<S, O>;
-  // iterate with `in` so we can preserve key types and use non-null assertions
-  for (const k in slices) {
-    const key = k as keyof O;
-    const factory = slices[key]!;
-    // call the factory with the string key and assign into the typed db
-    db[key] = factory(String(key)) as unknown as FxSchema<S, O>[typeof key];
-  }
-
-  const initialState = {} as S;
-  for (const k in db) {
-    const key = k as keyof O;
-    initialState[key] = db[key]!.initialState as S[typeof key];
-  }
-
-  function* update(ups: StoreUpdater<S> | StoreUpdater<S>[]) {
-    return yield* updateStore(ups);
-  }
-
-  db.update = update;
-
-  return [db, initialState];
-}
 
 const addYear = addDays(365);
 
@@ -90,7 +70,10 @@ export const SettingsSchema = z.object({
   planning: z.boolean().default(true),
   financialindependence: z.boolean().default(true),
   flow: z.boolean().default(true),
-  taxes: z.boolean().default(false)
+  taxes: z.boolean().default(false),
+  // user preference for persisting application state locally.
+  // defaults to false so tests start with a clean in-memory store.
+  persist: z.boolean().default(false)
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 
@@ -204,25 +187,125 @@ export const IncomeExpectedSchema = z.object({
 });
 export type IncomeExpected = z.infer<typeof IncomeExpectedSchema>;
 
-const [schema, initialState] = createSchema({
-  cache: sliceOG.table({ empty: {} }),
-  loaders: slice.loaders(),
-  auth: slice.obj<Session | { user: null }>({ user: null }),
-  settings: slice.obj<Settings>(defaultSettings),
-  // emptyTransaction / emptyAccount come from dinero().toJSON() and may
-  // include readonly arrays on currency.base. Cast them to the expected
-  // generic types here to avoid a wide readonly vs mutable array type
-  // incompatibility during schema construction.
-  transactions: slice.table<Transaction>({
-    empty: emptyTransaction as unknown as Transaction
-  }),
-  accounts: slice.table<Account>({ empty: emptyAccount as unknown as Account }),
-  accountMeta: slice.obj<AccountMeta>(defaultAccountSnapshotData),
-  chartRange: slice.obj(defaultChartBarRange(referenceDate)),
-  incomeReceived: slice.table<IncomeReceived>(),
-  incomeExpected: slice.table<IncomeExpected>()
+// a separate persistor for meta state; always enabled so the
+// settings slices are durable independent of the main
+// document persistence toggle. we only need to save the meta portion of
+// the store, not the entire application state.
+
+export const metaPersistor = createPersistor<{
+  settings: Settings;
+  auth: { user: null | string };
+  cache: unknown;
+}>({
+  adapter: createLocalStorageAdapter(),
+  key: 'finatr-meta',
+  allowlist: ['settings', 'cache']
 });
 
-export { schema, initialState };
+export const metaSchema = createSchema(
+  {
+    cache: sliceOG.table(),
+    loaders: sliceOG.loaders(),
+    auth: sliceOG.obj({ user: null }),
+    settings: sliceOG.obj<Settings>(defaultSettings)
+  },
+  {
+    // TS can't infer the precise middleware state shape here; the return
+    // type of persistStoreMdw is generic over a different schema type, so
+    // the compiler complains. the runtime is fine, and we'll revisit in a
+    // later PR if we want a cleaner fix upstream.
+    // @ts-expect-error mismatched middleware type
+    middleware: [persistStoreMdw(metaPersistor) as unknown]
+  }
+);
 
-export type AppState = typeof initialState;
+export const localPersistor = createDocPersistor({
+  key: 'finatr',
+  adapter: createLocalStorageAdapter()
+});
+
+function createLoroSchema<O extends FxMap>(
+  slices: O,
+  options: {
+    /**
+     * Unique name for this schema. Used to access the schema from the store.
+     * @default "default"
+     */
+    name?: string;
+    middleware?: BaseMiddleware<UpdaterCtx<SliceFromSchema<O>>>[];
+  } = {}
+): FxSchema<O> {
+  return createSchemaWithUpdater(slices, {
+    name: options.name,
+    middleware: options.middleware,
+    *initialize() {
+      const store = yield* StoreContext.expect();
+      const scope = store.getScope();
+      const ldoc = yield* RootDoc.expect();
+      const root = ldoc.getMap('root');
+
+      const initial = store.getInitialState();
+      // initial is AnyState so TS can't guarantee the shape; coerce for now
+      // @ts-expect-error bad InitialState type
+      root.set('settings', Object.entries(initial['settings']));
+
+      // set up a map for all sources
+      const sources = root.setContainer('sources', new LoroMap());
+      // then a default subdoc for local data
+      const local = sources.setContainer('local', new LoroMap());
+      const plan = local.setContainer('plan', new LoroMap());
+      buildDocSubtree({ initial, parent: plan });
+      ldoc.commit();
+      scope.set(RootDoc, ldoc);
+    },
+    *updateMdw(ctx: UpdaterCtx<SliceFromSchema<O>>, next: Next) {
+      const root = yield* RootDoc.expect();
+      const store = yield* expectStore();
+      const plan = root
+        .getMap('root')
+        .getOrCreateContainer('sources', new LoroMap())!
+        .getOrCreateContainer('local', new LoroMap())!
+        .getOrCreateContainer('plan', new LoroMap())!;
+      const ups = Array.isArray(ctx.updater) ? ctx.updater : [ctx.updater];
+      console.dir({ ups, plan });
+      for (let up of ups as unknown as Array<
+        (state: LoroMap<Record<string, unknown>>) => void
+      >) {
+        up(plan);
+      }
+      root.commit();
+      const nextPlanState = plan.toJSON() as SliceFromSchema<O>;
+      store.setState(nextPlanState);
+      yield* next();
+    }
+  });
+}
+
+export const loroSchema = createLoroSchema(
+  {
+    // emptyTransaction / emptyAccount come from dinero().toJSON() and may
+    // include readonly arrays on currency.base. Cast them to the expected
+    // generic types here to avoid a wide readonly vs mutable array type
+    // incompatibility during schema construction.
+    transactions: sliceTable<Transaction>({
+      empty: emptyTransaction as Transaction
+    }),
+    accounts: sliceTable<Account>({
+      empty: emptyAccount as Account
+    }),
+    accountMeta: sliceObj<AccountMeta>(defaultAccountSnapshotData),
+    chartRange: sliceObj(defaultChartBarRange(referenceDate)),
+    incomeReceived: sliceTable<IncomeReceived>(),
+    incomeExpected: sliceTable<IncomeExpected>()
+  },
+  {
+    name: 'loro',
+    middleware: [
+      persistDocMdw(localPersistor) as unknown as BaseMiddleware<
+        UpdaterCtx<SliceFromSchema<any>>
+      >
+    ]
+  }
+);
+
+export const schemas = [metaSchema, loroSchema];

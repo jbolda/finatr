@@ -3,7 +3,7 @@ import { toDecimal, type Dinero } from 'dinero.js';
 import { createSelector } from 'starfx';
 
 import type { Account } from '~/store/schema/index.ts';
-import { schema } from '~/store/schema/index.ts';
+import { loroSchema as schema } from '~/store/schema/index.ts';
 
 import { reconstituteField } from '../utils/reconcilerWithReconstitution.ts';
 import { barChartTransactions } from './chartData';

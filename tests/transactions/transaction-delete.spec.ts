@@ -6,6 +6,10 @@ import { getRowWith } from '../helpers/tableHelpers';
 import { addDefaultAccount } from './helper';
 
 test.beforeEach(async ({ page }) => {
+  await page.context().addInitScript(() => {
+    localStorage.removeItem('finatr');
+    localStorage.removeItem('finatr-meta');
+  });
   await page.goto('/');
   await addDefaultAccount(page);
   await navigateTo(page, 'Planning');
@@ -27,6 +31,9 @@ test.beforeEach(async ({ page }) => {
   await page.getByLabel('Category').fill('generic'); //
   await page.getByLabel('description').fill('test transaction'); //
   await page.keyboard.press('Enter');
+
+  const row = getRowWith(page, 'transactions', 'test transaction');
+  await expect(row).toBeVisible();
 });
 
 test('deletes the recently added transaction', async ({ page }) => {
