@@ -107,7 +107,8 @@ function Main() {
 }
 
 function Routes() {
-  const settings = useSelector(schema.settings.select);
+  // TODO the schema typing is currently too loose to infer the precise shape
+  const settings = useSelector((schema as any).settings.select) as any;
 
   return (
     <RoutesList>

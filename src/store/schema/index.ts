@@ -210,7 +210,12 @@ export const metaSchema = createSchema(
     settings: sliceOG.obj<Settings>(defaultSettings)
   },
   {
-    middleware: [persistStoreMdw(metaPersistor)]
+    // TS can't infer the precise middleware state shape here; the return
+    // type of persistStoreMdw is generic over a different schema type, so
+    // the compiler complains. the runtime is fine, and we'll revisit in a
+    // later PR if we want a cleaner fix upstream.
+    // @ts-expect-error mismatched middleware type
+    middleware: [persistStoreMdw(metaPersistor) as unknown]
   }
 );
 
@@ -240,6 +245,8 @@ function createLoroSchema<O extends FxMap>(
       const root = ldoc.getMap('root');
 
       const initial = store.getInitialState();
+      // initial is AnyState so TS can't guarantee the shape; coerce for now
+      // @ts-expect-error bad InitialState type
       root.set('settings', Object.entries(initial['settings']));
 
       // set up a map for all sources

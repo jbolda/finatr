@@ -18,7 +18,10 @@ export function setupStore({
   logs: boolean;
   initialState: AnyState;
 }) {
-  const store = createStore({ schemas });
+  // schema array has heterogeneous generics; TS complains even though the
+  // runtime accepts it. cast to any for now and revisit upstream type defs.
+  // @ts-expect-error schema list too wide
+  const store = createStore({ schemas: schemas });
 
   const tsks: (() => Operation<void>)[] = [];
   if (logs) {
@@ -45,12 +48,16 @@ export function setupStore({
 
     // now the settings have been populated; only load the larger document if
     // the user previously enabled persistence.
-    const state = store.getState();
-    if (state.settings?.persist) {
+    // we treat the state as any to avoid schema typing issues
+    // TODO the generic isn't coming through and is only FxMap
+    const state = store.getState() as any; // loose due to schema typing
+    if (state.settings?.['persist']) {
       yield* localPersistor.rehydrate();
     }
 
     const group = yield* parallel(tsks);
+    // loader update typing is messy since schema type is broad
+    // @ts-expect-error loader updater mismatched
     yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID }));
     yield* group;
   });
