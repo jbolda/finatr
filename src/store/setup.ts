@@ -43,14 +43,12 @@ export function setupStore({
   );
 
   store.initialize(function* () {
-    // hydrate meta state first (settings & auth) regardless of the toggle.
     yield* metaPersistor.rehydrate();
 
     // now the settings have been populated; only load the larger document if
     // the user previously enabled persistence.
-    // we treat the state as any to avoid schema typing issues
-    // TODO the generic isn't coming through and is only FxMap
-    const state = store.getState() as any; // loose due to schema typing
+    // TODO typings: the generic isn't coming through and is only FxMap
+    const state = store.getState() as any;
     if (state.settings?.['persist']) {
       yield* localPersistor.rehydrate();
     }

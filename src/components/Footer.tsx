@@ -5,7 +5,9 @@ import { useSelector } from 'starfx/react';
 import { metaSchema as schema, type Settings } from '../store/schema';
 
 export const Footer = () => {
-  const settings = useSelector(schema.settings.select);
+  // use any to escape the overly generic BaseSchema type
+  // TODO typings: drop this cast when `schema.settings` has a usable type
+  const settings = useSelector((schema as any).settings.select) as Settings;
 
   return (
     <footer>

@@ -1,11 +1,5 @@
-import { LoroDoc, LoroMap } from 'loro-crdt';
-import {
-  type AnyState,
-  type UpdaterCtx,
-  type Next,
-  type Operation,
-  type Scope
-} from 'starfx';
+import { LoroMap } from 'loro-crdt';
+import { type AnyState } from 'starfx';
 
 export const buildDocSubtree = ({
   initial,

@@ -107,7 +107,7 @@ function Main() {
 }
 
 function Routes() {
-  // TODO the schema typing is currently too loose to infer the precise shape
+  // TODO typings: the schema typing is currently too loose to infer the precise shape
   const settings = useSelector((schema as any).settings.select) as any;
 
   return (

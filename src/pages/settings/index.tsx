@@ -7,9 +7,8 @@ import { changeSetting } from '~/store/thunks/settings.ts';
 import { Switch } from '~/elements/Switch.tsx';
 
 const Settings = () => {
-  // TS complains because metaSchema is treated as BaseSchema<unknown>.
-  // cast to any to retrieve the selector and then assert the Settings type.
-  // TODO revisit the schema typing to avoid this in the future.
+  // TODO typings: remove `as any` cast when schema.settings type is
+  // exported correctly or when selector helpers are typed better upstream.
   const settings = useSelector((schema as any).settings.select) as Settings;
   return (
     <div className="relative max-w-lg mx-auto divide-y-2 divide-gray-200 lg:max-w-7xl">

@@ -20,8 +20,11 @@ export const transactionAdd = thunks.create<TransactionInput>(
     }
 
     console.log('Adding transaction', transaction);
+    // TODO typings: the generic isn't coming through and is only FxMap
     yield* schema.update(
-      schema.transactions.add({ [transaction.data.id]: transaction.data })
+      schema.transactions.add({
+        [transaction.data.id]: transaction.data
+      }) as any
     );
     yield* next();
   }
@@ -30,7 +33,8 @@ export const transactionAdd = thunks.create<TransactionInput>(
 export const transactionRemove = thunks.create<{ id: string }>(
   'transaction:remove',
   function* (ctx, next) {
-    yield* schema.update(schema.transactions.remove([ctx.payload.id]));
+    // TODO typings: the generic isn't coming through and is only FxMap
+    yield* schema.update(schema.transactions.remove([ctx.payload.id]) as any);
     yield* next();
   }
 );

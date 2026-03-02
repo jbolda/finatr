@@ -21,9 +21,9 @@ export const accountAdd = thunks.create<AccountInput>(
       throw new Error('Invalid account payload');
     }
 
-    // store as-is (AccountSchema normalizes starting into a serializable snapshot)
+    // TODO typings: the generic isn't coming through and is only FxMap
     yield* schema.update(
-      schema.accounts.add({ [account.data.id]: account.data })
+      schema.accounts.add({ [account.data.id]: account.data }) as any
     );
     yield* next();
   }
@@ -32,7 +32,8 @@ export const accountAdd = thunks.create<AccountInput>(
 export const accountRemove = thunks.create<{ id: string }>(
   'account:remove',
   function* (ctx, next) {
-    yield* schema.update(schema.accounts.remove([ctx.payload.id]));
+    // TODO typings: see comment above about update generic mismatch
+    yield* schema.update(schema.accounts.remove([ctx.payload.id]) as any);
     yield* next();
   }
 );

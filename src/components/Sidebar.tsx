@@ -28,7 +28,7 @@ import {
 import { useSelector } from 'starfx/react';
 import { tv } from 'tailwind-variants';
 
-import { metaSchema as schema } from '../store/schema';
+import { metaSchema as schema, type Settings } from '../store/schema';
 
 type NavItem = {
   name: string;
@@ -138,7 +138,8 @@ function SidebarContent({
 }) {
   const { sidebar, setSidebar } = useContext(SidebarContext);
   const sidebarWidth = forceSidebarState ?? sidebar;
-  const settings = useSelector(schema.settings.select);
+  // TODO typings: remove the ts-expect-error once schema typing is fixed
+  const settings = useSelector((schema as any).settings.select) as Settings;
   const fullNavigation = [
     {
       name: null,

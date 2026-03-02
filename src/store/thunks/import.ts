@@ -42,11 +42,12 @@ export const importEntries = thunks.create<{
     throw new Error('Transaction import failed');
   }
 
+  // TODO typings: the generic isn't coming through and is only FxMap
   yield* schema.update([
-    schema.transactions.reset(),
-    schema.accounts.reset(),
-    schema.chartRange.reset()
-  ]);
+    schema.transactions.reset() as any,
+    schema.accounts.reset() as any,
+    schema.chartRange.reset() as any
+  ] as any);
 
   // the fires off a dispatch and returns immediately
   for (let account of accountsParsed.data) {
