@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import addDays from 'date-fns/fp/addDays/index.js';
-import { LoroDoc, LoroMap } from 'loro-crdt';
+import { LoroMap } from 'loro-crdt';
 import {
   slice as sliceOG,
   createSchema,
@@ -12,20 +12,18 @@ import {
   type FxMap,
   type FxSchema,
   type BaseMiddleware,
-  createContext,
-  StoreContext
+  StoreContext,
+  persistStoreMdw
 } from 'starfx';
+import { createLocalStorageAdapter, createPersistor } from 'starfx';
 import { z } from 'zod';
 
 import { emptyAccount, emptyTransaction } from '../factory.ts';
-import {
-  createDocPersistor,
-  createLocalStorageAdapter,
-  persistDocMdw
-} from '../persist.ts';
+import { createDocPersistor, persistDocMdw } from '../persist.ts';
 import { buildDocSubtree } from '../updater.ts';
 import { redinero, scaledFromFloat } from '../utils/dineroUtils.ts';
 import makeUUID from '../utils/makeUUID.ts';
+import { RootDoc } from './context.ts';
 import { obj as sliceObj } from './obj.ts';
 import { table as sliceTable } from './table.ts';
 
@@ -72,7 +70,10 @@ export const SettingsSchema = z.object({
   planning: z.boolean().default(true),
   financialindependence: z.boolean().default(true),
   flow: z.boolean().default(true),
-  taxes: z.boolean().default(false)
+  taxes: z.boolean().default(false),
+  // user preference for persisting application state locally.
+  // defaults to false so tests start with a clean in-memory store.
+  persist: z.boolean().default(false)
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 
@@ -186,19 +187,37 @@ export const IncomeExpectedSchema = z.object({
 });
 export type IncomeExpected = z.infer<typeof IncomeExpectedSchema>;
 
-export const metaSchema = createSchema({
-  cache: sliceOG.table(),
-  loaders: sliceOG.loaders(),
-  auth: sliceOG.obj({ user: null }),
-  settings: sliceOG.obj<Settings>(defaultSettings)
+// a separate persistor for meta state; always enabled so the
+// settings slices are durable independent of the main
+// document persistence toggle. we only need to save the meta portion of
+// the store, not the entire application state.
+
+export const metaPersistor = createPersistor<{
+  settings: Settings;
+  auth: { user: null | string };
+  cache: unknown;
+}>({
+  adapter: createLocalStorageAdapter(),
+  key: 'finatr-meta',
+  allowlist: ['settings', 'cache']
 });
+
+export const metaSchema = createSchema(
+  {
+    cache: sliceOG.table(),
+    loaders: sliceOG.loaders(),
+    auth: sliceOG.obj({ user: null }),
+    settings: sliceOG.obj<Settings>(defaultSettings)
+  },
+  {
+    middleware: [persistStoreMdw(metaPersistor)]
+  }
+);
 
 export const localPersistor = createDocPersistor({
   key: 'finatr',
   adapter: createLocalStorageAdapter()
 });
-
-export const RootDoc = createContext('starfx:loro', new LoroDoc());
 
 function createLoroSchema<O extends FxMap>(
   slices: O,

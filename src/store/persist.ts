@@ -7,10 +7,11 @@ import {
   type AnyState,
   type Next,
   type UpdaterCtx,
-  StoreContext
+  StoreContext,
+  select
 } from 'starfx';
 
-import { RootDoc } from './schema/index.ts';
+import { RootDoc } from './schema/context.ts';
 
 export const PERSIST_LOADER_ID = '@@starfx/persist';
 
@@ -130,8 +131,19 @@ export function persistDocMdw<S extends AnyState>({
 }: PersistProps<S>) {
   return function* (_: UpdaterCtx<S>, next: Next) {
     yield* next();
-    const doc = yield* RootDoc.expect();
 
+    // only write the document if persistence has been enabled in settings.
+    // we avoid importing the schema here to keep the module graph acyclic;
+    // the field name is hard‑coded but that’s acceptable given our limited
+    // scope.
+    const shouldPersist: boolean = yield* select((s: any) => {
+      return s?.settings?.persist;
+    });
+    if (!shouldPersist) {
+      return;
+    }
+
+    const doc = yield* RootDoc.expect();
     yield* adapter.setItem(key, doc as unknown as Partial<S>);
   };
 }

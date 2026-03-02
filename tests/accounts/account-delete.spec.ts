@@ -4,6 +4,10 @@ import { navigateTo } from '../helpers/navigate';
 import { getRowWith } from '../helpers/tableHelpers';
 
 test.beforeEach(async ({ page }) => {
+  await page.context().addInitScript(() => {
+    localStorage.removeItem('finatr');
+    localStorage.removeItem('finatr-meta');
+  });
   await page.goto('/');
   await navigateTo(page, 'Planning');
   await page.getByText('Add Account').click();
@@ -11,6 +15,9 @@ test.beforeEach(async ({ page }) => {
   await page.getByLabel('Starting').first().fill('55');
   await page.getByLabel('name').fill('test account');
   await page.keyboard.press('Enter');
+
+  const row = getRowWith(page, 'accounts', '55.00');
+  await expect(row).toBeVisible();
 });
 
 test('deletes the recently added account', async ({ page }) => {

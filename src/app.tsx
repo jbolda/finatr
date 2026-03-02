@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useMemo } from 'react';
 import { RouterProvider } from 'react-aria-components';
 import { Routes as RoutesList, Route, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'starfx/react';
+import { useSelector, PersistGate } from 'starfx/react';
 import { tv } from 'tailwind-variants';
 
 import { Footer } from './components/Footer.tsx';
@@ -76,11 +76,18 @@ const sidebarMain = tv({
   }
 });
 
+// persist gate ensures that the meta schema has been rehydrated
+// before the application content that relies on it is mounted. the
+// sidebar and routing infrastructure can render immediately; only the main
+// viewport is delayed. this reduces the perceived blank‑screen time while
+// still guaranteeing that settings are ready when pages read them.
 function App() {
   return (
     <AppWrapper>
       <Sidebar />
-      <Main />
+      <PersistGate>
+        <Main />
+      </PersistGate>
     </AppWrapper>
   );
 }

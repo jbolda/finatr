@@ -5,7 +5,8 @@ import { PERSIST_LOADER_ID } from './persist.ts';
 import {
   localPersistor,
   schemas,
-  metaSchema as schema
+  metaSchema as schema,
+  metaPersistor
 } from './schema/index.ts';
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
 import { tasks, thunks } from './thunks/index.ts';
@@ -39,7 +40,16 @@ export function setupStore({
   );
 
   store.initialize(function* () {
-    yield* localPersistor.rehydrate();
+    // hydrate meta state first (settings & auth) regardless of the toggle.
+    yield* metaPersistor.rehydrate();
+
+    // now the settings have been populated; only load the larger document if
+    // the user previously enabled persistence.
+    const state = store.getState();
+    if (state.settings?.persist) {
+      yield* localPersistor.rehydrate();
+    }
+
     const group = yield* parallel(tsks);
     yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID }));
     yield* group;

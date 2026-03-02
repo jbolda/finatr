@@ -1,6 +1,11 @@
 import { select } from 'starfx';
 
-import { metaSchema as schema, type Settings } from '../schema/index.ts';
+import { RootDoc } from '../schema/context.ts';
+import {
+  type Settings,
+  metaSchema as schema,
+  localPersistor
+} from '../schema/index.ts';
 import { thunks } from './foundation.ts';
 
 export const changeSetting = thunks.create<{
@@ -22,6 +27,28 @@ export const changeSetting = thunks.create<{
     );
     yield* schema.update(schema.settings.set(newSettings));
   } else {
+    // handle side effects for persistence toggle
+    if (key === 'persist') {
+      if (value) {
+        // turning on persistence: immediately write whatever state we have
+        // so a subsequent reload will at least see the current document. we
+        // also attempt to rehydrate in case there was already data on disk.
+        try {
+          const doc = yield* RootDoc.expect();
+          yield* localPersistor.adapter.setItem(
+            localPersistor.key,
+            doc as unknown as Partial<Settings>
+          );
+        } catch (err) {
+          console.error('persist write failed during toggle on', err);
+        }
+        yield* localPersistor.rehydrate();
+      } else {
+        // turning off: clear out any stored snapshot
+        yield* localPersistor.adapter.removeItem(localPersistor.key);
+      }
+    }
+
     yield* schema.update(schema.settings.update({ key, value }));
   }
   yield* next();

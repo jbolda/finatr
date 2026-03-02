@@ -4,6 +4,10 @@ import { navigateTo } from '../helpers/navigate';
 import { addDefaultAccount, addGenericTransaction, selectOnly } from './helper';
 
 test.beforeEach(async ({ page }) => {
+  await page.context().addInitScript(() => {
+    localStorage.removeItem('finatr');
+    localStorage.removeItem('finatr-meta');
+  });
   await page.goto('/');
   await addDefaultAccount(page);
   await navigateTo(page, 'Planning');

@@ -16,6 +16,13 @@ const Settings = () => {
           This is still in an alpha state.
         </p>
         <SettingsToggle settings={settings} />
+        <div className="mt-8 pt-6 border-t border-gray-200">
+          <h2 className="text-lg font-medium">Persistence</h2>
+          <p className="text-sm text-gray-500 mb-4">
+            Control whether the application stores data in your browser.
+          </p>
+          <PersistToggle settings={settings} />
+        </div>
       </div>
     </div>
   );
@@ -24,20 +31,23 @@ const Settings = () => {
 type SettingsAll = keyof Settings | 'all';
 const SettingsToggle = ({ settings }: { settings: Settings }) => {
   const dispatch = useDispatch();
-  const settingsList = ['all'].concat(Object.keys(settings)) as SettingsAll[];
-  const allValue = (Object.keys(settings) as (keyof Settings)[]).reduce(
-    (finalValue, setting) => {
-      if (settings[setting] && finalValue) return true;
-      return false;
-    },
-    true
-  );
+  // omit the persist key from the general features list
+  const settingsList = ['all'].concat(
+    Object.keys(settings).filter((k) => k !== 'persist')
+  ) as SettingsAll[];
+  const allValue = (
+    settingsList.filter((s) => s !== 'all') as (keyof Settings)[]
+  ).reduce((finalValue, setting) => {
+    if (settings[setting] && finalValue) return true;
+    return false;
+  }, true);
 
   return (
     <>
       {settingsList.map((setting) => {
-        // but technically SettingsAll which includes 'all' so fallback
-        const value = settings?.[setting as keyof Settings] ?? allValue;
+        const value =
+          setting === 'all' ? allValue : settings[setting as keyof Settings];
+        const label = setting === 'all' ? 'all features' : setting;
         return (
           <Switch
             key={setting}
@@ -47,9 +57,9 @@ const SettingsToggle = ({ settings }: { settings: Settings }) => {
             onChange={() =>
               dispatch(changeSetting({ key: setting, value: !value }))
             }
-            isSelected={value}
+            isSelected={!!value}
           >
-            {setting}
+            {label}
           </Switch>
         );
       })}
@@ -57,4 +67,22 @@ const SettingsToggle = ({ settings }: { settings: Settings }) => {
   );
 };
 
+const PersistToggle = ({ settings }: { settings: Settings }) => {
+  const dispatch = useDispatch();
+  const value = settings.persist;
+  return (
+    <Switch
+      key="persist"
+      className={
+        'group flex gap-2 items-center text-gray-800 disabled:text-gray-300 dark:text-zinc-200 dark:disabled:text-zinc-600 forced-colors:disabled:text-[GrayText] text-sm transition'
+      }
+      onChange={() =>
+        dispatch(changeSetting({ key: 'persist', value: !value }))
+      }
+      isSelected={value}
+    >
+      Save data to local storage
+    </Switch>
+  );
+};
 export default Settings;

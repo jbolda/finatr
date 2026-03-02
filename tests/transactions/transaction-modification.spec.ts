@@ -6,12 +6,17 @@ import { getRowWith } from '../helpers/tableHelpers';
 import { addDefaultAccount, addGenericTransaction } from './helper';
 
 test.beforeEach(async ({ page }) => {
+  await page.context().addInitScript(() => {
+    localStorage.removeItem('finatr');
+    localStorage.removeItem('finatr-meta');
+  });
   await page.goto('/');
   await addDefaultAccount(page);
   await navigateTo(page, 'Planning');
   await addGenericTransaction(page, { value: '55', extraActions: [] });
 
   const row = getRowWith(page, 'transactions', 'test transaction');
+  await expect(row).toBeVisible();
   const modifyButton = row.getByRole('button', { name: 'modify' });
   await modifyButton.click();
 });
