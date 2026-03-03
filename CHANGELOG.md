@@ -1,5 +1,13 @@
 # Changelog
 
+## \[0.8.0]
+
+- [`e03b4a3`](https://github.com/jbolda/finatr/commit/e03b4a303b2d81e35d3b2433f53c3902a7e9f5fd) ([#919](https://github.com/jbolda/finatr/pull/919) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Shifting to using Loro to back the store. This is a sync engine that will help in handling inter-device and user interactions.
+- [`efbe46c`](https://github.com/jbolda/finatr/commit/efbe46c579efa5ff24003c56457ab10bd4a0732c) ([#920](https://github.com/jbolda/finatr/pull/920) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Move storage handling out of persistor and (more properly) into the schema. Attach schema more directly to the store.
+- [`56ae06c`](https://github.com/jbolda/finatr/commit/56ae06c4931d30f4b271a8a1f6624a080e07cbd4) ([#918](https://github.com/jbolda/finatr/pull/918) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Update to preview version of starfx with effection v4.
+- [`0794ddc`](https://github.com/jbolda/finatr/commit/0794ddc88395303f26d3fc76c60e5fc522500fb3) ([#916](https://github.com/jbolda/finatr/pull/916) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Big swap to Vite.
+- [`0794ddc`](https://github.com/jbolda/finatr/commit/0794ddc88395303f26d3fc76c60e5fc522500fb3) ([#916](https://github.com/jbolda/finatr/pull/916) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Update to Tailwind v4.
+
 ## \[0.7.0]
 
 - [`80ed35c`](https://github.com/jbolda/finatr/commit/80ed35c2f1ded9d65f3d23f265d679cfafff21a5) ([#913](https://github.com/jbolda/finatr/pull/913) by [@jbolda](https://github.com/jbolda/finatr/../../jbolda)) Allow setting a date for account balances. This sets a lower limit on the cash flow analysis graph. It also separates the date from chart so we can freely adjust the date range in view within the chart. Additionally, it helps prevent users from hitting a memory overflow error caused by trying to view too far back into the past.
