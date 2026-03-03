@@ -6,7 +6,8 @@ import { getRowWith } from '../helpers/tableHelpers';
 import { addDefaultAccount } from './helper';
 
 test.beforeEach(async ({ page }) => {
-  await page.context().addInitScript(() => {
+  await page.goto('/');
+  await page.evaluate(() => {
     localStorage.removeItem('finatr');
     localStorage.removeItem('finatr-meta');
   });

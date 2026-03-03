@@ -6,11 +6,11 @@ import { navigateTo } from '../helpers/navigate';
 // accessible name, so "persist" will show up as a checkbox role.
 
 test('persistence is off by default and can be toggled', async ({ page }) => {
-  await page.context().addInitScript(() => {
+  await page.goto('/');
+  await page.evaluate(() => {
     localStorage.removeItem('finatr');
     localStorage.removeItem('finatr-meta');
   });
-  await page.goto('/');
   await navigateTo(page, 'Settings');
 
   const persistSwitch = page.getByRole('switch', {

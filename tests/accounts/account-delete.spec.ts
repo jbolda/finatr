@@ -4,11 +4,11 @@ import { navigateTo } from '../helpers/navigate';
 import { getRowWith } from '../helpers/tableHelpers';
 
 test.beforeEach(async ({ page }) => {
-  await page.context().addInitScript(() => {
+  await page.goto('/');
+  await page.evaluate(() => {
     localStorage.removeItem('finatr');
     localStorage.removeItem('finatr-meta');
   });
-  await page.goto('/');
   await navigateTo(page, 'Planning');
   await page.getByText('Add Account').click();
 

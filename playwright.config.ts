@@ -13,17 +13,13 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './tests',
-  /* Run tests in files in parallel, but keep tests within each file
-     sequential. this avoids sharing the same `page` object between
-     tests in the same spec which currently causes interference when
-     they run at the same time. */
-  fullyParallel: false,
+  fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env['CI'],
   /* Retry on CI only */
   retries: process.env['CI'] ? 2 : 0,
   /* Use two workers locally; CI still runs single‑threaded. */
-  workers: process.env['CI'] ? 1 : 2,
+  workers: process.env['CI'] ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   // bump timeout to 30s so individual tests don't fail when multiple
   // workers are contending for CPU on the same machine.
