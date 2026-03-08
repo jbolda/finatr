@@ -1,7 +1,16 @@
-import { type Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
 export const navigateTo = async (page: Page, navLink: string) => {
-  await page.locator('nav').first().locator('a', { hasText: navLink }).click();
+  const nav = page.locator('nav').first();
+  await expect(nav).toBeVisible({ timeout: 10000 });
+
+  const link = nav.locator('a', { hasText: navLink });
+  await expect(link).toBeVisible({ timeout: 10000 });
+  await link.click();
+
+  await expect(link)
+    .toHaveAttribute('aria-current', 'page')
+    .catch(() => {});
 };
 
 export const turnOnAllFeatures = async (page: Page) => {

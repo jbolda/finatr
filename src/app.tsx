@@ -1,11 +1,8 @@
-// import { Auth } from '@supabase/auth-ui-react';
-// import { ThemeSupa } from '@supabase/auth-ui-shared';
-import { type SupabaseClient } from '@supabase/supabase-js';
 import React, { useCallback, useContext, useMemo } from 'react';
 import { RouterProvider } from 'react-aria-components';
 import { Routes as RoutesList, Route, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'starfx/react';
+import { useSelector, PersistGate } from 'starfx/react';
 import { tv } from 'tailwind-variants';
 
 import { Footer } from './components/Footer.tsx';
@@ -15,7 +12,7 @@ import Examples from './pages/examples';
 import Homepage from './pages/homepage';
 import PlanOverview from './pages/plan/index.tsx';
 import TransactionsOverview from './pages/transactions/index.tsx';
-import { schema } from './store/schema/index.ts';
+import { metaSchema as schema } from './store/schema/index.ts';
 
 const Settings = React.lazy(() => import('./pages/settings'));
 const Financial = React.lazy(() => import('./pages/flow'));
@@ -80,30 +77,29 @@ const sidebarMain = tv({
   }
 });
 
-function App({
-  supabase
-}: {
-  supabase: SupabaseClient<any, 'public', any> | null;
-}) {
+// persist gate ensures that the meta schema has been rehydrated
+// before the application content that relies on it is mounted. the
+// sidebar and routing infrastructure can render immediately; only the main
+// viewport is delayed. this reduces the perceived blank‑screen time while
+// still guaranteeing that settings are ready when pages read them.
+function App() {
   return (
     <AppWrapper>
       <Sidebar />
-      <Main supabase={supabase} />
+      <PersistGate>
+        <Main />
+      </PersistGate>
     </AppWrapper>
   );
 }
 
-function Main({
-  supabase
-}: {
-  supabase: SupabaseClient<any, 'public', any> | null;
-}) {
+function Main() {
   const { sidebar } = useContext(SidebarContext);
   return (
     <div className="flex flex-col min-h-screen">
       <main className={sidebarMain({ sidebar })}>
         <div className="px-4 sm:px-6 lg:px-8">
-          <Routes supabase={supabase} />
+          <Routes />
         </div>
       </main>
       <Footer />
@@ -111,12 +107,9 @@ function Main({
   );
 }
 
-function Routes({
-  supabase: _
-}: {
-  supabase: SupabaseClient<any, 'public', any> | null;
-}) {
-  const settings = useSelector(schema.settings.select);
+function Routes() {
+  // TODO typings: the schema typing is currently too loose to infer the precise shape
+  const settings = useSelector((schema as any).settings.select) as any;
 
   return (
     <RoutesList>

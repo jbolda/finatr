@@ -2,7 +2,7 @@ import { parseDate } from '@internationalized/date';
 import React from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema } from '~/store/schema/index.ts';
+import { loroSchema as schema } from '~/store/schema/index.ts';
 import { accountsFromSerialized } from '~/store/selectors/accounts.ts';
 import { updateAccountSnapshotDate } from '~/store/thunks/accounts.ts';
 

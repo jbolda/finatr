@@ -3,7 +3,7 @@ import { parse } from 'date-fns';
 import { addYears } from 'date-fns';
 import { format } from 'date-fns';
 
-import { schema } from '../schema/index.ts';
+import { loroSchema as schema } from '../schema/index.ts';
 import { thunks } from './foundation.ts';
 
 export const updateChartDateRange = thunks.create<{

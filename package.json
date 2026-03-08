@@ -20,18 +20,15 @@
   },
   "dependencies": {
     "@dinero.js/currencies": "^2.0.0-alpha.14",
-    "@supabase/auth-ui-react": "^0.4.7",
-    "@supabase/auth-ui-shared": "^0.1.8",
-    "@supabase/supabase-js": "^2.45.4",
     "@tailwindcss/forms": "^0.5.10",
-    "@tailwindcss/vite": "^4.1.16",
+    "@tailwindcss/vite": "^4.2.1",
     "@tanstack/react-form": "^1.23.8",
     "@tauri-apps/api": "^2.1.1",
     "d3": "^7.9.0",
     "date-fns": "^2.23.0",
     "dinero.js": "^2.0.0-alpha.14",
     "js-file-download": "0.4.12",
-    "loro-crdt": "^1.8.9",
+    "loro-crdt": "^1.10.6",
     "lucide-react": "^0.482.0",
     "papaparse": "^5.4.1",
     "react": "^19.2.0",
@@ -40,7 +37,7 @@
     "react-dom": "^19.2.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.27.0",
-    "starfx": "https://pkg.pr.new/fxforge/starfx@ef94711",
+    "starfx": "https://pkg.pr.new/fxforge/starfx@15c9bd4",
     "tailwindcss-react-aria-components": "^2.0.1",
     "zod": "^4.1.12"
   },
@@ -55,19 +52,29 @@
     "@types/react": "19.2.2",
     "@types/react-dom": "^19.2.2",
     "@types/redux": "^3.6.31",
-    "@vitejs/plugin-react": "^5.1.0",
+    "@vitejs/plugin-react": "^5.1.4",
     "covector": "^0.12.4",
     "prettier": "^3.6.2",
     "tailwind-merge": "^3.3.1",
     "tailwind-variants": "^3.1.1",
-    "tailwindcss": "^4.1.16",
+    "tailwindcss": "^4.2.1",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.9.3",
-    "@simulacrum/server": "^0.7.2",
-    "effection": "^3.6.0",
-    "vite": "^7.1.12",
-    "vite-plugin-top-level-await": "^1.6.0",
+    "@simulacrum/server": "^0.8.0",
+    "effection": "^4.0.2",
+    "vite": "^8.0.0-beta.16",
     "vite-plugin-wasm": "^3.5.0"
+  },
+  "overrides": {
+    "@tailwindcss/vite": {
+      "vite": "^8.0.0-beta.16"
+    },
+    "@vitejs/plugin-react": {
+      "vite": "^8.0.0-beta.16"
+    },
+    "vite-plugin-wasm": {
+      "vite": "^8.0.0-beta.16"
+    }
   },
   "volta": {
     "node": "24.10.0",

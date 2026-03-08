@@ -5,6 +5,10 @@ import { getRowWith } from '../helpers/tableHelpers';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
+  await page.evaluate(() => {
+    localStorage.removeItem('finatr');
+    localStorage.removeItem('finatr-meta');
+  });
   await navigateTo(page, 'Planning');
   await page.getByText('Add Account').click();
 
@@ -14,6 +18,8 @@ test.beforeEach(async ({ page }) => {
   await page.keyboard.press('Enter');
 
   const row = getRowWith(page, 'accounts', 'test account');
+  await expect(row).toBeVisible();
+
   const modifyButton = row.getByRole('button', { name: 'modify' });
   await modifyButton.click();
   await expect(

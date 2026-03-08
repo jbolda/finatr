@@ -6,12 +6,12 @@ import {
   type Result,
   type AnyState,
   type Next,
-  updateStore,
   type UpdaterCtx,
-  StoreContext
+  StoreContext,
+  select
 } from 'starfx';
 
-import { buildDocSubtree, RootDoc } from './updater';
+import { RootDoc } from './schema/context.ts';
 
 export const PERSIST_LOADER_ID = '@@starfx/persist';
 
@@ -87,40 +87,30 @@ export function createDocPersistor<S extends AnyState>({
 
       const store = yield* StoreContext.expect();
       const scope = store.getScope();
-      let plan = null;
-      if (!persistedState.value) {
-        const store = yield* StoreContext.expect();
-        const ldoc = yield* RootDoc.expect();
-        const root = ldoc.getMap('root');
-
-        const initial = store.getInitialState();
-        root.set('settings', Object.entries(initial['settings']));
-
-        // set up a map for all sources
-        const sources = root.setContainer('sources', new LoroMap());
-        // then a default subdoc for local data
-        const local = sources.setContainer('local', new LoroMap());
-        plan = local.setContainer('plan', new LoroMap());
-        buildDocSubtree({ initial, parent: plan });
-        ldoc.commit();
-        scope.set(RootDoc, ldoc);
-      } else {
+      console.log('rehydrating from storage', { persistedState });
+      if (persistedState.value) {
         const stateFromStorage = persistedState.value;
         const newDoc = LoroDoc.fromSnapshot(
           stateFromStorage as unknown as Uint8Array
         );
+        console.log('newDoc', newDoc);
         scope.set(RootDoc, newDoc);
 
-        plan = newDoc
+        const plan = newDoc
           .getMap('root')
           .getOrCreateContainer('sources', new LoroMap())!
           .getOrCreateContainer('local', new LoroMap())!
           .getOrCreateContainer('plan', new LoroMap())!;
-      }
 
-      yield* updateStore<S>(() => {
-        return plan.toJSON() as S;
-      });
+        // TODO fix type here
+        // @ts-expect-error broken perhaps by bad generic on schema
+        yield* store.schemas.loro?.update((s) => {
+          console.log('updating store from persisted doc', {
+            plan: plan.toJSON()
+          });
+          s = plan.toJSON() as S;
+        });
+      }
 
       return Ok(undefined);
     } catch (err: any) {
@@ -141,8 +131,19 @@ export function persistDocMdw<S extends AnyState>({
 }: PersistProps<S>) {
   return function* (_: UpdaterCtx<S>, next: Next) {
     yield* next();
-    const doc = yield* RootDoc.expect();
 
+    // only write the document if persistence has been enabled in settings.
+    // we avoid importing the schema here to keep the module graph acyclic;
+    // the field name is hard‑coded but that’s acceptable given our limited
+    // scope.
+    const shouldPersist: boolean = yield* select((s: any) => {
+      return s?.settings?.persist;
+    });
+    if (!shouldPersist) {
+      return;
+    }
+
+    const doc = yield* RootDoc.expect();
     yield* adapter.setItem(key, doc as unknown as Partial<S>);
   };
 }
