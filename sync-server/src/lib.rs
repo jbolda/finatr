@@ -1,6 +1,6 @@
 //! Lightweight WebSocket server used for development and testing.
 //!
-//! This crate implements a small wrapper around the Loro protocol for
+//! This crate implements a local fork of the Loro websocket server for
 //! programmatic spawning and a management HTTP API intended for local dev
 //! and integration testing. It exposes a few helpers used by tests and
 //! the example CLI JavaScript binaries:
@@ -15,8 +15,10 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 pub use loro_protocol as protocol;
-pub mod lws_wrapper;
-use crate::lws_wrapper::{serve_with_http, ServerConfig as LwsServerConfig};
+pub mod server;
+use crate::server::{
+    serve_with_http, LoadDocArgs, LoadedDoc, SaveDocArgs, ServerConfig as LwsServerConfig,
+};
 use protocol::CrdtType;
 use tokio::sync::Mutex;
 
@@ -34,7 +36,7 @@ use std::future::Future;
 use std::pin::Pin;
 
 type LocalLoadFuture =
-    Pin<Box<dyn Future<Output = Result<Option<Vec<u8>>, String>> + Send + 'static>>;
+    Pin<Box<dyn Future<Output = Result<LoadedDoc<()>, String>> + Send + 'static>>;
 type LocalSaveFuture = Pin<Box<dyn Future<Output = Result<(), String>> + Send + 'static>>;
 
 /// Start the WebSocket Loro server and management endpoints.
@@ -59,17 +61,17 @@ pub async fn start_server(bind: &str, port: u16) {
     let state_for_save = state.clone();
 
     let on_load = std::sync::Arc::new(
-        move |workspace: String, room: String, crdt: protocol::CrdtType| {
+        move |args: LoadDocArgs| {
             let p = db_for_load.clone();
             let state = state_for_load.clone();
             let fut: LocalLoadFuture = Box::pin(async move {
-                match load_snapshot(&p, &workspace, &room, crdt).await {
+                match load_snapshot(&p, &args.workspace, &args.room, args.crdt).await {
                     Ok(Some(snap)) => {
                         let mut st = state.lock().await;
                         st.snapshot = Some(snap.clone());
-                        Ok(Some(snap))
+                        Ok(LoadedDoc { snapshot: Some(snap), ctx: None })
                     }
-                    Ok(None) => Ok(None),
+                    Ok(None) => Ok(LoadedDoc { snapshot: None, ctx: None }),
                     Err(e) => Err(e),
                 }
             });
@@ -78,13 +80,13 @@ pub async fn start_server(bind: &str, port: u16) {
     );
 
     let on_save = std::sync::Arc::new(
-        move |workspace: String, room: String, crdt: protocol::CrdtType, data: Vec<u8>| {
+        move |args: SaveDocArgs<()>| {
             let p = db_for_save.clone();
             let state = state_for_save.clone();
             let fut: LocalSaveFuture = Box::pin(async move {
-                let res = save_snapshot(&p, &workspace, &room, crdt, &data).await;
+                let res = save_snapshot(&p, &args.workspace, &args.room, args.crdt, &args.data).await;
                 let mut st = state.lock().await;
-                st.snapshot = Some(data.clone());
+                st.snapshot = Some(args.data.clone());
                 res
             });
             fut
@@ -132,17 +134,17 @@ pub async fn spawn_server(
     let state_for_save = state.clone();
 
     let on_load = std::sync::Arc::new(
-        move |workspace: String, room: String, crdt: protocol::CrdtType| {
+        move |args: LoadDocArgs| {
             let p = db_for_load.clone();
             let state = state_for_load.clone();
             let fut: LocalLoadFuture = Box::pin(async move {
-                match load_snapshot(&p, &workspace, &room, crdt).await {
+                match load_snapshot(&p, &args.workspace, &args.room, args.crdt).await {
                     Ok(Some(snap)) => {
                         let mut st = state.lock().await;
                         st.snapshot = Some(snap.clone());
-                        Ok(Some(snap))
+                        Ok(LoadedDoc { snapshot: Some(snap), ctx: None })
                     }
-                    Ok(None) => Ok(None),
+                    Ok(None) => Ok(LoadedDoc { snapshot: None, ctx: None }),
                     Err(e) => Err(e),
                 }
             });
@@ -150,13 +152,13 @@ pub async fn spawn_server(
         },
     );
     let on_save = std::sync::Arc::new(
-        move |workspace: String, room: String, crdt: protocol::CrdtType, data: Vec<u8>| {
+        move |args: SaveDocArgs<()>| {
             let p = db_for_save.clone();
             let state = state_for_save.clone();
             let fut: LocalSaveFuture = Box::pin(async move {
-                let res = save_snapshot(&p, &workspace, &room, crdt, &data).await;
+                let res = save_snapshot(&p, &args.workspace, &args.room, args.crdt, &args.data).await;
                 let mut st = state.lock().await;
-                st.snapshot = Some(data.clone());
+                st.snapshot = Some(args.data.clone());
                 res
             });
             fut
@@ -167,8 +169,6 @@ pub async fn spawn_server(
         on_load_document: Some(on_load),
         on_save_document: Some(on_save),
         save_interval_ms: Some(1_000),
-        on_peer_connect: None,
-        on_peer_disconnect: None,
         ..LwsServerConfig::default()
     };
 
@@ -201,17 +201,17 @@ pub async fn spawn_server_with_config(
     let state_for_save = state.clone();
 
     let on_load = std::sync::Arc::new(
-        move |workspace: String, room: String, crdt: protocol::CrdtType| {
+        move |args: LoadDocArgs| {
             let p = db_for_load.clone();
             let state = state_for_load.clone();
             let fut: LocalLoadFuture = Box::pin(async move {
-                match load_snapshot(&p, &workspace, &room, crdt).await {
+                match load_snapshot(&p, &args.workspace, &args.room, args.crdt).await {
                     Ok(Some(snap)) => {
                         let mut st = state.lock().await;
                         st.snapshot = Some(snap.clone());
-                        Ok(Some(snap))
+                        Ok(LoadedDoc { snapshot: Some(snap), ctx: None })
                     }
-                    Ok(None) => Ok(None),
+                    Ok(None) => Ok(LoadedDoc { snapshot: None, ctx: None }),
                     Err(e) => Err(e),
                 }
             });
@@ -219,13 +219,13 @@ pub async fn spawn_server_with_config(
         },
     );
     let on_save = std::sync::Arc::new(
-        move |workspace: String, room: String, crdt: protocol::CrdtType, data: Vec<u8>| {
+        move |args: SaveDocArgs<()>| {
             let p = db_for_save.clone();
             let state = state_for_save.clone();
             let fut: LocalSaveFuture = Box::pin(async move {
-                let res = save_snapshot(&p, &workspace, &room, crdt, &data).await;
+                let res = save_snapshot(&p, &args.workspace, &args.room, args.crdt, &args.data).await;
                 let mut st = state.lock().await;
-                st.snapshot = Some(data.clone());
+                st.snapshot = Some(args.data.clone());
                 res
             });
             fut

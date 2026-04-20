@@ -6,6 +6,7 @@ import {
   createSchema,
   createSchemaWithUpdater,
   expectStore,
+  type AnyState,
   type UpdaterCtx,
   type Next,
   type SliceFromSchema,
@@ -202,39 +203,46 @@ export const metaPersistor = createPersistor<{
   allowlist: ['settings', 'cache']
 });
 
-export const metaSchema = createSchema(
-  {
-    cache: sliceOG.table(),
-    loaders: sliceOG.loaders(),
-    auth: sliceOG.obj({ user: null }),
-    settings: sliceOG.obj<Settings>(defaultSettings),
-    metadata: sliceOG.obj({ name: 'Default', lastUpdated: '' }),
-    sync: sliceOG.obj({
-      service: 'http://localhost:8787',
-      // whether the current websocket is connected
-      connected: false,
-      // last message received from the sync websocket
-      lastMessage: ''
-    }),
-    persist: sliceOG.obj({
-      // string keys/names for the available storage adapters
-      localStorage: 'finatr|default',
-      fileStorage: 'finatr-default',
-      // preferred sync service endpoint (not necessarily active)
-      syncService: 'http://localhost:8787',
-      // active mode indicates which storage adapter is used by the UI
-      mode: 'local' as 'local' | 'file'
-    })
-  },
+const metaSlices = {
+  cache: sliceOG.table<AnyState>(),
+  loaders: sliceOG.loaders(),
+  auth: sliceOG.obj({ user: null }),
+  settings: sliceOG.obj<Settings>(defaultSettings),
+  metadata: sliceOG.obj({ name: 'Default', lastUpdated: '' }),
+  sync: sliceOG.obj({
+    // URL for the sync service; kept empty by default so clients won't
+    // attempt a connection on startup. UI/CLI should populate this per-usage.
+    service: '' as string,
+    // whether the current websocket is connected
+    connected: false,
+    // last message received from the sync websocket
+    lastMessage: ''
+  }),
+  persist: sliceOG.obj({
+    // string keys/names for the available storage adapters
+    localStorage: 'finatr|default',
+    fileStorage: 'finatr-default',
+    // preferred sync service endpoint (not necessarily active)
+    // prefer an empty placeholder; tests will write the actual port
+    syncService: '' as string,
+    // active mode indicates which storage adapter is used by the UI
+    mode: 'local' as 'local' | 'file'
+  })
+};
+
+export type MetaSchemaSlices = typeof metaSlices;
+
+export const metaSchema: FxSchema<MetaSchemaSlices> = createSchema<MetaSchemaSlices>(
+  metaSlices,
   {
     // TS can't infer the precise middleware state shape here; the return
     // type of persistStoreMdw is generic over a different schema type, so
     // the compiler complains. the runtime is fine, and we'll revisit in a
     // later PR if we want a cleaner fix upstream.
-    // @ts-expect-error mismatched middleware type
     middleware: [persistStoreMdw(metaPersistor) as unknown]
   }
 );
+
 
 export const localPersistor = createDocPersistor({
   key: 'finatr',

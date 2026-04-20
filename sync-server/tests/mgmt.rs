@@ -76,7 +76,6 @@ async fn test_mgmt_inspect_includes_raw_peers() {
         let db_path = std::env::temp_dir().join(format!("sync_server_mgmt_peers_test_{}.db", port));
         let _ = std::fs::remove_file(&db_path);
         std::env::set_var("SYNC_DB", db_path.to_string_lossy().to_string());
-        std::env::set_var("SYNC_MANAGEMENT_PORT", port.to_string());
         let (_state, server_handle) = spawn_server("127.0.0.1", port).await;
         let _server_guard = ServerHandleGuard(server_handle);
         assert!(wait_port_open("127.0.0.1", port, 3000).await);
@@ -139,8 +138,6 @@ async fn test_mgmt_inspect_returns_snapshot() {
         let db_path = std::env::temp_dir().join(format!("sync_server_mgmt_test_{}.db", port));
         let _ = std::fs::remove_file(&db_path);
         std::env::set_var("SYNC_DB", db_path.to_string_lossy().to_string());
-        // management runs on the same port as the main server
-        std::env::set_var("SYNC_MANAGEMENT_PORT", port.to_string());
         let (state, server_handle) = spawn_server("127.0.0.1", port).await;
         let _server_guard = ServerHandleGuard(server_handle);
 
@@ -166,7 +163,6 @@ async fn test_mgmt_inspect_returns_snapshot() {
         let du = ProtocolMessage::DocUpdate {
             crdt: CrdtType::Loro,
             room_id: "test-room".to_string(),
-            batch_id: protocol::BatchId([0; 8]),
             updates: vec![update_bytes.clone()],
         };
         let enc = proto_encode(&du).expect("encode du");
@@ -192,8 +188,7 @@ async fn test_mgmt_inspect_returns_snapshot() {
             "server snapshot did not reflect update via DOCUPDATE"
         );
 
-        // Hit mgmt /inspect and find base64 encoded snapshot
-        // mgmt_port selected during spawn_server start (via SYNC_MANAGEMENT_PORT env var)
+        // Hit /inspect and find base64 encoded snapshot on the same listener port.
         let client = reqwest::Client::new();
         let resp = client
             .get(&format!("http://127.0.0.1:{}/inspect", port))
@@ -251,8 +246,6 @@ async fn test_mgmt_broadcast_reaches_peers() {
         let db_path = std::env::temp_dir().join(format!("sync_server_mgmt_broadcast_{}.db", port));
         let _ = std::fs::remove_file(&db_path);
         std::env::set_var("SYNC_DB", db_path.to_string_lossy().to_string());
-        // management runs on the same port as the main server
-        std::env::set_var("SYNC_MANAGEMENT_PORT", port.to_string());
         let (_state, server_handle) = spawn_server("127.0.0.1", port).await;
         let _server_guard = ServerHandleGuard(server_handle);
 

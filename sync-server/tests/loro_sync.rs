@@ -80,7 +80,6 @@ async fn test_two_clients_sync_loro_update() {
     let du = ProtocolMessage::DocUpdate {
         crdt: CrdtType::Loro,
         room_id: "room1".to_string(),
-        batch_id: protocol::BatchId([0; 8]),
         updates: vec![update_bytes.clone()],
     };
     let enc = proto_encode(&du).expect("encode du");

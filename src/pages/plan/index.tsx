@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'starfx/react';
 
-import { schema } from '~/store/schema/index.ts';
+import { metaSchema, loroSchema } from '~/store/schema/index.ts';
 import {
   updatePersist,
   toggleSync,
@@ -16,11 +16,11 @@ import { TextField } from '~/elements/TextField.tsx';
 
 const PlanOverview = () => {
   const dispatch = useDispatch();
-  const metadata = useSelector(schema.metadata.select);
-  const sync = useSelector(schema.sync.select);
-  const persist = useSelector(schema.persist.select);
-  const accounts = useSelector(schema.accounts.selectTableAsList);
-  const transactions = useSelector(schema.transactions.selectTableAsList);
+  const metadata = useSelector(metaSchema.metadata.select);
+  const sync = useSelector(metaSchema.sync.select);
+  const persist = useSelector(metaSchema.persist.select);
+  const accounts = useSelector(loroSchema.accounts.selectTableAsList);
+  const transactions = useSelector(loroSchema.transactions.selectTableAsList);
 
   return (
     <>

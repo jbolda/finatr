@@ -13,12 +13,9 @@ sha1 = "0.6"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tracing = "0.1"
-loro = "1"
-# Loro protocol crate (CRDT wire protocol parsing)
-loro-protocol = { git = "https://github.com/loro-dev/protocol.git", package = "loro-protocol" }
-# LWS wrapper is implemented locally (src/lws_wrapper.rs) and provides small management features (peer hooks and broadcast)
-# Use upstream protocol repo to fetch the websocket server package rather than a vendored path
-# If the websocket server package lives in another repo, replace git URL accordingly.
+loro = "1.10"
+loro-protocol = "0.1"
+loro-websocket-server = "0.1"
 tokio-tungstenite = "0.27"
 tokio = { version = "1", features = [
     "rt",

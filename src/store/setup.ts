@@ -42,7 +42,7 @@ export function setupStore({
     ...tasks
   );
 
-  store.initialize(function* () {
+  store.run(function* () {
     yield* metaPersistor.rehydrate();
 
     // now the settings have been populated; only load the larger document if
@@ -54,8 +54,6 @@ export function setupStore({
     }
 
     const group = yield* parallel(tsks);
-    // loader update typing is messy since schema type is broad
-    // @ts-expect-error loader updater mismatched
     yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID }));
     yield* group;
   });

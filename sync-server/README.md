@@ -24,7 +24,7 @@ cargo run --manifest-path sync-server/Cargo.toml --bin sync-server
 2. Environment variables you can use in development:
 
 - `SYNC_DB` — path to the SQLite database used for snapshot persistence. Defaults to `loro.db` in the current directory when not set.
-- `SYNC_MANAGEMENT_PORT` — compatibility variable used by some tests; when set the management server may be started on a specific port. The `sync-server` wrapper serves management endpoints on the same port as the WebSocket server by default.
+- Management endpoints (`/`, `/inspect`, `/broadcast`) are served on the same port as the WebSocket server.
 
 Tests are run from the crate directory and will spawn an in-process server using the test helpers in `src/lib.rs`:
 
@@ -78,12 +78,15 @@ WebSocket behaviour (Loro protocol)
 ## Persistence hooks (server implementers)
 
 - The server exposes two hook types in its Rust API (`ServerConfig`):
-  - `on_load_document(workspace: String, room: String, crdt: CrdtType) -> Future<Option<Vec<u8>>>` — invoked when a room is first created to optionally load a persisted snapshot.
-  - `on_save_document(workspace: String, room: String, crdt: CrdtType, data: Vec<u8>) -> Future<Result<(), String>>` — invoked when the server persists a snapshot for a room.
+  - `on_load_document(LoadDocArgs) -> Future<Result<LoadedDoc<DocCtx>, String>>` — invoked when a room is first created to optionally load a persisted snapshot.
+  - `on_save_document(SaveDocArgs<DocCtx>) -> Future<Result<(), String>>` — invoked when the server persists a snapshot for a room.
 
 These hooks are optional and are useful to integrate persistence with a backing DB (like the SQLite helper included here).
 
 ## Implementation notes
 
-- The current `sync-server` implementation uses a small, local LWS wrapper (`src/lws_wrapper.rs`) and a manual WebSocket handshake to avoid complexity combining HTTP and WebSocket upgrade helpers. Management endpoints are implemented directly in this crate — no separate shared server implementation or wrapper library is required.
-- The management endpoints and WebSocket server run on the same port by default, enabling test code to call management APIs against the test server directly.
+- The canonical implementation lives under `src/server/`:
+  - `src/server/core.rs` contains the upstream-aligned runtime with local admin additions.
+  - `src/server/hooks.rs` contains public hook/config types (`ServerConfig`, `LoadDocArgs`, `SaveDocArgs`, etc.).
+  - `src/server/mod.rs` exports the server API surface.
+- Management endpoints and the WebSocket server run on the same port by default, enabling test code to call management APIs against the same test server instance.
