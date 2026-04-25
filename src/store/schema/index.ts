@@ -10,22 +10,37 @@ import {
   type UpdaterCtx,
   type Next,
   type SliceFromSchema,
+  type SchemaUpdater,
   type FxMap,
   type FxSchema,
   type BaseMiddleware,
   StoreContext,
-  persistStoreMdw
+  persistStoreMdw,
+  createSignal,
+  each,
+  ensure
 } from 'starfx';
-import { createLocalStorageAdapter, createPersistor } from 'starfx';
+import {
+  createLocalStorageAdapter as createStateLocalStorageAdapter,
+  createPersistor
+} from 'starfx';
 import { z } from 'zod';
 
 import { emptyAccount, emptyTransaction } from '../factory.ts';
-import { createDocPersistor, persistDocMdw } from '../persist.ts';
+import {
+  createDocPersistor,
+  createLocalStorageAdapter,
+  persistDocMdw
+} from '../persist.ts';
 import { buildDocSubtree } from '../updater.ts';
 import { redinero, scaledFromFloat } from '../utils/dineroUtils.ts';
 import makeUUID from '../utils/makeUUID.ts';
 import { RootDoc } from './context.ts';
 import { obj as sliceObj } from './obj.ts';
+import {
+  createSchemaSnapshotUpdater,
+  isSchemaSnapshotUpdater
+} from './snapshot.ts';
 import { table as sliceTable } from './table.ts';
 
 const addYear = addDays(365);
@@ -198,7 +213,7 @@ export const metaPersistor = createPersistor<{
   auth: { user: null | string };
   cache: unknown;
 }>({
-  adapter: createLocalStorageAdapter(),
+  adapter: createStateLocalStorageAdapter(),
   key: 'finatr-meta',
   allowlist: ['settings', 'cache']
 });
@@ -257,9 +272,12 @@ function createLoroSchema<O extends FxMap>(
      * @default "default"
      */
     name?: string;
-    middleware?: BaseMiddleware<UpdaterCtx<SliceFromSchema<O>>>[];
+    middleware?: BaseMiddleware<
+      UpdaterCtx<SliceFromSchema<O>, SchemaUpdater<O> | SchemaUpdater<O>[]>
+    >[];
   } = {}
 ): FxSchema<O> {
+  const managedKeys = Object.keys(slices);
   return createSchemaWithUpdater(slices, {
     name: options.name,
     middleware: options.middleware,
@@ -282,17 +300,59 @@ function createLoroSchema<O extends FxMap>(
       buildDocSubtree({ initial, parent: plan });
       ldoc.commit();
       scope.set(RootDoc, ldoc);
+
+      const schemaName = options.name ?? 'default';
+      const schema = store.schemas[schemaName] as FxSchema<O>;
+      const observation = createSignal<void>();
+      const unsubscribe = ldoc.subscribe((event) => {
+        if (event.by === 'import') {
+          observation.send();
+        }
+      });
+
+      yield* ensure(() => {
+        unsubscribe();
+      });
+
+      for (const _ of yield* each(observation)) {
+        const nextPlanState = root
+          .getOrCreateContainer('sources', new LoroMap())!
+          .getOrCreateContainer('local', new LoroMap())!
+          .getOrCreateContainer('plan', new LoroMap())!
+          .toJSON() as SliceFromSchema<O>;
+
+        yield* schema.update(
+          createSchemaSnapshotUpdater<O>(nextPlanState, managedKeys)
+        );
+        yield* each.next();
+      }
     },
-    *updateMdw(ctx: UpdaterCtx<SliceFromSchema<O>>, next: Next) {
+    *updateMdw(
+      ctx: UpdaterCtx<
+        SliceFromSchema<O>,
+        SchemaUpdater<O> | SchemaUpdater<O>[]
+      >,
+      next: Next
+    ) {
       const root = yield* RootDoc.expect();
-      const store = yield* expectStore();
+      const store = yield* expectStore<O>();
       const plan = root
         .getMap('root')
         .getOrCreateContainer('sources', new LoroMap())!
         .getOrCreateContainer('local', new LoroMap())!
         .getOrCreateContainer('plan', new LoroMap())!;
       const ups = Array.isArray(ctx.updater) ? ctx.updater : [ctx.updater];
-      console.dir({ ups, plan });
+
+      const snapshotUpdaters = ups.filter((updater) =>
+        isSchemaSnapshotUpdater<O>(updater)
+      );
+
+      if (snapshotUpdaters.length > 0) {
+        store.setState(snapshotUpdaters);
+        yield* next();
+        return;
+      }
+
       for (let up of ups as unknown as Array<
         (state: LoroMap<Record<string, unknown>>) => void
       >) {
@@ -300,7 +360,9 @@ function createLoroSchema<O extends FxMap>(
       }
       root.commit();
       const nextPlanState = plan.toJSON() as SliceFromSchema<O>;
-      store.setState(nextPlanState);
+      store.setState([
+        createSchemaSnapshotUpdater<O>(nextPlanState, managedKeys)
+      ]);
       yield* next();
     }
   });

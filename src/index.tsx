@@ -5,7 +5,7 @@ import { Provider, PersistGate } from 'starfx/react';
 
 import App from './app.tsx';
 import { setupStore } from './store/setup.ts';
-import { thunks } from './store/thunks/index.ts';
+import * as thunkExports from './store/thunks/index.ts';
 
 const store = setupStore({
   logs: true,
@@ -15,7 +15,7 @@ const store = setupStore({
 // Expose store and thunks for integration tests.
 if (typeof window !== 'undefined') {
   (window as any).__STORE__ = store;
-  (window as any).__THUNKS__ = thunks;
+  (window as any).__THUNKS__ = thunkExports;
 }
 
 async function init() {

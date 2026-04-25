@@ -9,7 +9,6 @@ export const buildDocSubtree = ({
   parent: LoroMap;
 }) => {
   for (let [key, value] of Object.entries(initial)) {
-    console.log('building subtree key', key, value);
     if (Object.keys(value).length !== 0) {
       parent.set(key, value);
     } else if (['accounts', 'transactions'].includes(key)) {
