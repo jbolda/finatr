@@ -109,11 +109,11 @@ export function createDocPersistor<S extends AnyState>({
 
         const loroSchema = store.schemas['loro'];
         if (loroSchema) {
+          const managedKeys = Object.keys(
+            (loroSchema.initialState as AnyState) ?? {}
+          );
           yield* loroSchema.update(
-            createSchemaSnapshotUpdater(
-              nextPlanState,
-              Object.keys(nextPlanState)
-            )
+            createSchemaSnapshotUpdater(nextPlanState, managedKeys)
           );
         }
       }

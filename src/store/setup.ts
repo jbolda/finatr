@@ -43,14 +43,30 @@ export function setupStore({
   );
 
   store.run(function* () {
-    yield* metaPersistor.rehydrate();
+    const metaResult = yield* metaPersistor.rehydrate();
+    if (!metaResult.ok) {
+      console.error('meta rehydrate failed', metaResult.error);
+    }
 
     // now the settings have been populated; only load the larger document if
     // the user previously enabled persistence.
     // TODO typings: the generic isn't coming through and is only FxMap
-    const state = store.getState() as any;
-    if (state.settings?.['persist']) {
+    let state = store.getState() as any;
+    const hasLocalSnapshot =
+      typeof localStorage !== 'undefined' &&
+      Boolean(localStorage.getItem(localPersistor.key));
+
+    if (state.settings?.['persist'] || hasLocalSnapshot) {
       yield* localPersistor.rehydrate();
+
+      // If we recovered from an existing snapshot, keep persist enabled so
+      // later updates continue writing the document.
+      if (hasLocalSnapshot && !state.settings?.['persist']) {
+        yield* schema.update(
+          schema.settings.update({ key: 'persist', value: true })
+        );
+        state = store.getState() as any;
+      }
     }
 
     const group = yield* parallel(tsks);

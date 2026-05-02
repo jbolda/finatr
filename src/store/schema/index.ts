@@ -247,17 +247,14 @@ const metaSlices = {
 
 export type MetaSchemaSlices = typeof metaSlices;
 
-export const metaSchema: FxSchema<MetaSchemaSlices> = createSchema<MetaSchemaSlices>(
-  metaSlices,
-  {
+export const metaSchema: FxSchema<MetaSchemaSlices> =
+  createSchema<MetaSchemaSlices>(metaSlices, {
     // TS can't infer the precise middleware state shape here; the return
     // type of persistStoreMdw is generic over a different schema type, so
     // the compiler complains. the runtime is fine, and we'll revisit in a
     // later PR if we want a cleaner fix upstream.
-    middleware: [persistStoreMdw(metaPersistor) as unknown]
-  }
-);
-
+    middleware: [persistStoreMdw(metaPersistor)]
+  });
 
 export const localPersistor = createDocPersistor({
   key: 'finatr',
@@ -292,12 +289,14 @@ function createLoroSchema<O extends FxMap>(
       // @ts-expect-error bad InitialState type
       root.set('settings', Object.entries(initial['settings']));
 
-      // set up a map for all sources
-      const sources = root.setContainer('sources', new LoroMap());
-      // then a default subdoc for local data
-      const local = sources.setContainer('local', new LoroMap());
-      const plan = local.setContainer('plan', new LoroMap());
-      buildDocSubtree({ initial, parent: plan });
+      // Preserve persisted document structure when present; only seed
+      // default subtree on first boot when plan is empty.
+      const sources = root.getOrCreateContainer('sources', new LoroMap())!;
+      const local = sources.getOrCreateContainer('local', new LoroMap())!;
+      const plan = local.getOrCreateContainer('plan', new LoroMap())!;
+      if (Object.keys(plan.toJSON() as Record<string, unknown>).length === 0) {
+        buildDocSubtree({ initial, parent: plan });
+      }
       ldoc.commit();
       scope.set(RootDoc, ldoc);
 
