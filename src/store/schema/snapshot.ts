@@ -3,10 +3,11 @@ import type { FxMap, SliceFromSchema, StoreUpdater } from 'starfx';
 
 const SCHEMA_SNAPSHOT = Symbol('schema:snapshot');
 
-export type SchemaSnapshotUpdater<O extends FxMap> =
-  StoreUpdater<SliceFromSchema<O>> & {
-    [SCHEMA_SNAPSHOT]: true;
-  };
+export type SchemaSnapshotUpdater<O extends FxMap> = StoreUpdater<
+  SliceFromSchema<O>
+> & {
+  [SCHEMA_SNAPSHOT]: true;
+};
 
 export function createSchemaSnapshotUpdater<O extends FxMap>(
   snapshot: SliceFromSchema<O>,
@@ -37,6 +38,7 @@ export function isSchemaSnapshotUpdater<O extends FxMap>(
   updater: unknown
 ): updater is SchemaSnapshotUpdater<O> {
   return (
-    typeof updater === 'function' && Reflect.get(updater, SCHEMA_SNAPSHOT) === true
+    typeof updater === 'function' &&
+    Reflect.get(updater, SCHEMA_SNAPSHOT) === true
   );
 }

@@ -21,7 +21,8 @@ if (typeof window !== 'undefined') {
 async function init() {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-      <Provider store={store}>
+      {/* TODO starfx/react Provider typing currently models single-schema stores. */}
+      <Provider store={store as any}>
         <PersistGate loading={<div>Loading…</div>}>
           <BrowserRouter>
             <App />

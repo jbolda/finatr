@@ -264,11 +264,6 @@ export const localPersistor = createDocPersistor({
 function createLoroSchema<O extends FxMap>(
   slices: O,
   options: {
-    /**
-     * Unique name for this schema. Used to access the schema from the store.
-     * @default "default"
-     */
-    name?: string;
     middleware?: BaseMiddleware<
       UpdaterCtx<SliceFromSchema<O>, SchemaUpdater<O> | SchemaUpdater<O>[]>
     >[];
@@ -276,7 +271,6 @@ function createLoroSchema<O extends FxMap>(
 ): FxSchema<O> {
   const managedKeys = Object.keys(slices);
   return createSchemaWithUpdater(slices, {
-    name: options.name,
     middleware: options.middleware,
     *initialize() {
       const store = yield* StoreContext.expect();
@@ -300,8 +294,7 @@ function createLoroSchema<O extends FxMap>(
       ldoc.commit();
       scope.set(RootDoc, ldoc);
 
-      const schemaName = options.name ?? 'default';
-      const schema = store.schemas[schemaName] as FxSchema<O>;
+      const schema = store.schemas['loro'] as FxSchema<O>;
       const observation = createSignal<void>();
       const unsubscribe = ldoc.subscribe((event) => {
         if (event.by === 'import') {
@@ -385,7 +378,6 @@ export const loroSchema = createLoroSchema(
     incomeExpected: sliceTable<IncomeExpected>()
   },
   {
-    name: 'loro',
     middleware: [
       persistDocMdw(localPersistor) as unknown as BaseMiddleware<
         UpdaterCtx<SliceFromSchema<any>>
