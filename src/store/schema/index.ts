@@ -14,6 +14,7 @@ import {
   type FxMap,
   type FxSchema,
   type BaseMiddleware,
+  type StoreUpdater,
   StoreContext,
   persistStoreMdw,
   createSignal,
@@ -279,9 +280,10 @@ function createLoroSchema<O extends FxMap>(
       const root = ldoc.getMap('root');
 
       const initial = store.getInitialState();
-      // initial is AnyState so TS can't guarantee the shape; coerce for now
-      // @ts-expect-error bad InitialState type
-      root.set('settings', Object.entries(initial['settings']));
+      const initialSettings = initial['settings'] as
+        | Record<string, unknown>
+        | undefined;
+      root.set('settings', Object.entries(initialSettings ?? {}));
 
       // Preserve persisted document structure when present; only seed
       // default subtree on first boot when plan is empty.
@@ -294,7 +296,10 @@ function createLoroSchema<O extends FxMap>(
       ldoc.commit();
       scope.set(RootDoc, ldoc);
 
-      const schema = store.schemas['loro'] as FxSchema<O>;
+      const schema = store.schemas['loro'];
+      if (!schema) {
+        throw new Error('loro schema missing from store registry');
+      }
       const observation = createSignal<void>();
       const unsubscribe = ldoc.subscribe((event) => {
         if (event.by === 'import') {
@@ -327,34 +332,49 @@ function createLoroSchema<O extends FxMap>(
       next: Next
     ) {
       const root = yield* RootDoc.expect();
-      const store = yield* expectStore<O>();
+      const store = yield* expectStore<{
+        default: typeof metaSchema;
+        loro: FxSchema<O>;
+      }>();
       const plan = root
         .getMap('root')
         .getOrCreateContainer('sources', new LoroMap())!
         .getOrCreateContainer('local', new LoroMap())!
         .getOrCreateContainer('plan', new LoroMap())!;
       const ups = Array.isArray(ctx.updater) ? ctx.updater : [ctx.updater];
+      const fnUpdaters = ups.filter(
+        (updater): updater is StoreUpdater<SliceFromSchema<O>> =>
+          typeof updater === 'function'
+      );
+      type RootState = ReturnType<typeof store.getState>;
+      const toRootUpdater =
+        (updater: StoreUpdater<SliceFromSchema<O>>): StoreUpdater<RootState> =>
+        (state) => {
+          updater(state as unknown as Parameters<typeof updater>[0]);
+        };
 
-      const snapshotUpdaters = ups.filter((updater) =>
+      const snapshotUpdaters = fnUpdaters.filter((updater) =>
         isSchemaSnapshotUpdater<O>(updater)
       );
 
       if (snapshotUpdaters.length > 0) {
-        store.setState(snapshotUpdaters);
+        store.setState(snapshotUpdaters.map(toRootUpdater));
         yield* next();
         return;
       }
 
-      for (let up of ups as unknown as Array<
+      for (let up of fnUpdaters as unknown as Array<
         (state: LoroMap<Record<string, unknown>>) => void
       >) {
         up(plan);
       }
       root.commit();
       const nextPlanState = plan.toJSON() as SliceFromSchema<O>;
-      store.setState([
-        createSchemaSnapshotUpdater<O>(nextPlanState, managedKeys)
-      ]);
+      const applyPlanSnapshot = createSchemaSnapshotUpdater<O>(
+        nextPlanState,
+        managedKeys
+      );
+      store.setState([toRootUpdater(applyPlanSnapshot)]);
       yield* next();
     }
   });

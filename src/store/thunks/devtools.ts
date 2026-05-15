@@ -2,21 +2,15 @@ import {
   take,
   ensure,
   resource,
-  type FxStore,
+  type AnyState,
   type Operation,
   type Action,
   StoreContext
 } from 'starfx';
 
 interface ReduxDevtoolsExtensionConnectResponse {
-  init: <S>(
-    state: S,
-    liftedData?: ReturnType<FxStore<any>['getState']>
-  ) => void;
-  send: <A extends Action>(
-    action: A,
-    state: ReturnType<FxStore<any>['getState']>
-  ) => void;
+  init: <S>(state: S, liftedData?: AnyState) => void;
+  send: <A extends Action>(action: A, state: AnyState) => void;
 }
 interface DevToolsEffectionized {
   send: (action: Action) => Operation<void>;
@@ -56,7 +50,7 @@ export function connectReduxDevToolsExtension(options: Options) {
 
 type SetupOptions = {
   name?: string;
-  store: FxStore<any>;
+  store: { getState: () => AnyState };
   extension: ReduxDevtoolsExtension;
 };
 
