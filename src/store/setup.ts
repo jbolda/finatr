@@ -9,7 +9,7 @@ import {
   metaPersistor
 } from './schema/index.ts';
 import { connectReduxDevToolsExtension } from './thunks/devtools.ts';
-import { tasks } from './thunks/index.ts';
+import { thunks } from './thunks/index.ts';
 
 const devtoolsEnabled = true;
 export function setupStore({
@@ -24,17 +24,13 @@ export function setupStore({
       loro: loroSchema
     },
     tasks: [
+      thunks.register,
       () =>
         takeEvery('*', function* logActions(action) {
           if (logs) {
             console.log(action);
           }
         }),
-      connectReduxDevToolsExtension({
-        name: 'finatr',
-        enabled: devtoolsEnabled
-      }),
-      ...tasks,
       function* () {
         const runtimeStore = yield* expectStore<typeof schema>();
         const metaResult = yield* metaPersistor.rehydrate();
@@ -63,7 +59,11 @@ export function setupStore({
           }
         }
         yield* schema.update(schema.loaders.success({ id: PERSIST_LOADER_ID }));
-      }
+      },
+      connectReduxDevToolsExtension({
+        name: 'finatr',
+        enabled: devtoolsEnabled
+      })
     ]
   });
 
