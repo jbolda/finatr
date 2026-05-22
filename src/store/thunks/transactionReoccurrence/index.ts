@@ -1,4 +1,3 @@
-import { USD } from '@dinero.js/currencies';
 import addDays from 'date-fns/fp/addDays/index.js';
 import addMonths from 'date-fns/fp/addMonths/index.js';
 import addQuarters from 'date-fns/fp/addQuarters/index.js';
@@ -12,6 +11,7 @@ import isBefore from 'date-fns/fp/isBefore/index.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';
 import setDate from 'date-fns/fp/setDate/index.js';
 import { dinero, allocate, type Dinero } from 'dinero.js';
+import { USD } from 'dinero.js/currencies';
 
 import type { RepeatType } from '~/store/schema/index.ts';
 

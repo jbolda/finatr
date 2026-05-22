@@ -1,7 +1,11 @@
-import type { DineroSnapshot, TransformerOptions } from '@dinero.js/core';
-import { type Currency } from '@dinero.js/currencies';
-import { USD } from '@dinero.js/currencies';
-import { dinero, toDecimal, type Dinero } from 'dinero.js';
+import {
+  dinero,
+  toDecimal,
+  type Dinero,
+  type DineroSnapshot,
+  type TransformerOptions
+} from 'dinero.js';
+import { USD, type DineroCurrency } from 'dinero.js/currencies';
 
 export function dineroFromFloat({
   amount: float,
@@ -9,7 +13,7 @@ export function dineroFromFloat({
   scale
 }: {
   amount: number;
-  currency: Currency<number>;
+  currency: DineroCurrency<number>;
   scale?: number;
 }) {
   // eventually need to consider base can be an array
@@ -80,7 +84,13 @@ export function redinero(
 // It returns a function that takes a Dinero object and applies
 // the closured transformer.
 function createFormatter(transformer: {
-  ({ value, currency }: { value: number; currency: Currency<number> }): string;
+  ({
+    value,
+    currency
+  }: {
+    value: number;
+    currency: DineroCurrency<number>;
+  }): string;
   (options: TransformerOptions<number, string>): string;
 }) {
   return function formatter(dineroObject: Dinero<number>) {

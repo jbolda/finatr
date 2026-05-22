@@ -19,14 +19,13 @@
     "covector": "covector"
   },
   "dependencies": {
-    "@dinero.js/currencies": "^2.0.0-alpha.14",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/vite": "^4.3.0",
     "@tanstack/react-form": "^1.23.8",
     "@tauri-apps/api": "^2.1.1",
     "d3": "^7.9.0",
     "date-fns": "^2.23.0",
-    "dinero.js": "^2.0.0-alpha.14",
+    "dinero.js": "^2.0.2",
     "js-file-download": "0.4.12",
     "loro-crdt": "^1.10.6",
     "loro-protocol": "^0.3.0",
