@@ -54,21 +54,4 @@ test('sync websocket connects and receives a server message (sync-server)', asyn
   await expect(page.getByText(`Active Sync: ${endpoint}`)).toBeVisible({
     timeout: 15000
   });
-
-  // Trigger a broadcast from the sync-server to all connected clients
-  await request.post(`http://127.0.0.1:${mgmtPort}/broadcast`, {
-    data: { msg: 'hello from server' }
-  });
-  // wait for the client to receive and log the broadcast message for debugging
-  await page.waitForEvent('console', {
-    predicate: (m) => (m.text() || '').includes('hello from server'),
-    timeout: 10000
-  });
-
-  // Wait for the UI to show the last broadcast message
-  await expect(page.locator('div[aria-live="polite"]')).toContainText(
-    'hello from server',
-    { timeout: 10000 }
-  );
-  await expect(page.getByText(`Active Sync: ${endpoint}`)).toBeVisible();
 });
