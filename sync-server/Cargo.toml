@@ -1,9 +1,9 @@
 [package]
-name = "sync-server"
+name = "local-sync-server"
 version = "0.1.0"
 edition = "2021"
-authors = ["Finatr Contributors <devnull@example.com>"]
-description = "A lightweight WebSocket server used for LoroDoc sync in development"
+authors = ["Jacob Bolda <me@jacobbolda.com>"]
+description = "A lightweight WebSocket server used to sync your data locally"
 
 [dependencies]
 futures = "0.3"
