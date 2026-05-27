@@ -1034,6 +1034,31 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6373607a59f0be73a39b6fe456b8192fcc3585f602af20751600e974dd455e77"
 
 [[package]]
+name = "local-sync-server"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "clap",
+ "futures",
+ "futures-util",
+ "loro",
+ "loro-protocol",
+ "loro-websocket-server",
+ "once_cell",
+ "reqwest",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "serial_test",
+ "sha1 0.6.1",
+ "tokio",
+ "tokio-tungstenite",
+ "tracing",
+ "tracing-subscriber",
+ "url",
+]
+
+[[package]]
 name = "lock_api"
 version = "0.4.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2067,31 +2092,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
-]
-
-[[package]]
-name = "sync-server"
-version = "0.1.0"
-dependencies = [
- "base64",
- "clap",
- "futures",
- "futures-util",
- "loro",
- "loro-protocol",
- "loro-websocket-server",
- "once_cell",
- "reqwest",
- "rusqlite",
- "serde",
- "serde_json",
- "serial_test",
- "sha1 0.6.1",
- "tokio",
- "tokio-tungstenite",
- "tracing",
- "tracing-subscriber",
- "url",
 ]
 
 [[package]]

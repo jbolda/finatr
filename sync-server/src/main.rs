@@ -13,7 +13,7 @@ use std::{error::Error, path::PathBuf};
 use tracing::info;
 use tracing_subscriber::EnvFilter;
 
-use sync_server::{init_db, start_server};
+use local_sync_server::{init_db, start_server};
 
 #[derive(Parser, Debug)]
 #[command(
