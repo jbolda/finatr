@@ -1,12 +1,15 @@
-import { select } from 'starfx';
+import { select, type StoreUpdater, type SliceFromSchema } from 'starfx';
 
 import { RootDoc } from '../schema/context.ts';
 import {
   type Settings,
   metaSchema as schema,
+  type MetaSchemaSlices,
   localPersistor
 } from '../schema/index.ts';
 import { thunks } from './foundation.ts';
+
+type MetaState = SliceFromSchema<MetaSchemaSlices>;
 
 export const changeSetting = thunks.create<{
   key: 'all' | keyof Settings;
@@ -15,8 +18,7 @@ export const changeSetting = thunks.create<{
   const { key, value } = ctx.payload;
 
   if (key === 'all') {
-    // @ts-expect-error schema update type
-    const settings = (yield* select(schema.settings.select)) as any;
+    const settings = (yield* select(schema.settings.select)) as Settings;
     const newSettings = Object.keys(settings).reduce(
       (finalSettings, setting) => {
         finalSettings[setting as keyof Settings] = value;
@@ -26,10 +28,10 @@ export const changeSetting = thunks.create<{
         ...settings
       } as Settings
     );
-    // updating settings slice from thunk; type system sees whole schema and
-    // complains about mismatched state. ignore for now.
-    // @ts-expect-error schema update type
-    yield* schema.update(schema.settings.set(newSettings));
+
+    // updating settings slice from thunk
+    const updater = schema.settings.set(newSettings);
+    yield* schema.update(updater as unknown as StoreUpdater<MetaState>);
   } else {
     // handle side effects for persistence toggle
     if (key === 'persist') {
@@ -53,8 +55,8 @@ export const changeSetting = thunks.create<{
       }
     }
 
-    // @ts-expect-error schema update type
-    yield* schema.update(schema.settings.update({ key, value }));
+    const updater = schema.settings.update({ key, value });
+    yield* schema.update(updater as unknown as StoreUpdater<MetaState>);
   }
   yield* next();
 });

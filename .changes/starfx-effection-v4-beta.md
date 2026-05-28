@@ -2,4 +2,4 @@
 "web": minor
 ---
 
-Update to preview version of starfx with effection v4.
+Update to preview version of starfx using effection v4, and custom stores.

@@ -1,6 +1,6 @@
 // @ts-nocheck eventually tighten up types here
-import { USD } from '@dinero.js/currencies';
 import { dinero } from 'dinero.js';
+import { USD } from 'dinero.js/currencies';
 
 import { loroSchema as schema } from '../schema/index.ts';
 import makeUUID from '../utils/makeUUID.ts';

@@ -2,20 +2,15 @@ import {
   take,
   ensure,
   resource,
-  type FxStore,
+  type AnyState,
   type Operation,
-  type Action
+  type Action,
+  StoreContext
 } from 'starfx';
 
 interface ReduxDevtoolsExtensionConnectResponse {
-  init: <S>(
-    state: S,
-    liftedData?: ReturnType<FxStore<any>['getState']>
-  ) => void;
-  send: <A extends Action>(
-    action: A,
-    state: ReturnType<FxStore<any>['getState']>
-  ) => void;
+  init: <S>(state: S, liftedData?: AnyState) => void;
+  send: <A extends Action>(action: A, state: AnyState) => void;
 }
 interface DevToolsEffectionized {
   send: (action: Action) => Operation<void>;
@@ -36,14 +31,14 @@ declare global {
 type Options = {
   name?: string;
   enabled?: boolean;
-  store: FxStore<any>;
 };
 
 export function connectReduxDevToolsExtension(options: Options) {
   return function* setup() {
+    const store = yield* StoreContext.expect();
     const extension = window.__REDUX_DEVTOOLS_EXTENSION__;
     if (options.enabled !== false && extension) {
-      const { name, store } = options;
+      const { name } = options;
       const dt = yield* setupDevTools({ name, store, extension });
       while (true) {
         const action = yield* take('*');
@@ -55,7 +50,7 @@ export function connectReduxDevToolsExtension(options: Options) {
 
 type SetupOptions = {
   name?: string;
-  store: FxStore<any>;
+  store: { getState: () => AnyState };
   extension: ReduxDevtoolsExtension;
 };
 

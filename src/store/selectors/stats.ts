@@ -1,4 +1,3 @@
-import { USD } from '@dinero.js/currencies';
 import {
   dinero,
   add,
@@ -10,6 +9,7 @@ import {
   trimScale,
   type Dinero
 } from 'dinero.js';
+import { USD } from 'dinero.js/currencies';
 import { createSelector } from 'starfx';
 
 import { accountsFromSerialized } from './accounts';
@@ -166,7 +166,7 @@ export const financialStats = createSelector(
     const zero = dinero({ amount: 0, currency: USD });
     const daily = deriveDailies(transactions);
 
-    let dailyInvest = transactions.reduce((accumulator, d) => {
+    let dailyInvest = transactions.reduce<Dinero<number>>((accumulator, d) => {
       let account = accounts.find((acc) => acc.name === d.raccount);
 
       if (account && account.vehicle === 'investment') {
@@ -185,7 +185,7 @@ export const financialStats = createSelector(
             : daily.income
         );
 
-    let totalInvest = accounts.reduce((accumulator, d) => {
+    let totalInvest = accounts.reduce<Dinero<number>>((accumulator, d) => {
       if (d.vehicle === 'investment') {
         return add(d.starting, accumulator);
       } else {
@@ -193,15 +193,18 @@ export const financialStats = createSelector(
       }
     }, zero);
 
-    let totalInvestInterest = accounts.reduce((accumulator, d) => {
-      if (d.vehicle === 'investment') {
-        return add(multiply(d.starting, d.interest), accumulator);
-      } else {
-        return accumulator;
-      }
-    }, zero);
+    let totalInvestInterest = accounts.reduce<Dinero<number>>(
+      (accumulator, d) => {
+        if (d.vehicle === 'investment') {
+          return add(multiply(d.starting, d.interest), accumulator);
+        } else {
+          return accumulator;
+        }
+      },
+      zero
+    );
 
-    let totalDebt = accounts.reduce((accumulator, d) => {
+    let totalDebt = accounts.reduce<Dinero<number>>((accumulator, d) => {
       if (
         d.vehicle === 'debt' ||
         d.vehicle === 'loan' ||

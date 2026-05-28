@@ -12,6 +12,7 @@ import {
 } from 'starfx';
 
 import { RootDoc } from './schema/context.ts';
+import { createSchemaSnapshotUpdater } from './schema/snapshot.ts';
 
 export const PERSIST_LOADER_ID = '@@starfx/persist';
 
@@ -37,14 +38,17 @@ export function createLocalStorageAdapter<
 
         if (!storage) return Ok(undefined);
 
-        // Parse the JSON string back into a regular array
-        const retrievedArray = JSON.parse(storage);
+        const parsed = JSON.parse(storage);
 
-        // Convert the regular array back to a Uint8Array
-        const retrievedSnapshot = new Uint8Array(retrievedArray);
+        // Persisted format: serialized Uint8Array -> JSON number[]
+        if (!Array.isArray(parsed)) {
+          throw new Error('Persisted snapshot is not a byte array');
+        }
 
+        const retrievedSnapshot = new Uint8Array(parsed);
         return Ok(retrievedSnapshot as unknown as Partial<S>);
       } catch (err: any) {
+        console.error('persist getItem parse failed', err);
         return Err(err);
       }
     },
@@ -93,27 +97,30 @@ export function createDocPersistor<S extends AnyState>({
         const newDoc = LoroDoc.fromSnapshot(
           stateFromStorage as unknown as Uint8Array
         );
-        console.log('newDoc', newDoc);
-        scope.set(RootDoc, newDoc);
-
         const plan = newDoc
           .getMap('root')
           .getOrCreateContainer('sources', new LoroMap())!
           .getOrCreateContainer('local', new LoroMap())!
           .getOrCreateContainer('plan', new LoroMap())!;
+        const nextPlanState = plan.toJSON() as AnyState;
 
-        // TODO fix type here
-        // @ts-expect-error broken perhaps by bad generic on schema
-        yield* store.schemas.loro?.update((s) => {
-          console.log('updating store from persisted doc', {
-            plan: plan.toJSON()
-          });
-          s = plan.toJSON() as S;
-        });
+        console.log('newDoc', newDoc);
+        scope.set(RootDoc, newDoc);
+
+        const loroSchema = store.schemas['loro'];
+        if (loroSchema) {
+          const managedKeys = Object.keys(
+            (loroSchema.initialState as AnyState) ?? {}
+          );
+          yield* loroSchema.update(
+            createSchemaSnapshotUpdater(nextPlanState, managedKeys)
+          );
+        }
       }
 
       return Ok(undefined);
     } catch (err: any) {
+      console.error('persist rehydrate failed', err);
       return Err(err);
     }
   }

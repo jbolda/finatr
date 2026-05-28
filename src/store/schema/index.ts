@@ -6,25 +6,42 @@ import {
   createSchema,
   createSchemaWithUpdater,
   expectStore,
+  type AnyState,
   type UpdaterCtx,
   type Next,
   type SliceFromSchema,
+  type SchemaUpdater,
   type FxMap,
   type FxSchema,
   type BaseMiddleware,
+  type StoreUpdater,
   StoreContext,
-  persistStoreMdw
+  persistStoreMdw,
+  createSignal,
+  each,
+  ensure
 } from 'starfx';
-import { createLocalStorageAdapter, createPersistor } from 'starfx';
+import {
+  createLocalStorageAdapter as createStateLocalStorageAdapter,
+  createPersistor
+} from 'starfx';
 import { z } from 'zod';
 
 import { emptyAccount, emptyTransaction } from '../factory.ts';
-import { createDocPersistor, persistDocMdw } from '../persist.ts';
+import {
+  createDocPersistor,
+  createLocalStorageAdapter,
+  persistDocMdw
+} from '../persist.ts';
 import { buildDocSubtree } from '../updater.ts';
 import { redinero, scaledFromFloat } from '../utils/dineroUtils.ts';
 import makeUUID from '../utils/makeUUID.ts';
 import { RootDoc } from './context.ts';
 import { obj as sliceObj } from './obj.ts';
+import {
+  createSchemaSnapshotUpdater,
+  isSchemaSnapshotUpdater
+} from './snapshot.ts';
 import { table as sliceTable } from './table.ts';
 
 const addYear = addDays(365);
@@ -197,27 +214,48 @@ export const metaPersistor = createPersistor<{
   auth: { user: null | string };
   cache: unknown;
 }>({
-  adapter: createLocalStorageAdapter(),
+  adapter: createStateLocalStorageAdapter(),
   key: 'finatr-meta',
   allowlist: ['settings', 'cache']
 });
 
-export const metaSchema = createSchema(
-  {
-    cache: sliceOG.table(),
-    loaders: sliceOG.loaders(),
-    auth: sliceOG.obj({ user: null }),
-    settings: sliceOG.obj<Settings>(defaultSettings)
-  },
-  {
+const metaSlices = {
+  cache: sliceOG.table<AnyState>(),
+  loaders: sliceOG.loaders(),
+  auth: sliceOG.obj({ user: null }),
+  settings: sliceOG.obj<Settings>(defaultSettings),
+  metadata: sliceOG.obj({ name: 'Default', lastUpdated: '' }),
+  sync: sliceOG.obj({
+    // URL for the sync service; kept empty by default so clients won't
+    // attempt a connection on startup. UI/CLI should populate this per-usage.
+    service: '' as string,
+    // whether the current websocket is connected
+    connected: false,
+    // last message received from the sync websocket
+    lastMessage: ''
+  }),
+  persist: sliceOG.obj({
+    // string keys/names for the available storage adapters
+    localStorage: 'finatr|default',
+    fileStorage: 'finatr-default',
+    // preferred sync service endpoint (not necessarily active)
+    // prefer an empty placeholder; tests will write the actual port
+    syncService: '' as string,
+    // active mode indicates which storage adapter is used by the UI
+    mode: 'local' as 'local' | 'file'
+  })
+};
+
+export type MetaSchemaSlices = typeof metaSlices;
+
+export const metaSchema: FxSchema<MetaSchemaSlices> =
+  createSchema<MetaSchemaSlices>(metaSlices, {
     // TS can't infer the precise middleware state shape here; the return
     // type of persistStoreMdw is generic over a different schema type, so
     // the compiler complains. the runtime is fine, and we'll revisit in a
     // later PR if we want a cleaner fix upstream.
-    // @ts-expect-error mismatched middleware type
-    middleware: [persistStoreMdw(metaPersistor) as unknown]
-  }
-);
+    middleware: [persistStoreMdw(metaPersistor)]
+  });
 
 export const localPersistor = createDocPersistor({
   key: 'finatr',
@@ -227,16 +265,13 @@ export const localPersistor = createDocPersistor({
 function createLoroSchema<O extends FxMap>(
   slices: O,
   options: {
-    /**
-     * Unique name for this schema. Used to access the schema from the store.
-     * @default "default"
-     */
-    name?: string;
-    middleware?: BaseMiddleware<UpdaterCtx<SliceFromSchema<O>>>[];
+    middleware?: BaseMiddleware<
+      UpdaterCtx<SliceFromSchema<O>, SchemaUpdater<O> | SchemaUpdater<O>[]>
+    >[];
   } = {}
 ): FxSchema<O> {
+  const managedKeys = Object.keys(slices);
   return createSchemaWithUpdater(slices, {
-    name: options.name,
     middleware: options.middleware,
     *initialize() {
       const store = yield* StoreContext.expect();
@@ -245,37 +280,101 @@ function createLoroSchema<O extends FxMap>(
       const root = ldoc.getMap('root');
 
       const initial = store.getInitialState();
-      // initial is AnyState so TS can't guarantee the shape; coerce for now
-      // @ts-expect-error bad InitialState type
-      root.set('settings', Object.entries(initial['settings']));
+      const initialSettings = initial['settings'] as
+        | Record<string, unknown>
+        | undefined;
+      root.set('settings', Object.entries(initialSettings ?? {}));
 
-      // set up a map for all sources
-      const sources = root.setContainer('sources', new LoroMap());
-      // then a default subdoc for local data
-      const local = sources.setContainer('local', new LoroMap());
-      const plan = local.setContainer('plan', new LoroMap());
-      buildDocSubtree({ initial, parent: plan });
+      // Preserve persisted document structure when present; only seed
+      // default subtree on first boot when plan is empty.
+      const sources = root.getOrCreateContainer('sources', new LoroMap())!;
+      const local = sources.getOrCreateContainer('local', new LoroMap())!;
+      const plan = local.getOrCreateContainer('plan', new LoroMap())!;
+      if (Object.keys(plan.toJSON() as Record<string, unknown>).length === 0) {
+        buildDocSubtree({ initial, parent: plan });
+      }
       ldoc.commit();
       scope.set(RootDoc, ldoc);
+
+      const schema = store.schemas['loro'];
+      if (!schema) {
+        throw new Error('loro schema missing from store registry');
+      }
+      const observation = createSignal<void>();
+      const unsubscribe = ldoc.subscribe((event) => {
+        if (event.by === 'import') {
+          observation.send();
+        }
+      });
+
+      yield* ensure(() => {
+        unsubscribe();
+      });
+
+      for (const _ of yield* each(observation)) {
+        const nextPlanState = root
+          .getOrCreateContainer('sources', new LoroMap())!
+          .getOrCreateContainer('local', new LoroMap())!
+          .getOrCreateContainer('plan', new LoroMap())!
+          .toJSON() as SliceFromSchema<O>;
+
+        yield* schema.update(
+          createSchemaSnapshotUpdater<O>(nextPlanState, managedKeys)
+        );
+        yield* each.next();
+      }
     },
-    *updateMdw(ctx: UpdaterCtx<SliceFromSchema<O>>, next: Next) {
+    *updateMdw(
+      ctx: UpdaterCtx<
+        SliceFromSchema<O>,
+        SchemaUpdater<O> | SchemaUpdater<O>[]
+      >,
+      next: Next
+    ) {
       const root = yield* RootDoc.expect();
-      const store = yield* expectStore();
+      const store = yield* expectStore<{
+        default: typeof metaSchema;
+        loro: FxSchema<O>;
+      }>();
       const plan = root
         .getMap('root')
         .getOrCreateContainer('sources', new LoroMap())!
         .getOrCreateContainer('local', new LoroMap())!
         .getOrCreateContainer('plan', new LoroMap())!;
       const ups = Array.isArray(ctx.updater) ? ctx.updater : [ctx.updater];
-      console.dir({ ups, plan });
-      for (let up of ups as unknown as Array<
+      const fnUpdaters = ups.filter(
+        (updater): updater is StoreUpdater<SliceFromSchema<O>> =>
+          typeof updater === 'function'
+      );
+      type RootState = ReturnType<typeof store.getState>;
+      const toRootUpdater =
+        (updater: StoreUpdater<SliceFromSchema<O>>): StoreUpdater<RootState> =>
+        (state) => {
+          updater(state as unknown as Parameters<typeof updater>[0]);
+        };
+
+      const snapshotUpdaters = fnUpdaters.filter((updater) =>
+        isSchemaSnapshotUpdater<O>(updater)
+      );
+
+      if (snapshotUpdaters.length > 0) {
+        store.setState(snapshotUpdaters.map(toRootUpdater));
+        yield* next();
+        return;
+      }
+
+      for (let up of fnUpdaters as unknown as Array<
         (state: LoroMap<Record<string, unknown>>) => void
       >) {
         up(plan);
       }
       root.commit();
       const nextPlanState = plan.toJSON() as SliceFromSchema<O>;
-      store.setState(nextPlanState);
+      const applyPlanSnapshot = createSchemaSnapshotUpdater<O>(
+        nextPlanState,
+        managedKeys
+      );
+      store.setState([toRootUpdater(applyPlanSnapshot)]);
       yield* next();
     }
   });
@@ -299,7 +398,6 @@ export const loroSchema = createLoroSchema(
     incomeExpected: sliceTable<IncomeExpected>()
   },
   {
-    name: 'loro',
     middleware: [
       persistDocMdw(localPersistor) as unknown as BaseMiddleware<
         UpdaterCtx<SliceFromSchema<any>>

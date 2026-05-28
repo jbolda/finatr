@@ -1,6 +1,6 @@
-import { USD } from '@dinero.js/currencies';
 import { test, expect } from '@playwright/experimental-ct-react';
 import { dinero } from 'dinero.js';
+import { USD } from 'dinero.js/currencies';
 
 import { deriveFIstats } from './stats.ts';
 

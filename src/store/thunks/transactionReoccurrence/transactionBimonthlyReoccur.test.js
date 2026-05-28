@@ -1,4 +1,4 @@
-import { USD } from '@dinero.js/currencies';
+import { USD } from 'dinero.js/currencies';
 import { test, expect } from '@playwright/experimental-ct-react';
 import parseISO from 'date-fns/fp/parseISO/index.js';
 import startOfDay from 'date-fns/fp/startOfDay/index.js';

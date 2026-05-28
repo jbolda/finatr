@@ -19,16 +19,16 @@
     "covector": "covector"
   },
   "dependencies": {
-    "@dinero.js/currencies": "^2.0.0-alpha.14",
-    "@tailwindcss/forms": "^0.5.10",
-    "@tailwindcss/vite": "^4.2.1",
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/vite": "^4.3.0",
     "@tanstack/react-form": "^1.23.8",
     "@tauri-apps/api": "^2.1.1",
     "d3": "^7.9.0",
     "date-fns": "^2.23.0",
-    "dinero.js": "^2.0.0-alpha.14",
+    "dinero.js": "^2.0.2",
     "js-file-download": "0.4.12",
     "loro-crdt": "^1.10.6",
+    "loro-protocol": "^0.3.0",
     "lucide-react": "^0.482.0",
     "papaparse": "^5.4.1",
     "react": "^19.2.0",
@@ -37,14 +37,15 @@
     "react-dom": "^19.2.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.27.0",
-    "starfx": "https://pkg.pr.new/fxforge/starfx@15c9bd4",
+    "starfx": "https://pkg.pr.new/fxforge/starfx@83fcfb9",
     "tailwindcss-react-aria-components": "^2.0.1",
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@estruyf/github-actions-reporter": "^1.9.2",
-    "@playwright/experimental-ct-react": "^1.56.1",
-    "@playwright/test": "^1.56.1",
+    "@estruyf/github-actions-reporter": "^1.12.0",
+    "@playwright/experimental-ct-react": "^1.60.0",
+    "@playwright/test": "^1.60.0",
+    "@simulacrum/server": "^0.8.0",
     "@tauri-apps/cli": "2.1.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/d3": "^7.4.3",
@@ -52,27 +53,16 @@
     "@types/react": "19.2.2",
     "@types/react-dom": "^19.2.2",
     "@types/redux": "^3.6.31",
-    "@vitejs/plugin-react": "^5.1.4",
+    "@vitejs/plugin-react": "^6.0.2",
     "covector": "^0.12.4",
     "prettier": "^3.6.2",
-    "tailwind-merge": "^3.3.1",
-    "tailwind-variants": "^3.1.1",
-    "tailwindcss": "^4.2.1",
+    "tailwind-merge": "^3.6.0",
+    "tailwind-variants": "^3.2.2",
+    "tailwindcss": "^4.3.0",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.9.3",
-    "vite": "^8.0.0-beta.16",
-    "vite-plugin-wasm": "^3.5.0"
-  },
-  "overrides": {
-    "@tailwindcss/vite": {
-      "vite": "^8.0.0-beta.16"
-    },
-    "@vitejs/plugin-react": {
-      "vite": "^8.0.0-beta.16"
-    },
-    "vite-plugin-wasm": {
-      "vite": "^8.0.0-beta.16"
-    }
+    "vite": "^8.0.14",
+    "vite-plugin-wasm": "^3.6.0"
   },
   "volta": {
     "node": "24.10.0",

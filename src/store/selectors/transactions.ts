@@ -1,7 +1,7 @@
-import { USD } from '@dinero.js/currencies';
 import { parseISO } from 'date-fns';
 import { dinero } from 'dinero.js';
 import type { Dinero } from 'dinero.js';
+import { USD } from 'dinero.js/currencies';
 import { createSelector } from 'starfx';
 import type { AnyState } from 'starfx';
 

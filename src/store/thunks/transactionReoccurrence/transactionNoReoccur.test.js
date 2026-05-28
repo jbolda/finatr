@@ -1,4 +1,4 @@
-import { USD } from '@dinero.js/currencies';
+import { USD } from 'dinero.js/currencies';
 import { test, expect } from '@playwright/experimental-ct-react';
 import differenceInCalendarDays from 'date-fns/fp/differenceInDays/index.js';
 import parseISO from 'date-fns/fp/parseISO/index.js';

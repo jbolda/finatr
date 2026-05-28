@@ -19,6 +19,13 @@
       "getPublishedVersion": "git log v${ pkgFile.version } -1 --pretty=%Cgreen${ pkgFile.version } || echo \"not published yet\"",
       "publish": "echo \"build assets have already been uploaded to release\"",
       "dependencies": ["web"]
+    },
+    "local-sync-server": {
+      "path": "./sync-server/Cargo.toml",
+      "version": true,
+      "postversion": "cargo tree |> /dev/null",
+      "getPublishedVersion": "git log v${ pkgFile.version } -1 --pretty=%Cgreen${ pkgFile.version } || echo \"not published yet\"",
+      "publish": "echo \"build assets have already been uploaded to release\""
     }
   }
 }

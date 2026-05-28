@@ -22,7 +22,12 @@ test.beforeEach(async ({ page }) => {
 
   const modifyButton = row.getByRole('button', { name: 'modify' });
   await modifyButton.click();
-  await expect(page.getByText('550.00')).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: 'Modify Account' })
+  ).toBeVisible({ timeout: 10000 });
+  await expect(page.getByLabel('starting').first()).toHaveValue(/550\.00$/, {
+    timeout: 10000
+  });
 });
 
 test('switches back to the form', async ({ page }) => {

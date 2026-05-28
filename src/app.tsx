@@ -10,6 +10,7 @@ import Sidebar, { SidebarContext } from './components/Sidebar.tsx';
 import AccountView from './pages/accounts/view.tsx';
 import Examples from './pages/examples';
 import Homepage from './pages/homepage';
+import PlanOverview from './pages/plan/index.tsx';
 import TransactionsOverview from './pages/transactions/index.tsx';
 import { metaSchema as schema } from './store/schema/index.ts';
 
@@ -114,6 +115,14 @@ function Routes() {
     <RoutesList>
       <Route index element={<Homepage />} />
       <Route path="examples" element={<Examples />} />
+      <Route
+        path="plan"
+        element={
+          <React.Suspense fallback={<>...</>}>
+            <PlanOverview />
+          </React.Suspense>
+        }
+      />
       <Route
         path="settings"
         element={
